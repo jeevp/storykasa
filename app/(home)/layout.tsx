@@ -57,9 +57,8 @@ export default async function HomeLayout({
           />
           <Box mt="9">
             <Nav></Nav>
-
-            {/* @ts-expect-error Server Component */}
-            <AuthButtonServer></AuthButtonServer>
+            {/* @ts-expect-error Server Component */}(
+            <AuthButtonServer> as any)</AuthButtonServer>
           </Box>
         </Box>
 

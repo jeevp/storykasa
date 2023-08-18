@@ -2,14 +2,6 @@
 
 import { createContext, useEffect, useState } from 'react'
 import { Profile } from './database-helpers.types'
-import { getProfiles } from './_actions'
-
-const fakeProfile: Profile = {
-  account_id: '',
-  created_at: '',
-  profile_id: '',
-  profile_name: '',
-}
 
 export const ProfileContext = createContext('')
 
