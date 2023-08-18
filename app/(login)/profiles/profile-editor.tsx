@@ -1,0 +1,180 @@
+'use client'
+import { useEffect, useState } from 'react'
+import ImageUploading, { ImageListType } from 'react-images-uploading'
+import Image from 'next/image'
+import { Label } from '@radix-ui/react-label'
+import {
+  Button,
+  Flex,
+  IconButton,
+  Select,
+  TextArea,
+  TextField,
+  Text,
+  Box,
+  Card,
+  Avatar,
+  Theme,
+} from '@radix-ui/themes'
+import { PencilSimple, Sparkle, UserPlus, X } from '@phosphor-icons/react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Profile } from '@/app/database-helpers.types'
+import { addProfile, uploadAvatar } from '@/app/_actions'
+import { resizeImage } from '@/app/utils'
+
+export default function ProfileEditor({
+  profileToEdit,
+}: {
+  profileToEdit: Profile
+}) {
+  const [images, setImages] = useState(
+    profileToEdit ? [{ dataURL: profileToEdit.avatar_url } as any] : []
+  )
+
+  const onChange = (
+    imageList: ImageListType,
+    addUpdateIndex: number[] | undefined
+  ) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex)
+    setImages(imageList as never[])
+  }
+
+  const router = useRouter()
+  const updateProfile = () => {
+    // router.refresh()
+  }
+
+  const upsertProfile = async (profileFormData: FormData) => {
+    if (profileToEdit) {
+      profileFormData.set('profile_id', profileToEdit.profile_id)
+    }
+    if (profileFormData.get('name')?.length == 0)
+      alert('Profile name cannot be empty')
+
+    // if there is a new avatar file, we need to upload to the bucket
+    if (images.length && images[0].file) {
+      const avatarFormData = new FormData()
+      const file: Blob = await resizeImage(images[0].file, 200)
+      avatarFormData.set('file', file)
+
+      const avatarURL = await uploadAvatar(avatarFormData)
+      profileFormData.set('avatar_url', avatarURL)
+    }
+
+    await addProfile(profileFormData)
+    router.refresh()
+  }
+
+  return (
+    <Card variant="classic" mt="6">
+      <Flex direction="row" gap="3" align="start" justify="between">
+        <Label style={{ flex: 2 }}>
+          <Text weight="medium" size="3">
+            Profile name
+          </Text>
+          <Theme scaling="110%">
+            <form action={upsertProfile}>
+              <TextField.Input
+                variant="soft"
+                name="name"
+                defaultValue={profileToEdit?.profile_name}
+                size="3"
+                mt="2"
+              />
+              <Button color="grass" size="2" mt="4" type="submit">
+                <UserPlus size={24} weight="duotone" />
+                Save profile
+              </Button>
+            </form>
+          </Theme>
+        </Label>
+
+        <ImageUploading
+          multiple
+          value={images}
+          onChange={onChange}
+          maxNumber={1}
+          resolutionHeight={100}
+          resolutionWidth={100}
+        >
+          {({
+            imageList,
+            onImageUpload,
+            onImageRemoveAll,
+            onImageUpdate,
+            onImageRemove,
+            isDragging,
+            dragProps,
+          }) => (
+            // write your building UI
+            <div
+              style={{
+                position: 'relative',
+                margin: '0 10px',
+              }}
+            >
+              {imageList.length ? (
+                <>
+                  <IconButton
+                    radius="full"
+                    size="2"
+                    color="tomato"
+                    onClick={onImageRemoveAll}
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      right: '-10px',
+                      zIndex: 3,
+                    }}
+                  >
+                    <X size={16} weight="bold" />
+                  </IconButton>
+                  <Avatar
+                    src={imageList[0].dataURL}
+                    fallback={''}
+                    size="7"
+                    radius="full"
+                    color="cyan"
+                  ></Avatar>
+                </>
+              ) : (
+                <>
+                  <IconButton
+                    radius="full"
+                    size="2"
+                    color="green"
+                    onClick={onImageUpload}
+                    {...dragProps}
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      right: '-10px',
+                      zIndex: 3,
+                    }}
+                  >
+                    <PencilSimple size={16} weight="bold" />
+                    {/* <button
+                            style={isDragging ? { color: 'red' } : undefined}
+                            onClick={onImageUpload}
+                            {...dragProps}
+                          >
+                            Click or Drop here
+                          </button> */}
+                  </IconButton>
+                  <Avatar
+                    fallback={''}
+                    size="7"
+                    radius="full"
+                    color="cyan"
+                  ></Avatar>
+                </>
+              )}
+            </div>
+          )}
+        </ImageUploading>
+      </Flex>
+    </Card>
+  )
+}

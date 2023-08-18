@@ -1,0 +1,15 @@
+.wrapper {
+  max-width: 1200px;
+  margin: auto;
+
+  // main {
+  //   display: flex;
+  // }
+
+  nav {
+    flex: 1;
+    button {
+      margin: 1em 0;
+    }
+  }
+}
