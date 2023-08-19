@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useEffect, useState } from 'react'
-import { Profile } from './database-helpers.types'
+import { Profile } from '../lib/database-helpers.types'
 
 export const ProfileContext = createContext('')
 

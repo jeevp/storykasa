@@ -14,11 +14,11 @@ import {
 } from '@radix-ui/themes'
 import { Label } from '@radix-ui/react-label'
 import AudioRecorder from './audio-recorder'
-import { addStory, uploadRecording } from '../../_actions'
+import { addStory, uploadRecording } from '../../../lib/_actions'
 import { useContext, useState } from 'react'
 import AudioPreview from './audio-preview'
 import { ProfileContext } from '../../profile-provider'
-import { Profile } from '../../database-helpers.types'
+import { Profile } from '../../../lib/database-helpers.types'
 
 export default function StoryForm() {
   const { currentProfileID } = useContext(ProfileContext) as any

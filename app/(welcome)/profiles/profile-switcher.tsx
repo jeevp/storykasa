@@ -1,11 +1,11 @@
 'use client'
 
-import { addProfile, getProfiles } from '../../_actions'
+import { addProfile, getProfiles } from '../../../lib/_actions'
 
 import { useContext, useEffect, useState } from 'react'
 import { ProfileContext } from '@/app/profile-provider'
-import { Profile } from '@/app/database-helpers.types'
-import { initials } from '@/app/utils'
+import { Profile } from '@/lib/database-helpers.types'
+import { initials } from '@/lib/utils'
 import {
   Select,
   Flex,
@@ -19,48 +19,63 @@ import {
 import ProfileEditor from './profile-editor'
 import { ArrowLeft, PencilSimple, Plus, Users } from '@phosphor-icons/react'
 import { redirect, useRouter } from 'next/navigation'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-export default function Profiles() {
+export default function Profiles({ profiles }: { profiles: Profile[] }) {
   const { currentProfileID, setCurrentProfileID } = useContext(
     ProfileContext
   ) as any
 
-  const router = useRouter()
+  const supabase = createClientComponentClient<Database>()
 
+  const [managing, setManaging] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [profileOptions, setProfileOptions] = useState<Profile[]>(profiles)
   const [profileToEdit, setProfileToEdit] = useState<Profile | null>(null)
+
+  const router = useRouter()
 
   const editProfile = (id: string) => {
     const profile = profileOptions.find((p: Profile) => {
       return p.profile_id === id
     })
     if (profile) {
+      setEditing(true)
       setProfileToEdit(profile)
     } else {
-      throw new Error('tried to edit a profile that does not exist')
+      setEditing(true)
+      setProfileToEdit(null)
     }
   }
 
-  const [managing, setManaging] = useState(false)
+  useEffect(() => {
+    console.log(profileOptions)
+    const channel = supabase
+      .channel('*')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'posts' },
+        (payload) => setProfileOptions((p: any) => [...p, payload.new])
+      )
+      .subscribe()
 
-  const [profileOptions, setProfileOptions] = useState<Profile[]>([])
+    if (!profiles.length) {
+      setManaging(true)
+      setEditing(true)
+    }
 
-  const loadProfiles = async () => {
-    const profiles: Profile[] = await getProfiles()
-    setProfileOptions(profiles)
-  }
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [profiles])
 
   const selectProfile = (profile: Profile) => {
     console.log(profile)
     const id = profile.profile_id
-    console.log('asdfjskaslsdjf')
     localStorage.setItem('currentProfileID', id)
     setCurrentProfileID(id)
     router.push('/library')
   }
-
-  useEffect(() => {
-    loadProfiles()
-  }, [])
 
   return (
     <Box mt="5">
@@ -108,20 +123,24 @@ export default function Profiles() {
           </Flex>
         ))}
 
-        {managing && (
+        {managing && !editing && (
           <IconButton
             radius="full"
             color="gray"
             variant="soft"
             style={{ width: 80, height: 80 }}
+            onClick={() => editProfile('')}
           >
             <Plus size={24} weight="bold"></Plus>
           </IconButton>
         )}
       </Flex>
-      {profileToEdit && (
+
+      {managing && editing && profileToEdit && (
         <ProfileEditor profileToEdit={profileToEdit}></ProfileEditor>
       )}
+      {managing && editing && !profileToEdit && <ProfileEditor></ProfileEditor>}
+
       <Button
         mt="6"
         variant="soft"

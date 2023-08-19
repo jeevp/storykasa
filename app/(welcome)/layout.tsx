@@ -14,9 +14,9 @@ export default function LoginLayout({
         <Box style={{ flex: 1 }}>
           <Image
             src="/logo.svg"
-            width="150"
-            height="0"
-            style={{ height: 'auto' }}
+            width={0}
+            height={0}
+            style={{ height: 'auto', width: 150 }}
             alt="StoryKasa logo"
           />
           <Box mt="9">{/* <AuthButtonServer></AuthButtonServer> */}</Box>

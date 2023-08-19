@@ -2,9 +2,9 @@
 
 import { Card, Flex, Avatar, Box, Text } from '@radix-ui/themes'
 import Link from 'next/link'
-import { StoryWithProfile } from '../database-helpers.types'
+import { StoryWithProfile } from '../../lib/database-helpers.types'
 import { format } from 'timeago.js'
-import { initials } from '../utils'
+import { initials } from '../../lib/utils'
 export default function StoryCard({ story }: { story: StoryWithProfile }) {
   return (
     <Card variant="classic" mx="1" my="3">

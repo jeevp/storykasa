@@ -19,14 +19,14 @@ import {
 import { PencilSimple, Sparkle, UserPlus, X } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Profile } from '@/app/database-helpers.types'
-import { addProfile, uploadAvatar } from '@/app/_actions'
-import { resizeImage } from '@/app/utils'
+import { Profile } from '@/lib/database-helpers.types'
+import { addProfile, uploadAvatar } from '@/lib/_actions'
+import { resizeImage } from '@/lib/utils'
 
 export default function ProfileEditor({
   profileToEdit,
 }: {
-  profileToEdit: Profile
+  profileToEdit?: Profile
 }) {
   const [images, setImages] = useState(
     profileToEdit ? [{ dataURL: profileToEdit.avatar_url } as any] : []

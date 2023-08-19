@@ -4,12 +4,14 @@ import { Box, Button, Grid, Heading, ScrollArea } from '@radix-ui/themes'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import StoryCard from '../story-card'
-import { StoryWithProfile } from '../../database-helpers.types'
+import { StoryWithProfile } from '../../../lib/database-helpers.types'
 import { useEffect, useState } from 'react'
-import { getPublicStories } from '../../_actions'
+import { getPublicStories } from '../../../lib/_actions'
 import StoryDetails from '../story-details'
 import PageWrapper from '../../page-wrapper'
 import { AnimatePresence, motion } from 'framer-motion'
+
+export const dynamic = 'force-dynamic'
 
 export default function Discover() {
   const [stories, setStories] = useState<StoryWithProfile[]>([])

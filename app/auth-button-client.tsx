@@ -16,7 +16,7 @@ import {
 } from '@supabase/auth-helpers-nextjs'
 import { redirect, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { initials } from './utils'
+import { initials } from '../lib/utils'
 import { SignOut, UserSwitch } from '@phosphor-icons/react'
 // import { Account } from './database-helpers.types'
 
@@ -62,7 +62,7 @@ export default function AuthButtonClient({
   //   }
   // }, [])
 
-  const handleSignIn = async () => {
+  const handleSignInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -122,7 +122,7 @@ export default function AuthButtonClient({
           </Flex>
         </div>
       ) : (
-        <Button onClick={handleSignIn}>Login</Button>
+        <Button onClick={handleSignInWithGoogle}>Login</Button>
       )}
     </Box>
   )

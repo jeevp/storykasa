@@ -36,13 +36,16 @@ export default async function HomeLayout({
   } = await supabase.auth.getSession()
 
   if (!session) {
-    redirect('/login')
+    redirect('/')
   }
-  // if (!profiles) {
-  //   throw new Error('failed to fetch profiles')
-  // } else if (!profiles?.length) {
-  //   redirect('/profiles')
-  // }
+
+  const { data: profiles } = await supabase.from('profiles').select()
+
+  if (!profiles) {
+    throw new Error('failed to fetch profiles')
+  } else if (!profiles?.length) {
+    redirect('/profiles')
+  }
 
   return (
     <ProfileProvider>
@@ -50,15 +53,15 @@ export default async function HomeLayout({
         <Box style={{ flex: 1 }}>
           <Image
             src="/logo.svg"
-            width="150"
-            height="0"
-            style={{ height: 'auto' }}
+            width={0}
+            height={0}
+            style={{ height: 'auto', width: 150 }}
             alt="StoryKasa logo"
           />
           <Box mt="9">
             <Nav></Nav>
-            {/* @ts-expect-error Server Component */}(
-            <AuthButtonServer> as any)</AuthButtonServer>
+            {/* @ts-expect-error */}
+            {(<AuthButtonServer />) as any}
           </Box>
         </Box>
 

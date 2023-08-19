@@ -2,9 +2,9 @@
 
 import { Grid, Heading, ScrollArea, TextField } from '@radix-ui/themes'
 import StoryCard from '@/app/(home)/story-card'
-import { StoryWithProfile } from '@/app/database-helpers.types'
+import { StoryWithProfile } from '@/lib/database-helpers.types'
 import { useEffect, useState } from 'react'
-import { getLibraryStories } from '@/app/_actions'
+import { getLibraryStories } from '@/lib/_actions'
 import StoryDetails from '../story-details'
 import PageWrapper from '@/app/page-wrapper'
 import { AnimatePresence, motion } from 'framer-motion'

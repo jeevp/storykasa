@@ -1,7 +1,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect, usePathname } from 'next/navigation'
-import { Flex, Grid } from '@radix-ui/themes'
+import { Flex, Grid, Heading, Link } from '@radix-ui/themes'
 
 export default async function Home() {
   const supabase = createServerComponentClient<Database>({
@@ -12,25 +12,16 @@ export default async function Home() {
     data: { session },
   } = await supabase.auth.getSession()
 
-  if (!session) {
-    redirect('/login')
-  } else {
+  if (session) {
     redirect('/library')
   }
 
-  const { data: profiles } = await supabase.from('profiles').select()
-
   return (
     <Grid columns="2" gap="3">
-      hello
       <Flex direction="column" gap="3">
-        {profiles?.map((profile) => (
-          <li key={profile.profile_id}>{profile.profile_name}</li>
-        ))}
-
-        {/* <pre style={{ fontSize: '0.6em' }}>
-            {JSON.stringify(stories, null, 2)}
-          </pre> */}
+        <Heading size="8">Welcome to StoryKasa!</Heading>
+        <Link href="/signup">Get started</Link>
+        <Link href="/login">Log in</Link>
       </Flex>
     </Grid>
 

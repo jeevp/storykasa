@@ -9,9 +9,9 @@ import {
   Heading,
   Text,
 } from '@radix-ui/themes'
-import { StoryWithProfile } from '../database-helpers.types'
+import { StoryWithProfile } from '../../lib/database-helpers.types'
 import AudioPlayer from './record/audio-player'
-import { initials } from '../utils'
+import { initials } from '../../lib/utils'
 import { useContext } from 'react'
 import { ProfileContext } from '../profile-provider'
 

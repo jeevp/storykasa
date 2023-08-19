@@ -12,6 +12,8 @@ import {
 } from 'react-audio-voice-recorder'
 import { useEffect, useState } from 'react'
 
+export const dynamic = 'force-dynamic'
+
 export default function AudioRecorder({ onRecorded }: { onRecorded: any }) {
   const [duration, setDuration] = useState(0)
 

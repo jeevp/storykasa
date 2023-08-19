@@ -68,19 +68,24 @@ export async function addStory(formData: FormData) {
     .select()
 
   if (error) console.log(error)
+  var newStoryID = data![0].story_id
 
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // simulate the story "saving" process by adding it to the library_stories table
   if (data && user) {
-    // simulate the story "saving" process by adding it to the library_stories table
-    const newStoryID = data[0].story_id
+    const { data, error } = await supabase
+      .from('accounts')
+      .select('*, libraries(*)')
+      .eq('account_id', user.id)
 
+    if (error) console.log(error)
     await supabase.from('library_stories').insert({
       account_id: user.id,
       story_id: newStoryID,
-      library_id: fakeLibraryID,
+      library_id: data![0].libraries![0].library_id,
     })
   }
 }
@@ -131,25 +136,41 @@ export async function addProfile(formData: FormData) {
   if (formData.has('profile_id')) {
     const id = formData.get('profile_id') as string
 
+    const newProfile = {
+      profile_name: name as string,
+    }
+
     const { data, error } = await supabase
       .from('profiles')
-      .update({ profile_name: name as string, avatar_url: avatarURL })
+      .update({
+        profile_name: name as string,
+        ...(formData.has('avatar_url') && { avatar_url: avatarURL }),
+      })
       .eq('profile_id', id)
 
     console.log(data)
     console.log(error)
+  } else if (!formData.has('profile_id')) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (user) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert({
+          account_id: user.id as string,
+          profile_name: name as string,
+          ...(formData.has('avatar_url') && { avatar_url: avatarURL }),
+        })
+        .select()
+      if (data) {
+        console.log(data)
+      }
+    } else {
+      throw new Error('unable to get user data needed to create profile')
+    }
   }
-
-  // const {
-  //   data: { user },
-  // } = await supabase.auth.getUser()
-
-  // if (user) {
-  //   await supabase.from('profiles').insert({
-  //     account_id: user.id,
-  //     profile_name: name,
-  //   })
-  // }
 }
 
 // export async function uploadAvatar(formData: FormData) {
@@ -178,10 +199,16 @@ export async function getProfiles() {
 
 export async function getPublicStories(): Promise<StoryWithProfile[]> {
   const supabase = createServerActionClient<Database>({ cookies })
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   const { data: stories } = await supabase
     .from('stories')
     .select('*, profiles (*)')
     .eq('is_public', true)
+    .eq('account_id', user!.id)
     .order('last_updated', { ascending: false })
 
   if (stories) {
@@ -193,15 +220,23 @@ export async function getPublicStories(): Promise<StoryWithProfile[]> {
 
 export async function getLibraryStories(): Promise<StoryWithProfile[]> {
   const supabase = createServerActionClient<Database>({ cookies })
-  const { data: stories } = await supabase
-    .from('stories')
-    .select('*, profiles (*)')
-    .order('last_updated', { ascending: false })
-  // .eq('is_public', true)
 
-  if (stories) {
-    return stories as StoryWithProfile[]
-  } else {
-    throw new Error('no stories found for current library')
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const { data, error } = await supabase
+    .from('library_stories')
+    .select('stories (*, profiles (*))')
+    .eq('account_id', user!.id)
+    .order('last_updated', { foreignTable: 'stories', ascending: false })
+
+  if (error) {
+    throw new Error(error.message)
   }
+
+  const stories = data?.map((story) => story.stories)
+  console.log(stories)
+
+  return stories as StoryWithProfile[]
 }

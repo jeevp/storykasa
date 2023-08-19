@@ -184,3 +184,9 @@ a[role='button'] {
 .profile-btn:hover {
   box-shadow: 0 0 0 2px var(--gray-8);
 }
+
+.auth-container,
+.auth-container * {
+  font-family: inherit !important;
+  font-weight: 500;
+}

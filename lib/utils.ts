@@ -2,7 +2,8 @@ export const initials = (str: string) => {
   return str
     .split(' ')
     .map((n) => n[0])
-    .join('.')
+    .join('')
+    .slice(0, 2)
 }
 
 export const resizeImage = async (file: Blob, size: number) => {
