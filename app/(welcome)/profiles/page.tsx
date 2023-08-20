@@ -3,6 +3,8 @@ import ProfileSwitcher from './profile-switcher'
 import { Button, Grid, Heading } from '@radix-ui/themes'
 import PageWrapper from '@/app/page-wrapper'
 import { cookies } from 'next/headers'
+import { getProfiles } from '@/lib/_actions'
+import ProfileProvider from '@/app/profile-provider'
 
 export default async function Profiles() {
   //   const {
@@ -15,19 +17,19 @@ export default async function Profiles() {
 
   //   return <ProfileSwitcher session={session}></ProfileSwitcher>
   const supabase = createServerComponentClient<Database>({ cookies })
-  const { data } = await supabase.from('profiles').select('*')
-  if (!data) {
-    throw new Error('unable to select from profiles table')
-  }
+  let profiles = await getProfiles()
+  if (!profiles) profiles = []
 
   return (
-    <PageWrapper path="profiles">
-      <Heading mb="3" size="6">
-        Choose a profile
-      </Heading>
-      <Grid columns="2" gap="3">
-        <ProfileSwitcher profiles={data}></ProfileSwitcher>
-      </Grid>
-    </PageWrapper>
+    <ProfileProvider>
+      <PageWrapper path="profiles">
+        <Heading mb="3" size="6">
+          Choose a profile
+        </Heading>
+        <Grid columns="2" gap="3">
+          <ProfileSwitcher profiles={profiles}></ProfileSwitcher>
+        </Grid>
+      </PageWrapper>
+    </ProfileProvider>
   )
 }

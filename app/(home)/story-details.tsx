@@ -1,21 +1,33 @@
 'use client'
 
 import {
+  AlertDialog,
   Avatar,
   Box,
   Button,
   Card,
   Flex,
   Heading,
+  ScrollArea,
   Text,
 } from '@radix-ui/themes'
 import { StoryWithProfile } from '../../lib/database-helpers.types'
 import AudioPlayer from './record/audio-player'
-import { initials } from '../../lib/utils'
+import { capitalize, initials } from '../../lib/utils'
 import { useContext } from 'react'
 import { ProfileContext } from '../profile-provider'
+import { Baby, GlobeSimple, Trash } from '@phosphor-icons/react'
+import { deleteStory } from '@/lib/_actions'
+import { useRouter } from 'next/navigation'
 
 export default function StoryDetails({ story }: { story: StoryWithProfile }) {
+  const router = useRouter()
+
+  const handleDeleteStory = () => {
+    deleteStory(story.story_id)
+    router.push('/')
+  }
+
   const { currentProfileID } = useContext(ProfileContext) as any
 
   return (
@@ -23,31 +35,36 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
       <Box px="4">
         <Heading size="6">{story.title}</Heading>
 
-        <Flex direction="row" align="center" mt="3">
+        <Flex direction="row" align="center" mt="5">
           <Avatar
+            src={story.profiles?.avatar_url!}
             fallback={initials(story.profiles.profile_name)}
             size="2"
             mr="3"
             radius="full"
           ></Avatar>
-          <Text size="3" weight="medium">
+          <Text size="3" weight="bold">
             {story.profiles.profile_name}
           </Text>
         </Flex>
-        <Box mt="4">
-          <Text size="2" weight="medium">
-            Ages {story.age_group}
-          </Text>
-        </Box>
-        <Box mt="4">
-          <Text size="3">{story.description}</Text>
-        </Box>
-
-        {currentProfileID === story.profiles.profile_id && (
-          <Button size="1" my="3" variant="soft">
-            Edit story
-          </Button>
-        )}
+        <Flex direction="column" gap="1" mt="4">
+          {story.age_group && (
+            <Flex direction="row" gap="1">
+              <Baby size={20} />
+              <Text size="2" weight="medium">
+                {story.age_group}
+              </Text>
+            </Flex>
+          )}
+          {story.language && (
+            <Flex direction="row" gap="1">
+              <GlobeSimple size={20} />
+              <Text size="2" weight="medium">
+                {capitalize(story.language)}
+              </Text>
+            </Flex>
+          )}
+        </Flex>
         {story.recording_url && (
           <Card mt="6" variant="surface">
             <AudioPlayer
@@ -55,6 +72,45 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
               key={story.recording_url}
             ></AudioPlayer>
           </Card>
+        )}
+        <Box mt="4">
+          <ScrollArea scrollbars="vertical" style={{ height: 200 }}>
+            {story.description}
+          </ScrollArea>
+        </Box>
+        {currentProfileID === story.profiles.profile_id && (
+          <AlertDialog.Root>
+            <AlertDialog.Trigger>
+              <Button size="2" my="3" variant="ghost">
+                <Trash size={18} />
+                <Text>Delete story</Text>
+              </Button>
+            </AlertDialog.Trigger>
+            <AlertDialog.Content style={{ maxWidth: 450 }}>
+              <AlertDialog.Title>Delete "{story.title}"?</AlertDialog.Title>
+              <AlertDialog.Description size="2">
+                Are you sure you want to delete this story? Deleting a story is
+                permanent and cannot be undone.
+              </AlertDialog.Description>
+
+              <Flex gap="3" mt="4" justify="end">
+                <AlertDialog.Cancel>
+                  <Button variant="soft" color="gray">
+                    Cancel
+                  </Button>
+                </AlertDialog.Cancel>
+                <AlertDialog.Action>
+                  <Button
+                    variant="solid"
+                    color="red"
+                    onClick={handleDeleteStory}
+                  >
+                    <Trash size={20}></Trash>Yes, delete story
+                  </Button>
+                </AlertDialog.Action>
+              </Flex>
+            </AlertDialog.Content>
+          </AlertDialog.Root>
         )}
       </Box>
     </div>

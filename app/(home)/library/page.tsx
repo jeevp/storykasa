@@ -56,7 +56,7 @@ export default function Library() {
                     <MagnifyingGlass size="20" />
                   </TextField.Slot>
                   <TextField.Input
-                    placeholder="Search for a story..."
+                    placeholder="Search in my library..."
                     value={filterQuery}
                     onChange={handleFilterQueryChange}
                     variant="soft"

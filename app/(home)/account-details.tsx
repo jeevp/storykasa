@@ -14,6 +14,7 @@ export default function AccountDetails({ account }: { account: Account }) {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
+
     router.refresh()
   }
 
@@ -22,13 +23,18 @@ export default function AccountDetails({ account }: { account: Account }) {
       <Flex direction="row" gap="3" align="center" mb="5">
         <Avatar
           src={account.avatar_url}
-          size="1"
+          size="2"
           fallback={initials(account.name)}
           radius="full"
         ></Avatar>
-        <Text weight="medium" size="3">
-          {account.name}
-        </Text>
+        <Flex direction="column" gap="0">
+          <Text weight="regular" size="1">
+            Logged in as
+          </Text>
+          <Text weight="medium" size="3">
+            {account.name}
+          </Text>
+        </Flex>
       </Flex>
       <Flex direction="column" gap="3" mt="6">
         <Link passHref href="/profiles">

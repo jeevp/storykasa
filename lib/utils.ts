@@ -6,6 +6,11 @@ export const initials = (str: string) => {
     .slice(0, 2)
 }
 
+export const capitalize = (str: string) => {
+  const capitalized = str.charAt(0).toUpperCase() + str.slice(1)
+  return capitalized
+}
+
 export const resizeImage = async (file: Blob, size: number) => {
   size ??= 256
   const canvas = document.createElement('canvas')

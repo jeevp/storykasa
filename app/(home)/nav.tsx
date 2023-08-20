@@ -17,6 +17,7 @@ import { Profile } from '../../lib/database-helpers.types'
 import { usePathname } from 'next/navigation'
 import { BookOpenText, Books, Microphone } from '@phosphor-icons/react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { initials } from '@/lib/utils'
 
 export default function Nav() {
   const pathname = usePathname()
@@ -36,11 +37,6 @@ export default function Nav() {
     (p) => p.profile_id === currentProfileID
   )
 
-  const handleProfileChange = (profileID: any) => {
-    setCurrentProfileID(profileID)
-    localStorage.setItem('currentProfileID', profileID)
-  }
-
   useEffect(() => {
     loadProfiles()
   }, [currentProfileID])
@@ -56,35 +52,14 @@ export default function Nav() {
             exit={{ x: 10, opacity: 0 }}
             key={currentProfile.profile_id}
           >
+            {/* <Avatar
+              src={currentProfile.avatar_url!}
+              fallback={initials(currentProfile.profile_name)}
+            ></Avatar> */}
             <Heading size="6">Hi, {currentProfile.profile_name}!</Heading>
           </motion.div>
         </AnimatePresence>
       )}
-      {/* {currentProfile && (
-        <Select.Root
-          size="3"
-          value={currentProfile.profile_id}
-          onValueChange={handleProfileChange}
-        >
-          <Select.Trigger variant="soft" />
-          <Select.Content>
-            {profileOptions.map((profile: Profile) => (
-              <Select.Item value={profile.profile_id} key={profile.profile_id}>
-                <Flex direction="row" align="center">
-                  <Avatar
-                    fallback={initials(profile.profile_name)}
-                    size="1"
-                    mr="3"
-                  ></Avatar>
-                  <Text weight="medium" size="2">
-                    {profile.profile_name}
-                  </Text>
-                </Flex>
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Root>
-      )} */}
 
       <Flex direction="column" gap="3">
         <Text size="5" weight="bold" mb="3">
@@ -101,7 +76,7 @@ export default function Nav() {
           >
             <Flex direction="row" gap="2">
               <BookOpenText size={24} weight="duotone" />
-              Discover
+              Discover stories
             </Flex>
           </a>
         </Link>
@@ -116,7 +91,7 @@ export default function Nav() {
           >
             <Flex direction="row" gap="2">
               <Books size={24} weight="duotone" />
-              Library
+              My library
             </Flex>
           </a>
         </Link>

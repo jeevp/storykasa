@@ -24,8 +24,6 @@ export default function SignupForm() {
   const [signedUp, setSignedUp] = useState(false)
 
   const handleSignUp = async (formData: FormData) => {
-    console.log(formData)
-
     const { data, error } = await supabase.auth.signUp({
       email: formData.get('email') as string,
       password: formData.get('password') as string,
@@ -37,6 +35,11 @@ export default function SignupForm() {
       },
     })
 
+    if (data) {
+      //   setSignedUp(true)
+      router.push('/profiles')
+    }
+
     if (error) {
       setErrorMsg(error.message)
     }
@@ -46,7 +49,7 @@ export default function SignupForm() {
 
   return (
     <Card mt="5">
-      {signedUp && 'Account created, check your email to confirm sign up'}
+      {/* {signedUp && 'Account created, check your email to confirm sign up'} */}
 
       <Form.Root action={handleSignUp}>
         <Form.Field name="name" asChild>

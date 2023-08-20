@@ -11,14 +11,10 @@ export default function StoryCard({ story }: { story: StoryWithProfile }) {
       <Flex gap="3" align="center">
         <Avatar
           size="3"
-          //   src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
+          src={story.profiles?.avatar_url!}
           radius="full"
           color="cyan"
-          fallback={
-            story.profiles?.profile_name
-              ? initials(story.profiles.profile_name)
-              : 'SK'
-          }
+          fallback={initials(story.profiles.profile_name)}
         />
         <Box width="100%" style={{ cursor: 'pointer' }}>
           <Flex gap="3" align="center" justify="between" width="100%">
@@ -43,7 +39,7 @@ export default function StoryCard({ story }: { story: StoryWithProfile }) {
             {story.duration && (
               <Text size="2">{Math.ceil(story.duration / 60)} min</Text>
             )}
-            <Text size="2">Ages {story.age_group}</Text>
+            <Text size="2">{story.age_group}</Text>
           </Flex>
         </Box>
       </Flex>

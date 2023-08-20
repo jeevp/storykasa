@@ -3,7 +3,7 @@
 import { addProfile, getProfiles } from '../../../lib/_actions'
 
 import { useContext, useEffect, useState } from 'react'
-import { ProfileContext } from '@/app/profile-provider'
+import ProfileProvider, { ProfileContext } from '@/app/profile-provider'
 import { Profile } from '@/lib/database-helpers.types'
 import { initials } from '@/lib/utils'
 import {
@@ -21,7 +21,7 @@ import { ArrowLeft, PencilSimple, Plus, Users } from '@phosphor-icons/react'
 import { redirect, useRouter } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-export default function Profiles({ profiles }: { profiles: Profile[] }) {
+export default function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
   const { currentProfileID, setCurrentProfileID } = useContext(
     ProfileContext
   ) as any
@@ -49,31 +49,32 @@ export default function Profiles({ profiles }: { profiles: Profile[] }) {
   }
 
   useEffect(() => {
-    console.log(profileOptions)
-    const channel = supabase
-      .channel('*')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'posts' },
-        (payload) => setProfileOptions((p: any) => [...p, payload.new])
-      )
-      .subscribe()
-
     if (!profiles.length) {
       setManaging(true)
       setEditing(true)
     }
 
-    return () => {
-      supabase.removeChannel(channel)
-    }
-  }, [profiles])
+    // const channel = supabase
+    //   .channel('*')
+    //   .on(
+    //     'postgres_changes',
+    //     { event: 'INSERT', schema: 'public', table: 'posts' },
+    //     (payload) => setProfileOptions((p: any) => [...p, payload.new])
+    //   )
+    //   .subscribe()
+
+    // return () => {
+    //   supabase.removeChannel(channel)
+    // }
+  }, [])
 
   const selectProfile = (profile: Profile) => {
     console.log(profile)
     const id = profile.profile_id
     localStorage.setItem('currentProfileID', id)
     setCurrentProfileID(id)
+    console.log('context', currentProfileID)
+    console.log('local', localStorage.getItem('currentProfileID'))
     router.push('/library')
   }
 

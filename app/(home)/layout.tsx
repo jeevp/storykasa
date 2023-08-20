@@ -36,18 +36,6 @@ export default async function HomeLayout({
   } = await supabase.auth.getSession()
   const { data: accounts } = await supabase.from('accounts').select()
 
-  if (!session || !accounts) {
-    redirect('/')
-  }
-
-  const { data: profiles } = await supabase.from('profiles').select()
-
-  if (!profiles) {
-    throw new Error('failed to fetch profiles')
-  } else if (!profiles?.length) {
-    redirect('/profiles')
-  }
-
   return (
     <ProfileProvider>
       <Flex direction="row" gap="6" mt="6">
@@ -59,15 +47,16 @@ export default async function HomeLayout({
             style={{ height: 'auto', width: 150 }}
             alt="StoryKasa logo"
           />
-          <Box mt="9">
-            <Nav></Nav>
-            <AccountDetails account={accounts[0]}></AccountDetails>
-          </Box>
+          {accounts && session && (
+            <Box mt="9">
+              <Nav></Nav>
+              <AccountDetails account={accounts[0]}></AccountDetails>
+            </Box>
+          )}
         </Box>
 
         <Box style={{ flex: 4 }}>{children}</Box>
       </Flex>
-      {/* <ThemePanel></ThemePanel> */}
     </ProfileProvider>
   )
 }

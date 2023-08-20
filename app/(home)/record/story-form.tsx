@@ -1,9 +1,11 @@
 'use client'
 
-import { Sparkle } from '@phosphor-icons/react'
+import { Bookmark, Books, Sparkle } from '@phosphor-icons/react'
 
 import {
+  AlertDialog,
   Button,
+  Callout,
   Card,
   Flex,
   Select,
@@ -19,9 +21,13 @@ import { useContext, useState } from 'react'
 import AudioPreview from './audio-preview'
 import { ProfileContext } from '../../profile-provider'
 import { Profile } from '../../../lib/database-helpers.types'
+import { ageGroups, languages } from '@/app/enums'
+import { useRouter } from 'next/navigation'
 
 export default function StoryForm() {
   const { currentProfileID } = useContext(ProfileContext) as any
+
+  const router = useRouter()
 
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [audioDuration, setAudioDuration] = useState(0)
@@ -51,83 +57,121 @@ export default function StoryForm() {
     await addStory(storyFormData)
   }
 
+  const handleGoToLibrary = () => {
+    router.push('/library')
+  }
+
   return (
-    <Card size="3">
-      <Theme radius="small">
+    <form action={uploadAndAddStory}>
+      <Card>
+        <Callout.Root>
+          <Callout.Icon>
+            <Text size="2">Step 1</Text>
+          </Callout.Icon>
+          <Callout.Text weight="bold">
+            Tell the world about your story
+          </Callout.Text>
+        </Callout.Root>
+
+        <Flex asChild direction="column" gap="1">
+          <Label>
+            <Text weight="bold" size="1">
+              Story title
+            </Text>
+            <TextField.Input variant="soft" name="title" />
+          </Label>
+        </Flex>
+
+        <Flex asChild direction="column" gap="1">
+          <Label>
+            <Text weight="bold" size="1">
+              Description
+            </Text>
+            <TextArea
+              variant="soft"
+              size="1"
+              placeholder="Briefly describe your story"
+              name="description"
+            />
+          </Label>
+        </Flex>
+
+        <Flex asChild direction="column" gap="1">
+          <Label>
+            <Text weight="bold" size="1">
+              Language
+            </Text>
+            <Select.Root name="language">
+              <Select.Trigger placeholder="Choose a language" />
+              <Select.Content>
+                {languages.map((l) => (
+                  <Select.Item value={l.name}>{l.name}</Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          </Label>
+        </Flex>
+
+        <Flex asChild direction="column" gap="1">
+          <Label>
+            <Text weight="bold" size="1">
+              Age range
+            </Text>
+            <Select.Root name="age_group">
+              <Select.Trigger placeholder="Choose a range" />
+              <Select.Content>
+                {ageGroups.map((a) => (
+                  <Select.Item value={a.name}>{a.name}</Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          </Label>
+        </Flex>
+      </Card>
+      <Card mt="3">
+        <Callout.Root>
+          <Callout.Icon>
+            <Text size="2">Step 2</Text>
+          </Callout.Icon>
+          <Callout.Text weight="bold">
+            Click the microphone to record your story
+          </Callout.Text>
+        </Callout.Root>
+
         <AudioRecorder onRecorded={updateAudioBlob}></AudioRecorder>
 
-        {audioBlob && (
-          <form action={uploadAndAddStory}>
-            <AudioPreview src={audioURL}></AudioPreview>
-            <Flex direction="column" gap="4">
-              <Flex asChild direction="column" gap="1">
-                <Label>
-                  <Text weight="bold" size="1">
-                    Story title
-                  </Text>
-                  <TextField.Input variant="soft" name="title" />
-                </Label>
-              </Flex>
+        {audioBlob && <AudioPreview src={audioURL}></AudioPreview>}
+      </Card>
 
-              <Flex asChild direction="column" gap="1">
-                <Label>
-                  <Text weight="bold" size="1">
-                    Description
-                  </Text>
-                  <TextArea
-                    variant="soft"
-                    size="1"
-                    placeholder="Briefly describe your story"
-                    name="description"
-                  />
-                </Label>
-              </Flex>
+      <AlertDialog.Root>
+        <AlertDialog.Trigger>
+          <Button size="3" my="3" color="grass" type="submit">
+            <Bookmark size={24} weight="duotone" />
+            <Text>Save story to my library</Text>
+          </Button>
+        </AlertDialog.Trigger>
+        <AlertDialog.Content style={{ maxWidth: 450 }}>
+          <AlertDialog.Title>Added to your library!</AlertDialog.Title>
+          <AlertDialog.Description size="2">
+            Congratulations on your brand new story. Go to your library to
+            listen to it.
+          </AlertDialog.Description>
 
-              <Flex asChild direction="column" gap="1">
-                <Label>
-                  <Text weight="bold" size="1">
-                    Language
-                  </Text>
-                  <Select.Root name="language">
-                    <Select.Trigger placeholder="Choose a language" />
-                    <Select.Content>
-                      <Select.Item value="english">English</Select.Item>
-                      <Select.Item value="spanish">Spanish</Select.Item>
-                    </Select.Content>
-                  </Select.Root>
-                </Label>
-              </Flex>
-
-              <Flex asChild direction="column" gap="1">
-                <Label>
-                  <Text weight="bold" size="1">
-                    Age range
-                  </Text>
-                  <Select.Root name="age">
-                    <Select.Trigger placeholder="Choose a range" />
-                    <Select.Content>
-                      <Select.Item value="1-3">1-3</Select.Item>
-                      <Select.Item value="4-6">4-6</Select.Item>
-                      <Select.Item value="6-9">6-9</Select.Item>
-                    </Select.Content>
-                  </Select.Root>
-                </Label>
-              </Flex>
-            </Flex>
-
-            <Button
-              mt="5"
-              color="grass"
-              className="raised"
-              radius="full"
-              type="submit"
-            >
-              <Sparkle weight="bold"></Sparkle>
-              Save to your library
-            </Button>
-          </form>
-        )}
-      </Theme>
-    </Card>
+          <Flex gap="3" mt="4" justify="end">
+            <AlertDialog.Cancel>
+              <Button variant="soft" color="gray">
+                Cancel
+              </Button>
+            </AlertDialog.Cancel>
+            <AlertDialog.Action>
+              <Button onClick={handleGoToLibrary}>
+                <Books size="20"></Books>
+                Go to my library
+              </Button>
+            </AlertDialog.Action>
+          </Flex>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
+    </form>
   )
 }

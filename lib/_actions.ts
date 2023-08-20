@@ -40,13 +40,11 @@ export async function addStory(formData: FormData) {
   const description = formData.get('description') as string
   const recordedBy = formData.get('recorded_by') as string
   const language = formData.get('language') as string
-  const ageGroup = formData.get('ageGroup') as string
+  const ageGroup = formData.get('age_group') as string
   const recordingURL = formData.get('recording_url') as string
   const duration = parseInt(formData.get('duration') as string)
 
-  const fakeLibraryID = '64621a80-c37d-4513-837b-6b66ddcb488e'
-
-  const fakeStory = {
+  const newStory = {
     is_public: false,
     title: title,
     recorded_by: recordedBy,
@@ -64,10 +62,14 @@ export async function addStory(formData: FormData) {
   const supabase = createServerActionClient<Database>({ cookies })
   const { data, error } = await supabase
     .from('stories')
-    .insert(fakeStory)
+    .insert(newStory)
     .select()
 
   if (error) console.log(error)
+
+  console.log('added story data')
+  console.log(data)
+
   var newStoryID = data![0].story_id
 
   const {
@@ -188,13 +190,17 @@ export async function addProfile(formData: FormData) {
 
 export async function getProfiles() {
   const supabase = createServerActionClient<Database>({ cookies })
-  const { data: profiles } = await supabase.from('profiles').select()
 
-  if (profiles) {
-    return profiles
-  } else {
-    throw new Error('no profiles found')
-  }
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('account_id', user!.id)
+
+  return profiles
 }
 
 export async function getPublicStories(): Promise<StoryWithProfile[]> {
@@ -204,18 +210,17 @@ export async function getPublicStories(): Promise<StoryWithProfile[]> {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: stories } = await supabase
+  const { data, error } = await supabase
     .from('stories')
     .select('*, profiles (*)')
     .eq('is_public', true)
-    .eq('account_id', user!.id)
     .order('last_updated', { ascending: false })
 
-  if (stories) {
-    return stories as StoryWithProfile[]
-  } else {
-    throw new Error('no public stories found')
+  if (error) {
+    throw new Error(error.message)
   }
+
+  return data as StoryWithProfile[]
 }
 
 export async function getLibraryStories(): Promise<StoryWithProfile[]> {
@@ -227,9 +232,9 @@ export async function getLibraryStories(): Promise<StoryWithProfile[]> {
 
   const { data, error } = await supabase
     .from('library_stories')
-    .select('stories (*, profiles (*))')
+    .select('*, stories (*, profiles (*))')
     .eq('account_id', user!.id)
-    .order('last_updated', { foreignTable: 'stories', ascending: false })
+    .order('stories(last_updated)', { ascending: false })
 
   if (error) {
     throw new Error(error.message)
@@ -239,4 +244,10 @@ export async function getLibraryStories(): Promise<StoryWithProfile[]> {
   console.log(stories)
 
   return stories as StoryWithProfile[]
+}
+
+export async function deleteStory(id: string) {
+  const supabase = createServerActionClient<Database>({ cookies })
+  const { error } = await supabase.from('stories').delete().eq('story_id', id)
+  if (error) throw new Error(error.message)
 }
