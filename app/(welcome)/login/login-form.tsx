@@ -186,7 +186,7 @@ export default function LoginForm() {
       {/* <Link href="/sign-up">Forgot password</Link> */}
       <Flex mt="5">
         <Link href="/signup" size="3" underline="always">
-          Don't have an account? Sign up
+          Don&apos;t have an account? Sign up
         </Link>
       </Flex>
     </Card>

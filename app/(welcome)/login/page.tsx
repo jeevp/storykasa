@@ -1,11 +1,8 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import AuthButtonClient from '../../auth-button-client'
-import AuthClientTest from './auth-client-test'
 import PageWrapper from '@/app/page-wrapper'
 import { Grid, Heading } from '@radix-ui/themes'
-import AuthButtonServer from '@/app/auth-button-server'
 import LoginForm from './login-form'
 
 export const dynamic = 'force-dynamic'

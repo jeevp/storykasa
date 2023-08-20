@@ -15,10 +15,10 @@ import Image from 'next/image'
 import type { Metadata } from 'next'
 import Nav from './nav'
 import ProfileProvider from '../profile-provider'
-import AuthButtonServer from '../auth-button-server'
 import { redirect } from 'next/navigation'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+import AccountDetails from './account-details'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,8 +34,9 @@ export default async function HomeLayout({
   const {
     data: { session },
   } = await supabase.auth.getSession()
+  const { data: accounts } = await supabase.from('accounts').select()
 
-  if (!session) {
+  if (!session || !accounts) {
     redirect('/')
   }
 
@@ -60,8 +61,7 @@ export default async function HomeLayout({
           />
           <Box mt="9">
             <Nav></Nav>
-            {/* @ts-expect-error */}
-            {(<AuthButtonServer />) as any}
+            <AccountDetails account={accounts[0]}></AccountDetails>
           </Box>
         </Box>
 

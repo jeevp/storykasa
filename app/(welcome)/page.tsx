@@ -3,6 +3,8 @@ import { cookies } from 'next/headers'
 import { redirect, usePathname } from 'next/navigation'
 import { Flex, Grid, Heading, Link } from '@radix-ui/themes'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const supabase = createServerComponentClient<Database>({
     cookies,
