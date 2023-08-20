@@ -87,7 +87,9 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
               </Button>
             </AlertDialog.Trigger>
             <AlertDialog.Content style={{ maxWidth: 450 }}>
-              <AlertDialog.Title>Delete "{story.title}"?</AlertDialog.Title>
+              <AlertDialog.Title>
+                Delete &ldquo;{story.title}&rdquo;?
+              </AlertDialog.Title>
               <AlertDialog.Description size="2">
                 Are you sure you want to delete this story? Deleting a story is
                 permanent and cannot be undone.

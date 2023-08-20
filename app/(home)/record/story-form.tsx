@@ -105,7 +105,9 @@ export default function StoryForm() {
               <Select.Trigger placeholder="Choose a language" />
               <Select.Content>
                 {languages.map((l) => (
-                  <Select.Item value={l.name}>{l.name}</Select.Item>
+                  <Select.Item key={l.code} value={l.name}>
+                    {l.name}
+                  </Select.Item>
                 ))}
               </Select.Content>
             </Select.Root>
@@ -121,7 +123,9 @@ export default function StoryForm() {
               <Select.Trigger placeholder="Choose a range" />
               <Select.Content>
                 {ageGroups.map((a) => (
-                  <Select.Item value={a.name}>{a.name}</Select.Item>
+                  <Select.Item key={a.name} value={a.name}>
+                    {a.name}
+                  </Select.Item>
                 ))}
               </Select.Content>
             </Select.Root>

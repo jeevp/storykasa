@@ -200,7 +200,11 @@ export async function getProfiles() {
     .select('*')
     .eq('account_id', user!.id)
 
-  return profiles
+  if (profiles) {
+    return profiles
+  } else {
+    throw new Error("couldn't get profiles")
+  }
 }
 
 export async function getPublicStories(): Promise<StoryWithProfile[]> {
