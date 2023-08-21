@@ -137,7 +137,6 @@ export async function addProfile(formData: FormData) {
 
   if (formData.has('profile_id')) {
     const id = formData.get('profile_id') as string
-
     const newProfile = {
       profile_name: name as string,
     }
@@ -149,13 +148,20 @@ export async function addProfile(formData: FormData) {
         ...(formData.has('avatar_url') && { avatar_url: avatarURL }),
       })
       .eq('profile_id', id)
+      .select()
 
     console.log(data)
     console.log(error)
+
+    if (data) {
+      return id
+    }
   } else if (!formData.has('profile_id')) {
     const {
       data: { user },
     } = await supabase.auth.getUser()
+
+    let newProfileID
 
     if (user) {
       const { data, error } = await supabase
@@ -167,7 +173,8 @@ export async function addProfile(formData: FormData) {
         })
         .select()
       if (data) {
-        console.log(data)
+        console.log('created new profile')
+        return data[0].profile_id
       }
     } else {
       throw new Error('unable to get user data needed to create profile')

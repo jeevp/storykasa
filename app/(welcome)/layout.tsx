@@ -1,4 +1,4 @@
-import { Box, Flex, Theme } from '@radix-ui/themes'
+import { Box, Flex, Separator, Theme } from '@radix-ui/themes'
 import Image from 'next/image'
 
 export default function LoginLayout({
@@ -7,8 +7,8 @@ export default function LoginLayout({
   children: React.ReactNode
 }) {
   return (
-    <Flex direction="row" gap="6" mt="6">
-      <Box style={{ flex: 1 }}>
+    <>
+      <Flex direction="row" align="start" justify="between" pb="3">
         <Image
           src="/logo.svg"
           width={0}
@@ -16,8 +16,13 @@ export default function LoginLayout({
           style={{ height: 'auto', width: 150 }}
           alt="StoryKasa logo"
         />
-      </Box>
-      <Box style={{ flex: 5 }}>{children}</Box>
-    </Flex>
+      </Flex>
+      <Separator size="4"></Separator>
+      <Flex direction="row" gap="7" mt="6">
+        <Box style={{ flex: 1.25 }}></Box>
+
+        <Box style={{ flex: 5 }}>{children}</Box>
+      </Flex>
+    </>
   )
 }

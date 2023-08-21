@@ -1,5 +1,13 @@
 import '@radix-ui/themes/styles.css'
-import { Box, Container, Flex, Grid, Theme, ThemePanel } from '@radix-ui/themes'
+import {
+  Box,
+  Container,
+  Flex,
+  Grid,
+  Separator,
+  Theme,
+  ThemePanel,
+} from '@radix-ui/themes'
 import '../themes-config.css'
 import Image from 'next/image'
 
@@ -28,10 +36,10 @@ export default async function HomeLayout({
   } = await supabase.auth.getSession()
   const { data: accounts } = await supabase.from('accounts').select()
 
-  return (
-    <ProfileProvider>
-      <Flex direction="row" gap="7" mt="6">
-        <Box style={{ flex: 1 }}>
+  if (accounts && session) {
+    return (
+      <ProfileProvider>
+        <Flex direction="row" align="start" justify="between" pb="3">
           <Image
             src="/logo.svg"
             width={0}
@@ -39,16 +47,33 @@ export default async function HomeLayout({
             style={{ height: 'auto', width: 150 }}
             alt="StoryKasa logo"
           />
-          {accounts && session && (
-            <Box mt="9">
-              <Nav></Nav>
-              <AccountDetails account={accounts[0]}></AccountDetails>
-            </Box>
-          )}
-        </Box>
+          <AccountDetails account={accounts[0]}></AccountDetails>
+        </Flex>
+        <Separator size="4"></Separator>
+        <Flex direction="row" gap="7" mt="6">
+          <Box style={{ flex: 1.25 }}>
+            <Nav></Nav>
+          </Box>
 
-        <Box style={{ flex: 5 }}>{children}</Box>
-      </Flex>
-    </ProfileProvider>
-  )
+          <Box style={{ flex: 5 }}>{children}</Box>
+        </Flex>
+      </ProfileProvider>
+    )
+  } else {
+    return (
+      <ProfileProvider>
+        <Flex direction="row" gap="7" mt="6">
+          <Box style={{ flex: 1 }}>
+            <Image
+              src="/logo.svg"
+              width={0}
+              height={0}
+              style={{ height: 'auto', width: 150 }}
+              alt="StoryKasa logo"
+            />
+          </Box>
+        </Flex>
+      </ProfileProvider>
+    )
+  }
 }

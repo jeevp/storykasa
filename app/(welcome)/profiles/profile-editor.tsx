@@ -49,16 +49,22 @@ export default function ProfileEditor({
   }
 
   const router = useRouter()
-  const updateProfile = () => {
-    // router.refresh()
-  }
+
+  const [profileName, setProfileName] = useState('')
 
   const upsertProfile = async (profileFormData: FormData) => {
     if (profileToEdit) {
       profileFormData.set('profile_id', profileToEdit.profile_id)
     }
-    if (profileFormData.get('name')?.length == 0)
+
+    if (
+      profileFormData.has('name') &&
+      profileFormData.get('name')!.length > 0
+    ) {
+      setProfileName(profileFormData.get('name') as string)
+    } else {
       alert('Profile name cannot be empty')
+    }
 
     // if there is a new avatar file, we need to upload to the bucket
     if (images.length && images[0].file) {
@@ -70,7 +76,12 @@ export default function ProfileEditor({
       profileFormData.set('avatar_url', avatarURL)
     }
 
-    await addProfile(profileFormData)
+    const id = await addProfile(profileFormData)
+    if (id) {
+      localStorage.setItem('currentProfileID', id)
+    } else {
+      throw new Error('unable to create profile')
+    }
   }
 
   return (
@@ -106,7 +117,8 @@ export default function ProfileEditor({
                 </AlertDialog.Trigger>
                 <AlertDialog.Content style={{ maxWidth: 450 }}>
                   <AlertDialog.Title>
-                    Updated profile for {profileToEdit?.profile_name}
+                    {profileToEdit ? 'Updated' : 'Created'} profile for{' '}
+                    {profileName}
                   </AlertDialog.Title>
                   <AlertDialog.Description size="2">
                     Your profile is now up to date, and you are ready to use

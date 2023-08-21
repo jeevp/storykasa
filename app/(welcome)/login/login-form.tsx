@@ -115,9 +115,8 @@ export default function LoginForm() {
             </Callout.Root>
           )}
         </Flex>
-
-        <Separator mb="4" mt="5" size="4" />
       </Form.Root>
+      <Separator mb="4" mt="5" size="4" />
       <Button
         color="gray"
         variant="soft"

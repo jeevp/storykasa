@@ -56,61 +56,61 @@ export default function Nav() {
               src={currentProfile.avatar_url!}
               fallback={initials(currentProfile.profile_name)}
             ></Avatar> */}
-            <Heading size="6">Hi, {currentProfile.profile_name}!</Heading>
+            <Heading size="4">Hi, {currentProfile.profile_name}!</Heading>
+
+            <Flex direction="column" gap="3" mt="6">
+              <Link href="/discover" passHref legacyBehavior>
+                <a
+                  role="button"
+                  title="Discover new publicly available stories"
+                  href="/discover"
+                  className={
+                    pathname == '/discover' ? 'select-btn active' : 'select-btn'
+                  }
+                >
+                  <Flex direction="row" gap="2">
+                    <BookOpenText size={24} weight="duotone" />
+                    Discover
+                  </Flex>
+                </a>
+              </Link>
+
+              <Link href="/library" passHref legacyBehavior>
+                <a
+                  role="button"
+                  title="Listen to the stories in your library"
+                  href="/library"
+                  className={
+                    pathname == '/library' ? 'select-btn active' : 'select-btn'
+                  }
+                >
+                  <Flex direction="row" gap="2">
+                    <Books size={24} weight="duotone" />
+                    My library
+                  </Flex>
+                </a>
+              </Link>
+
+              <Link href="/record" passHref legacyBehavior>
+                <a
+                  role="button"
+                  title="Record and add a new story"
+                  href="/record"
+                  className={
+                    pathname == '/record' ? 'raised-btn active' : 'raised-btn'
+                  }
+                  style={{ marginTop: '3em' }}
+                >
+                  <Flex direction="row" gap="2">
+                    <Microphone size={24} weight="duotone" />
+                    Add a story
+                  </Flex>
+                </a>
+              </Link>
+            </Flex>
           </motion.div>
         </AnimatePresence>
       )}
-
-      <Flex direction="column" gap="3" mt="6">
-        <Link href="/discover" passHref legacyBehavior>
-          <a
-            role="button"
-            title="Discover new publicly available stories"
-            href="/discover"
-            className={
-              pathname == '/discover' ? 'select-btn active' : 'select-btn'
-            }
-          >
-            <Flex direction="row" gap="2">
-              <BookOpenText size={24} weight="duotone" />
-              Discover
-            </Flex>
-          </a>
-        </Link>
-
-        <Link href="/library" passHref legacyBehavior>
-          <a
-            role="button"
-            title="Listen to the stories in your library"
-            href="/library"
-            className={
-              pathname == '/library' ? 'select-btn active' : 'select-btn'
-            }
-          >
-            <Flex direction="row" gap="2">
-              <Books size={24} weight="duotone" />
-              My library
-            </Flex>
-          </a>
-        </Link>
-
-        <Link href="/record" passHref legacyBehavior>
-          <a
-            role="button"
-            title="Record and add a new story"
-            href="/record"
-            className={
-              pathname == '/record' ? 'raised-btn active' : 'raised-btn'
-            }
-            style={{ marginTop: '3em' }}
-          >
-            <Flex direction="row" gap="2">
-              <Microphone size={24} weight="duotone" />
-              Add a story
-            </Flex>
-          </a>
-        </Link>
-      </Flex>
     </nav>
   )
 }

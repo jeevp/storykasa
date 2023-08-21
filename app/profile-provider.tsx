@@ -38,17 +38,21 @@ export default function ProfileProvider({
       } else {
         router.push('/profiles')
       }
+      setLoaded(true)
     }
 
     getAccountData()
-    setLoaded(true)
   }, [])
 
-  return (
-    <ProfileContext.Provider
-      value={{ currentProfileID, setCurrentProfileID } as any}
-    >
-      {loaded && children}
-    </ProfileContext.Provider>
-  )
+  if (loaded) {
+    return (
+      <ProfileContext.Provider
+        value={{ currentProfileID, setCurrentProfileID } as any}
+      >
+        {children}
+      </ProfileContext.Provider>
+    )
+  } else {
+    return <></>
+  }
 }

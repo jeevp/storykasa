@@ -23,6 +23,15 @@ export default function SignupForm() {
   const supabase = createClientComponentClient<Database>()
   const [signedUp, setSignedUp] = useState(false)
 
+  const handleSignInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    })
+  }
+
   const handleSignUp = async (formData: FormData) => {
     const { data, error } = await supabase.auth.signUp({
       email: formData.get('email') as string,
@@ -59,6 +68,9 @@ export default function SignupForm() {
                 Account name
               </Text>
             </Form.Label>
+            {/* <Text weight="medium" size="2">
+              This could be your name, or the name of your family or group.
+            </Text> */}
             <Form.Control asChild>
               <TextField.Input size="3" type="text" variant="soft" required />
             </Form.Control>
@@ -137,6 +149,21 @@ export default function SignupForm() {
           )}
         </Flex>
       </Form.Root>
+      <Separator mb="4" mt="5" size="4" />
+      <Button
+        color="gray"
+        variant="soft"
+        size="3"
+        onClick={handleSignInWithGoogle}
+      >
+        <Image
+          src="/google.svg"
+          width={24}
+          height={24}
+          alt="Google logo"
+        ></Image>
+        <Text weight="medium">Sign up with Google</Text>
+      </Button>
 
       {/* <Link href="/sign-up">Forgot password</Link> */}
       <Flex mt="5">

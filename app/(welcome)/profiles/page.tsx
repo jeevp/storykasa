@@ -18,7 +18,10 @@ export default async function Profiles() {
           Choose a profile
         </Heading>
         <Grid columns="2" gap="5">
-          <ProfileSwitcher profiles={profiles}></ProfileSwitcher>
+          <ProfileSwitcher
+            profiles={profiles}
+            key={profiles.length}
+          ></ProfileSwitcher>
         </Grid>
       </PageWrapper>
     </ProfileProvider>

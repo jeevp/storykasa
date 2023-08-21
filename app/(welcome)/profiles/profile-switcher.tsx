@@ -73,8 +73,6 @@ export default function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
     const id = profile.profile_id
     localStorage.setItem('currentProfileID', id)
     setCurrentProfileID(id)
-    console.log('context', currentProfileID)
-    console.log('local', localStorage.getItem('currentProfileID'))
     router.push('/library')
   }
 
@@ -136,6 +134,19 @@ export default function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
           </IconButton>
         )}
       </Flex>
+
+      {!profileToEdit && (
+        <Flex direction="column" gap="2">
+          <Text size="4" weight="bold">
+            To get started, set up your first profile.
+          </Text>
+          <Text>
+            Each member of your account can make a profile for creating and
+            listening to stories. All members share the same account login
+            information.
+          </Text>
+        </Flex>
+      )}
 
       {managing && editing && profileToEdit && (
         <ProfileEditor profileToEdit={profileToEdit}></ProfileEditor>
