@@ -145,10 +145,10 @@ export const languages = [
 ]
 
 export const ageGroups = [
-  { name: 'All ages' },
-  { name: 'Infants (0-1 yr)' },
-  { name: 'Toddlers (1-3 yr)' },
-  { name: 'Preschool age (3-6 yr)' },
-  { name: 'Young children (6-11 yr)' },
-  { name: 'Adolescents (12-18 yr)' },
+  { name: 'All ages', code: 'All ages' },
+  { name: 'Infants (0-1 yr)', code: 'Infants' },
+  { name: 'Toddlers (1-3 yr)', code: 'Toddlers' },
+  { name: 'Preschool (3-4 yr)', code: 'Preschool' },
+  { name: 'Young children (5-11 yr)', code: 'Young children' },
+  { name: 'Adolescents (12-18 yr)', code: 'Adolescents' },
 ]

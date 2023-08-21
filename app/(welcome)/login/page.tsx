@@ -23,7 +23,7 @@ export default async function Login() {
       <Heading mb="3" size="6">
         Log in
       </Heading>
-      <Grid columns="2" gap="3">
+      <Grid columns="2" gap="5">
         <LoginForm></LoginForm>
         {/* <AuthClientTest session={session}></AuthClientTest> */}
 

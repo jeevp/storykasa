@@ -1,11 +1,14 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect, usePathname } from 'next/navigation'
-import { Flex, Grid, Heading, Link } from '@radix-ui/themes'
+import { Flex, Grid, Text, Heading, Button } from '@radix-ui/themes'
+import HelpDialog from '../help-dialog'
+import Link from 'next/link'
+import { SignIn } from '@phosphor-icons/react'
 
 export const dynamic = 'force-dynamic'
 
-export default async function Home() {
+export default async function Welcome() {
   const supabase = createServerComponentClient<Database>({
     cookies,
   })
@@ -15,15 +18,35 @@ export default async function Home() {
   } = await supabase.auth.getSession()
 
   if (session) {
+    console.log('signed in, going to library')
     redirect('/library')
   }
 
   return (
-    <Grid columns="2" gap="3">
+    <Grid columns="2" gap="5">
       <Flex direction="column" gap="3">
-        <Heading size="8">Welcome to StoryKasa!</Heading>
-        <Link href="/signup">Get started</Link>
+        <Heading size="8">Welcome to StoryKasa</Heading>
+        <Text size="6" mt="4">
+          StoryKasa is a platform where you can listen to stories or create your
+          own!
+        </Text>
+
+        <Flex gap="3" mt="7">
+          <Link href="/signup" passHref legacyBehavior>
+            <Button color="grass" size="3">
+              Create an account
+            </Button>
+          </Link>
+          <Link href="/login" passHref legacyBehavior>
+            <Button color="gray" variant="surface" size="3">
+              Log in
+            </Button>
+          </Link>
+        </Flex>
+        {/* 
+        <Link href="/signup">Create an account</Link>
         <Link href="/login">Log in</Link>
+        <HelpDialog></HelpDialog> */}
       </Flex>
     </Grid>
 

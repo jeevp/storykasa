@@ -45,3 +45,7 @@ export const resizeImage = async (file: Blob, size: number) => {
     )
   })
 }
+
+export const mmss = (seconds: number) => {
+  return new Date(seconds * 1000).toISOString().slice(14, 19)
+}

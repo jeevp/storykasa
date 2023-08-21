@@ -7,15 +7,18 @@ import { Flex, Text, Avatar, Button, Box } from '@radix-ui/themes'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import HelpDialog from '../help-dialog'
 
 export default function AccountDetails({ account }: { account: Account }) {
   const router = useRouter()
   const supabase = createClientComponentClient<Database>()
 
   const handleSignOut = async () => {
+    localStorage.removeItem('currentProfileID')
     await supabase.auth.signOut()
 
     router.refresh()
+    router.push('/')
   }
 
   return (
@@ -37,14 +40,21 @@ export default function AccountDetails({ account }: { account: Account }) {
         </Flex>
       </Flex>
       <Flex direction="column" gap="3" mt="6">
-        <Link passHref href="/profiles">
-          <Button variant="ghost" color="gray" style={{ width: 'fit-content' }}>
+        <Link passHref legacyBehavior href="/profiles">
+          <Button
+            variant="ghost"
+            color="gray"
+            style={{ width: 'fit-content' }}
+            mb="5"
+          >
             <UserSwitch size={20} />{' '}
             <Text weight="medium" ml="1">
-              Change profiles
+              Switch profiles
             </Text>
           </Button>
         </Link>
+        <HelpDialog></HelpDialog>
+
         <Button
           variant="ghost"
           color="gray"

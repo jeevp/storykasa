@@ -1,14 +1,5 @@
-import { DM_Sans } from 'next/font/google'
 import '@radix-ui/themes/styles.css'
-import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  Link,
-  Theme,
-  ThemePanel,
-} from '@radix-ui/themes'
+import { Box, Container, Flex, Grid, Theme, ThemePanel } from '@radix-ui/themes'
 import '../themes-config.css'
 import Image from 'next/image'
 
@@ -19,6 +10,7 @@ import { redirect } from 'next/navigation'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import AccountDetails from './account-details'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,7 +30,7 @@ export default async function HomeLayout({
 
   return (
     <ProfileProvider>
-      <Flex direction="row" gap="6" mt="6">
+      <Flex direction="row" gap="7" mt="6">
         <Box style={{ flex: 1 }}>
           <Image
             src="/logo.svg"
@@ -55,7 +47,7 @@ export default async function HomeLayout({
           )}
         </Box>
 
-        <Box style={{ flex: 4 }}>{children}</Box>
+        <Box style={{ flex: 5 }}>{children}</Box>
       </Flex>
     </ProfileProvider>
   )

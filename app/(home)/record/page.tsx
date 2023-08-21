@@ -7,11 +7,9 @@ export default async function Record() {
   return (
     <PageWrapper path="record">
       <Heading mb="3" size="6">
-        Record a new story
+        Add a story
       </Heading>
-      <Grid columns="2" gap="3">
-        <StoryForm></StoryForm>
-      </Grid>
+      <StoryForm></StoryForm>
     </PageWrapper>
   )
 }

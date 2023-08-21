@@ -1,8 +1,9 @@
+import { DMMono } from '@/app/fonts'
 import { useEffect } from 'react'
 import { AudioPlayer as ReactAudioPlayer } from 'react-audio-player-component'
 export default function AudioPlayer({ src }: { src: string }) {
   return (
-    <div style={{ fontFamily: 'monospace' }}>
+    <div className={DMMono.className}>
       <ReactAudioPlayer
         src={src}
         minimal={false}

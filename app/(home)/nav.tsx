@@ -61,14 +61,11 @@ export default function Nav() {
         </AnimatePresence>
       )}
 
-      <Flex direction="column" gap="3">
-        <Text size="5" weight="bold" mb="3">
-          {' '}
-        </Text>
-
+      <Flex direction="column" gap="3" mt="6">
         <Link href="/discover" passHref legacyBehavior>
           <a
             role="button"
+            title="Discover new publicly available stories"
             href="/discover"
             className={
               pathname == '/discover' ? 'select-btn active' : 'select-btn'
@@ -76,7 +73,7 @@ export default function Nav() {
           >
             <Flex direction="row" gap="2">
               <BookOpenText size={24} weight="duotone" />
-              Discover stories
+              Discover
             </Flex>
           </a>
         </Link>
@@ -84,6 +81,7 @@ export default function Nav() {
         <Link href="/library" passHref legacyBehavior>
           <a
             role="button"
+            title="Listen to the stories in your library"
             href="/library"
             className={
               pathname == '/library' ? 'select-btn active' : 'select-btn'
@@ -99,6 +97,7 @@ export default function Nav() {
         <Link href="/record" passHref legacyBehavior>
           <a
             role="button"
+            title="Record and add a new story"
             href="/record"
             className={
               pathname == '/record' ? 'raised-btn active' : 'raised-btn'
@@ -107,7 +106,7 @@ export default function Nav() {
           >
             <Flex direction="row" gap="2">
               <Microphone size={24} weight="duotone" />
-              Record a story
+              Add a story
             </Flex>
           </a>
         </Link>

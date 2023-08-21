@@ -7,15 +7,6 @@ import { getProfiles } from '@/lib/_actions'
 import ProfileProvider from '@/app/profile-provider'
 
 export default async function Profiles() {
-  //   const {
-  //     data: { session },
-  //   } = await supabase.auth.getSession()
-
-  //   if (session) {
-  //     redirect('/')
-  //   }
-
-  //   return <ProfileSwitcher session={session}></ProfileSwitcher>
   const supabase = createServerComponentClient<Database>({ cookies })
   let profiles = await getProfiles()
   if (!profiles) profiles = []
@@ -26,7 +17,7 @@ export default async function Profiles() {
         <Heading mb="3" size="6">
           Choose a profile
         </Heading>
-        <Grid columns="2" gap="3">
+        <Grid columns="2" gap="5">
           <ProfileSwitcher profiles={profiles}></ProfileSwitcher>
         </Grid>
       </PageWrapper>

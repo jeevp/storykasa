@@ -1,6 +1,16 @@
 'use client'
 
-import { Grid, Heading, ScrollArea, TextField } from '@radix-ui/themes'
+import {
+  Flex,
+  Text,
+  Grid,
+  Heading,
+  Link,
+  ScrollArea,
+  TextField,
+  Box,
+  Callout,
+} from '@radix-ui/themes'
 import StoryCard from '@/app/(home)/story-card'
 import { StoryWithProfile } from '@/lib/database-helpers.types'
 import { useEffect, useState } from 'react'
@@ -8,7 +18,8 @@ import { getLibraryStories } from '@/lib/_actions'
 import StoryDetails from '../story-details'
 import PageWrapper from '@/app/page-wrapper'
 import { AnimatePresence, motion } from 'framer-motion'
-import { MagnifyingGlass } from '@phosphor-icons/react'
+import { MagnifyingGlass, Warning } from '@phosphor-icons/react'
+import InfoTooltip from '../info-tooltip'
 
 export default function Library() {
   const [filterQuery, setFilterQuery] = useState('')
@@ -37,11 +48,14 @@ export default function Library() {
   return (
     <PageWrapper path="library">
       <Heading mb="3" size="6">
-        My story library
+        <Flex gap="2" align="center">
+          My story library
+          <InfoTooltip content="Stories in your library are private to your account, but can be accessed from any of your profiles."></InfoTooltip>
+        </Flex>
       </Heading>
 
-      <Grid columns="2" gap="3">
-        {stories && (
+      <Grid columns="2" gap="5">
+        {stories.length ? (
           <AnimatePresence mode="wait">
             (
             <motion.div
@@ -51,7 +65,7 @@ export default function Library() {
               key={stories.length}
             >
               {stories.length > 0 && (
-                <TextField.Root>
+                <TextField.Root mt="2" mb="2">
                   <TextField.Slot>
                     <MagnifyingGlass size="20" />
                   </TextField.Slot>
@@ -73,12 +87,32 @@ export default function Library() {
                     key={story.story_id}
                     onClick={() => setSelectedIndex(index)}
                   >
-                    <StoryCard story={story}></StoryCard>
+                    <StoryCard
+                      story={story}
+                      selected={selectedIndex === index}
+                    ></StoryCard>
                   </a>
                 ))}
               </ScrollArea>
             </motion.div>
           </AnimatePresence>
+        ) : (
+          <Flex direction="column" gap="2" mt="5">
+            <Callout.Root color="gray" variant="surface" size="1">
+              <Box>
+                <Heading size="6" weight="medium" color="gray">
+                  No stories yet...{' '}
+                </Heading>
+                <Callout.Text weight="medium" mt="3" size="3">
+                  Get started by{' '}
+                  <Link underline="always" weight="medium" color="grass">
+                    adding your first story
+                  </Link>
+                  .
+                </Callout.Text>
+              </Box>
+            </Callout.Root>
+          </Flex>
         )}
 
         {selectedIndex !== undefined && (

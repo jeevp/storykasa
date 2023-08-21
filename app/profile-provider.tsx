@@ -16,8 +16,9 @@ export default function ProfileProvider({
   const router = useRouter()
   const supabase = createClientComponentClient<Database>()
 
+  const [loaded, setLoaded] = useState(false)
+
   useEffect(() => {
-    console.log('profile provider!')
     const getAccountData = async () => {
       const {
         data: { session },
@@ -29,25 +30,25 @@ export default function ProfileProvider({
         console.log('no account, redirecting to login')
         router.push('/login')
       }
+      // declare the async data fetching function
+
+      const id = localStorage.getItem('currentProfileID')
+      if (id) {
+        setCurrentProfileID(id)
+      } else {
+        router.push('/profiles')
+      }
     }
 
     getAccountData()
-
-    // declare the async data fetching function
-
-    const id = localStorage.getItem('currentProfileID')
-    if (id) {
-      setCurrentProfileID(id)
-    } else {
-      router.push('/profiles')
-    }
+    setLoaded(true)
   }, [])
 
   return (
     <ProfileContext.Provider
       value={{ currentProfileID, setCurrentProfileID } as any}
     >
-      {children}
+      {loaded && children}
     </ProfileContext.Provider>
   )
 }

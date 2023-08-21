@@ -1,25 +1,10 @@
-import { DM_Sans } from 'next/font/google'
 import './styles/globals.scss'
 import '@radix-ui/themes/styles.css'
-import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  Link,
-  Theme,
-  ThemePanel,
-} from '@radix-ui/themes'
+import { Container, Theme } from '@radix-ui/themes'
 import './themes-config.css'
-import Image from 'next/image'
 
 import type { Metadata } from 'next'
-
-const DMSans = DM_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-dm-sans',
-})
+import { DMSans } from './fonts'
 
 export const metadata: Metadata = {
   title: 'StoryKasa Beta',

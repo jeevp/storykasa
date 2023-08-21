@@ -15,8 +15,15 @@ import {
   Card,
   Avatar,
   Theme,
+  AlertDialog,
 } from '@radix-ui/themes'
-import { PencilSimple, Sparkle, UserPlus, X } from '@phosphor-icons/react'
+import {
+  ArrowCircleRight,
+  PencilSimple,
+  Sparkle,
+  UserPlus,
+  X,
+} from '@phosphor-icons/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Profile } from '@/lib/database-helpers.types'
@@ -64,7 +71,6 @@ export default function ProfileEditor({
     }
 
     await addProfile(profileFormData)
-    router.refresh()
   }
 
   return (
@@ -74,6 +80,7 @@ export default function ProfileEditor({
           <Text weight="medium" size="3">
             Profile name
           </Text>
+
           <Theme scaling="110%">
             <form action={upsertProfile}>
               <TextField.Input
@@ -83,10 +90,44 @@ export default function ProfileEditor({
                 size="3"
                 mt="2"
               />
-              <Button color="grass" size="2" mt="4" type="submit">
-                <UserPlus size={24} weight="duotone" />
-                Save profile
-              </Button>
+
+              <AlertDialog.Root>
+                <AlertDialog.Trigger>
+                  <Button
+                    size="2"
+                    color="grass"
+                    radius="full"
+                    type="submit"
+                    mt="4"
+                  >
+                    <UserPlus size={20} weight="duotone" />
+                    <Text>Save profile</Text>
+                  </Button>
+                </AlertDialog.Trigger>
+                <AlertDialog.Content style={{ maxWidth: 450 }}>
+                  <AlertDialog.Title>
+                    Updated profile for {profileToEdit?.profile_name}
+                  </AlertDialog.Title>
+                  <AlertDialog.Description size="2">
+                    Your profile is now up to date, and you are ready to use
+                    StoryKasa.
+                  </AlertDialog.Description>
+
+                  <Flex gap="3" mt="4" justify="end">
+                    {/* <AlertDialog.Cancel>
+                      <Button variant="soft" color="gray">
+                        Cancel
+                      </Button>
+                    </AlertDialog.Cancel> */}
+                    <AlertDialog.Action>
+                      <Button onClick={() => router.push('/')} color="grass">
+                        <ArrowCircleRight size="20"></ArrowCircleRight>
+                        Enter StoryKasa
+                      </Button>
+                    </AlertDialog.Action>
+                  </Flex>
+                </AlertDialog.Content>
+              </AlertDialog.Root>
             </form>
           </Theme>
         </Label>

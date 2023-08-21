@@ -32,7 +32,7 @@ export default function Discover() {
         Discover stories
       </Heading>
 
-      <Grid columns="2" gap="3">
+      <Grid columns="2" gap="5">
         {stories && (
           <AnimatePresence mode="wait">
             (
@@ -52,7 +52,10 @@ export default function Discover() {
                     key={story.story_id}
                     onClick={() => setSelectedIndex(index)}
                   >
-                    <StoryCard story={story}></StoryCard>
+                    <StoryCard
+                      story={story}
+                      selected={index === selectedIndex}
+                    ></StoryCard>
                   </a>
                 ))}
               </ScrollArea>

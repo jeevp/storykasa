@@ -17,7 +17,7 @@ export default function LoginLayout({
           alt="StoryKasa logo"
         />
       </Box>
-      <Box style={{ flex: 4 }}>{children}</Box>
+      <Box style={{ flex: 5 }}>{children}</Box>
     </Flex>
   )
 }

@@ -125,7 +125,7 @@ export default function SignupForm() {
 
         <Form.Submit asChild>
           <Button size="3" mt="3" color="green">
-            Log in
+            Create account
           </Button>
         </Form.Submit>
 
@@ -136,18 +136,6 @@ export default function SignupForm() {
             </Text>
           )}
         </Flex>
-
-        <Separator mb="4" mt="5" size="4" />
-
-        <Button color="gray" variant="soft" size="3">
-          <Image
-            src="/google.svg"
-            width={24}
-            height={24}
-            alt="Google logo"
-          ></Image>
-          <Text weight="medium">Log in with Google</Text>
-        </Button>
       </Form.Root>
 
       {/* <Link href="/sign-up">Forgot password</Link> */}

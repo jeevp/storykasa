@@ -11,6 +11,21 @@ import {
   useAudioRecorder,
 } from 'react-audio-voice-recorder'
 import { useEffect, useState } from 'react'
+import { Button, Flex, IconButton, Text } from '@radix-ui/themes'
+import { mmss } from '@/lib/utils'
+import { DMMono } from '@/app/fonts'
+import {
+  Check,
+  CheckCircle,
+  Microphone,
+  Pause,
+  PauseCircle,
+  PlayCircle,
+  Record,
+  StopCircle,
+  Trash,
+  TrashSimple,
+} from '@phosphor-icons/react'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,12 +53,108 @@ export default function AudioRecorder({ onRecorded }: { onRecorded: any }) {
   }
 
   return (
-    <AudioVoiceRecorder
-      onRecordingComplete={(blob: Blob) => addAudioElement(blob)}
-      recorderControls={recorderControls}
-      // downloadOnSavePress={true}
-      // downloadFileExtension="mp3"
-      showVisualizer={true}
-    />
+    <div>
+      {!recorderControls.recordingBlob && (
+        <Flex justify="between" align="center" mb="4">
+          {recorderControls.isRecording ? (
+            recorderControls.isPaused ? (
+              <Button
+                onClick={recorderControls.togglePauseResume}
+                variant="surface"
+                color="gray"
+                radius="full"
+                type="button"
+              >
+                <Record size="20" weight="fill"></Record>
+                <Text>Resume</Text>
+              </Button>
+            ) : (
+              <Button
+                onClick={recorderControls.togglePauseResume}
+                variant="surface"
+                color="gray"
+                radius="full"
+                type="button"
+              >
+                <PauseCircle size="20" weight="fill"></PauseCircle>
+                <Text>Pause</Text>
+              </Button>
+            )
+          ) : (
+            !recorderControls.recordingBlob && (
+              <Button
+                onClick={recorderControls.startRecording}
+                color="tomato"
+                radius="full"
+                variant="surface"
+                type="button"
+              >
+                <Record size="20" weight="fill"></Record>
+                <Text>Start recording</Text>
+              </Button>
+            )
+          )}
+          {recorderControls.isRecording && !recorderControls.recordingBlob && (
+            <Button
+              color="tomato"
+              radius="full"
+              variant="surface"
+              type="button"
+              onClick={recorderControls.stopRecording}
+            >
+              <StopCircle weight="fill" size="20" />
+              <Text>Finish recording</Text>
+            </Button>
+          )}
+          {/* {recorderControls.isRecording && recorderControls.isPaused && (
+          <IconButton
+            radius="full"
+            onClick={recorderControls.stopRecording}
+            color="tomato"
+            variant="soft"
+          >
+            <Trash size="20"></Trash>
+          </IconButton>
+        )} */}
+        </Flex>
+      )}
+
+      <Flex
+        justify="between"
+        align="center"
+        className={DMMono.className}
+        style={
+          recorderControls.isRecording || recorderControls.recordingBlob
+            ? { opacity: 1 }
+            : { opacity: 0.3 }
+        }
+      >
+        <Flex justify="between" align="center" gap="3">
+          <Flex align="center" gap="1">
+            <Text weight="bold" size="2" color="gray">
+              REC
+            </Text>
+            <div
+              className={
+                recorderControls.isRecording && !recorderControls.isPaused
+                  ? 'rec-indicator'
+                  : 'rec-indicator paused'
+              }
+            ></div>
+          </Flex>
+
+          <AudioVoiceRecorder
+            onRecordingComplete={(blob: Blob) => addAudioElement(blob)}
+            recorderControls={recorderControls}
+            // downloadOnSavePress={true}
+            // downloadFileExtension="mp3"
+            showVisualizer={true}
+          />
+        </Flex>
+        <Text size="7" weight="light">
+          {duration ? mmss(duration) : mmss(recorderControls.recordingTime)}
+        </Text>
+      </Flex>
+    </div>
   )
 }

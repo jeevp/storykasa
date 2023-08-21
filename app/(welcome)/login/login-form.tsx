@@ -11,11 +11,13 @@ import {
   Separator,
   Text,
   Link,
+  Callout,
 } from '@radix-ui/themes'
 import { Auth } from '@supabase/auth-ui-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Warning } from '@phosphor-icons/react'
 
 export default function LoginForm() {
   const [errorMsg, setErrorMsg] = useState('')
@@ -32,7 +34,7 @@ export default function LoginForm() {
     })
 
     if (data.user && data.session) {
-      router.push('/')
+      router.push('/library')
     }
     if (error) {
       setErrorMsg(error.message)
@@ -51,24 +53,6 @@ export default function LoginForm() {
   return (
     <Card mt="5">
       <Form.Root action={handleSigninWithPassword}>
-        {/* <Form.Field name="name" asChild>
-          <Flex direction="column" gap="1" mb="3">
-            <Form.Label asChild>
-              <Text weight="bold" size="2">
-                Account name
-              </Text>
-            </Form.Label>
-            <Form.Control asChild>
-              <TextField.Input size="3" type="text" required />
-            </Form.Control>
-            <Form.Message match="valueMissing" asChild>
-              <Text color="tomato" weight="medium" size="2">
-                Please enter a name for your account
-              </Text>
-            </Form.Message>
-          </Flex>
-        </Form.Field> */}
-
         <Form.Field name="email" asChild>
           <Flex direction="column" gap="1" mb="3">
             <Form.Label asChild>
@@ -112,57 +96,23 @@ export default function LoginForm() {
                 Please enter a password for your account
               </Text>
             </Form.Message>
-            <Form.Message match="patternMismatch" asChild>
-              <Text color="tomato" weight="medium" size="2">
-                Password must contain at least one number, one uppercase letter,
-                one lowercase letter, and at least 8 or more characters
-              </Text>
-            </Form.Message>
           </Flex>
         </Form.Field>
 
-        {/* Sign up password */}
-        {/* <Form.Field name="password" asChild>
-          <Flex direction="column" gap="1" mb="3">
-            <Form.Label asChild>
-              <Text weight="bold" size="2">
-                Password
-              </Text>
-            </Form.Label>
-            <Form.Control asChild>
-              <TextField.Input
-                size="3"
-                type="password"
-                variant="soft"
-                required
-                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-              />
-            </Form.Control>
-            <Form.Message match="valueMissing" asChild>
-              <Text color="tomato" weight="medium" size="2">
-                Please enter a password for your account
-              </Text>
-            </Form.Message>
-            <Form.Message match="patternMismatch" asChild>
-              <Text color="tomato" weight="medium" size="2">
-                Password must contain at least one number, one uppercase letter,
-                one lowercase letter, and at least 8 or more characters
-              </Text>
-            </Form.Message>
-          </Flex>
-        </Form.Field> */}
-
         <Form.Submit asChild>
-          <Button size="3" mt="3" color="green">
+          <Button size="3" mt="3" color="green" role="submit">
             Log in
           </Button>
         </Form.Submit>
 
-        <Flex direction="column" gap="2" mt="3">
+        <Flex direction="column" gap="2" mt="5">
           {errorMsg && (
-            <Text color="tomato" weight="medium" size="2">
-              {errorMsg}
-            </Text>
+            <Callout.Root color="red" role="alert" variant="surface" size="1">
+              <Callout.Icon>
+                <Warning size={24} />
+              </Callout.Icon>
+              <Callout.Text weight="medium">{errorMsg}</Callout.Text>
+            </Callout.Root>
           )}
         </Flex>
 
