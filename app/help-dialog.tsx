@@ -20,7 +20,7 @@ export default function HelpDialog() {
         <Dialog.Description size="2" mb="4">
           StoryKasa is still in beta mode. If you experience any issues using
           the app or managing your account, please send us an email at{' '}
-          <Link href="mailto:">help@storykasa.com.</Link>
+          <Link href="mailto:help@storykasa.com">help@storykasa.com.</Link>
         </Dialog.Description>
 
         <Flex gap="3" mt="4" justify="end">

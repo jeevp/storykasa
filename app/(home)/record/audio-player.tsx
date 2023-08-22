@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { AudioPlayer as ReactAudioPlayer } from 'react-audio-player-component'
 export default function AudioPlayer({ src }: { src: string }) {
   return (
-    <div className={DMMono.className}>
+    <div className={DMMono.className} key={src}>
       <ReactAudioPlayer
         src={src}
         minimal={false}

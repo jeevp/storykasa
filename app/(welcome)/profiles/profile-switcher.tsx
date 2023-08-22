@@ -135,7 +135,7 @@ export default function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
         )}
       </Flex>
 
-      {!profileToEdit && (
+      {managing && editing && !profileToEdit && !profiles.length && (
         <Flex direction="column" gap="2">
           <Text size="4" weight="bold">
             To get started, set up your first profile.
