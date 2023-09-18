@@ -17,12 +17,12 @@ export default async function Profiles() {
         <Heading mb="3" size="6">
           Choose a profile
         </Heading>
-        <Grid columns="2" gap="5">
+        <div className="lg:w-96">
           <ProfileSwitcher
             profiles={profiles}
             key={profiles.length}
           ></ProfileSwitcher>
-        </Grid>
+        </div>
       </PageWrapper>
     </ProfileProvider>
   )

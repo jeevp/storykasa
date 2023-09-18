@@ -126,11 +126,6 @@ export default function ProfileEditor({
                   </AlertDialog.Description>
 
                   <Flex gap="3" mt="4" justify="end">
-                    {/* <AlertDialog.Cancel>
-                      <Button variant="soft" color="gray">
-                        Cancel
-                      </Button>
-                    </AlertDialog.Cancel> */}
                     <AlertDialog.Action>
                       <Button onClick={() => router.push('/')} color="grass">
                         <ArrowCircleRight size="20"></ArrowCircleRight>

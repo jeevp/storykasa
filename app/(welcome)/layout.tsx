@@ -19,8 +19,6 @@ export default function LoginLayout({
       </Flex>
       <Separator size="4"></Separator>
       <Flex direction="row" gap="7" mt="6">
-        <Box style={{ flex: 1.25 }}></Box>
-
         <Box style={{ flex: 5 }}>{children}</Box>
       </Flex>
     </>
