@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="538b5c5e-ec9c-49e1-8935-55e9149aa572" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/(welcome)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(welcome)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(welcome)/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(welcome)/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(welcome)/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(welcome)/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(welcome)/profiles/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(welcome)/profiles/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(welcome)/profiles/profile-editor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(welcome)/profiles/profile-editor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(welcome)/profiles/profile-switcher.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(welcome)/profiles/profile-switcher.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(welcome)/signup/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(welcome)/signup/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(welcome)/signup/signup-form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(welcome)/signup/signup-form.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/styles/globals.scss" beforeDir="false" afterPath="$PROJECT_DIR$/app/styles/globals.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/database.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/database.types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +31,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "task/SKT-17",
+    "git-widget-placeholder": "task/STK-17",
     "last_opened_file_path": "/Users/felipefernandes/Desktop/Paifertech/Proxify/StoryKasa/storykasa",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -63,7 +52,7 @@
       <updated>1694745320909</updated>
       <workItem from="1694745322965" duration="1099000" />
       <workItem from="1695060434290" duration="2045000" />
-      <workItem from="1695070371248" duration="2803000" />
+      <workItem from="1695070371248" duration="2968000" />
     </task>
     <servers />
   </component>
