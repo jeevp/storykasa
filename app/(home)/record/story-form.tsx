@@ -79,7 +79,7 @@ export default function StoryForm() {
 
   return (
     <form action={uploadAndAddStory}>
-      <Grid columns="2" gap="5">
+      <div>
         <Box pr="2" mt="4">
           <Flex align="center">
             <NumberCircleOne size={28} />
@@ -185,7 +185,7 @@ export default function StoryForm() {
               When you add a story to your library, only profiles in your
               account will be able to listen to it.
             </Text>
-            <Flex ml="7" mr="7" mt="5" justify="between" gap="3" align="center">
+            <div className="flex items-center justify-center mt-8 lg:justify-end">
               <AlertDialog.Root>
                 <AlertDialog.Trigger>
                   <Button
@@ -199,7 +199,7 @@ export default function StoryForm() {
                     <Text>Delete recording</Text>
                   </Button>
                 </AlertDialog.Trigger>
-                <AlertDialog.Content style={{ maxWidth: 450 }}>
+                <AlertDialog.Content style={{ maxWidth: 450, margin: 20 }}>
                   <AlertDialog.Title>Delete recording?</AlertDialog.Title>
                   <AlertDialog.Description size="2">
                     Are you sure you want to delete this recording and start
@@ -222,39 +222,41 @@ export default function StoryForm() {
                 </AlertDialog.Content>
               </AlertDialog.Root>
 
-              <AlertDialog.Root>
-                <AlertDialog.Trigger>
-                  <Button size="3" color="grass" radius="full" type="submit">
-                    <CheckCircle size={24} weight="duotone" />
-                    <Text>Save to library</Text>
-                  </Button>
-                </AlertDialog.Trigger>
-                <AlertDialog.Content style={{ maxWidth: 450 }}>
-                  <AlertDialog.Title>Added to your library!</AlertDialog.Title>
-                  <AlertDialog.Description size="2">
-                    Congratulations on your brand new story. Go to your library
-                    to listen to it.
-                  </AlertDialog.Description>
+              <div className="ml-2">
+                <AlertDialog.Root>
+                  <AlertDialog.Trigger>
+                    <Button size="2" color="grass" radius="full" type="submit">
+                      <CheckCircle size={24} weight="duotone" />
+                      <Text>Save to library</Text>
+                    </Button>
+                  </AlertDialog.Trigger>
+                  <AlertDialog.Content style={{ maxWidth: 450, margin: 20 }}>
+                    <AlertDialog.Title>Added to your library!</AlertDialog.Title>
+                    <AlertDialog.Description size="2">
+                      Congratulations on your brand new story. Go to your library
+                      to listen to it.
+                    </AlertDialog.Description>
 
-                  <Flex gap="3" mt="4" justify="end">
-                    <AlertDialog.Cancel>
-                      <Button variant="soft" color="gray">
-                        Cancel
-                      </Button>
-                    </AlertDialog.Cancel>
-                    <AlertDialog.Action>
-                      <Button onClick={handleGoToLibrary} color="grass">
-                        <Books size="20"></Books>
-                        Go to my library
-                      </Button>
-                    </AlertDialog.Action>
-                  </Flex>
-                </AlertDialog.Content>
-              </AlertDialog.Root>
-            </Flex>
+                    <Flex gap="3" mt="4" justify="end">
+                      <AlertDialog.Cancel>
+                        <Button variant="soft" color="gray">
+                          Cancel
+                        </Button>
+                      </AlertDialog.Cancel>
+                      <AlertDialog.Action>
+                        <Button onClick={handleGoToLibrary} color="grass">
+                          <Books size="20"></Books>
+                          Go to my library
+                        </Button>
+                      </AlertDialog.Action>
+                    </Flex>
+                  </AlertDialog.Content>
+                </AlertDialog.Root>
+              </div>
+            </div>
           </Box>
         </Box>
-      </Grid>
+      </div>
     </form>
   )
 }

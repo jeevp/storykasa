@@ -52,10 +52,6 @@ export default function Nav() {
             exit={{ x: 10, opacity: 0 }}
             key={currentProfile.profile_id}
           >
-            {/* <Avatar
-              src={currentProfile.avatar_url!}
-              fallback={initials(currentProfile.profile_name)}
-            ></Avatar> */}
             <Heading size="4">Hi, {currentProfile.profile_name}!</Heading>
 
             <Flex direction="column" gap="3" mt="6">

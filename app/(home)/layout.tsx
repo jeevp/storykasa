@@ -50,13 +50,13 @@ export default async function HomeLayout({
           <AccountDetails account={accounts[0]}></AccountDetails>
         </Flex>
         <Separator size="4"></Separator>
-        <Flex direction="row" gap="7" mt="6">
+        <div className="flex-col flex lg:flex-row mt-12">
           <Box style={{ flex: 1.25 }}>
             <Nav></Nav>
           </Box>
 
-          <Box style={{ flex: 5 }}>{children}</Box>
-        </Flex>
+          <Box className="lg:ml-14 mt-10 lg:mt-0" style={{ flex: 5 }}>{children}</Box>
+        </div>
       </ProfileProvider>
     )
   } else {

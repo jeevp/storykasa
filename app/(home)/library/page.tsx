@@ -13,7 +13,7 @@ import {
 } from '@radix-ui/themes'
 import StoryCard from '@/app/(home)/story-card'
 import { StoryWithProfile } from '@/lib/database-helpers.types'
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getLibraryStories } from '@/lib/_actions'
 import StoryDetails from '../story-details'
 import PageWrapper from '@/app/page-wrapper'
@@ -57,7 +57,7 @@ export default function Library() {
       </Heading>
 
       {loaded && (
-        <Grid columns="2" gap="5">
+        <div className="flex lg-w-96">
           {stories.length ? (
             <AnimatePresence mode="wait">
               (
@@ -136,7 +136,7 @@ export default function Library() {
               </motion.div>
             </AnimatePresence>
           )}
-        </Grid>
+        </div>
       )}
     </PageWrapper>
   )
