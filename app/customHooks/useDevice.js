@@ -12,8 +12,9 @@ export default function useDevice() {
 
     // Method
     const handleDevice = () => {
-        const width = window?.screen?.width
-        setOnMobile(width <= 850)
+        const { width, height } = window?.screen
+
+        setOnMobile(width <= 850 || height <= 410)
         setOnTablet(width <= 1024)
         setScreenWidth(width)
     }

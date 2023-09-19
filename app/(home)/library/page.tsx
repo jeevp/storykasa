@@ -20,8 +20,8 @@ import PageWrapper from '@/app/page-wrapper'
 import {AnimatePresence, motion} from 'framer-motion'
 import {MagnifyingGlass, Warning} from '@phosphor-icons/react'
 import InfoTooltip from '../info-tooltip'
-import useDevice from "@/customHooks/useDevice";
-import StoryDetailsDialog from "@/composedComponents/StoryDetailsDialog/StoryDetailsDialog";
+import useDevice from "@/app/customHooks/useDevice";
+import StoryDetailsDialog from "@/app/composedComponents/StoryDetailsDialog/StoryDetailsDialog";
 
 export default function Library() {
   const { onMobile } = useDevice()

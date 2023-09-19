@@ -3,6 +3,7 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 import StoryDetails from "@/app/(home)/story-details";
 import {Dialog} from "@radix-ui/themes";
 import {StoryWithProfile} from "@/lib/database-helpers.types";
+import useDevice from "@/app/customHooks/useDevice";
 
 
 interface StoryDetailsDialogProps {
@@ -10,11 +11,15 @@ interface StoryDetailsDialogProps {
     story: StoryWithProfile;
     onClose?: () => void;
 }
+
 export default function StoryDetailsDialog({ open, story, onClose = () => ({}) }: StoryDetailsDialogProps) {
+    const { onMobile } = useDevice()
 
     return (
         <Dialog.Root open={open}>
-            <Dialog.Content style={{ height: "100%", top: "0", borderRadius: "0", maxHeight: "100%", position: "fixed" }}>
+            <Dialog.Content
+            style={onMobile ? { borderRadius: 0 } : {}}
+            className="h-full sm:h-auto top-0 sm:top-auto !max-h-full sm:max-h-auto fixed sm:block">
                 <Dialog.Close>
                     <div className="flex" style={{ justifyContent: "flex-end" }}>
                         <button className="IconButton" aria-label="Close" onClick={() => onClose()}>
