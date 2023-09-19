@@ -13,19 +13,23 @@ import {
 } from '@radix-ui/themes'
 import StoryCard from '@/app/(home)/story-card'
 import { StoryWithProfile } from '@/lib/database-helpers.types'
-import { useEffect, useState } from 'react'
-import { getLibraryStories } from '@/lib/_actions'
+import { SetStateAction, useEffect, useState} from 'react'
+import {getLibraryStories} from '@/lib/_actions'
 import StoryDetails from '../story-details'
 import PageWrapper from '@/app/page-wrapper'
-import { AnimatePresence, motion } from 'framer-motion'
-import { MagnifyingGlass, Warning } from '@phosphor-icons/react'
+import {AnimatePresence, motion} from 'framer-motion'
+import {MagnifyingGlass, Warning} from '@phosphor-icons/react'
 import InfoTooltip from '../info-tooltip'
+import useDevice from "@/customHooks/useDevice";
+import StoryDetailsDialog from "@/composedComponents/StoryDetailsDialog/StoryDetailsDialog";
 
 export default function Library() {
+  const { onMobile } = useDevice()
   const [filterQuery, setFilterQuery] = useState('')
   const [stories, setStories] = useState<StoryWithProfile[]>([])
   const [selectedIndex, setSelectedIndex] = useState<number>()
   const [loaded, setLoaded] = useState(false)
+  const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
 
   const handleFilterQueryChange = (e: React.FormEvent<HTMLInputElement>) => {
     setFilterQuery(e.currentTarget.value)
@@ -38,14 +42,20 @@ export default function Library() {
   }
 
   const filtered = stories
-    ? stories.filter((story) =>
-        story.title.toLowerCase().includes(filterQuery.toLowerCase())
+      ? stories.filter((story) =>
+          story.title.toLowerCase().includes(filterQuery.toLowerCase())
       )
-    : []
+      : []
+
+  const handleStoryClick = (index: number) => {
+    setSelectedIndex(index)
+    if (onMobile) setShowStoryDetailsDialog(true)
+  }
 
   useEffect(() => {
     loadStories()
   }, [])
+
 
   return (
     <PageWrapper path="library">
@@ -57,11 +67,12 @@ export default function Library() {
       </Heading>
 
       {loaded && (
-        <div className="flex lg-w-96">
+        <div className="flex sm:w-full">
           {stories.length ? (
             <AnimatePresence mode="wait">
               (
               <motion.div
+                className="w-full"
                 initial={{ x: 10, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 10, opacity: 0 }}
@@ -88,7 +99,7 @@ export default function Library() {
                   {filtered?.map((story: StoryWithProfile, index: number) => (
                     <a
                       key={story.story_id}
-                      onClick={() => setSelectedIndex(index)}
+                      onClick={() => handleStoryClick(index)}
                     >
                       <StoryCard
                         story={story}
@@ -124,20 +135,26 @@ export default function Library() {
           )}
 
           {selectedIndex !== undefined && (
-            <AnimatePresence mode="wait">
-              (
-              <motion.div
-                initial={{ x: 10, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 10, opacity: 0 }}
-                key={selectedIndex}
-              >
-                <StoryDetails story={stories[selectedIndex]}></StoryDetails>
-              </motion.div>
-            </AnimatePresence>
+              <div className="hidden lg:flex">
+                <AnimatePresence mode="wait">
+                  (
+                  <motion.div
+                      initial={{ x: 10, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: 10, opacity: 0 }}
+                      key={selectedIndex}
+                  >
+                    <StoryDetails story={stories[selectedIndex]}></StoryDetails>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
           )}
         </div>
       )}
+      <StoryDetailsDialog
+          open={showStoryDetailsDialog}
+          story={stories[selectedIndex]}
+          onClose={() => setShowStoryDetailsDialog(false)}/>
     </PageWrapper>
   )
 }

@@ -73,11 +73,13 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
             ></AudioPlayer>
           </Card>
         )}
-        <Box mt="4">
-          <ScrollArea scrollbars="vertical" style={{ height: 200 }}>
-            {story.description}
-          </ScrollArea>
-        </Box>
+        <div className="mb-8">
+          <Box mt="4">
+            <ScrollArea scrollbars="vertical">
+              {story.description}
+            </ScrollArea>
+          </Box>
+        </div>
         {currentProfileID === story.profiles.profile_id && (
           <AlertDialog.Root>
             <AlertDialog.Trigger>
@@ -86,7 +88,7 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
                 <Text>Delete story</Text>
               </Button>
             </AlertDialog.Trigger>
-            <AlertDialog.Content style={{ maxWidth: 450 }}>
+            <AlertDialog.Content style={{ maxWidth: 450, margin: 20 }}>
               <AlertDialog.Title>
                 Delete &ldquo;{story.title}&rdquo;?
               </AlertDialog.Title>
