@@ -1,30 +1,15 @@
-// "react-media-recorder";
-
-// or
-// https://stackblitz.com/edit/react-ts-cc5l47?file=App.tsx
-
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-
 import {
   AudioRecorder as AudioVoiceRecorder,
   useAudioRecorder,
 } from 'react-audio-voice-recorder'
 import { useEffect, useState } from 'react'
-import { Button, Flex, IconButton, Text } from '@radix-ui/themes'
+import { Button, Flex, Text } from '@radix-ui/themes'
 import { mmss } from '@/lib/utils'
 import { DMMono } from '@/app/fonts'
 import {
-  Check,
-  CheckCircle,
-  Microphone,
-  Pause,
   PauseCircle,
-  PlayCircle,
   Record,
   StopCircle,
-  Trash,
-  TrashSimple,
 } from '@phosphor-icons/react'
 
 export const dynamic = 'force-dynamic'
@@ -106,16 +91,6 @@ export default function AudioRecorder({ onRecorded }: { onRecorded: any }) {
               <Text>Finish recording</Text>
             </Button>
           )}
-          {/* {recorderControls.isRecording && recorderControls.isPaused && (
-          <IconButton
-            radius="full"
-            onClick={recorderControls.stopRecording}
-            color="tomato"
-            variant="soft"
-          >
-            <Trash size="20"></Trash>
-          </IconButton>
-        )} */}
         </Flex>
       )}
 
@@ -129,7 +104,7 @@ export default function AudioRecorder({ onRecorded }: { onRecorded: any }) {
             : { opacity: 0.3 }
         }
       >
-        <Flex justify="between" align="center" gap="3">
+        <Flex className="w-9/12" justify="between" align="center" gap="3">
           <Flex align="center" gap="1">
             <Text weight="bold" size="2" color="gray">
               REC
@@ -146,8 +121,6 @@ export default function AudioRecorder({ onRecorded }: { onRecorded: any }) {
           <AudioVoiceRecorder
             onRecordingComplete={(blob: Blob) => addAudioElement(blob)}
             recorderControls={recorderControls}
-            // downloadOnSavePress={true}
-            // downloadFileExtension="mp3"
             showVisualizer={true}
           />
         </Flex>

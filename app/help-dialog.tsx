@@ -15,7 +15,7 @@ export default function HelpDialog() {
         </Button>
       </Dialog.Trigger>
 
-      <Dialog.Content style={{ maxWidth: 450 }}>
+      <Dialog.Content style={{ maxWidth: 450, margin: 20 }}>
         <Dialog.Title>StoryKasa Beta</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           StoryKasa is still in beta mode. If you experience any issues using

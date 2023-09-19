@@ -80,7 +80,7 @@ export default function StoryForm() {
   return (
     <form action={uploadAndAddStory}>
       <div>
-        <Box pr="2" mt="4">
+        <Box className="lg:pr-2" mt="4">
           <Flex align="center">
             <NumberCircleOne size={28} />
             <Text weight="medium" ml="2" size="3">
@@ -151,7 +151,7 @@ export default function StoryForm() {
           </Flex>
         </Box>
 
-        <Box pl="2" mt="4">
+        <Box className="lg:pr-2" mt="4">
           <Flex align="center" className={title.length ? '' : 'disabled'}>
             <NumberCircleTwo size={28} />
             <Text weight="medium" ml="2" size="3">
