@@ -153,7 +153,7 @@ export default function Library() {
       )}
       <StoryDetailsDialog
           open={showStoryDetailsDialog}
-          story={selectedIndex ? stories[selectedIndex] : null}
+          story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
           onClose={() => setShowStoryDetailsDialog(false)}/>
     </PageWrapper>
   )
