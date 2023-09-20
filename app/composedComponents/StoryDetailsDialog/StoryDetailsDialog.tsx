@@ -8,7 +8,7 @@ import useDevice from "@/app/customHooks/useDevice";
 
 interface StoryDetailsDialogProps {
     open: boolean;
-    story: StoryWithProfile;
+    story: StoryWithProfile | null;
     onClose?: () => void;
 }
 

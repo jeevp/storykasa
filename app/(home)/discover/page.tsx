@@ -80,7 +80,7 @@ export default function Discover() {
 
         <StoryDetailsDialog
         open={showStoryDetailsDialog}
-        story={stories[selectedIndex]}
+        story={selectedIndex ? stories[selectedIndex] : null}
         onClose={() => setShowStoryDetailsDialog(false)}/>
     </PageWrapper>
   )

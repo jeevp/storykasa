@@ -20,12 +20,17 @@ import { Baby, GlobeSimple, Trash } from '@phosphor-icons/react'
 import { deleteStory } from '@/lib/_actions'
 import { useRouter } from 'next/navigation'
 
-export default function StoryDetails({ story }: { story: StoryWithProfile }) {
+interface StoryDetailsProps {
+  story: StoryWithProfile | null
+}
+export default function StoryDetails({ story }: StoryDetailsProps) {
   const router = useRouter()
 
   const handleDeleteStory = () => {
-    deleteStory(story.story_id)
-    router.push('/')
+    if (story) {
+      deleteStory(story.story_id)
+      router.push('/')
+    }
   }
 
   const { currentProfileID } = useContext(ProfileContext) as any
@@ -33,22 +38,22 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
   return (
     <div>
       <Box px="4">
-        <Heading size="6">{story.title}</Heading>
+        <Heading size="6">{story?.title}</Heading>
 
         <Flex direction="row" align="center" mt="5">
           <Avatar
-            src={story.profiles?.avatar_url!}
-            fallback={initials(story.profiles.profile_name)}
+            src={story?.profiles?.avatar_url!}
+            fallback={initials(story?.profiles?.profile_name || "")}
             size="2"
             mr="3"
             radius="full"
           ></Avatar>
           <Text size="3" weight="bold">
-            {story.profiles.profile_name}
+            {story?.profiles.profile_name}
           </Text>
         </Flex>
         <Flex direction="column" gap="1" mt="4">
-          {story.age_group && (
+          {story?.age_group && (
             <Flex direction="row" gap="1">
               <Baby size={20} />
               <Text size="2" weight="medium">
@@ -56,7 +61,7 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
               </Text>
             </Flex>
           )}
-          {story.language && (
+          {story?.language && (
             <Flex direction="row" gap="1">
               <GlobeSimple size={20} />
               <Text size="2" weight="medium">
@@ -65,7 +70,7 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
             </Flex>
           )}
         </Flex>
-        {story.recording_url && (
+        {story?.recording_url && (
           <Card mt="6" variant="surface">
             <AudioPlayer
               src={story.recording_url}
@@ -76,11 +81,11 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
         <div className="mb-8">
           <Box mt="4">
             <ScrollArea scrollbars="vertical">
-              {story.description}
+              {story?.description}
             </ScrollArea>
           </Box>
         </div>
-        {currentProfileID === story.profiles.profile_id && (
+        {currentProfileID === story?.profiles.profile_id && (
           <AlertDialog.Root>
             <AlertDialog.Trigger>
               <Button size="2" my="3" variant="ghost">
@@ -90,7 +95,7 @@ export default function StoryDetails({ story }: { story: StoryWithProfile }) {
             </AlertDialog.Trigger>
             <AlertDialog.Content style={{ maxWidth: 450, margin: 20 }}>
               <AlertDialog.Title>
-                Delete &ldquo;{story.title}&rdquo;?
+                Delete &ldquo;{story?.title}&rdquo;?
               </AlertDialog.Title>
               <AlertDialog.Description size="2">
                 Are you sure you want to delete this story? Deleting a story is
