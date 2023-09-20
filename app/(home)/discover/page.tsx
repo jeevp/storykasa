@@ -43,7 +43,7 @@ export default function Discover() {
 
         <div className="flex sm:w-full">
             {stories && (
-                <AnimatePresence className="lg:w-1/2" mode="wait">
+                <AnimatePresence mode="wait">
                     (
                     <motion.div
                         initial={{ x: 10, opacity: 0 }}
