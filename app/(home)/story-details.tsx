@@ -37,8 +37,8 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
 
   return (
     <div>
-      <Box px="4">
-        <Heading size="6">{story?.title}</Heading>
+      <Box>
+        <Heading className="max-w-[12em]" size="6">{story?.title}</Heading>
 
         <Flex direction="row" align="center" mt="5">
           <Avatar

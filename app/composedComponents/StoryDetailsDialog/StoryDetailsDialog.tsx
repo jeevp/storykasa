@@ -21,7 +21,7 @@ export default function StoryDetailsDialog({ open, story, onClose = () => ({}) }
             style={onMobile ? { borderRadius: 0 } : {}}
             className="h-full sm:h-auto top-0 sm:top-auto !max-h-full sm:max-h-auto fixed sm:block">
                 <Dialog.Close>
-                    <div className="flex" style={{ justifyContent: "flex-end" }}>
+                    <div className="flex justify-end">
                         <button className="IconButton" aria-label="Close" onClick={() => onClose()}>
                             <Cross2Icon />
                         </button>

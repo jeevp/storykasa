@@ -185,14 +185,15 @@ export default function StoryForm() {
               When you add a story to your library, only profiles in your
               account will be able to listen to it.
             </Text>
-            <div className="flex items-center justify-center mt-8 lg:justify-end">
+            <div className="flex lg:flex-row flex-col items-center justify-center mt-8 lg:justify-end">
               <AlertDialog.Root>
                 <AlertDialog.Trigger>
                   <Button
+                    className="w-full lg:w-auto"
                     color="tomato"
                     variant="outline"
                     radius="full"
-                    size="2"
+                    size="3"
                     type="button"
                   >
                     <Trash size={20}></Trash>
@@ -221,11 +222,15 @@ export default function StoryForm() {
                   </Flex>
                 </AlertDialog.Content>
               </AlertDialog.Root>
-
-              <div className="ml-2">
+              <div className="ml-2 mt-2 lg:mt-0 w-full lg:w-auto">
                 <AlertDialog.Root>
                   <AlertDialog.Trigger>
-                    <Button size="2" color="grass" radius="full" type="submit">
+                    <Button
+                      className="w-full lg:w-auto"
+                      size="3"
+                      color="grass"
+                      radius="full"
+                      type="submit">
                       <CheckCircle size={24} weight="duotone" />
                       <Text>Save to library</Text>
                     </Button>

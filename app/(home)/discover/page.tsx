@@ -46,7 +46,7 @@ export default function Discover() {
                 <AnimatePresence mode="wait">
                     (
                     <motion.div
-                        initial={{ x: 10, opacity: 0 }}
+                        initial={{ x: 10, opacity: 0, width: "100%" }}
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: 10, opacity: 0 }}
                         key={stories.length}
@@ -54,7 +54,7 @@ export default function Discover() {
                         <ScrollArea
                             type="scroll"
                             scrollbars="vertical"
-                            style={{ height: '80vh' }}
+                            style={{ height: !onMobile ? '80vh' : 'auto' }}
                         >
                             {stories?.map((story: StoryWithProfile, index: number) => (
                                 <a
