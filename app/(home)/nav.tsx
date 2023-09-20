@@ -12,9 +12,11 @@ import { Profile } from '../../lib/database-helpers.types'
 import { usePathname } from 'next/navigation'
 import { BookOpenText, Books, Microphone } from '@phosphor-icons/react'
 import { AnimatePresence, motion } from 'framer-motion'
+import useDevice from "@/app/customHooks/useDevice";
 
 export default function Nav() {
   const pathname = usePathname()
+  const { onMobile } = useDevice()
 
   const { currentProfileID, setCurrentProfileID } = useContext(
     ProfileContext
@@ -41,7 +43,7 @@ export default function Nav() {
         <AnimatePresence mode="wait">
           (
           <motion.div
-            initial={{ x: 10, opacity: 0 }}
+            initial={{ x: onMobile ? 0 : 10, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 10, opacity: 0 }}
             key={currentProfile.profile_id}
