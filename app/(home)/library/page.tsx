@@ -2,8 +2,6 @@
 
 import {
   Flex,
-  Text,
-  Grid,
   Heading,
   Link,
   ScrollArea,
@@ -13,7 +11,7 @@ import {
 } from '@radix-ui/themes'
 import StoryCard from '@/app/(home)/story-card'
 import { StoryWithProfile } from '@/lib/database-helpers.types'
-import { SetStateAction, useEffect, useState} from 'react'
+import { useEffect, useState} from 'react'
 import {getLibraryStories} from '@/lib/_actions'
 import StoryDetails from '../story-details'
 import PageWrapper from '@/app/page-wrapper'
@@ -92,22 +90,23 @@ export default function Library() {
                   </TextField.Root>
                 )}
                 <ScrollArea
-                  type="scroll"
-                  scrollbars="vertical"
-                  style={{ height: '80vh' }}
+                    type="scroll"
+                    scrollbars="vertical"
+                    style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}
                 >
                   {filtered?.map((story: StoryWithProfile, index: number) => (
-                    <a
-                      key={story.story_id}
-                      onClick={() => handleStoryClick(index)}
-                    >
-                      <StoryCard
-                        story={story}
-                        selected={selectedIndex === index}
-                      ></StoryCard>
-                    </a>
+                      <a
+                          key={story.story_id}
+                          onClick={() => handleStoryClick(index)}
+                      >
+                        <StoryCard
+                            story={story}
+                            selected={selectedIndex === index}
+                        ></StoryCard>
+                      </a>
                   ))}
                 </ScrollArea>
+
               </motion.div>
             </AnimatePresence>
           ) : (

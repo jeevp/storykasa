@@ -1,13 +1,8 @@
 'use client'
 
 import {
-  Avatar,
-  Box,
-  Button,
   Flex,
   Heading,
-  Select,
-  Text,
 } from '@radix-ui/themes'
 import Link from 'next/link'
 import { useContext, useEffect, useState } from 'react'
@@ -17,7 +12,6 @@ import { Profile } from '../../lib/database-helpers.types'
 import { usePathname } from 'next/navigation'
 import { BookOpenText, Books, Microphone } from '@phosphor-icons/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { initials } from '@/lib/utils'
 
 export default function Nav() {
   const pathname = usePathname()
@@ -54,20 +48,19 @@ export default function Nav() {
           >
             <Heading size="4">Hi, {currentProfile.profile_name}!</Heading>
 
-            <Flex direction="column" gap="3" mt="6">
+            <div
+              className="nav lg:mt-8 w-full lg:w-auto flex lg:flex-col justify-center bg-white py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
               <Link href="/discover" passHref legacyBehavior>
                 <a
                   role="button"
                   title="Discover new publicly available stories"
                   href="/discover"
-                  className={
-                    pathname == '/discover' ? 'select-btn active' : 'select-btn'
-                  }
+                  className={`h-12 lg:h-auto ${pathname === "/discover" ? 'select-btn active' : 'select-btn'}`}
                 >
-                  <Flex direction="row" gap="2">
+                  <div className="flex items-center">
                     <BookOpenText size={24} weight="duotone" />
-                    Discover
-                  </Flex>
+                    <span className="ml-2 hidden lg:block">Discover</span>
+                  </div>
                 </a>
               </Link>
 
@@ -76,14 +69,14 @@ export default function Nav() {
                   role="button"
                   title="Listen to the stories in your library"
                   href="/library"
-                  className={
-                    pathname == '/library' ? 'select-btn active' : 'select-btn'
-                  }
+                  className={`h-12 lg:h-auto ml-4 lg:mt-4 lg:ml-0 ${pathname === "/library" ? 'select-btn active' : 'select-btn'}`}
                 >
-                  <Flex direction="row" gap="2">
+                  <div className="flex">
                     <Books size={24} weight="duotone" />
-                    My library
-                  </Flex>
+                    <span className="ml-2 hidden lg:block">
+                        My library
+                    </span>
+                  </div>
                 </a>
               </Link>
 
@@ -92,18 +85,17 @@ export default function Nav() {
                   role="button"
                   title="Record and add a new story"
                   href="/record"
-                  className={
-                    pathname == '/record' ? 'raised-btn active' : 'raised-btn'
-                  }
-                  style={{ marginTop: '3em' }}
+                  className={`h-12 lg:h-auto lg:mt-8 mt-0 ml-4 lg:ml-0 ${pathname === "/record" ? 'raised-btn active' : 'raised-btn'}`}
                 >
-                  <Flex direction="row" gap="2">
+                  <div className="flex">
                     <Microphone size={24} weight="duotone" />
+                    <span className="ml-2 hidden lg:block">
                     Add a story
-                  </Flex>
+                    </span>
+                  </div>
                 </a>
               </Link>
-            </Flex>
+            </div>
           </motion.div>
         </AnimatePresence>
       )}
