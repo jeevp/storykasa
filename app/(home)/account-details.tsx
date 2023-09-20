@@ -78,7 +78,7 @@ export default function AccountDetails({ account }: { account: Account }) {
               justify="between"
             >
               <Avatar
-                src={account.avatar_url}
+                src={account.avatar_url || ""}
                 size="2"
                 fallback={initials(account.name)}
                 radius="full"
