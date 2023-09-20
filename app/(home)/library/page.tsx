@@ -135,7 +135,7 @@ export default function Library() {
           )}
 
           {selectedIndex !== undefined && (
-              <div className="hidden lg:flex">
+              <div className="hidden lg:flex lg:pl-8">
                 <AnimatePresence mode="wait">
                   (
                   <motion.div

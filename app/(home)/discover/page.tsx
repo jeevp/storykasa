@@ -72,7 +72,7 @@ export default function Discover() {
                 </AnimatePresence>
             )}
             {selectedIndex !== undefined && (
-                <div className="hidden lg:flex lg:w-1/2">
+                <div className="hidden lg:flex lg:w-1/2 lg:pl-8">
                     <StoryDetails story={stories[selectedIndex]}></StoryDetails>
                 </div>
             )}
