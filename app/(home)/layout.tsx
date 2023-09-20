@@ -12,7 +12,6 @@ import ProfileProvider from '../profile-provider'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import AccountDetails from './account-details'
-import MobileNavbar from "@/app/composedComponents/MobileNavbar/MobileNavbar";
 
 export const dynamic = 'force-dynamic'
 
