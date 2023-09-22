@@ -37,8 +37,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) 
             onload: () => {
                 setHowl(sound);
                 setTotalDuration(formatTime(sound.duration()));
-            },
-            html5: true
+            }
         });
 
         return () => {

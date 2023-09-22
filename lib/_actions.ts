@@ -3,10 +3,7 @@
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { v4 as uuidv4 } from 'uuid'
-import getBlobDuration from 'get-blob-duration'
 import { StoryWithProfile } from './database-helpers.types'
-
-// export const dynamic = 'force-dynamic'
 
 export async function uploadRecording(formData: FormData) {
   const supabase = createServerActionClient<Database>({ cookies })
