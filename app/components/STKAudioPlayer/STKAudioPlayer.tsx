@@ -29,15 +29,15 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) 
     const [currentTime, setCurrentTime] = useState('0:00');
     const [totalDuration, setTotalDuration] = useState('0:00');
 
-    console.log({ src })
     useEffect(() => {
         const sound = new Howl({
-            src: ["https://qqgpgejvlxdizhjkswmm.supabase.co/storage/v1/object/public/storykasa-recordings/ENG_Anansi.mp3"],
+            src: [src],
             preload,
             onload: () => {
                 setHowl(sound);
                 setTotalDuration(formatTime(sound.duration()));
-            }
+            },
+            format: ["mp3"]
         });
 
         return () => {

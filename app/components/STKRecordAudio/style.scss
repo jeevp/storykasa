@@ -1,0 +1,35 @@
+
+.stk-record-audio {
+  background-color: white;
+  padding: 20px;
+
+  #waveform {
+    width: 100%;
+    height: 200px;
+  }
+}
+
+@keyframes growAndShrink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: growAndShrink 1s infinite; /* The animation will now repeat indefinitely */
+}
+
+.stop-animation {
+  animation: none !important;
+}
+
+@tailwind utilities;

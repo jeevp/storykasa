@@ -20,6 +20,8 @@ import {MagnifyingGlass, Warning} from '@phosphor-icons/react'
 import InfoTooltip from '../info-tooltip'
 import useDevice from "@/app/customHooks/useDevice";
 import StoryDetailsDialog from "@/app/composedComponents/StoryDetailsDialog/StoryDetailsDialog";
+import STKRecordAudio from "@/app/components/STKRecordAudio/STKRecordAudio";
+import STKAudioPlayer from "@/app/components/STKAudioPlayer/STKAudioPlayer";
 
 export default function Library() {
   const { onMobile } = useDevice()
@@ -28,6 +30,7 @@ export default function Library() {
   const [selectedIndex, setSelectedIndex] = useState<number>()
   const [loaded, setLoaded] = useState(false)
   const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
+  const [recordedAudioUrl, setRecordedAudioUrl] = useState("")
 
   const handleFilterQueryChange = (e: React.FormEvent<HTMLInputElement>) => {
     setFilterQuery(e.currentTarget.value)
@@ -54,6 +57,10 @@ export default function Library() {
     loadStories()
   }, [])
 
+  const handleRecordOnComplete = (recordUrl) => {
+    console.log({ recordUrl })
+    setRecordedAudioUrl(recordUrl)
+  }
 
   return (
     <PageWrapper path="library">
@@ -154,6 +161,12 @@ export default function Library() {
           open={showStoryDetailsDialog}
           story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
           onClose={() => setShowStoryDetailsDialog(false)}/>
+
+      {recordedAudioUrl ? (
+          <STKAudioPlayer src={recordedAudioUrl} />
+      ) : (
+          <STKRecordAudio onComplete={handleRecordOnComplete} />
+        )}
     </PageWrapper>
   )
 }

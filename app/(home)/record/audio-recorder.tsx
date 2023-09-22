@@ -11,6 +11,7 @@ import {
   Record,
   StopCircle,
 } from '@phosphor-icons/react'
+import STKRecordAudio from "@/app/components/STKRecordAudio/STKRecordAudio";
 
 export const dynamic = 'force-dynamic'
 
@@ -118,11 +119,12 @@ export default function AudioRecorder({ onRecorded }: { onRecorded: any }) {
             ></div>
           </Flex>
 
-          <AudioVoiceRecorder
-            onRecordingComplete={(blob: Blob) => addAudioElement(blob)}
-            recorderControls={recorderControls}
-            showVisualizer={true}
-          />
+          <STKRecordAudio />
+          {/*<AudioVoiceRecorder*/}
+          {/*  onRecordingComplete={(blob: Blob) => addAudioElement(blob)}*/}
+          {/*  recorderControls={recorderControls}*/}
+          {/*  showVisualizer={true}*/}
+          {/*/>*/}
         </Flex>
         <Text size="7" weight="light">
           {duration ? mmss(duration) : mmss(recorderControls.recordingTime)}
