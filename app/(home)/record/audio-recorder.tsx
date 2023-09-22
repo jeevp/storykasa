@@ -122,6 +122,7 @@ export default function AudioRecorder({ onRecorded }: { onRecorded: any }) {
             onRecordingComplete={(blob: Blob) => addAudioElement(blob)}
             recorderControls={recorderControls}
             showVisualizer={true}
+            downloadFileExtension="mp3"
           />
         </Flex>
         <Text size="7" weight="light">
