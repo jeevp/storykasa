@@ -106,6 +106,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) 
         }
     }
 
+
     return (
         <div className="stk-audio-player" style={{ background: 'white' }}>
             <div className="flex items-center w-full">
@@ -117,6 +118,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) 
                         max="100"
                         value={progress}
                         onChange={(e) => handleProgressBarOnChange(e)}
+                        // @ts-ignore
                         style={{ '--progress': `${progress}%` }}
                     />
                 </div>
@@ -147,6 +149,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) 
                             step="0.01"
                             value={volume}
                             onChange={(e) => setVolume(+e.target.value)}
+                            // @ts-ignore
                             style={{ '--volume': `${volume * 100}%` }}
                             className="volume-bar"
                         />
