@@ -16,7 +16,6 @@ export default async function Welcome() {
   } = await supabase.auth.getSession()
 
   if (session) {
-    console.log('signed in, going to library')
     redirect('/library')
   }
 

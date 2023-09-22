@@ -34,8 +34,6 @@ export async function uploadRecording(formData: FormData) {
 }
 
 export async function addStory(formData: FormData) {
-  console.log(formData)
-
   const title = formData.get('title') as string
   const description = formData.get('description') as string
   const recordedBy = formData.get('recorded_by') as string
@@ -67,9 +65,6 @@ export async function addStory(formData: FormData) {
 
   if (error) console.log(error)
 
-  console.log('added story data')
-  console.log(data)
-
   var newStoryID = data![0].story_id
 
   const {
@@ -92,11 +87,6 @@ export async function addStory(formData: FormData) {
   }
 }
 
-// export async function getAccount() {
-//   const supabase = createServerActionClient<Database>({ cookies })
-//   const { data: accounts } = await supabase.from('accounts').select()
-//   console.log(accounts)
-// }
 
 export async function updateAvatar(formData: FormData, filename: string) {}
 
@@ -104,8 +94,6 @@ export async function uploadAvatar(formData: FormData) {
   const supabase = createServerActionClient<Database>({ cookies })
   const file = formData.get('file')
   if (!file) throw new Error('unable to get new avatar file')
-
-  console.log(file)
 
   const uuid = uuidv4()
 
@@ -127,8 +115,6 @@ export async function uploadAvatar(formData: FormData) {
 }
 
 export async function addProfile(formData: FormData) {
-  console.log(formData)
-
   const name = formData.get('name')
   if (!name) throw new Error('cannot add a profile without a name')
   const supabase = createServerActionClient<Database>({ cookies })
@@ -150,8 +136,6 @@ export async function addProfile(formData: FormData) {
       .eq('profile_id', id)
       .select()
 
-    console.log(data)
-    console.log(error)
 
     if (data) {
       return id
@@ -173,7 +157,6 @@ export async function addProfile(formData: FormData) {
         })
         .select()
       if (data) {
-        console.log('created new profile')
         return data[0].profile_id
       }
     } else {
@@ -252,7 +235,6 @@ export async function getLibraryStories(): Promise<StoryWithProfile[]> {
   }
 
   const stories = data?.map((story) => story.stories)
-  console.log(stories)
 
   return stories as StoryWithProfile[]
 }

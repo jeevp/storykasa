@@ -15,7 +15,6 @@ interface StoryDetailsDialogProps {
 export default function StoryDetailsDialog({ open, story, onClose = () => ({}) }: StoryDetailsDialogProps) {
     const { onMobile } = useDevice()
 
-    console.log({ story })
     return (
         <Dialog.Root open={open}>
             <Dialog.Content

@@ -134,11 +134,11 @@ export default function Library() {
           )}
 
           {selectedIndex !== undefined && (
-              <div className="hidden lg:flex lg:pl-8">
+              <div className="hidden lg:flex lg:pl-8 w-full">
                 <AnimatePresence mode="wait">
                   (
                   <motion.div
-                      initial={{ x: 10, opacity: 0 }}
+                      initial={{ x: 10, opacity: 0, width: "100%" }}
                       animate={{ x: 0, opacity: 1 }}
                       exit={{ x: 10, opacity: 0 }}
                       key={selectedIndex}

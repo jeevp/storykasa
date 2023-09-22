@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import "../(home)/nav.scss";
+@import "../components/STKAudioPlayer/style.scss";
 
 body {
   background-color: #fffcef !important;
