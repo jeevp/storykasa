@@ -51,7 +51,7 @@ export default function Nav() {
             <Heading size="4">Hi, {currentProfile.profile_name}!</Heading>
 
             <div
-              className="nav lg:mt-8 w-full lg:w-auto flex lg:flex-col justify-center bg-white py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
+              className="nav lg:mt-8 w-full lg:w-auto flex lg:flex-col justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
               <Link href="/discover" passHref legacyBehavior>
                 <a
                   role="button"
