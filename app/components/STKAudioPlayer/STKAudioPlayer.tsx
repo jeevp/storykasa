@@ -7,6 +7,7 @@ import volumeOnIcon from "../../assets/icons/volume-on.svg"
 import volumeOffIcon from "../../assets/icons/volume-off.svg"
 import Image from "next/image";
 import './style.scss';
+import useAppleDevice from "@/app/customHooks/useAppleDevice";
 
 interface STKAudioPlayerProps {
     src: string;
@@ -20,6 +21,7 @@ const formatTime = (seconds: number) => {
 };
 
 const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) => {
+    const isAppleDevice = useAppleDevice()
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(1);
     const [progress, setProgress] = useState(0);
@@ -35,6 +37,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) 
                 setHowl(sound);
                 setTotalDuration(formatTime(sound.duration()));
             },
+            html5: isAppleDevice
         });
 
         return () => {
