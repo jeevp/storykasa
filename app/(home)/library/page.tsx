@@ -57,8 +57,7 @@ export default function Library() {
     loadStories()
   }, [])
 
-  const handleRecordOnComplete = (recordUrl) => {
-    console.log({ recordUrl })
+  const handleRecordOnComplete = (recordUrl: any) => {
     setRecordedAudioUrl(recordUrl)
   }
 
@@ -161,12 +160,6 @@ export default function Library() {
           open={showStoryDetailsDialog}
           story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
           onClose={() => setShowStoryDetailsDialog(false)}/>
-
-      {recordedAudioUrl ? (
-          <STKAudioPlayer src={recordedAudioUrl} />
-      ) : (
-          <STKRecordAudio onComplete={handleRecordOnComplete} />
-        )}
     </PageWrapper>
   )
 }

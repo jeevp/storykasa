@@ -1,38 +1,33 @@
 'use client'
 
 import {
-  Bookmark,
   Books,
   CheckCircle,
   NumberCircleOne,
   NumberCircleThree,
   NumberCircleTwo,
-  Sparkle,
   Trash,
-  TrashSimple,
 } from '@phosphor-icons/react'
 
 import {
   AlertDialog,
   Box,
   Button,
-  Callout,
   Card,
   Flex,
-  Grid,
   Select,
   Text,
   TextArea,
   TextField,
 } from '@radix-ui/themes'
 import { Label } from '@radix-ui/react-label'
-import AudioRecorder from './audio-recorder'
 import { addStory, uploadRecording } from '../../../lib/_actions'
-import { useContext, useEffect, useState } from 'react'
-import AudioPreview from './audio-preview'
+import { useContext, useState } from 'react'
 import { ProfileContext } from '../../profile-provider'
 import { ageGroups, languages } from '@/app/enums'
 import { useRouter } from 'next/navigation'
+import STKAudioPlayer from "@/app/components/STKAudioPlayer/STKAudioPlayer";
+import STKRecordAudio from "@/app/components/STKRecordAudio/STKRecordAudio";
 
 export default function StoryForm() {
   const { currentProfileID } = useContext(ProfileContext) as any
@@ -166,9 +161,9 @@ export default function StoryForm() {
             className={title.length ? '' : 'disabled'}
           >
             {!audioBlob ? (
-              <AudioRecorder onRecorded={updateAudioBlob}></AudioRecorder>
+                <STKRecordAudio onComplete={updateAudioBlob} />
             ) : (
-              <AudioPreview key={audioURL} src={audioURL}></AudioPreview>
+                <STKAudioPlayer src={audioURL} />
             )}
           </Card>
 

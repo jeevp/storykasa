@@ -4,11 +4,13 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import WaveSurfer from 'wavesurfer.js';
 import './style.scss';
-import STKAudioPlayer from "@/app/components/STKAudioPlayer/STKAudioPlayer";
 import Record from "@/app/assets/icons/iconsJS/Record";
 import {neutral800, red800} from "@/app/assets/colorPallet/colors";
 import PauseSolid from "@/app/assets/icons/iconsJS/PauseSolid";
 import Stop from "@/app/assets/icons/iconsJS/Stop";
+import Formatter from "@/app/utils/Formatter";
+import STKAudioWave from "@/app/components/STKAudioWave/STKAudioWave";
+import STKLoading from "@/app/components/STKLoading/STKLoading";
 
 interface STKRecordAudioProps {
     onComplete: Function
@@ -18,32 +20,20 @@ const STKRecordAudio = ({ onComplete = () => ({}) }: STKRecordAudioProps) => {
     const [recording, setRecording] = useState(false);
     const [audioURL, setAudioURL] = useState<string | null>(null);
     const [paused, setPaused] = useState(false);
-    const [recordCompleted, setRecordCompleted] = useState(false);
+    const [duration, setDuration] = useState(0);
+    const [stream, setStream] = useState(null);
+    const [processing, setProcessing] = useState(false);
+    const [audioBlob, setAudioBlob] = useState(null)
+
     const ffmpegRef = useRef(new FFmpeg());
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-    const waveSurferRef = useRef<WaveSurfer | null>(null);
-    const waveformRef = useRef<HTMLDivElement | null>(null);
-    const audioRef = useRef<HTMLAudioElement | null>(null);  // added a
-    const [duration, setDuration] = useState(0)// udioRef
-
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        if (audioURL && waveformRef.current && audioRef.current) {
-            waveSurferRef.current = WaveSurfer.create({
-                container: waveformRef.current,
-                waveColor: 'violet',
-                progressColor: 'purple',
-                backend: 'MediaElement',  // updated to use MediaElement backend
-                mediaControls: true,  // added mediaControls
-            });
-
-            waveSurferRef.current.load(audioRef.current);  // updated to pass audioRef
-
-            return () => {
-                waveSurferRef.current?.destroy();
-            };
+        if (audioURL && !processing) {
+            onComplete(audioBlob, duration, audioURL)
         }
-    }, [audioURL]);
+    }, [audioURL, processing]);
 
     const load = async () => {
         const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.2/dist/umd';
@@ -57,39 +47,50 @@ const STKRecordAudio = ({ onComplete = () => ({}) }: STKRecordAudioProps) => {
 
     const startRecording = async () => {
         if (!loaded) await load();
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorderRef.current = new MediaRecorder(stream);
+        const _stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorderRef.current = new MediaRecorder(_stream);
+        setStream(_stream)
         const audioChunks: Blob[] = [];
         mediaRecorderRef.current.ondataavailable = (event) => {
             audioChunks.push(event.data);
         };
         mediaRecorderRef.current.onstop = async () => {
+            setProcessing(true);
             const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
             const ffmpeg = ffmpegRef.current;
             await ffmpeg.writeFile('input.wav', await fetchFile(audioBlob));
-            await ffmpeg.exec(['-i', 'input.wav', 'output.mp3']);
+            await ffmpeg.exec(['-i', 'input.wav', '-q:a', '0', '-acodec', 'libmp3lame', 'output.mp3']);
             const data = (await ffmpeg.readFile('output.mp3')) as any;
-            setAudioURL(URL.createObjectURL(new Blob([data.buffer], { type: 'audio/mp3' })));
+            const _audioBlob = new Blob([data.buffer], { type: 'audio/mp3' })
+            setAudioBlob(_audioBlob)
+            setAudioURL(URL.createObjectURL(_audioBlob));
+            setProcessing(false);
         };
         mediaRecorderRef.current.start();
         setRecording(true);
+        intervalRef.current = setInterval(() => {
+            setDuration(prevDuration => prevDuration + 1);
+        }, 1000);
     };
 
     const pauseResumeRecording = () => {
         if (mediaRecorderRef.current?.state === 'recording') {
             mediaRecorderRef.current.pause();
             setPaused(true)
+            if (intervalRef.current) clearInterval(intervalRef.current)
         } else {
             mediaRecorderRef.current?.resume();
             setPaused(false)
+            intervalRef.current = setInterval(() => {
+                setDuration(prevDuration => prevDuration + 1);
+            }, 1000);
         }
     };
 
     const stopRecording = () => {
         mediaRecorderRef.current?.stop();
         setRecording(false);
-        setRecordCompleted(true)
-        onComplete(audioURL)
+        if (intervalRef.current) clearInterval(intervalRef.current);
     };
 
     return (
@@ -120,16 +121,23 @@ const STKRecordAudio = ({ onComplete = () => ({}) }: STKRecordAudioProps) => {
                             <span className="ml-2">Stop Recording</span>
                         </button>
                     )}
+                    {processing && (
+                        <button className="bg-red-50 text-red-800 rounded-3xl border border-red-300 px-4 h-10 flex items-center">
+                            <STKLoading />
+                        </button>
+                    )}
                 </div>
-                {/*<div ref={waveformRef} id="waveform"></div>*/}
-                <div className="mt-8">
-                    <div className={recording ? "flex items-center" : "disabled"}>
+                <div className="flex justify-center w-full py-4">
+                    {stream && <STKAudioWave stream={stream} active={recording && !paused} />}
+                </div>
+                <div className="mt-8 flex items-center justify-between">
+                    <div className={`flex items-center ${recording ? '' : 'disabled'}`}>
                         <span>REC</span>
                         <div className={`circle ml-2 ${recording && !paused ? 'bg-red-800' : recording && paused ? 'bg-neutral-300 stop-animation' : 'hidden'}`} />
                     </div>
                     <div></div>
                     <div>
-                        <span>{duration}</span>
+                        <span>{Formatter.formatDuration(duration)}</span>
                     </div>
                 </div>
             </div>
