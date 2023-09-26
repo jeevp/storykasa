@@ -27,26 +27,32 @@ export default function STKAudioWave({ stream, active }: STKAudioWaveProps){
 
             const draw = () => {
                 analyser.getByteFrequencyData(dataArray);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // @ts-ignore
+                ctx.clearRect(0, 0, canvas?.width, canvas?.height);
 
                 const barWidth = 1;
                 let x = 0;
 
                 for (let i = 0; i < bufferLength; i++) {
                     const barHeight = dataArray[i] / 2;
-                    const gradient = ctx.createLinearGradient(0, canvas.height / 2 - barHeight, 0, canvas.height / 2 + barHeight);
+                    // @ts-ignore
+                    const gradient = ctx.createLinearGradient(0, canvas?.height / 2 - barHeight, 0, canvas?.height / 2 + barHeight);
                     gradient.addColorStop(0, 'rgba(61, 153, 109, 1)');
                     gradient.addColorStop(1, 'rgba(61, 153, 109, 1)');
                     ctx.fillStyle = gradient;
-                    ctx.fillRect(x, canvas.height / 2 - barHeight, barWidth, barHeight); // upper half
-                    ctx.fillRect(x, canvas.height / 2, barWidth, barHeight); // lower half
+                    // @ts-ignore
+                    ctx.fillRect(x, canvas?.height / 2 - barHeight, barWidth, barHeight);
+                    // @ts-ignore
+                    ctx.fillRect(x, canvas?.height / 2, barWidth, barHeight);
                     x += barWidth + 1;
                 }
 
+                // @ts-ignore
                 animationFrameRef.current = requestAnimationFrame(draw);
             }
 
             if (active) {
+                // @ts-ignore
                 animationFrameRef.current = requestAnimationFrame(draw);
             }
         });
