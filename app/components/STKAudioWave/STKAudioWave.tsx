@@ -14,7 +14,7 @@ export default function STKAudioWave({ stream, active }: STKAudioWaveProps){
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas?.getContext('2d');
         const analyser = analyserRef.current;
 
         audioContextRef.current.resume().then(() => {
