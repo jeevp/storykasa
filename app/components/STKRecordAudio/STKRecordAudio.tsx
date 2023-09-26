@@ -110,7 +110,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                             <span className="ml-2">Start recording</span>
                         </button>
                     )}
-                    {recording && (
+                    {recording && !processing && (
                         <button onClick={stopRecording} className="bg-red-50 text-red-800 rounded-3xl border border-red-300 px-4 h-10 flex items-center">
                             <Stop fill={red800} />
                             <span className="ml-2">Stop Recording</span>

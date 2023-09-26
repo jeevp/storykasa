@@ -1,25 +1,20 @@
 'use client'
 
 import {
-  Bookmark,
   Books,
   CheckCircle,
   NumberCircleOne,
   NumberCircleThree,
   NumberCircleTwo,
-  Sparkle,
   Trash,
-  TrashSimple,
 } from '@phosphor-icons/react'
 
 import {
   AlertDialog,
   Box,
   Button,
-  Callout,
   Card,
   Flex,
-  Grid,
   Select,
   Text,
   TextArea,
