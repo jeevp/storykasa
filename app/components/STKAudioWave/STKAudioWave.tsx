@@ -11,7 +11,6 @@ export default function STKAudioWave({ stream, active }: STKAudioWaveProps){
     const analyserRef = useRef(audioContextRef.current.createAnalyser());
     const animationFrameRef = useRef(null);
 
-
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
