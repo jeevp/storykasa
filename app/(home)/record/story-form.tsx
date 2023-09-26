@@ -100,51 +100,52 @@ export default function StoryForm() {
               <Text className="font-semibold" weight="medium" size="2">
                 Story title
               </Text>
-              <div>
-                <STKTextField onChange={(value: SetStateAction<string>) => setTitle(value)} fluid={onMobile} />
+              <div className="mt-2">
+                <STKTextField onChange={(value: SetStateAction<string>) => setTitle(value)} fluid />
               </div>
             </div>
-            <div>
+            <div className="mt-6">
               <Text className="font-semibold"  weight="medium" size="2">
                 Description
               </Text>
-              <div>
+              <div className="mt-2">
                 <STKTextField
                   multiline
-                  fluid={onMobile}
+                  fluid
                   onChange={(value: SetStateAction<string>) => setDescription(value)} />
               </div>
             </div>
-            <Flex asChild direction="column" gap="1">
-              <Label>
+            <div className="flex flex-col lg:flex-row mt-6">
+              <div className="flex flex-col">
                 <Text className="font-semibold"  weight="medium" size="2">
                   Language
                 </Text>
-                <STKAutocomplete
-                  options={languages}
-                  optionLabel="name"
-                  fluid={onMobile}
-                  onChange={handleLanguageOnChange} />
-              </Label>
-            </Flex>
-
-            <Flex asChild direction="column" gap="1">
-              <Label>
+                <div className="mt-2">
+                  <STKAutocomplete
+                    options={languages}
+                    optionLabel="name"
+                    fluid={onMobile}
+                    onChange={handleLanguageOnChange} />
+                </div>
+              </div>
+              <div className="lg:ml-4 flex flex-col mt-6 lg:mt-0">
                 <Text className="font-semibold"  weight="medium" size="2">
                   Age range
                 </Text>
-                <STKSelect
-                  options={ageGroups}
-                  optionLabel="name"
-                  optionValue="code"
-                  fluid={onMobile}
-                  onChange={handleAgeGroupOnChange}  />
-              </Label>
-            </Flex>
+                <div className="mt-2">
+                  <STKSelect
+                    options={ageGroups}
+                    optionLabel="name"
+                    optionValue="code"
+                    fluid={onMobile}
+                    onChange={handleAgeGroupOnChange}  />
+                </div>
+              </div>
+            </div>
           </Flex>
         </Box>
 
-        <Box className="lg:pr-2" mt="4">
+        <Box className="lg:pr-2 mt-6">
           <Flex align="center" className={title.length ? '' : 'disabled'}>
             <NumberCircleTwo size={28} />
             <Text weight="medium" ml="2" size="3">
@@ -160,8 +161,8 @@ export default function StoryForm() {
             )}
           </div>
 
-          <Box className={title.length && audioBlob ? '' : 'disabled'}>
-            <Flex align="center" mt="8">
+          <Box className={`mt-6 ${title.length && audioBlob ? '' : 'disabled'}`}>
+            <Flex align="center">
               <NumberCircleThree size={28} />
               <Box>
                 <Text weight="medium" ml="2" size="3">
