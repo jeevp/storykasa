@@ -1,8 +1,7 @@
 // STKRecordAudio.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
-import WaveSurfer from 'wavesurfer.js';
 import './style.scss';
 import Record from "@/app/assets/icons/iconsJS/Record";
 import {neutral800, red800} from "@/app/assets/colorPallet/colors";
@@ -42,6 +41,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
         if (!loaded) await load();
         const _stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorderRef.current = new MediaRecorder(_stream);
+        // @ts-ignore
         setStream(_stream)
         const audioChunks: Blob[] = [];
         mediaRecorderRef.current.ondataavailable = (event) => {
