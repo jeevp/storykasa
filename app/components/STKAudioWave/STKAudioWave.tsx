@@ -7,7 +7,7 @@ interface STKAudioWaveProps {
 
 export default function STKAudioWave({ stream, active }: STKAudioWaveProps){
     const canvasRef = useRef(null);
-    const audioContextRef = useRef(new (window.AudioContext || window.webkitAudioContext)());
+    const audioContextRef = useRef(new (window.AudioContext)());
     const analyserRef = useRef(audioContextRef.current.createAnalyser());
     const animationFrameRef = useRef(null);
 
