@@ -15,14 +15,14 @@ export async function uploadRecording(formData: FormData) {
 
   const { data, error } = await supabase.storage
     .from('storykasa-recordings')
-    .upload(`${uuid}.webm`, recording, {
+    .upload(`${uuid}.mp3`, recording, {
       cacheControl: '3600',
       upsert: false,
     })
 
   const publicURL = supabase.storage
     .from('storykasa-recordings')
-    .getPublicUrl(`${uuid}.webm`)
+    .getPublicUrl(`${uuid}.mp3`)
 
   if (!publicURL.data.publicUrl)
     throw new Error("couldn't get public url for  recording")
@@ -31,57 +31,54 @@ export async function uploadRecording(formData: FormData) {
 }
 
 export async function addStory(formData: FormData) {
-  const title = formData.get('title') as string
-  const description = formData.get('description') as string
-  const recordedBy = formData.get('recorded_by') as string
-  const language = formData.get('language') as string
-  const ageGroup = formData.get('age_group') as string
-  const recordingURL = formData.get('recording_url') as string
-  const duration = parseInt(formData.get('duration') as string)
+    const title = formData.get('title') as string
+    const description = formData.get('description') as string
+    const recordedBy = formData.get('recorded_by') as string
+    const language = formData.get('language') as string
+    const ageGroup = formData.get('age_group') as string
+    const recordingURL = formData.get('recording_url') as string
+    const duration = parseInt(formData.get('duration') as string)
 
-  const newStory = {
-    is_public: false,
-    title: title,
-    recorded_by: recordedBy,
-    recording_url: recordingURL,
-    description: description,
-    language: language,
-    age_group: ageGroup,
-    duration: duration,
-    // category: '',
-    // image_url: '...',
-    // region: '',
-    // theme: '',
-  }
+    const newStory = {
+      is_public: false,
+      title: title,
+      recorded_by: recordedBy,
+      recording_url: recordingURL,
+      description: description,
+      language: language,
+      age_group: ageGroup,
+      duration: duration
+    }
 
-  const supabase = createServerActionClient<Database>({ cookies })
-  const { data, error } = await supabase
-    .from('stories')
-    .insert(newStory)
-    .select()
-
-  if (error) console.log(error)
-
-  var newStoryID = data![0].story_id
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // simulate the story "saving" process by adding it to the library_stories table
-  if (data && user) {
+    const supabase = createServerActionClient<Database>({ cookies })
     const { data, error } = await supabase
-      .from('accounts')
-      .select('*, libraries(*)')
-      .eq('account_id', user.id)
+        .from('stories')
+        .insert(newStory)
+        .select()
 
-    if (error) console.log(error)
-    await supabase.from('library_stories').insert({
-      account_id: user.id,
-      story_id: newStoryID,
-      library_id: data![0].libraries![0].library_id,
-    })
-  }
+
+   if (error) console.log(error)
+
+    var newStoryID = data![0].story_id
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    // simulate the story "saving" process by adding it to the library_stories table
+    if (data && user) {
+      const { data, error } = await supabase
+          .from('accounts')
+          .select('*, libraries(*)')
+          .eq('account_id', user.id)
+
+      if (error) console.log(error)
+      await supabase.from('library_stories').insert({
+        account_id: user.id,
+        story_id: newStoryID,
+        library_id: data![0].libraries![0].library_id,
+      })
+    }
 }
 
 
@@ -94,12 +91,10 @@ export async function uploadAvatar(formData: FormData) {
 
   const uuid = uuidv4()
 
-  const { data, error } = await supabase.storage
-    .from('storykasa-avatars')
-    .upload(`${uuid}.webp`, file, {
-      cacheControl: '3600',
-      upsert: false,
-    })
+  await supabase.storage.from('storykasa-avatars').upload(`${uuid}.webp`, file, {
+    cacheControl: '3600',
+    upsert: false,
+  })
 
   const publicURL = supabase.storage
     .from('storykasa-avatars')

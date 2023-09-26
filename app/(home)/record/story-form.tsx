@@ -1,20 +1,25 @@
 'use client'
 
 import {
+  Bookmark,
   Books,
   CheckCircle,
   NumberCircleOne,
   NumberCircleThree,
   NumberCircleTwo,
+  Sparkle,
   Trash,
+  TrashSimple,
 } from '@phosphor-icons/react'
 
 import {
   AlertDialog,
   Box,
   Button,
+  Callout,
   Card,
   Flex,
+  Grid,
   Select,
   Text,
   TextArea,
@@ -35,22 +40,19 @@ export default function StoryForm() {
   const router = useRouter()
 
   const [title, setTitle] = useState('')
-
-  const handleTitleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setTitle(e.currentTarget.value)
-  }
-
+  const [description, setDescription] = useState("")
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [audioDuration, setAudioDuration] = useState(0)
   const [audioURL, setAudioURL] = useState('')
+  const [language, setLanguage] = useState('')
+  const [ageGroup, setAgeGroup] = useState('')
 
-  const updateAudioBlob = (blob: Blob, duration: number, url: string) => {
+  const updateAudioBlob = (blob: Blob, url: string) => {
     setAudioBlob(blob)
-    setAudioDuration(duration)
     setAudioURL(url)
   }
 
-  const uploadAndAddStory = async (storyFormData: FormData) => {
+  const uploadAndAddStory = async () => {
     if (!audioBlob) throw new Error('missing audio for story')
 
     // create form to upload audio blob to bucket
@@ -61,9 +63,14 @@ export default function StoryForm() {
     const recordingURL = await uploadRecording(audioFormData)
 
     // add public URL and recording duration to story form data
+    const storyFormData = new FormData()
     storyFormData.set('recording_url', recordingURL)
     storyFormData.set('duration', String(audioDuration))
     storyFormData.set('recorded_by', currentProfileID)
+    storyFormData.set('title', title)
+    storyFormData.set('description', description)
+    storyFormData.set('language', language)
+    storyFormData.set('age_group', ageGroup)
 
     await addStory(storyFormData)
   }
@@ -73,7 +80,6 @@ export default function StoryForm() {
   }
 
   return (
-    <form action={uploadAndAddStory}>
       <div>
         <Box className="lg:pr-2" mt="4">
           <Flex align="center">
@@ -91,8 +97,9 @@ export default function StoryForm() {
               <TextField.Input
                 variant="soft"
                 name="title"
+                value={title}
                 size="3"
-                onBlur={handleTitleChange}
+                onChange={(e) => setTitle(e.target.value)}
               />
             </Label>
             <Label>
@@ -103,8 +110,9 @@ export default function StoryForm() {
                 variant="soft"
                 size="2"
                 placeholder="Briefly describe your story"
-                name="description"
                 style={{ height: 160 }}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </Label>
 
@@ -113,7 +121,7 @@ export default function StoryForm() {
                 <Text weight="medium" size="2">
                   Language
                 </Text>
-                <Select.Root name="language">
+                <Select.Root name="language" onValueChange={(value) => setLanguage(value)}>
                   <Select.Trigger placeholder="Choose a language" />
                   <Select.Content>
                     {languages.map((l) => (
@@ -131,7 +139,7 @@ export default function StoryForm() {
                 <Text weight="medium" size="2">
                   Age range
                 </Text>
-                <Select.Root name="age_group">
+                <Select.Root name="age_group" onValueChange={(value) => setAgeGroup(value)}>
                   <Select.Trigger placeholder="Choose an age range" />
                   <Select.Content>
                     {ageGroups.map((a) => (
@@ -160,10 +168,10 @@ export default function StoryForm() {
             variant="surface"
             className={title.length ? '' : 'disabled'}
           >
-            {!audioBlob ? (
-                <STKRecordAudio onComplete={updateAudioBlob} />
-            ) : (
+            {audioBlob ? (
                 <STKAudioPlayer src={audioURL} />
+            ) : (
+                <STKRecordAudio onComplete={updateAudioBlob} onDuration={(duration: number) => setAudioDuration(duration)} />
             )}
           </Card>
 
@@ -225,7 +233,7 @@ export default function StoryForm() {
                       size="3"
                       color="grass"
                       radius="full"
-                      type="submit">
+                      onClick={uploadAndAddStory}>
                       <CheckCircle size={24} weight="duotone" />
                       <Text>Save to library</Text>
                     </Button>
@@ -257,6 +265,5 @@ export default function StoryForm() {
           </Box>
         </Box>
       </div>
-    </form>
   )
 }

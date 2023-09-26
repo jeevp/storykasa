@@ -37,11 +37,6 @@ export default function StoryCard({
             )}
 
             <Text size="1">{format(story.last_updated)}</Text>
-
-            {/* 
-            <Text size="1" weight="medium">
-              {story.is_public ? 'Saved' 'Recorded' } {story.profiles.profile_name}
-            </Text> */}
           </Flex>
 
           <Text size="4" weight="bold">

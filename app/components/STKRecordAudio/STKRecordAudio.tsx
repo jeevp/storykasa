@@ -13,27 +13,20 @@ import STKAudioWave from "@/app/components/STKAudioWave/STKAudioWave";
 import STKLoading from "@/app/components/STKLoading/STKLoading";
 
 interface STKRecordAudioProps {
-    onComplete: Function
+    onComplete: Function,
+    onDuration: Function
 }
-const STKRecordAudio = ({ onComplete = () => ({}) }: STKRecordAudioProps) => {
+const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: STKRecordAudioProps) => {
     const [loaded, setLoaded] = useState(false);
     const [recording, setRecording] = useState(false);
-    const [audioURL, setAudioURL] = useState<string | null>(null);
     const [paused, setPaused] = useState(false);
     const [duration, setDuration] = useState(0);
     const [stream, setStream] = useState(null);
     const [processing, setProcessing] = useState(false);
-    const [audioBlob, setAudioBlob] = useState(null)
 
     const ffmpegRef = useRef(new FFmpeg());
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-    useEffect(() => {
-        if (audioURL && !processing) {
-            onComplete(audioBlob, duration, audioURL)
-        }
-    }, [audioURL, processing]);
 
     const load = async () => {
         const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.2/dist/umd';
@@ -61,10 +54,12 @@ const STKRecordAudio = ({ onComplete = () => ({}) }: STKRecordAudioProps) => {
             await ffmpeg.writeFile('input.wav', await fetchFile(audioBlob));
             await ffmpeg.exec(['-i', 'input.wav', '-q:a', '0', '-acodec', 'libmp3lame', 'output.mp3']);
             const data = (await ffmpeg.readFile('output.mp3')) as any;
-            const _audioBlob = new Blob([data.buffer], { type: 'audio/mp3' })
-            setAudioBlob(_audioBlob)
-            setAudioURL(URL.createObjectURL(_audioBlob));
+            const convertedAudioBlob = new Blob([data.buffer], { type: 'audio/mp3' })
+            const audioURL = URL.createObjectURL(convertedAudioBlob);
+
             setProcessing(false);
+            setRecording(false);
+            onComplete(convertedAudioBlob, audioURL);
         };
         mediaRecorderRef.current.start();
         setRecording(true);
@@ -89,7 +84,7 @@ const STKRecordAudio = ({ onComplete = () => ({}) }: STKRecordAudioProps) => {
 
     const stopRecording = () => {
         mediaRecorderRef.current?.stop();
-        setRecording(false);
+        onDuration(duration)
         if (intervalRef.current) clearInterval(intervalRef.current);
     };
 

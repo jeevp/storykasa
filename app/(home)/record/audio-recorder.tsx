@@ -119,7 +119,6 @@ export default function AudioRecorder({ onRecorded }: { onRecorded: any }) {
             ></div>
           </Flex>
 
-          <STKRecordAudio />
           {/*<AudioVoiceRecorder*/}
           {/*  onRecordingComplete={(blob: Blob) => addAudioElement(blob)}*/}
           {/*  recorderControls={recorderControls}*/}
