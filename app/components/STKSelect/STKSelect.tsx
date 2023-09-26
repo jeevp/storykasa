@@ -1,4 +1,5 @@
-import {MenuItem, Select} from "@mui/material";
+import {MenuItem, Select, ThemeProvider} from "@mui/material";
+import theme from "@/app/components/theme";
 
 interface STKSelectProps {
     options: Array<Object>,
@@ -27,18 +28,20 @@ function STKSelect({
     }
 
     return (
-        <Select
-            id={id}
-            value={value}
-            sx={{ width: fluid ? '100%' : '300px', backgroundColor: "white" }}
-            // @ts-ignore
-            onChange={handleChange}
-        >
-            {options.map((option, index) => (
+        <ThemeProvider theme={theme}>
+            <Select
+                id={id}
+                value={value}
+                sx={{ width: fluid ? '100%' : '300px', backgroundColor: "white" }}
                 // @ts-ignore
-                <MenuItem key={index} value={option[optionValue]}>{option[optionLabel]}</MenuItem>
-            ))}
-        </Select>
+                onChange={handleChange}
+            >
+                {options.map((option, index) => (
+                    // @ts-ignore
+                    <MenuItem key={index} value={option[optionValue]}>{option[optionLabel]}</MenuItem>
+                ))}
+            </Select>
+        </ThemeProvider>
     )
 }
 

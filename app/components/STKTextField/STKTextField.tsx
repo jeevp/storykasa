@@ -1,5 +1,6 @@
-import {TextField} from "@mui/material";
+import {TextField, ThemeProvider} from "@mui/material";
 import {beige300} from "@/app/assets/colorPallet/colors";
+import theme from "@/app/components/theme";
 
 interface STKTextFieldProps {
     onChange: Function
@@ -17,12 +18,14 @@ function STKTextField({
     onChange = () => ({})
 }: STKTextFieldProps) {
     return (
-        <TextField
-        sx={{ width: fluid ? '100%' : '300px', backgroundColor: beige300 }}
-        multiline={multiline}
-        minRows={minRows}
-        maxRows={maxRows}
-        onChange={(e) => onChange(e.target.value)} />
+        <ThemeProvider theme={theme}>
+            <TextField
+            sx={{ width: fluid ? '100%' : '300px', backgroundColor: beige300 }}
+            multiline={multiline}
+            minRows={minRows}
+            maxRows={maxRows}
+            onChange={(e) => onChange(e.target.value)} />
+        </ThemeProvider>
     )
 }
 

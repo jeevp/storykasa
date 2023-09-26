@@ -1,4 +1,5 @@
-import {Autocomplete, TextField} from "@mui/material";
+import {Autocomplete, TextField, ThemeProvider} from "@mui/material";
+import theme from "@/app/components/theme";
 
 interface STKAutocompleteProps {
     options: Array<Object>
@@ -18,17 +19,19 @@ function STKAutocomplete({
     }
 
     return (
-        <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={options}
-            sx={{ width: fluid ? '100%' : '300px', backgroundColor: "white" }}
-            // @ts-ignore
-            getOptionLabel={(option) => option[optionLabel]}
-            renderInput={(params) => <TextField {...params}  />}
-            // @ts-ignore
-            onChange={handleOnChange}
-        />
+        <ThemeProvider theme={theme}>
+            <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={options}
+                sx={{ width: fluid ? '100%' : '300px', backgroundColor: "white" }}
+                // @ts-ignore
+                getOptionLabel={(option) => option[optionLabel]}
+                renderInput={(params) => <TextField {...params}  />}
+                // @ts-ignore
+                onChange={handleOnChange}
+            />
+        </ThemeProvider>
     )
 }
 
