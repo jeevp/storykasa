@@ -1,7 +1,10 @@
+@import "../../assets/colorPallet/colors";
 
 .stk-record-audio {
   background-color: white;
   padding: 20px;
+  border: 1px solid $neutral300;
+  border-radius: 8px;
 
   #waveform {
     width: 100%;

@@ -12,6 +12,7 @@ import useAppleDevice from "@/app/customHooks/useAppleDevice";
 interface STKAudioPlayerProps {
     src: string;
     preload?: boolean;
+    outlined: boolean;
 }
 
 const formatTime = (seconds: number) => {
@@ -20,7 +21,11 @@ const formatTime = (seconds: number) => {
     return `${minutes}:${secs.padStart(2, '0')}`;
 };
 
-const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) => {
+const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
+    src,
+    preload = true,
+    outlined = false
+}) => {
     const isAppleDevice = useAppleDevice()
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(1);
@@ -111,7 +116,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) 
 
 
     return (
-        <div className="stk-audio-player" style={{ background: 'white' }}>
+        <div className={`stk-audio-player ${!outlined ? '!border-0' : ''}`} style={{ background: 'white' }}>
             <div className="flex items-center w-full">
                 <span>{currentTime}</span>
                 <div className="progress-bar px-4 flex items-center">
@@ -140,7 +145,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({ src, preload = true }) 
                         <Image src={skipIcon} alt="Skip forward" width={16} />
                     </button>
                 </div>
-                <div className="volume w-30 flex items-center">
+                <div className="volume w-30 flex items-center pl-10">
                     <button onClick={toggleMute} className="mr-2">
                         <Image src={volume ? volumeOnIcon : volumeOffIcon} alt="Volume Toggle" width={16} />
                     </button>

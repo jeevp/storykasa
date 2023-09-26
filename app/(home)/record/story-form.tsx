@@ -13,24 +13,25 @@ import {
   AlertDialog,
   Box,
   Button,
-  Card,
   Flex,
-  Select,
   Text,
-  TextArea,
-  TextField,
 } from '@radix-ui/themes'
 import { Label } from '@radix-ui/react-label'
 import { addStory, uploadRecording } from '../../../lib/_actions'
-import { useContext, useState } from 'react'
-import { ProfileContext } from '../../profile-provider'
-import { ageGroups, languages } from '@/app/enums'
-import { useRouter } from 'next/navigation'
+import { SetStateAction, useContext, useState} from 'react'
+import {ProfileContext} from '../../profile-provider'
+import {ageGroups, languages} from '@/app/enums'
+import {useRouter} from 'next/navigation'
 import STKAudioPlayer from "@/app/components/STKAudioPlayer/STKAudioPlayer";
 import STKRecordAudio from "@/app/components/STKRecordAudio/STKRecordAudio";
+import STKAutocomplete from "@/app/components/STKAutocomplete/STKAutocomplete";
+import useDevice from "@/app/customHooks/useDevice";
+import STKSelect from "@/app/components/STKSelect/STKSelect";
+import STKTextField from "@/app/components/STKTextField/STKTextField";
 
 export default function StoryForm() {
-  const { currentProfileID } = useContext(ProfileContext) as any
+  const {currentProfileID} = useContext(ProfileContext) as any
+  const {onMobile} = useDevice()
 
   const router = useRouter()
 
@@ -74,76 +75,70 @@ export default function StoryForm() {
     router.push('/library')
   }
 
+  const handleLanguageOnChange = (selectedLanguage: Object) => {
+    // @ts-ignore
+    setLanguage(selectedLanguage?.name)
+  }
+
+  const handleAgeGroupOnChange = (selectedAgeGroup: SetStateAction<string>) => {
+    // @ts-ignore
+    setAgeGroup(selectedAgeGroup.code)
+  }
+
   return (
       <div>
         <Box className="lg:pr-2" mt="4">
           <Flex align="center">
             <NumberCircleOne size={28} />
-            <Text weight="medium" ml="2" size="3">
+            <Text className="font-semibold"  weight="medium" ml="2" size="3">
               Describe your story
             </Text>
           </Flex>
 
           <Flex direction="column" gap="3" mt="3">
-            <Label>
-              <Text weight="medium" size="2">
+            <div>
+              <Text className="font-semibold" weight="medium" size="2">
                 Story title
               </Text>
-              <TextField.Input
-                variant="soft"
-                name="title"
-                value={title}
-                size="3"
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </Label>
-            <Label>
-              <Text weight="medium" size="2">
+              <div>
+                <STKTextField onChange={(value: SetStateAction<string>) => setTitle(value)} fluid={onMobile} />
+              </div>
+            </div>
+            <div>
+              <Text className="font-semibold"  weight="medium" size="2">
                 Description
               </Text>
-              <TextArea
-                variant="soft"
-                size="2"
-                placeholder="Briefly describe your story"
-                style={{ height: 160 }}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Label>
-
+              <div>
+                <STKTextField
+                  multiline
+                  fluid={onMobile}
+                  onChange={(value: SetStateAction<string>) => setDescription(value)} />
+              </div>
+            </div>
             <Flex asChild direction="column" gap="1">
               <Label>
-                <Text weight="medium" size="2">
+                <Text className="font-semibold"  weight="medium" size="2">
                   Language
                 </Text>
-                <Select.Root name="language" onValueChange={(value) => setLanguage(value)}>
-                  <Select.Trigger placeholder="Choose a language" />
-                  <Select.Content>
-                    {languages.map((l) => (
-                      <Select.Item key={l.code} value={l.name}>
-                        {l.name}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Root>
+                <STKAutocomplete
+                  options={languages}
+                  optionLabel="name"
+                  fluid={onMobile}
+                  onChange={handleLanguageOnChange} />
               </Label>
             </Flex>
 
             <Flex asChild direction="column" gap="1">
               <Label>
-                <Text weight="medium" size="2">
+                <Text className="font-semibold"  weight="medium" size="2">
                   Age range
                 </Text>
-                <Select.Root name="age_group" onValueChange={(value) => setAgeGroup(value)}>
-                  <Select.Trigger placeholder="Choose an age range" />
-                  <Select.Content>
-                    {ageGroups.map((a) => (
-                      <Select.Item key={a.name} value={a.name}>
-                        {a.name}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Root>
+                <STKSelect
+                  options={ageGroups}
+                  optionLabel="name"
+                  optionValue="code"
+                  fluid={onMobile}
+                  onChange={handleAgeGroupOnChange}  />
               </Label>
             </Flex>
           </Flex>
@@ -157,18 +152,13 @@ export default function StoryForm() {
               {audioBlob && 'Preview your story'}
             </Text>
           </Flex>
-          <Card
-            mt="4"
-            size="3"
-            variant="surface"
-            className={title.length ? '' : 'disabled'}
-          >
+          <div className="mt-4">
             {audioBlob ? (
-                <STKAudioPlayer src={audioURL} />
+                <STKAudioPlayer src={audioURL} outlined />
             ) : (
                 <STKRecordAudio onComplete={updateAudioBlob} onDuration={(duration: number) => setAudioDuration(duration)} />
             )}
-          </Card>
+          </div>
 
           <Box className={title.length && audioBlob ? '' : 'disabled'}>
             <Flex align="center" mt="8">
