@@ -12,7 +12,7 @@ import useAppleDevice from "@/app/customHooks/useAppleDevice";
 interface STKAudioPlayerProps {
     src: string;
     preload?: boolean;
-    outlined: boolean;
+    outlined?: boolean;
 }
 
 const formatTime = (seconds: number) => {
