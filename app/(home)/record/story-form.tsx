@@ -28,6 +28,7 @@ import useDevice from "@/app/customHooks/useDevice";
 import STKSelect from "@/app/components/STKSelect/STKSelect";
 import STKTextField from "@/app/components/STKTextField/STKTextField";
 import UploadStoryDialog from "@/app/composedComponents/UploadStoryDialog/UploadStoryDialog";
+import STKLoading from "@/app/components/STKLoading/STKLoading";
 
 export default function StoryForm() {
   const {currentProfileID} = useContext(ProfileContext) as any
@@ -43,6 +44,7 @@ export default function StoryForm() {
   const [language, setLanguage] = useState('')
   const [ageGroup, setAgeGroup] = useState('')
   const [showUploadStoryDialog, setShowUploadStoryDialog] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const updateAudioBlob = (blob: Blob, url: string) => {
     setAudioBlob(blob)
@@ -50,27 +52,33 @@ export default function StoryForm() {
   }
 
   const uploadAndAddStory = async () => {
-    if (!audioBlob) throw new Error('missing audio for story')
+    try {
+      setLoading(true)
+      if (!audioBlob) throw new Error('missing audio for story')
 
-    // create form to upload audio blob to bucket
-    const audioFormData = new FormData()
-    audioFormData.set('recording', audioBlob)
+      // create form to upload audio blob to bucket
+      const audioFormData = new FormData()
+      audioFormData.set('recording', audioBlob)
 
-    // get the public URL of the recording after uploading to bucket
-    const recordingURL = await uploadRecording(audioFormData)
+      // get the public URL of the recording after uploading to bucket
+      const recordingURL = await uploadRecording(audioFormData)
 
-    // add public URL and recording duration to story form data
-    const storyFormData = new FormData()
-    storyFormData.set('recording_url', recordingURL)
-    storyFormData.set('duration', String(audioDuration))
-    storyFormData.set('recorded_by', currentProfileID)
-    storyFormData.set('title', title)
-    storyFormData.set('description', description)
-    storyFormData.set('language', language)
-    storyFormData.set('age_group', ageGroup)
+      // add public URL and recording duration to story form data
+      const storyFormData = new FormData()
+      storyFormData.set('recording_url', recordingURL)
+      storyFormData.set('duration', String(audioDuration))
+      storyFormData.set('recorded_by', currentProfileID)
+      storyFormData.set('title', title)
+      storyFormData.set('description', description)
+      storyFormData.set('language', language)
+      storyFormData.set('age_group', ageGroup)
 
-    await addStory(storyFormData)
-    setShowUploadStoryDialog(true)
+      await addStory(storyFormData)
+      setShowUploadStoryDialog(true)
+
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleLanguageOnChange = (selectedLanguage: Object) => {
@@ -82,6 +90,7 @@ export default function StoryForm() {
     // @ts-ignore
     setAgeGroup(selectedAgeGroup.code)
   }
+
 
   return (
       <div>
@@ -217,8 +226,15 @@ export default function StoryForm() {
                       color="grass"
                       radius="full"
                       onClick={uploadAndAddStory}>
-                    <CheckCircle size={24} weight="duotone" />
-                    <Text>Save to library</Text>
+                    {loading ? (
+                        // @ts-ignore
+                        <STKLoading color="white" />
+                    ): (
+                        <>
+                          <CheckCircle size={24} weight="duotone" />
+                          <Text>Save to library</Text>
+                        </>
+                    )}
                   </Button>
                 </div>
 
