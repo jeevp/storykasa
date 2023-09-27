@@ -15,6 +15,7 @@ interface STKRecordAudioProps {
     onComplete: Function,
     onDuration: Function
 }
+
 const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: STKRecordAudioProps) => {
     const [loaded, setLoaded] = useState(false);
     const [recording, setRecording] = useState(false);
