@@ -70,6 +70,7 @@ export default function StoryForm() {
     storyFormData.set('age_group', ageGroup)
 
     await addStory(storyFormData)
+    setShowUploadStoryDialog(true)
   }
 
   const handleLanguageOnChange = (selectedLanguage: Object) => {

@@ -22,7 +22,7 @@ export default function UploadStoryDialog({ open, onClose = () => ({}) }: Upload
     }
 
     return (
-        <STKDialog fullScreen active={open} onClose={() => onClose()}>
+        <STKDialog active={open} onClose={() => onClose()}>
             <div>
                 <h2 className="text-xl font-bold">
                     Added to your library!
