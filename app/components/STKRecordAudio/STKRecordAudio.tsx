@@ -40,34 +40,44 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
 
     const startRecording = async () => {
         if (!loaded) await load();
-        const _stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorderRef.current = new MediaRecorder(_stream);
-        // @ts-ignore
-        setStream(_stream)
-        const audioChunks: Blob[] = [];
-        mediaRecorderRef.current.ondataavailable = (event) => {
-            audioChunks.push(event.data);
-        };
-        mediaRecorderRef.current.onstop = async () => {
-            setProcessing(true);
-            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-            const ffmpeg = ffmpegRef.current;
-            await ffmpeg.writeFile('input.wav', await fetchFile(audioBlob));
-            await ffmpeg.exec(['-i', 'input.wav', '-q:a', '0', '-acodec', 'libmp3lame', 'output.mp3']);
-            const data = (await ffmpeg.readFile('output.mp3')) as any;
-            const convertedAudioBlob = new Blob([data.buffer], { type: 'audio/mp3' })
-            const audioURL = URL.createObjectURL(convertedAudioBlob);
 
-            setProcessing(false);
-            setRecording(false);
-            onComplete(convertedAudioBlob, audioURL);
-            if (intervalRef.current) clearInterval(intervalRef.current);
-        };
-        mediaRecorderRef.current.start();
-        setRecording(true);
-        intervalRef.current = setInterval(() => {
-            setDuration(prevDuration => prevDuration + 1);
-        }, 1000);
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.error('MediaDevices or getUserMedia is not supported in this environment.');
+            return;
+        }
+
+        try {
+            const _stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorderRef.current = new MediaRecorder(_stream);
+            // @ts-ignore
+            setStream(_stream)
+            const audioChunks: Blob[] = [];
+            mediaRecorderRef.current.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+            mediaRecorderRef.current.onstop = async () => {
+                setProcessing(true);
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const ffmpeg = ffmpegRef.current;
+                await ffmpeg.writeFile('input.wav', await fetchFile(audioBlob));
+                await ffmpeg.exec(['-i', 'input.wav', '-q:a', '0', '-acodec', 'libmp3lame', 'output.mp3']);
+                const data = (await ffmpeg.readFile('output.mp3')) as any;
+                const convertedAudioBlob = new Blob([data.buffer], { type: 'audio/mp3' })
+                const audioURL = URL.createObjectURL(convertedAudioBlob);
+
+                setProcessing(false);
+                setRecording(false);
+                onComplete(convertedAudioBlob, audioURL);
+                if (intervalRef.current) clearInterval(intervalRef.current);
+            };
+            mediaRecorderRef.current.start();
+            setRecording(true);
+            intervalRef.current = setInterval(() => {
+                setDuration(prevDuration => prevDuration + 1);
+            }, 1000);
+        } catch (error) {
+            console.error(error)
+        }
     };
 
     const pauseResumeRecording = () => {

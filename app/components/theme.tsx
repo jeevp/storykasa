@@ -1,10 +1,10 @@
 import {createTheme} from "@mui/material";
-import {beige200} from "@/app/assets/colorPallet/colors";
+import {beige200, green600} from "@/app/assets/colorPallet/colors";
 
 const theme = createTheme({
     palette: {
         primary: {
-            main: beige200,
+            main: green600,
         },
     },
 });

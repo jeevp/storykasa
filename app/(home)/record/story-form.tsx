@@ -16,7 +16,6 @@ import {
   Flex,
   Text,
 } from '@radix-ui/themes'
-import { Label } from '@radix-ui/react-label'
 import { addStory, uploadRecording } from '../../../lib/_actions'
 import { SetStateAction, useContext, useState} from 'react'
 import {ProfileContext} from '../../profile-provider'
@@ -28,6 +27,7 @@ import STKAutocomplete from "@/app/components/STKAutocomplete/STKAutocomplete";
 import useDevice from "@/app/customHooks/useDevice";
 import STKSelect from "@/app/components/STKSelect/STKSelect";
 import STKTextField from "@/app/components/STKTextField/STKTextField";
+import UploadStoryDialog from "@/app/composedComponents/UploadStoryDialog/UploadStoryDialog";
 
 export default function StoryForm() {
   const {currentProfileID} = useContext(ProfileContext) as any
@@ -42,6 +42,7 @@ export default function StoryForm() {
   const [audioURL, setAudioURL] = useState('')
   const [language, setLanguage] = useState('')
   const [ageGroup, setAgeGroup] = useState('')
+  const [showUploadStoryDialog, setShowUploadStoryDialog] = useState(false)
 
   const updateAudioBlob = (blob: Blob, url: string) => {
     setAudioBlob(blob)
@@ -69,10 +70,6 @@ export default function StoryForm() {
     storyFormData.set('age_group', ageGroup)
 
     await addStory(storyFormData)
-  }
-
-  const handleGoToLibrary = () => {
-    router.push('/library')
   }
 
   const handleLanguageOnChange = (selectedLanguage: Object) => {
@@ -211,41 +208,22 @@ export default function StoryForm() {
                   </Flex>
                 </AlertDialog.Content>
               </AlertDialog.Root>
-              <div className="ml-2 mt-2 lg:mt-0 w-full lg:w-auto">
-                <AlertDialog.Root>
-                  <AlertDialog.Trigger>
-                    <Button
+              <div className="ml-0 lg:ml-2 mt-2 lg:mt-0 w-full lg:w-auto">
+                <div>
+                  <Button
                       className="w-full lg:w-auto"
                       size="3"
                       color="grass"
                       radius="full"
                       onClick={uploadAndAddStory}>
-                      <CheckCircle size={24} weight="duotone" />
-                      <Text>Save to library</Text>
-                    </Button>
-                  </AlertDialog.Trigger>
-                  <AlertDialog.Content style={{ maxWidth: 450, margin: 20 }}>
-                    <AlertDialog.Title>Added to your library!</AlertDialog.Title>
-                    <AlertDialog.Description size="2">
-                      Congratulations on your brand new story. Go to your library
-                      to listen to it.
-                    </AlertDialog.Description>
+                    <CheckCircle size={24} weight="duotone" />
+                    <Text>Save to library</Text>
+                  </Button>
+                </div>
 
-                    <Flex gap="3" mt="4" justify="end">
-                      <AlertDialog.Cancel>
-                        <Button variant="soft" color="gray">
-                          Cancel
-                        </Button>
-                      </AlertDialog.Cancel>
-                      <AlertDialog.Action>
-                        <Button onClick={handleGoToLibrary} color="grass">
-                          <Books size="20"></Books>
-                          Go to my library
-                        </Button>
-                      </AlertDialog.Action>
-                    </Flex>
-                  </AlertDialog.Content>
-                </AlertDialog.Root>
+                <UploadStoryDialog
+                  open={showUploadStoryDialog}
+                  onClose={() => setShowUploadStoryDialog(false)} />
               </div>
             </div>
           </Box>
