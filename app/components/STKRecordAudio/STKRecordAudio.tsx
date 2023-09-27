@@ -60,6 +60,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
             setProcessing(false);
             setRecording(false);
             onComplete(convertedAudioBlob, audioURL);
+            if (intervalRef.current) clearInterval(intervalRef.current);
         };
         mediaRecorderRef.current.start();
         setRecording(true);
@@ -85,7 +86,6 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
     const stopRecording = () => {
         mediaRecorderRef.current?.stop();
         onDuration(duration)
-        if (intervalRef.current) clearInterval(intervalRef.current);
     };
 
     return (
