@@ -33,6 +33,7 @@ export default function STKButton({
 
 
     return (
+        // @ts-ignore
         <Button
         startIcon={loading ? <></> : startIcon}
         endIcon={loading ? <></> : endIcon}
