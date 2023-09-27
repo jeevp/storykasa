@@ -37,6 +37,7 @@
     "react-howler": "^5.2.0",
     "react-icons": "^4.11.0",
     "react-images-uploading": "^3.1.7",
+    "recordrtc": "^5.6.2",
     "timeago.js": "^4.0.2",
     "typescript": "5.1.6",
     "url-loader": "^4.1.1",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@types/howler": "^2.2.9",
+    "@types/recordrtc": "^5.6.12",
     "@types/uuid": "^9.0.2",
     "autoprefixer": "^10.4.15",
     "encoding": "^0.1.13",

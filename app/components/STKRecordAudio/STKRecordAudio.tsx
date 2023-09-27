@@ -1,7 +1,9 @@
 // STKRecordAudio.tsx
 import React, { useState, useRef } from 'react';
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import RecordRTC from 'recordrtc';
+
+// import { FFmpeg } from '@ffmpeg/ffmpeg';
+// import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import './style.scss';
 import Record from "@/app/assets/icons/iconsJS/Record";
 import {neutral800, red800} from "@/app/assets/colorPallet/colors";
@@ -24,79 +26,67 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
     const [stream, setStream] = useState(null);
     const [processing, setProcessing] = useState(false);
 
-    const ffmpegRef = useRef(new FFmpeg());
+    // const ffmpegRef = useRef(new FFmpeg());
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    const load = async () => {
-        const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.2/dist/umd';
-        const ffmpeg = ffmpegRef.current;
-        await ffmpeg.load({
-            coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-            wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
-        });
-        setLoaded(true);
-    };
+    // const load = async () => {
+    //     const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.2/dist/umd';
+    //     const ffmpeg = ffmpegRef.current;
+    //     await ffmpeg.load({
+    //         coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+    //         wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
+    //     });
+    //     setLoaded(true);
+    // };
 
     const startRecording = async () => {
-        if (!loaded) await load();
-
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            console.error('MediaDevices or getUserMedia is not supported in this environment.');
-            return;
-        }
-
         try {
-            const _stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorderRef.current = new MediaRecorder(_stream);
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             // @ts-ignore
-            setStream(_stream)
-            const audioChunks: Blob[] = [];
-            mediaRecorderRef.current.ondataavailable = (event) => {
-                audioChunks.push(event.data);
-            };
-            mediaRecorderRef.current.onstop = async () => {
-                setProcessing(true);
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const ffmpeg = ffmpegRef.current;
-                await ffmpeg.writeFile('input.wav', await fetchFile(audioBlob));
-                await ffmpeg.exec(['-i', 'input.wav', '-q:a', '0', '-acodec', 'libmp3lame', 'output.mp3']);
-                const data = (await ffmpeg.readFile('output.mp3')) as any;
-                const convertedAudioBlob = new Blob([data.buffer], { type: 'audio/mp3' })
-                const audioURL = URL.createObjectURL(convertedAudioBlob);
-
-                setProcessing(false);
-                setRecording(false);
-                onComplete(convertedAudioBlob, audioURL);
-                if (intervalRef.current) clearInterval(intervalRef.current);
-            };
-            mediaRecorderRef.current.start();
+            mediaRecorderRef.current = new RecordRTC(stream, {type: 'audio'});
+            // @ts-ignore
+            mediaRecorderRef.current.startRecording();
+            // @ts-ignore
+            setStream(stream);
             setRecording(true);
             intervalRef.current = setInterval(() => {
-                setDuration(prevDuration => prevDuration + 1);
+                setDuration((prevDuration) => prevDuration + 1);
             }, 1000);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     };
 
     const pauseResumeRecording = () => {
-        if (mediaRecorderRef.current?.state === 'recording') {
-            mediaRecorderRef.current.pause();
-            setPaused(true)
-            if (intervalRef.current) clearInterval(intervalRef.current)
+        if (recording && !paused) {
+            // @ts-ignore
+            mediaRecorderRef.current?.pauseRecording();
+            setPaused(true);
+            if (intervalRef.current) clearInterval(intervalRef.current);
         } else {
-            mediaRecorderRef.current?.resume();
-            setPaused(false)
+            // @ts-ignore
+            mediaRecorderRef.current?.resumeRecording();
+            setPaused(false);
             intervalRef.current = setInterval(() => {
-                setDuration(prevDuration => prevDuration + 1);
+                setDuration((prevDuration) => prevDuration + 1);
             }, 1000);
         }
     };
 
+
     const stopRecording = () => {
-        mediaRecorderRef.current?.stop();
-        onDuration(duration)
+        // @ts-ignore
+        mediaRecorderRef.current?.stopRecording(async () => {
+            // @ts-ignore
+            const blob = mediaRecorderRef.current?.getBlob();
+            if (blob) {
+                const audioURL = URL.createObjectURL(blob);
+                onComplete(blob, audioURL);
+                if (intervalRef.current) clearInterval(intervalRef.current);
+                onDuration(duration);
+            }
+        });
     };
 
     return (
