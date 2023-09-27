@@ -4,7 +4,6 @@ import * as Form from '@radix-ui/react-form'
 import Image from 'next/image'
 import {
   Card,
-  Box,
   Flex,
   TextField,
   Button,
@@ -13,7 +12,6 @@ import {
   Link,
   Callout,
 } from '@radix-ui/themes'
-import { Auth } from '@supabase/auth-ui-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'

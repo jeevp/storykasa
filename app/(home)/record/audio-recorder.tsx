@@ -1,5 +1,4 @@
 import {
-  AudioRecorder as AudioVoiceRecorder,
   useAudioRecorder,
 } from 'react-audio-voice-recorder'
 import { useEffect, useState } from 'react'
@@ -11,7 +10,6 @@ import {
   Record,
   StopCircle,
 } from '@phosphor-icons/react'
-import STKRecordAudio from "@/app/components/STKRecordAudio/STKRecordAudio";
 
 export const dynamic = 'force-dynamic'
 

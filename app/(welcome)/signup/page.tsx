@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Button, Grid, Heading } from '@radix-ui/themes'
+import { Heading } from '@radix-ui/themes'
 import PageWrapper from '@/app/page-wrapper'
 import SignupForm from './signup-form'
 

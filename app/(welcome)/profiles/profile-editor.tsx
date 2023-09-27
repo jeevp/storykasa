@@ -1,17 +1,13 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ImageUploading, { ImageListType } from 'react-images-uploading'
-import Image from 'next/image'
 import { Label } from '@radix-ui/react-label'
 import {
   Button,
   Flex,
   IconButton,
-  Select,
-  TextArea,
   TextField,
   Text,
-  Box,
   Card,
   Avatar,
   Theme,
@@ -20,11 +16,9 @@ import {
 import {
   ArrowCircleRight,
   PencilSimple,
-  Sparkle,
   UserPlus,
   X,
 } from '@phosphor-icons/react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Profile } from '@/lib/database-helpers.types'
 import { addProfile, uploadAvatar } from '@/lib/_actions'

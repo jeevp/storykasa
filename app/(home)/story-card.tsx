@@ -1,11 +1,10 @@
 'use client'
 
 import { Card, Flex, Avatar, Box, Text } from '@radix-ui/themes'
-import Link from 'next/link'
 import { StoryWithProfile } from '../../lib/database-helpers.types'
 import { format } from 'timeago.js'
-import { capitalize, initials } from '../../lib/utils'
-import { Baby, Globe, GlobeSimple, Timer } from '@phosphor-icons/react'
+import { initials } from '../../lib/utils'
+import { Baby, GlobeSimple, Timer } from '@phosphor-icons/react'
 import { ageGroups, languages } from '../enums'
 export default function StoryCard({
   story,

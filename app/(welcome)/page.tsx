@@ -1,7 +1,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { Flex, Grid, Text, Heading, Button } from '@radix-ui/themes'
+import { Text, Heading, Button } from '@radix-ui/themes'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'

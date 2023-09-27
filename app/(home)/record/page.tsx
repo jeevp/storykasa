@@ -1,5 +1,4 @@
-import { Heading, Grid, ScrollArea } from '@radix-ui/themes'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { Heading } from '@radix-ui/themes'
 import StoryForm from '@/app/(home)/record/story-form'
 import PageWrapper from '@/app/page-wrapper'
 

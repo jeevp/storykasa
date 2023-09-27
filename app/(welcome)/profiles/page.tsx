@@ -1,6 +1,6 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import ProfileSwitcher from './profile-switcher'
-import { Button, Grid, Heading } from '@radix-ui/themes'
+import { Heading } from '@radix-ui/themes'
 import PageWrapper from '@/app/page-wrapper'
 import { cookies } from 'next/headers'
 import { getProfiles } from '@/lib/_actions'

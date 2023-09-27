@@ -5,7 +5,6 @@ import { initials } from '@/lib/utils'
 import { UserSwitch, SignOut, CaretDown } from '@phosphor-icons/react'
 import { Flex, Text, Avatar, Button, Box, DropdownMenu } from '@radix-ui/themes'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ProfileContext } from '../profile-provider'
 

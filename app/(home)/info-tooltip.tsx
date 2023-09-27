@@ -1,4 +1,4 @@
-import { IconProps, Info } from '@phosphor-icons/react'
+import { Info } from '@phosphor-icons/react'
 import { Tooltip } from '@radix-ui/themes'
 
 export default function InfoTooltip({ content }: { content: string }) {
