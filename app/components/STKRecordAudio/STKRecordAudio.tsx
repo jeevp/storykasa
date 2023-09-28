@@ -2,8 +2,6 @@
 import React, { useState, useRef } from 'react';
 import RecordRTC from 'recordrtc';
 
-// import { FFmpeg } from '@ffmpeg/ffmpeg';
-// import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import './style.scss';
 import Record from "@/app/assets/icons/iconsJS/Record";
 import {neutral800, red800} from "@/app/assets/colorPallet/colors";
@@ -30,26 +28,25 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // const load = async () => {
-    //     const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.2/dist/umd';
-    //     const ffmpeg = ffmpegRef.current;
-    //     await ffmpeg.load({
-    //         coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-    //         wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
-    //     });
-    //     setLoaded(true);
-    // };
-
     const startRecording = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             // @ts-ignore
-            mediaRecorderRef.current = RecordRTC(stream, {type: 'audio', mimeType: 'audio/wav'});
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const gainNode = audioContext.createGain();
+
+            gainNode.gain.value = 2
+            const audioStream = audioContext.createMediaStreamSource(stream);
+            audioStream.connect(gainNode);
+            // @ts-ignore
+            mediaRecorderRef.current = RecordRTC(gainNode, { type: 'audio', mimeType: 'audio/wav' });
             // @ts-ignore
             mediaRecorderRef.current.startRecording();
+
             // @ts-ignore
             setStream(stream);
             setRecording(true);
+
             intervalRef.current = setInterval(() => {
                 setDuration((prevDuration) => prevDuration + 1);
             }, 1000);

@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  Flex,
   Heading,
 } from '@radix-ui/themes'
 import Link from 'next/link'
