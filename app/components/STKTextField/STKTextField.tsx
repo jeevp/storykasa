@@ -8,6 +8,8 @@ interface STKTextFieldProps {
     minRows?: number
     maxRows?: number
     fluid?: boolean
+    placeholder?: string
+    type?: string
 }
 
 function STKTextField({
@@ -15,6 +17,8 @@ function STKTextField({
     multiline = false,
     minRows = 5,
     maxRows = 10,
+    placeholder,
+    type,
     onChange = () => ({})
 }: STKTextFieldProps) {
     return (
@@ -23,6 +27,8 @@ function STKTextField({
             sx={{ width: fluid ? '100%' : '300px', backgroundColor: beige300 }}
             multiline={multiline}
             minRows={minRows}
+            type={type}
+            placeholder={placeholder}
             maxRows={maxRows}
             onChange={(e) => onChange(e.target.value)} />
         </ThemeProvider>
