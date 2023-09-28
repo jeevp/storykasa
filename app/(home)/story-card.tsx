@@ -1,11 +1,10 @@
 'use client'
 
 import { Card, Flex, Avatar, Box, Text } from '@radix-ui/themes'
-import Link from 'next/link'
 import { StoryWithProfile } from '../../lib/database-helpers.types'
 import { format } from 'timeago.js'
-import { capitalize, initials } from '../../lib/utils'
-import { Baby, Globe, GlobeSimple, Timer } from '@phosphor-icons/react'
+import { initials } from '../../lib/utils'
+import { Baby, GlobeSimple, Timer } from '@phosphor-icons/react'
 import { ageGroups, languages } from '../enums'
 export default function StoryCard({
   story,
@@ -37,11 +36,6 @@ export default function StoryCard({
             )}
 
             <Text size="1">{format(story.last_updated)}</Text>
-
-            {/* 
-            <Text size="1" weight="medium">
-              {story.is_public ? 'Saved' 'Recorded' } {story.profiles.profile_name}
-            </Text> */}
           </Flex>
 
           <Text size="4" weight="bold">

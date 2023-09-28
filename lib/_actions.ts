@@ -3,10 +3,7 @@
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { v4 as uuidv4 } from 'uuid'
-import getBlobDuration from 'get-blob-duration'
 import { StoryWithProfile } from './database-helpers.types'
-
-// export const dynamic = 'force-dynamic'
 
 export async function uploadRecording(formData: FormData) {
   const supabase = createServerActionClient<Database>({ cookies })
@@ -18,14 +15,14 @@ export async function uploadRecording(formData: FormData) {
 
   const { data, error } = await supabase.storage
     .from('storykasa-recordings')
-    .upload(`${uuid}.webm`, recording, {
+    .upload(`${uuid}.mp3`, recording, {
       cacheControl: '3600',
       upsert: false,
     })
 
   const publicURL = supabase.storage
     .from('storykasa-recordings')
-    .getPublicUrl(`${uuid}.webm`)
+    .getPublicUrl(`${uuid}.mp3`)
 
   if (!publicURL.data.publicUrl)
     throw new Error("couldn't get public url for  recording")
@@ -34,69 +31,56 @@ export async function uploadRecording(formData: FormData) {
 }
 
 export async function addStory(formData: FormData) {
-  console.log(formData)
+    const title = formData.get('title') as string
+    const description = formData.get('description') as string
+    const recordedBy = formData.get('recorded_by') as string
+    const language = formData.get('language') as string
+    const ageGroup = formData.get('age_group') as string
+    const recordingURL = formData.get('recording_url') as string
+    const duration = parseInt(formData.get('duration') as string)
 
-  const title = formData.get('title') as string
-  const description = formData.get('description') as string
-  const recordedBy = formData.get('recorded_by') as string
-  const language = formData.get('language') as string
-  const ageGroup = formData.get('age_group') as string
-  const recordingURL = formData.get('recording_url') as string
-  const duration = parseInt(formData.get('duration') as string)
+    const newStory = {
+      is_public: false,
+      title: title,
+      recorded_by: recordedBy,
+      recording_url: recordingURL,
+      description: description,
+      language: language,
+      age_group: ageGroup,
+      duration: duration
+    }
 
-  const newStory = {
-    is_public: false,
-    title: title,
-    recorded_by: recordedBy,
-    recording_url: recordingURL,
-    description: description,
-    language: language,
-    age_group: ageGroup,
-    duration: duration,
-    // category: '',
-    // image_url: '...',
-    // region: '',
-    // theme: '',
-  }
-
-  const supabase = createServerActionClient<Database>({ cookies })
-  const { data, error } = await supabase
-    .from('stories')
-    .insert(newStory)
-    .select()
-
-  if (error) console.log(error)
-
-  console.log('added story data')
-  console.log(data)
-
-  var newStoryID = data![0].story_id
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // simulate the story "saving" process by adding it to the library_stories table
-  if (data && user) {
+    const supabase = createServerActionClient<Database>({ cookies })
     const { data, error } = await supabase
-      .from('accounts')
-      .select('*, libraries(*)')
-      .eq('account_id', user.id)
+        .from('stories')
+        .insert(newStory)
+        .select()
 
-    if (error) console.log(error)
-    await supabase.from('library_stories').insert({
-      account_id: user.id,
-      story_id: newStoryID,
-      library_id: data![0].libraries![0].library_id,
-    })
-  }
+
+   if (error) console.log(error)
+
+    var newStoryID = data![0].story_id
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    // simulate the story "saving" process by adding it to the library_stories table
+    if (data && user) {
+      const { data, error } = await supabase
+          .from('accounts')
+          .select('*, libraries(*)')
+          .eq('account_id', user.id)
+
+      if (error) console.log(error)
+      await supabase.from('library_stories').insert({
+        account_id: user.id,
+        story_id: newStoryID,
+        library_id: data![0].libraries![0].library_id,
+      })
+    }
 }
 
-// export async function getAccount() {
-//   const supabase = createServerActionClient<Database>({ cookies })
-//   const { data: accounts } = await supabase.from('accounts').select()
-//   console.log(accounts)
-// }
 
 export async function updateAvatar(formData: FormData, filename: string) {}
 
@@ -105,16 +89,12 @@ export async function uploadAvatar(formData: FormData) {
   const file = formData.get('file')
   if (!file) throw new Error('unable to get new avatar file')
 
-  console.log(file)
-
   const uuid = uuidv4()
 
-  const { data, error } = await supabase.storage
-    .from('storykasa-avatars')
-    .upload(`${uuid}.webp`, file, {
-      cacheControl: '3600',
-      upsert: false,
-    })
+  await supabase.storage.from('storykasa-avatars').upload(`${uuid}.webp`, file, {
+    cacheControl: '3600',
+    upsert: false,
+  })
 
   const publicURL = supabase.storage
     .from('storykasa-avatars')
@@ -127,8 +107,6 @@ export async function uploadAvatar(formData: FormData) {
 }
 
 export async function addProfile(formData: FormData) {
-  console.log(formData)
-
   const name = formData.get('name')
   if (!name) throw new Error('cannot add a profile without a name')
   const supabase = createServerActionClient<Database>({ cookies })
@@ -150,8 +128,6 @@ export async function addProfile(formData: FormData) {
       .eq('profile_id', id)
       .select()
 
-    console.log(data)
-    console.log(error)
 
     if (data) {
       return id
@@ -173,7 +149,6 @@ export async function addProfile(formData: FormData) {
         })
         .select()
       if (data) {
-        console.log('created new profile')
         return data[0].profile_id
       }
     } else {
@@ -252,7 +227,6 @@ export async function getLibraryStories(): Promise<StoryWithProfile[]> {
   }
 
   const stories = data?.map((story) => story.stories)
-  console.log(stories)
 
   return stories as StoryWithProfile[]
 }

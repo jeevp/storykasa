@@ -2,8 +2,6 @@
 
 import {
   Flex,
-  Text,
-  Grid,
   Heading,
   Link,
   ScrollArea,
@@ -13,19 +11,26 @@ import {
 } from '@radix-ui/themes'
 import StoryCard from '@/app/(home)/story-card'
 import { StoryWithProfile } from '@/lib/database-helpers.types'
-import { Suspense, useEffect, useState } from 'react'
-import { getLibraryStories } from '@/lib/_actions'
+import { useEffect, useState} from 'react'
+import {getLibraryStories} from '@/lib/_actions'
 import StoryDetails from '../story-details'
 import PageWrapper from '@/app/page-wrapper'
-import { AnimatePresence, motion } from 'framer-motion'
-import { MagnifyingGlass, Warning } from '@phosphor-icons/react'
+import {AnimatePresence, motion} from 'framer-motion'
+import {MagnifyingGlass, Warning} from '@phosphor-icons/react'
 import InfoTooltip from '../info-tooltip'
+import useDevice from "@/app/customHooks/useDevice";
+import StoryDetailsDialog from "@/app/composedComponents/StoryDetailsDialog/StoryDetailsDialog";
+import STKRecordAudio from "@/app/components/STKRecordAudio/STKRecordAudio";
+import STKAudioPlayer from "@/app/components/STKAudioPlayer/STKAudioPlayer";
 
 export default function Library() {
+  const { onMobile } = useDevice()
   const [filterQuery, setFilterQuery] = useState('')
   const [stories, setStories] = useState<StoryWithProfile[]>([])
   const [selectedIndex, setSelectedIndex] = useState<number>()
   const [loaded, setLoaded] = useState(false)
+  const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
+  const [recordedAudioUrl, setRecordedAudioUrl] = useState("")
 
   const handleFilterQueryChange = (e: React.FormEvent<HTMLInputElement>) => {
     setFilterQuery(e.currentTarget.value)
@@ -38,14 +43,23 @@ export default function Library() {
   }
 
   const filtered = stories
-    ? stories.filter((story) =>
-        story.title.toLowerCase().includes(filterQuery.toLowerCase())
+      ? stories.filter((story) =>
+          story.title.toLowerCase().includes(filterQuery.toLowerCase())
       )
-    : []
+      : []
+
+  const handleStoryClick = (index: number) => {
+    setSelectedIndex(index)
+    if (onMobile) setShowStoryDetailsDialog(true)
+  }
 
   useEffect(() => {
     loadStories()
   }, [])
+
+  const handleRecordOnComplete = (recordUrl: any) => {
+    setRecordedAudioUrl(recordUrl)
+  }
 
   return (
     <PageWrapper path="library">
@@ -57,11 +71,12 @@ export default function Library() {
       </Heading>
 
       {loaded && (
-        <Grid columns="2" gap="5">
+        <div className="flex sm:w-full">
           {stories.length ? (
             <AnimatePresence mode="wait">
               (
               <motion.div
+                className="w-full"
                 initial={{ x: 10, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 10, opacity: 0 }}
@@ -81,22 +96,23 @@ export default function Library() {
                   </TextField.Root>
                 )}
                 <ScrollArea
-                  type="scroll"
-                  scrollbars="vertical"
-                  style={{ height: '80vh' }}
+                    type="scroll"
+                    scrollbars="vertical"
+                    style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}
                 >
                   {filtered?.map((story: StoryWithProfile, index: number) => (
-                    <a
-                      key={story.story_id}
-                      onClick={() => setSelectedIndex(index)}
-                    >
-                      <StoryCard
-                        story={story}
-                        selected={selectedIndex === index}
-                      ></StoryCard>
-                    </a>
+                      <a
+                          key={story.story_id}
+                          onClick={() => handleStoryClick(index)}
+                      >
+                        <StoryCard
+                            story={story}
+                            selected={selectedIndex === index}
+                        ></StoryCard>
+                      </a>
                   ))}
                 </ScrollArea>
+
               </motion.div>
             </AnimatePresence>
           ) : (
@@ -124,20 +140,26 @@ export default function Library() {
           )}
 
           {selectedIndex !== undefined && (
-            <AnimatePresence mode="wait">
-              (
-              <motion.div
-                initial={{ x: 10, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 10, opacity: 0 }}
-                key={selectedIndex}
-              >
-                <StoryDetails story={stories[selectedIndex]}></StoryDetails>
-              </motion.div>
-            </AnimatePresence>
+              <div className="hidden lg:flex lg:pl-8 w-full">
+                <AnimatePresence mode="wait">
+                  (
+                  <motion.div
+                      initial={{ x: 10, opacity: 0, width: "100%" }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: 10, opacity: 0 }}
+                      key={selectedIndex}
+                  >
+                    <StoryDetails story={stories[selectedIndex]}></StoryDetails>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
           )}
-        </Grid>
+        </div>
       )}
+      <StoryDetailsDialog
+          open={showStoryDetailsDialog}
+          story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
+          onClose={() => setShowStoryDetailsDialog(false)}/>
     </PageWrapper>
   )
 }

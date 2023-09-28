@@ -1,4 +1,4 @@
-import { Box, Flex, Separator, Theme } from '@radix-ui/themes'
+import { Box, Flex, Separator } from '@radix-ui/themes'
 import Image from 'next/image'
 
 export default function LoginLayout({
@@ -19,8 +19,6 @@ export default function LoginLayout({
       </Flex>
       <Separator size="4"></Separator>
       <Flex direction="row" gap="7" mt="6">
-        <Box style={{ flex: 1.25 }}></Box>
-
         <Box style={{ flex: 5 }}>{children}</Box>
       </Flex>
     </>

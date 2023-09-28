@@ -1,3 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "../(home)/nav.scss";
+@import "../components/STKAudioPlayer/style.scss";
+@import "../components/STKRecordAudio/style.scss";
+@import "../components/STKLoading/style.scss";
+
 body {
   background-color: #fffcef !important;
 }
@@ -21,10 +29,6 @@ a[role='button'] {
   padding: 0.7em 1em;
   background-color: #96ea8f;
   box-shadow: 0 5px 0 #6bc563;
-
-  // background-color: #fff;
-  // box-shadow: 0 5px 0 #e0e0e0;
-  // border: 2px solid red;
   font-weight: 500;
 }
 

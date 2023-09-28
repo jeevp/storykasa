@@ -27,7 +27,6 @@ export default function ProfileProvider({
       const { data: accounts } = await supabase.from('accounts').select()
 
       if (!session || !accounts) {
-        console.log('no account, redirecting to login')
         router.push('/login')
       }
       // declare the async data fetching function

@@ -4,7 +4,6 @@ import * as Form from '@radix-ui/react-form'
 import Image from 'next/image'
 import {
   Card,
-  Box,
   Flex,
   TextField,
   Button,
@@ -12,7 +11,6 @@ import {
   Text,
   Link,
 } from '@radix-ui/themes'
-import { Auth } from '@supabase/auth-ui-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -21,10 +19,9 @@ export default function SignupForm() {
   const [errorMsg, setErrorMsg] = useState('')
   const router = useRouter()
   const supabase = createClientComponentClient<Database>()
-  const [signedUp, setSignedUp] = useState(false)
 
   const handleSignInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${location.origin}/auth/callback`,
@@ -52,8 +49,6 @@ export default function SignupForm() {
     if (error) {
       setErrorMsg(error.message)
     }
-
-    // setErrorMsg('Invalid username/password combination')
   }
 
   return (

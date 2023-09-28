@@ -12,24 +12,24 @@ export interface Database {
       accounts: {
         Row: {
           account_id: string
-          avatar_url: string
+          avatar_url: string | null
           created_at: string
           name: string
-          username: string
+          username: string | null
         }
         Insert: {
           account_id: string
-          avatar_url: string
+          avatar_url?: string | null
           created_at?: string
           name: string
-          username: string
+          username?: string | null
         }
         Update: {
           account_id?: string
-          avatar_url?: string
+          avatar_url?: string | null
           created_at?: string
           name?: string
-          username?: string
+          username?: string | null
         }
         Relationships: [
           {
@@ -161,14 +161,7 @@ export interface Database {
           profile_id?: string
           profile_name?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_account_id_fkey"
-            columns: ["account_id"]
-            referencedRelation: "accounts"
-            referencedColumns: ["account_id"]
-          }
-        ]
+        Relationships: []
       }
       stories: {
         Row: {

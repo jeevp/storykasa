@@ -9,8 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.11",
+    "@mui/material": "^5.14.11",
     "@phosphor-icons/react": "^2.0.10",
+    "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/themes": "^1.0.0",
+    "@remotion/preload": "^4.0.40",
     "@supabase/auth-helpers-nextjs": "^0.7.4",
     "@supabase/auth-ui-react": "^0.4.2",
     "@supabase/auth-ui-shared": "^0.1.6",
@@ -21,19 +27,27 @@
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
     "framer-motion": "^10.15.2",
+    "howler": "^2.2.4",
     "next": "13.4.13",
     "react": "18.2.0",
-    "react-audio-player-component": "^1.2.4",
-    "react-audio-voice-recorder": "^2.1.2",
     "react-dom": "18.2.0",
+    "react-howler": "^5.2.0",
+    "react-icons": "^4.11.0",
     "react-images-uploading": "^3.1.7",
+    "recordrtc": "^5.6.2",
     "timeago.js": "^4.0.2",
     "typescript": "5.1.6",
+    "url-loader": "^4.1.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.9",
+    "@types/recordrtc": "^5.6.12",
     "@types/uuid": "^9.0.2",
+    "autoprefixer": "^10.4.15",
     "encoding": "^0.1.13",
-    "sass": "^1.65.1"
+    "postcss": "^8.4.29",
+    "sass": "^1.65.1",
+    "tailwindcss": "^3.3.3"
   }
 }

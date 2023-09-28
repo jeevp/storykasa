@@ -1,24 +1,20 @@
 'use client'
 
-import { addProfile, getProfiles } from '../../../lib/_actions'
-
 import { useContext, useEffect, useState } from 'react'
-import ProfileProvider, { ProfileContext } from '@/app/profile-provider'
+import { ProfileContext } from '@/app/profile-provider'
 import { Profile } from '@/lib/database-helpers.types'
 import { initials } from '@/lib/utils'
 import {
-  Select,
   Flex,
   Avatar,
   Text,
-  Card,
   Button,
   Box,
   IconButton,
 } from '@radix-ui/themes'
 import ProfileEditor from './profile-editor'
 import { ArrowLeft, PencilSimple, Plus, Users } from '@phosphor-icons/react'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
@@ -53,23 +49,9 @@ export default function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
       setManaging(true)
       setEditing(true)
     }
-
-    // const channel = supabase
-    //   .channel('*')
-    //   .on(
-    //     'postgres_changes',
-    //     { event: 'INSERT', schema: 'public', table: 'posts' },
-    //     (payload) => setProfileOptions((p: any) => [...p, payload.new])
-    //   )
-    //   .subscribe()
-
-    // return () => {
-    //   supabase.removeChannel(channel)
-    // }
   }, [])
 
   const selectProfile = (profile: Profile) => {
-    console.log(profile)
     const id = profile.profile_id
     localStorage.setItem('currentProfileID', id)
     setCurrentProfileID(id)

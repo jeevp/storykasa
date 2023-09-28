@@ -1,24 +1,17 @@
 import '@radix-ui/themes/styles.css'
 import {
   Box,
-  Container,
   Flex,
-  Grid,
   Separator,
-  Theme,
-  ThemePanel,
 } from '@radix-ui/themes'
 import '../themes-config.css'
 import Image from 'next/image'
 
-import type { Metadata } from 'next'
 import Nav from './nav'
 import ProfileProvider from '../profile-provider'
-import { redirect } from 'next/navigation'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import AccountDetails from './account-details'
-import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
@@ -50,13 +43,13 @@ export default async function HomeLayout({
           <AccountDetails account={accounts[0]}></AccountDetails>
         </Flex>
         <Separator size="4"></Separator>
-        <Flex direction="row" gap="7" mt="6">
+        <div className="flex-col flex lg:flex-row mt-12 pb-28 lg:pb-0">
           <Box style={{ flex: 1.25 }}>
-            <Nav></Nav>
+            <Nav />
           </Box>
 
-          <Box style={{ flex: 5 }}>{children}</Box>
-        </Flex>
+          <Box className="lg:ml-14 mt-10 lg:mt-0" style={{ flex: 5 }}>{children}</Box>
+        </div>
       </ProfileProvider>
     )
   } else {

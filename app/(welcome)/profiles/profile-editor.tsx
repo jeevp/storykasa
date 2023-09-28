@@ -1,17 +1,13 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ImageUploading, { ImageListType } from 'react-images-uploading'
-import Image from 'next/image'
 import { Label } from '@radix-ui/react-label'
 import {
   Button,
   Flex,
   IconButton,
-  Select,
-  TextArea,
   TextField,
   Text,
-  Box,
   Card,
   Avatar,
   Theme,
@@ -20,11 +16,9 @@ import {
 import {
   ArrowCircleRight,
   PencilSimple,
-  Sparkle,
   UserPlus,
   X,
 } from '@phosphor-icons/react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Profile } from '@/lib/database-helpers.types'
 import { addProfile, uploadAvatar } from '@/lib/_actions'
@@ -44,7 +38,6 @@ export default function ProfileEditor({
     addUpdateIndex: number[] | undefined
   ) => {
     // data for submit
-    console.log(imageList, addUpdateIndex)
     setImages(imageList as never[])
   }
 
@@ -126,11 +119,6 @@ export default function ProfileEditor({
                   </AlertDialog.Description>
 
                   <Flex gap="3" mt="4" justify="end">
-                    {/* <AlertDialog.Cancel>
-                      <Button variant="soft" color="gray">
-                        Cancel
-                      </Button>
-                    </AlertDialog.Cancel> */}
                     <AlertDialog.Action>
                       <Button onClick={() => router.push('/')} color="grass">
                         <ArrowCircleRight size="20"></ArrowCircleRight>

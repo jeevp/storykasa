@@ -1,118 +1,81 @@
 'use client'
 
 import {
-  AlertDialog,
-  Avatar,
   Box,
   Button,
-  Card,
-  Flex,
-  Heading,
   ScrollArea,
-  Text,
 } from '@radix-ui/themes'
+import { Avatar } from "@mui/material"
 import { StoryWithProfile } from '../../lib/database-helpers.types'
-import AudioPlayer from './record/audio-player'
-import { capitalize, initials } from '../../lib/utils'
-import { useContext } from 'react'
+import {useContext, useState} from 'react'
 import { ProfileContext } from '../profile-provider'
 import { Baby, GlobeSimple, Trash } from '@phosphor-icons/react'
-import { deleteStory } from '@/lib/_actions'
 import { useRouter } from 'next/navigation'
+import STKAudioPlayer from "@/app/components/STKAudioPlayer/STKAudioPlayer";
+import DeleteStoryDialog from "@/app/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
 
-export default function StoryDetails({ story }: { story: StoryWithProfile }) {
+interface StoryDetailsProps {
+  story: StoryWithProfile | null
+}
+export default function StoryDetails({ story }: StoryDetailsProps) {
   const router = useRouter()
 
-  const handleDeleteStory = () => {
-    deleteStory(story.story_id)
-    router.push('/')
-  }
+  // States
+  const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
 
   const { currentProfileID } = useContext(ProfileContext) as any
 
   return (
     <div>
-      <Box px="4">
-        <Heading size="6">{story.title}</Heading>
-
-        <Flex direction="row" align="center" mt="5">
+      <Box>
+        <h1 className="max-w-[12em] text-2xl font-semibold">{story?.title}</h1>
+        <div className="mt-4 flex items-center">
           <Avatar
-            src={story.profiles?.avatar_url!}
-            fallback={initials(story.profiles.profile_name)}
-            size="2"
-            mr="3"
-            radius="full"
+            src={story?.profiles?.avatar_url!}
           ></Avatar>
-          <Text size="3" weight="bold">
-            {story.profiles.profile_name}
-          </Text>
-        </Flex>
-        <Flex direction="column" gap="1" mt="4">
-          {story.age_group && (
-            <Flex direction="row" gap="1">
+          <label className="ml-2 font-semibold text-base">{story?.profiles.profile_name}</label>
+        </div>
+        <div className="flex flex-col mt-4">
+          {story?.age_group && (
+            <div className="flex items-center">
               <Baby size={20} />
-              <Text size="2" weight="medium">
+              <label className="ml-2">
                 {story.age_group}
-              </Text>
-            </Flex>
+              </label>
+            </div>
           )}
-          {story.language && (
-            <Flex direction="row" gap="1">
+          {story?.language && (
+            <div className="flex items-center mt-1">
               <GlobeSimple size={20} />
-              <Text size="2" weight="medium">
-                {capitalize(story.language)}
-              </Text>
-            </Flex>
+              <label className="ml-2">
+                {story.age_group}
+              </label>
+            </div>
           )}
-        </Flex>
-        {story.recording_url && (
-          <Card mt="6" variant="surface">
-            <AudioPlayer
-              src={story.recording_url}
-              key={story.recording_url}
-            ></AudioPlayer>
-          </Card>
+        </div>
+        {story?.recording_url && (
+            <div key={story.recording_url} className="mt-6">
+              <STKAudioPlayer outlined src={story.recording_url} />
+            </div>
         )}
-        <Box mt="4">
-          <ScrollArea scrollbars="vertical" style={{ height: 200 }}>
-            {story.description}
-          </ScrollArea>
-        </Box>
-        {currentProfileID === story.profiles.profile_id && (
-          <AlertDialog.Root>
-            <AlertDialog.Trigger>
-              <Button size="2" my="3" variant="ghost">
+        <div className="mb-8 mt-6">
+          <Box mt="4">
+            <ScrollArea scrollbars="vertical">
+              {story?.description}
+            </ScrollArea>
+          </Box>
+        </div>
+        {currentProfileID === story?.profiles.profile_id && (
+            <div>
+              <Button size="2" my="3" variant="ghost" onClick={() => setShowDeleteStoryDialog(true)}>
                 <Trash size={18} />
-                <Text>Delete story</Text>
+                <label className="ml-2">Delete story</label>
               </Button>
-            </AlertDialog.Trigger>
-            <AlertDialog.Content style={{ maxWidth: 450 }}>
-              <AlertDialog.Title>
-                Delete &ldquo;{story.title}&rdquo;?
-              </AlertDialog.Title>
-              <AlertDialog.Description size="2">
-                Are you sure you want to delete this story? Deleting a story is
-                permanent and cannot be undone.
-              </AlertDialog.Description>
-
-              <Flex gap="3" mt="4" justify="end">
-                <AlertDialog.Cancel>
-                  <Button variant="soft" color="gray">
-                    Cancel
-                  </Button>
-                </AlertDialog.Cancel>
-                <AlertDialog.Action>
-                  <Button
-                    variant="solid"
-                    color="red"
-                    onClick={handleDeleteStory}
-                  >
-                    <Trash size={20}></Trash>Yes, delete story
-                  </Button>
-                </AlertDialog.Action>
-              </Flex>
-            </AlertDialog.Content>
-          </AlertDialog.Root>
+              <DeleteStoryDialog
+              open={showDeleteStoryDialog}
+              story={story}
+              onClose={() => setShowDeleteStoryDialog(false)} />
+            </div>
         )}
       </Box>
     </div>

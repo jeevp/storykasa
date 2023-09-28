@@ -1,0 +1,148 @@
+@import "../../assets/colorPallet/colors";
+
+.stk-audio-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid $neutral300;
+}
+
+.controls-volume-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 500px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.progress-bar {
+  width: 100%;
+}
+
+.volume {
+  text-align: right;
+}
+
+.progress-bar {
+  input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::-webkit-slider-runnable-track {
+      height: 2px;
+      background: linear-gradient(
+        to right,
+        #333 0%,
+        #333 var(--progress),
+        #ccc var(--progress),
+        #ccc 100%
+      );
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #333;
+      cursor: pointer;
+      transform: translateY(-5px);
+    }
+
+    &:hover {
+      &::-webkit-slider-thumb {
+        background: #444;
+      }
+
+      &::-webkit-slider-runnable-track {
+        background: linear-gradient(
+          to right,
+          #444 0%,
+          #444 var(--progress),
+          #ccc var(--progress),
+          #ccc 100%
+        );
+      }
+    }
+
+    &::-moz-range-track {
+      height: 3px;
+      background: linear-gradient(
+        to right,
+        #333 0%,
+        #333 var(--progress),
+        #ccc var(--progress),
+        #ccc 100%
+      );
+    }
+
+    &::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #333;
+      cursor: pointer;
+      transform: translateY(-5px); /* Adjust the vertical alignment */
+    }
+  }
+}
+
+.volume-bar {
+  input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::-webkit-slider-runnable-track {
+      height: 2px;
+      background: linear-gradient(
+        to right,
+        #333 0%,
+        #333 var(--volume),
+        #ccc var(--volume),
+        #ccc 100%
+      );
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #333;
+      cursor: pointer;
+      transform: translateY(-5px);
+    }
+
+    &::-moz-range-track {
+      height: 2px;
+      background: linear-gradient(
+        to right,
+        #333 0%,
+        #333 var(--volume),
+        #ccc var(--volume),
+        #ccc 100%
+      );
+    }
+
+    &::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #333;
+      cursor: pointer;
+      transform: translateY(-5px); /* Adjust the vertical alignment */
+    }
+  }
+}
