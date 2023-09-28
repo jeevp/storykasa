@@ -24,29 +24,31 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
     const [stream, setStream] = useState(null);
     const [processing, setProcessing] = useState(false);
 
-    // const ffmpegRef = useRef(new FFmpeg());
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const startRecording = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
             // @ts-ignore
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const gainNode = audioContext.createGain();
 
-            gainNode.gain.value = 2
-            const audioStream = audioContext.createMediaStreamSource(stream);
-            audioStream.connect(gainNode);
+            const source = audioContext.createMediaStreamSource(stream);
+            source.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            gainNode.gain.value = 2;
+
             // @ts-ignore
-            mediaRecorderRef.current = RecordRTC(gainNode, { type: 'audio', mimeType: 'audio/wav' });
+            mediaRecorderRef.current = RecordRTC(audioContext.createMediaStreamDestination().stream, {type: 'audio', mimeType: 'audio/wav'});
             // @ts-ignore
             mediaRecorderRef.current.startRecording();
 
             // @ts-ignore
             setStream(stream);
             setRecording(true);
-
             intervalRef.current = setInterval(() => {
                 setDuration((prevDuration) => prevDuration + 1);
             }, 1000);
