@@ -1,4 +1,4 @@
-import { Database } from '@/lib/database.types'
+import { Database } from './database.types'
 
 export type Account = Database['public']['Tables']['accounts']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
