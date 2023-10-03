@@ -10,6 +10,7 @@ interface FeedbackDialogProps {
     title?: string;
     text?: string;
     actionButtonText?: string;
+    loading?: boolean;
     onClose?: () => void;
     onAction?: () => void;
     actionButtonStartIcon?: () => void;
@@ -22,6 +23,7 @@ export default function FeedbackDialog({
     actionButtonStartIcon = () => ({}),
     actionButtonText,
     onAction = () => ({}),
+    loading,
     onClose = () => ({})
 }: FeedbackDialogProps) {
     const { onMobile } = useDevice()
@@ -46,6 +48,7 @@ export default function FeedbackDialog({
                         <STKButton
                             fullWidth={onMobile}
                             color="primary"
+                            loading={loading}
                             startIcon={actionButtonStartIcon}
                             onClick={() => onAction()}>
                             {actionButtonText}

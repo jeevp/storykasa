@@ -4,9 +4,9 @@ import {green600} from "@/assets/colorPallet/colors";
 import theme from "@/components/theme";
 
 
-const StyledButton = styled(Button)(({ theme, color, forceColor }) => ({
+const StyledButton = styled(Button)(({ theme, color, rounded }) => ({
     textTransform: 'none',
-    height: '40px'
+    borderRadius: rounded ? "20px" : "",
 }));
 
 interface STKButtonProps {
@@ -17,10 +17,14 @@ interface STKButtonProps {
     color?: string
     loading?: boolean
     fullWidth?: boolean
+    rounded?: boolean
     forceColor?: boolean
     type?: string
     onClick?: Function
     iconButton?: boolean
+    slim?: boolean
+    height?: string
+    width?: string
 }
 
 export default function STKButton({
@@ -30,8 +34,11 @@ export default function STKButton({
     variant = "contained",
     color = "primary",
     fullWidth,
+    slim,
     loading,
-    forceColor,
+    rounded,
+    height,
+    width,
     type,
     iconButton,
     onClick = () => ({})
@@ -49,7 +56,13 @@ export default function STKButton({
         // @ts-ignore
         <ThemeProvider theme={theme}>
             {iconButton ? (
-                <IconButton>
+                <IconButton
+                color={color}
+                sx={{
+                    width: width || "auto",
+                    height: height || "auto"
+                }}
+                onClick={() => onClick()}>
                     {children}
                 </IconButton>
             ) : (
@@ -59,10 +72,10 @@ export default function STKButton({
                     fullWidth={fullWidth}
                     color={color}
                     type={type}
-                    forceColor={forceColor}
+                    rounded={rounded}
                     disableElevation
                     variant={variant}
-                    sx={{ textTransform: "none", height: "40px"}}
+                    sx={{ textTransform: "none", height: slim ? "30px" : height || "40px", width: width || "auto" }}
                     onClick={() => onClick()}>
                     {loading ? (
                         // @ts-ignore

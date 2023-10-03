@@ -42,7 +42,6 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
             await router.push('/profiles')
         } catch(error) {
             setErrorMsg("Something went wrong")
-        } finally {
             setLoading(false)
         }
     }

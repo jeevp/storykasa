@@ -63,8 +63,8 @@ class ProfileController {
             }
 
             const attributesToBeUpdated = {}
-            const { name, avatarUrl } = req.bodu
-            if (name) attributesToBeUpdated.name = name
+            const { name, avatarUrl } = req.body
+            if (name) attributesToBeUpdated.profile_name = name
             if (avatarUrl) attributesToBeUpdated.avatar_url = avatarUrl
 
             await supabase.from("profiles")

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from "@/composedComponents/Navbar/Navbar";
 import SideNavigation from "@/composedComponents/SideNavigation/SideNavigation";
+import {usePathname, useRouter} from "next/navigation";
 
 export default function PageWrapper({
     children,
@@ -9,6 +10,8 @@ export default function PageWrapper({
     children: React.ReactNode
     path: string
 }) {
+    const pathname = usePathname()
+
     return (
         <AnimatePresence mode="wait">
             <motion.div
@@ -21,9 +24,11 @@ export default function PageWrapper({
                     <div className="w-full" style={{ maxWidth: "1280px" }}>
                         <Navbar />
                         <div className="mt-8 flex items-center w-full">
-                            <div>
-                                <SideNavigation />
-                            </div>
+                            {pathname !== "/profiles" && (
+                                <div>
+                                    <SideNavigation />
+                                </div>
+                            )}
                             <div>
                                 {children}
                             </div>

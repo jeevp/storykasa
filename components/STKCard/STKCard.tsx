@@ -3,7 +3,8 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 
 interface STKCardProps {
-    children: any
+    children: any,
+    padding: string
 }
 
 export default function STKCard({ children }: STKCardProps) {

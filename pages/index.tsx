@@ -11,14 +11,6 @@ function Welcome() {
         await router.push(route)
     }
 
-    useEffect(() => {
-        handleTry()
-    }, []);
-
-    const handleTry = async () => {
-        const response = await axios.get('/api/stories')
-        console.log({ data: response.data })
-    }
 
     return (
         <div>
