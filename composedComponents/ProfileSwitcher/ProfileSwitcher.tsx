@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from 'react'
-import { ProfileContext } from '@/composedComponents/ProfileProvider/ProfileProvider'
 import { Profile } from '@/lib/database-helpers.types'
 import ProfileEditor from '../ProfileEditor/ProfileEditor'
-import { ArrowLeft, PencilSimple, Plus, Users } from '@phosphor-icons/react'
+import { PencilSimple, Plus } from '@phosphor-icons/react'
 import { useRouter } from 'next/navigation'
 import {Avatar} from "@mui/material";
 import STKButton from "@/components/STKButton/STKButton";
+import ProfileContext from "@/contexts/ProfileContext";
 
 export default function ProfileSwitcher({ profiles, managing }: { profiles: Profile[], managing: boolean }) {
     // Context
-    const { setCurrentProfileID } = useContext(ProfileContext) as any
+    const { setCurrentProfileId } = useContext(ProfileContext) as any
 
     // Hooks
     const router = useRouter()
@@ -41,16 +41,14 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
 
     const selectProfile = async (profile: Profile) => {
         const id = profile.profile_id
-        localStorage.setItem('currentProfileID', id)
-        setCurrentProfileID(id)
-        await router.push('/library')
+        setCurrentProfileId(id)
+        router.push('/library')
     }
 
     const addProfile = () => {
         setEditing(true)
     }
 
-    console.log({ editing, managing })
 
     return (
         <div className="mt-5 flex-col">

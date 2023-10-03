@@ -1,13 +1,13 @@
-import { createContext, useEffect, useState } from 'react'
+import {createContext, useContext, useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-
-export const ProfileContext = createContext('')
+import ProfileContext from "@/contexts/ProfileContext";
 
 export default function ProfileProvider({ children }: {
     children: React.ReactNode
 }) {
-    const [currentProfileID, setCurrentProfileID] = useState<string>('')
+    const { currentProfileId } = useContext(ProfileContext)
+
     const router = useRouter()
     const supabase = createClientComponentClient<Database>()
 
@@ -26,12 +26,10 @@ export default function ProfileProvider({ children }: {
             }
             // declare the async data fetching function
 
-            const id = localStorage.getItem('currentProfileID')
-            if (id) {
-                setCurrentProfileID(id)
-            } else {
+            if (!currentProfileId) {
                 router.push('/profiles')
             }
+
             setLoaded(true)
         }
 
@@ -40,11 +38,9 @@ export default function ProfileProvider({ children }: {
 
     if (loaded) {
         return (
-            <ProfileContext.Provider
-                value={{ currentProfileID, setCurrentProfileID } as any}
-            >
+            <div>
                 {children}
-            </ProfileContext.Provider>
+            </div>
         )
     } else {
         return <></>

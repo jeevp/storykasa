@@ -25,7 +25,7 @@ export default function PageWrapper({
                         <Navbar />
                         <div className="mt-8 flex items-center w-full">
                             {pathname !== "/profiles" && (
-                                <div>
+                                <div className="mr-20">
                                     <SideNavigation />
                                 </div>
                             )}
