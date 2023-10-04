@@ -8,6 +8,7 @@ import volumeOffIcon from "../../assets/icons/volume-off.svg"
 import Image from "next/image";
 import './style.scss';
 import useAppleDevice from "@/customHooks/useAppleDevice";
+import STKButton from "@/components/STKButton/STKButton";
 
 interface STKAudioPlayerProps {
     src: string;
@@ -135,20 +136,24 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
             <div className="flex items-center w-full justify-between mt-4">
                 <div className="controls">
-                    <button onClick={handleBackward}>
+                    <STKButton onClick={handleBackward} iconButton>
                         <Image src={skipIcon} alt="Skip backwards" width={16} style={{ transform: "rotate(180deg)" }} />
-                    </button>
-                    <button onClick={() => setIsPlaying(!isPlaying)} className="px-2">
-                        {isPlaying ? <Image width={20} src={pauseIcon} alt="Pause" /> : <Image src={playIcon} width={20} alt="Play" />}
-                    </button>
-                    <button onClick={handleForward}>
+                    </STKButton>
+                    <div className="px-2">
+                        <STKButton iconButton onClick={() => setIsPlaying(!isPlaying)}>
+                            {isPlaying ? <Image width={20} src={pauseIcon} alt="Pause" /> : <Image src={playIcon} width={20} alt="Play" />}
+                        </STKButton>
+                    </div>
+                    <STKButton iconButton onClick={handleForward}>
                         <Image src={skipIcon} alt="Skip forward" width={16} />
-                    </button>
+                    </STKButton>
                 </div>
                 <div className="volume w-30 flex items-center pl-10">
-                    <button onClick={toggleMute} className="mr-2">
-                        <Image src={volume ? volumeOnIcon : volumeOffIcon} alt="Volume Toggle" width={16} />
-                    </button>
+                    <div className="mr-2">
+                        <STKButton iconButton onClick={toggleMute}>
+                            <Image src={volume ? volumeOnIcon : volumeOffIcon} alt="Volume Toggle" width={16} />
+                        </STKButton>
+                    </div>
                     <div className="volume-bar items-center flex">
                         <input
                             type="range"

@@ -7,6 +7,7 @@ import ProfileContext from '@/contexts/ProfileContext'
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
 import STKButton from "@/components/STKButton/STKButton";
+import STKAvatar from "@/components/STKAvatar/STKAvatar";
 
 interface StoryDetailsProps {
     story: StoryWithProfile | null
@@ -22,11 +23,12 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
     return (
         <div>
             <div>
-                <h1 className="max-w-[12em] text-2xl font-semibold">{story?.title}</h1>
+                <h1 className="m-0 max-w-[12em] text-2xl font-semibold">{story?.title}</h1>
                 <div className="mt-4 flex items-center">
-                    <Avatar
+                    <STKAvatar
                         src={story?.profiles?.avatar_url!}
-                    ></Avatar>
+                        name={story?.profiles.profile_name}
+                    />
                     <label className="ml-2 font-semibold text-base">{story?.profiles.profile_name}</label>
                 </div>
                 <div className="flex flex-col mt-4">
@@ -61,7 +63,7 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
                 </div>
                 {currentProfileId === story?.profiles.profile_id && (
                     <div>
-                        <STKButton startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
+                        <STKButton variant="outlined" startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
                             Delete story
                         </STKButton>
                         <DeleteStoryDialog

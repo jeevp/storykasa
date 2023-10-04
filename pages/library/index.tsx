@@ -23,8 +23,8 @@ function Library() {
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
     const [recordedAudioUrl, setRecordedAudioUrl] = useState("")
 
-    const handleFilterQueryChange = (e: React.FormEvent<HTMLInputElement>) => {
-        setFilterQuery(e.currentTarget.value)
+    const handleFilterQueryChange = (value: string) => {
+        setFilterQuery(value)
     }
 
     const loadStories = async () => {
@@ -128,7 +128,7 @@ function Library() {
                     )}
 
                     {selectedIndex !== undefined && (
-                        <div className="hidden lg:flex lg:pl-8 w-full">
+                        <div className="hidden lg:flex lg:ml-10 w-full">
                             <AnimatePresence mode="wait">
                                 (
                                 <motion.div

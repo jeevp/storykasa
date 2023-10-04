@@ -1,6 +1,8 @@
 @import "../../assets/colorPallet/colors";
 
 .stk-card {
+  border-radius: 8px !important;
+
   &:hover {
     border-color: $neutral800;
   }
