@@ -24,15 +24,15 @@ export default function PageWrapper({
                 key={path}
             >
                 <div className="w-full flex justify-center mt-4">
-                    <div className="w-full" style={{ maxWidth: "1280px" }}>
+                    <div className="w-full px-2" style={{ maxWidth: "1280px" }}>
                         <Navbar />
                         <div className="mt-8 flex w-full">
                             {currentUser && pathname !== "/profiles" && (
-                                <div className="mr-20 w-80">
+                                <div className="mr-20 w-80 absolute lg:relative">
                                     <SideNavigation />
                                 </div>
                             )}
-                            <div className="w-full">
+                            <div className="w-full ">
                                 {children}
                             </div>
                         </div>

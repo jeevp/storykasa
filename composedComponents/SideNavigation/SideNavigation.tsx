@@ -10,6 +10,8 @@ import ProfileContext from "@/contexts/ProfileContext";
 import STKButton from "@/components/STKButton/STKButton";
 import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {useRouter} from "next/router";
+import {neutral800} from "@/assets/colorPallet/colors";
+import RecordButton from "@/composedComponents/RecordButton/RecordButton";
 
 export default function SideNavigation() {
     // Hooks
@@ -61,49 +63,23 @@ export default function SideNavigation() {
                         exit={{ x: 10, opacity: 0 }}
                         key={currentProfile?.profile_id}
                     >
-                        <h2 className="m-0 text-base">Hi, {currentProfile?.profile_name}!</h2>
+                        <h2 className="m-0 text-base hidden lg:block">Hi, {currentProfile?.profile_name}!</h2>
 
                         <div className= "nav lg:mt-8 w-full lg:w-auto flex lg:flex-col bg-white lg:bg-transparent justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
-                            <STKButtonTabs
-                                tabs={[
-                                    { text: "Discover", icon: <BookOpenText size={24} />, pathname: "/discovery"  },
-                                    { text: "My Library", icon: <Books size={24} weight="duotone" />, pathname: "/library" },
-                                ]}
-                                onChange={handleTabOnChange}
-                            />
-                            {/*<div className="w-full">*/}
-                            {/*    <STKButton*/}
-                            {/*    alignStart*/}
-                            {/*    fullWidth*/}
-                            {/*    height="45px"*/}
-                            {/*    color="secondary"*/}
-                            {/*    variant={pathname === "/discover" ? 'contained' : 'outlined'}*/}
-                            {/*    startIcon={<BookOpenText size={24} />}>*/}
-                            {/*        Discover*/}
-                            {/*    </STKButton>*/}
-                            {/*</div>*/}
+                           <div className="flex justify-center lg:flex-col -ml-10 lg:ml-0">
+                               <STKButtonTabs
+                                   useIconButtonOnMobile
+                                   tabs={[
+                                       { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discovery"  },
+                                       { text: "My Library", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/library" },
+                                   ]}
+                                   onChange={handleTabOnChange}
+                               />
 
-                            {/*<div className="mt-2">*/}
-                            {/*    <STKButton*/}
-                            {/*    alignStart*/}
-                            {/*    fullWidth*/}
-                            {/*    color="secondary"*/}
-                            {/*    height="45px"*/}
-                            {/*    variant={pathname === "/library" ? 'contained' : 'outlined'}*/}
-                            {/*    startIcon={<Books size={24} weight="duotone" />}>*/}
-                            {/*        My library*/}
-                            {/*    </STKButton>*/}
-                            {/*</div>*/}
-
-                            <div className="mt-6">
-                                <STKButton
-                                alignStart
-                                fullWidth
-                                height="45px"
-                                startIcon={<Microphone size={24} weight="duotone" />}>
-                                    Add a story
-                                </STKButton>
-                            </div>
+                               <div className="lg:mt-6 ml-4 lg:ml-0 lg:w-full">
+                                   <RecordButton />
+                               </div>
+                           </div>
                         </div>
                     </motion.div>
                 </AnimatePresence>
