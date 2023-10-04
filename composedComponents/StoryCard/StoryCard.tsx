@@ -14,7 +14,7 @@ export default function StoryCard({
 }) {
     return (
         <STKCard>
-            <div className="flex items-center">
+            <div className="flex items-center p-4">
                 <Avatar src={story.profiles?.avatar_url!}/>
                 <div className="w-full cursor-pointer">
                     <div className="flex items-center justify-between w-full">

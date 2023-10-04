@@ -2,6 +2,7 @@ import {useState} from "react";
 import PageWrapper from '@/composedComponents/PageWrapper'
 import LoginForm from '@/composedComponents/LoginForm/LoginForm'
 import PasswordRecoveryForm from "@/composedComponents/PasswordRecoveryForm/PasswordRecoveryForm";
+import withoutAuth from "@/HOC/withoutAuth";
 
 function Login() {
     const [showPasswordRecoveryForm, setShowPasswordRecoveryForm] = useState(false)
@@ -25,4 +26,4 @@ function Login() {
     )
 }
 
-export default Login
+export default withoutAuth(Login)

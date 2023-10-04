@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import STKButton from "@/components/STKButton/STKButton";
 import {useRouter} from "next/navigation";
 import axios from "axios";
+import withoutAuth from "@/HOC/withoutAuth";
 
 
 function Welcome() {
@@ -35,4 +36,4 @@ function Welcome() {
     )
 }
 
-export default Welcome
+export default withoutAuth(Welcome)

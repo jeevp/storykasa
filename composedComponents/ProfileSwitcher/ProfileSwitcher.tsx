@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import {Avatar} from "@mui/material";
 import STKButton from "@/components/STKButton/STKButton";
 import ProfileContext from "@/contexts/ProfileContext";
+import {STK_PROFILE_ID} from "@/config";
 
 export default function ProfileSwitcher({ profiles, managing }: { profiles: Profile[], managing: boolean }) {
     // Context
@@ -42,6 +43,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
     const selectProfile = async (profile: Profile) => {
         const id = profile.profile_id
         setCurrentProfileId(id)
+        localStorage.setItem(STK_PROFILE_ID, id)
         router.push('/library')
     }
 

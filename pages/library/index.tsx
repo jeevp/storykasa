@@ -11,8 +11,10 @@ import STKTooltip from "@/composedComponents/STKTooltip/STKTooltip";
 import STKTextField from "@/components/STKTextField/STKTextField";
 import Link from "next/link";
 import StoryHandler from "@/handlers/StoryHandler";
+import withAuth from "@/HOC/withAuth";
+import withProfile from "@/HOC/withProfile";
 
-export default function Library() {
+function Library() {
     const { onMobile } = useDevice()
     const [filterQuery, setFilterQuery] = useState('')
     const [stories, setStories] = useState<StoryWithProfile[]>([])
@@ -53,15 +55,17 @@ export default function Library() {
     return (
         <PageWrapper path="library">
             <div className="flex items-center">
-                My story library
-                <span>
-                    <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles.">
-                        i
-                    </STKTooltip>
-                </span>
+                <h2 className="m-0 text-2xl">
+                    My story library
+                    <span>
+                        <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles.">
+
+                        </STKTooltip>
+                    </span>
+                </h2>
             </div>
             {loaded && (
-                <div className="flex sm:w-full">
+                <div className="flex sm:w-full mt-4">
                     {stories.length ? (
                         <AnimatePresence mode="wait">
                             (
@@ -73,18 +77,19 @@ export default function Library() {
                                 key={stories.length}
                             >
                                 {stories.length > 0 && (
-                                    <div>
-                                        <div>
-                                            <MagnifyingGlass size="20" />
-                                        </div>
+                                    <div className="w-full">
+                                        {/*<div>*/}
+                                        {/*    <MagnifyingGlass size="20" />*/}
+                                        {/*</div>*/}
                                         <STKTextField
                                             placeholder="Search in my library..."
                                             value={filterQuery}
+                                            fluid
                                             onChange={handleFilterQueryChange}
                                         />
                                     </div>
                                 )}
-                                <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}>
+                                <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}>
                                     {filtered?.map((story: StoryWithProfile, index: number) => (
                                         <a
                                             key={story.story_id}
@@ -146,3 +151,5 @@ export default function Library() {
         </PageWrapper>
     )
 }
+
+export default withAuth(withProfile((Library)))

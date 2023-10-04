@@ -5,8 +5,9 @@ import {useEffect, useState} from "react";
 import ProfileHandler from "@/handlers/ProfileHandler";
 import STKButton from "@/components/STKButton/STKButton";
 import {ArrowLeft, Users} from "@phosphor-icons/react";
+import withAuth from "@/HOC/withAuth";
 
-export default function Profiles() {
+function Profiles() {
     // States
     const [profiles, setProfiles] = useState([])
     const [managing, setManaging] = useState(false)
@@ -44,10 +45,12 @@ export default function Profiles() {
                     <ProfileSwitcher
                         profiles={profiles}
                         managing={managing}
-                        key={profiles.length}
+                        key={profiles?.length}
                     ></ProfileSwitcher>
                 </div>
             </PageWrapper>
         </ProfileProvider>
     )
 }
+
+export default withAuth(Profiles)

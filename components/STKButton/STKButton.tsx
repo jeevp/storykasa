@@ -4,9 +4,14 @@ import {green600} from "@/assets/colorPallet/colors";
 import theme from "@/components/theme";
 
 
-const StyledButton = styled(Button)(({ theme, color, rounded }) => ({
+const StyledButton = styled(Button)(({
+    theme,
+    rounded,
+    alignStart
+}) => ({
     textTransform: 'none',
-    borderRadius: rounded ? "20px" : "",
+    borderRadius: rounded ? "20px" : "15px",
+    justifyContent: alignStart ? "flex-start" : ""
 }));
 
 interface STKButtonProps {
@@ -25,6 +30,7 @@ interface STKButtonProps {
     slim?: boolean
     height?: string
     width?: string
+    alignStart?: boolean
 }
 
 export default function STKButton({
@@ -41,6 +47,7 @@ export default function STKButton({
     width,
     type,
     iconButton,
+    alignStart,
     onClick = () => ({})
 }: STKButtonProps) {
     const getLoadingColor = () => {
@@ -73,9 +80,10 @@ export default function STKButton({
                     color={color}
                     type={type}
                     rounded={rounded}
+                    alignStart={alignStart}
                     disableElevation
                     variant={variant}
-                    sx={{ textTransform: "none", height: slim ? "30px" : height || "40px", width: width || "auto" }}
+                    sx={{ textTransform: "none", height: slim ? "30px" : height || "40px", width: fullWidth ? "100%" : width || "auto" }}
                     onClick={() => onClick()}>
                     {loading ? (
                         // @ts-ignore

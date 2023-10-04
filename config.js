@@ -1,0 +1,2 @@
+export const STK_ACCESS_TOKEN = "STK_ACCESS_TOKEN"
+export const STK_PROFILE_ID = "STK_PROFILE_ID"

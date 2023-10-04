@@ -3,7 +3,7 @@ import {useContext, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import { Baby, GlobeSimple, Trash } from '@phosphor-icons/react'
 import { StoryWithProfile } from '@/lib/database-helpers.types'
-import { ProfileContext } from '../ProfileProvider/ProfileProvider'
+import ProfileContext from '@/contexts/ProfileContext'
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
 import STKButton from "@/components/STKButton/STKButton";
@@ -17,7 +17,7 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
     // States
     const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
 
-    const { currentProfileID } = useContext(ProfileContext) as any
+    const { currentProfileId } = useContext(ProfileContext) as any
 
     return (
         <div>
@@ -59,7 +59,7 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
                         </div>
                     </div>
                 </div>
-                {currentProfileID === story?.profiles.profile_id && (
+                {currentProfileId === story?.profiles.profile_id && (
                     <div>
                         <STKButton startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
                             Delete story

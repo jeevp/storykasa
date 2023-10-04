@@ -9,6 +9,9 @@ export const beige300 = "#f5efdc"
 export const beige200 = "#d9d1bd"
 
 export const green600 = "#3d996d"
+export const green300 = "#96ea8f"
 
 
 export const red600 = "#e54d2e"
+
+export const yellow600 = "#f4dc82"

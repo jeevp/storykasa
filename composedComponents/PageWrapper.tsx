@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from "@/composedComponents/Navbar/Navbar";
 import SideNavigation from "@/composedComponents/SideNavigation/SideNavigation";
 import {usePathname, useRouter} from "next/navigation";
+import {useContext} from "react";
+import AuthContext from "@/contexts/AuthContext";
 
 export default function PageWrapper({
     children,
@@ -10,6 +12,7 @@ export default function PageWrapper({
     children: React.ReactNode
     path: string
 }) {
+    const { currentUser } = useContext(AuthContext)
     const pathname = usePathname()
 
     return (
@@ -23,13 +26,13 @@ export default function PageWrapper({
                 <div className="w-full flex justify-center mt-4">
                     <div className="w-full" style={{ maxWidth: "1280px" }}>
                         <Navbar />
-                        <div className="mt-8 flex items-center w-full">
-                            {pathname !== "/profiles" && (
-                                <div className="mr-20">
+                        <div className="mt-8 flex w-full">
+                            {currentUser && pathname !== "/profiles" && (
+                                <div className="mr-20 w-80">
                                     <SideNavigation />
                                 </div>
                             )}
-                            <div>
+                            <div className="w-full">
                                 {children}
                             </div>
                         </div>

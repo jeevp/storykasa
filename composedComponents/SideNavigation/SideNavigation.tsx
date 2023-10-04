@@ -8,11 +8,14 @@ import useDevice from "@/customHooks/useDevice";
 import ProfileHandler from "@/handlers/ProfileHandler";
 import ProfileContext from "@/contexts/ProfileContext";
 import STKButton from "@/components/STKButton/STKButton";
+import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
+import {useRouter} from "next/router";
 
 export default function SideNavigation() {
     // Hooks
     const pathname = usePathname()
     const { onMobile } = useDevice()
+    const route = useRouter()
 
     // Context
     const { currentProfileId } = useContext(ProfileContext) as any
@@ -28,7 +31,7 @@ export default function SideNavigation() {
 
     // Watchers
     useEffect(() => {
-        if (profileOptions.length > 0) {
+        if (profileOptions?.length > 0) {
             const _currentProfile = profileOptions.find(
                 (p) => p.profile_id === currentProfileId
             )
@@ -43,7 +46,9 @@ export default function SideNavigation() {
         setProfileOptions(profiles)
     }
 
-    console.log({ currentProfile, profileOptions, currentProfileId })
+    const handleTabOnChange = (selectedTab) => {
+        route.push(selectedTab.pathname)
+    }
 
     return (
         <nav>
@@ -56,69 +61,48 @@ export default function SideNavigation() {
                         exit={{ x: 10, opacity: 0 }}
                         key={currentProfile?.profile_id}
                     >
-                        <h2>Hi, {currentProfile?.profile_name}!</h2>
+                        <h2 className="m-0 text-base">Hi, {currentProfile?.profile_name}!</h2>
 
-                        <div
-                            className="nav lg:mt-8 w-full lg:w-auto flex lg:flex-col bg-white lg:bg-transparent justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
-                            <div className="w-full">
-                                <Link href="/discover" passHref legacyBehavior>
-                                    <STKButton startIcon={<BookOpenText size={24} />}>
-                                        Discover
-                                    </STKButton>
-                                    {/*<a*/}
-                                    {/*    role="button"*/}
-                                    {/*    title="Discover new publicly available stories"*/}
-                                    {/*    href="/discover"*/}
-                                    {/*    className={`h-12 lg:h-auto ${pathname === "/discover" ? 'select-btn active' : 'select-btn'}`}*/}
-                                    {/*>*/}
-                                    {/*    <div className="flex items-center">*/}
-                                    {/*        */}
-                                    {/*        <span className="ml-2 hidden lg:block">Discover</span>*/}
-                                    {/*    </div>*/}
-                                    {/*</a>*/}
-                                </Link>
-                            </div>
+                        <div className= "nav lg:mt-8 w-full lg:w-auto flex lg:flex-col bg-white lg:bg-transparent justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
+                            <STKButtonTabs
+                                tabs={[
+                                    { text: "Discover", icon: <BookOpenText size={24} />, pathname: "/discovery"  },
+                                    { text: "My Library", icon: <Books size={24} weight="duotone" />, pathname: "/library" },
+                                ]}
+                                onChange={handleTabOnChange}
+                            />
+                            {/*<div className="w-full">*/}
+                            {/*    <STKButton*/}
+                            {/*    alignStart*/}
+                            {/*    fullWidth*/}
+                            {/*    height="45px"*/}
+                            {/*    color="secondary"*/}
+                            {/*    variant={pathname === "/discover" ? 'contained' : 'outlined'}*/}
+                            {/*    startIcon={<BookOpenText size={24} />}>*/}
+                            {/*        Discover*/}
+                            {/*    </STKButton>*/}
+                            {/*</div>*/}
 
-                            <div className="mt-2">
-                                <Link href="/library" passHref legacyBehavior>
-                                    <STKButton startIcon={<Books size={24} weight="duotone" />}>
-                                        My library
-                                    </STKButton>
-                                    {/*            <a*/}
-                                    {/*                role="button"*/}
-                                    {/*                title="Listen to the stories in your library"*/}
-                                    {/*                href="/library"*/}
-                                    {/*                className={`h-12 lg:h-auto ml-4 lg:mt-4 lg:ml-0 ${pathname === "/library" ? 'select-btn active' : 'select-btn'}`}*/}
-                                    {/*            >*/}
-                                    {/*                <div className="flex">*/}
-                                    {/*                    */}
-                                    {/*                    <span className="ml-2 hidden lg:block">*/}
-                                    {/*    */}
-                                    {/*</span>*/}
-                                    {/*                </div>*/}
-                                    {/*            </a>*/}
-                                </Link>
-                            </div>
+                            {/*<div className="mt-2">*/}
+                            {/*    <STKButton*/}
+                            {/*    alignStart*/}
+                            {/*    fullWidth*/}
+                            {/*    color="secondary"*/}
+                            {/*    height="45px"*/}
+                            {/*    variant={pathname === "/library" ? 'contained' : 'outlined'}*/}
+                            {/*    startIcon={<Books size={24} weight="duotone" />}>*/}
+                            {/*        My library*/}
+                            {/*    </STKButton>*/}
+                            {/*</div>*/}
 
                             <div className="mt-6">
-                                <Link href="/record" passHref legacyBehavior>
-                                    <STKButton startIcon={<Microphone size={24} weight="duotone" />}>
-                                        Add a story
-                                    </STKButton>
-                                    {/*            <a*/}
-                                    {/*                role="button"*/}
-                                    {/*                title="Record and add a new story"*/}
-                                    {/*                href="/record"*/}
-                                    {/*                className={`h-12 lg:h-auto lg:mt-8 mt-0 ml-4 lg:ml-0 ${pathname === "/record" ? 'raised-btn active' : 'raised-btn'}`}*/}
-                                    {/*            >*/}
-                                    {/*                <div className="flex">*/}
-                                    {/*                    */}
-                                    {/*                    <span className="ml-2 hidden lg:block">*/}
-
-                                    {/*</span>*/}
-                                    {/*                </div>*/}
-                                    {/*            </a>*/}
-                                </Link>
+                                <STKButton
+                                alignStart
+                                fullWidth
+                                height="45px"
+                                startIcon={<Microphone size={24} weight="duotone" />}>
+                                    Add a story
+                                </STKButton>
                             </div>
                         </div>
                     </motion.div>

@@ -1,0 +1,11 @@
+@import "../../assets/colorPallet/colors";
+
+.stk-card {
+  &:hover {
+    border-color: $neutral800;
+  }
+
+  &--active {
+    border-color: $neutral800;
+  }
+}
