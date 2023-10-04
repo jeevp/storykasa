@@ -59,6 +59,10 @@ export default function SideNavigation() {
         route.push(selectedTab.pathname)
     }
 
+    const goToRecordPage = () => {
+        route.push("/record")
+    }
+
     return (
         <nav>
             {currentProfile && (
@@ -82,7 +86,7 @@ export default function SideNavigation() {
                                />
 
                                <div className="lg:mt-6 ml-4 lg:ml-0 lg:w-full">
-                                   <RecordButton />
+                                   <RecordButton onClick={goToRecordPage} />
                                </div>
                            </div>
                         </div>

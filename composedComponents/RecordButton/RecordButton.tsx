@@ -56,9 +56,7 @@ const STKButtonTabsTheme = createTheme({
 interface STKButtonTabsProps {
     onClick: () => void
 }
-export default function RecordButton({
-onClick     = () => ({})
-}: STKButtonTabsProps) {
+export default function RecordButton({ onClick     = () => ({}) }: STKButtonTabsProps) {
     const { onMobile } = useDevice()
 
     return (

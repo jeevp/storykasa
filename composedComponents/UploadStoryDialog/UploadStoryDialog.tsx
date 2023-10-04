@@ -1,9 +1,8 @@
 import React from 'react';
-import {StoryWithProfile} from "../../../../../StoryKasaV2/storykasa/lib/database-helpers.types";
-import STKDialog from "@/app/components/STKDialog/STKDialog";
+import STKDialog from "@/components/STKDialog/STKDialog";
 import {Books} from "@phosphor-icons/react";
-import STKButton from "@/app/components/STKButton/STKButton";
-import useDevice from "@/app/customHooks/useDevice";
+import STKButton from "@/components/STKButton/STKButton";
+import useDevice from "@/customHooks/useDevice";
 import {useRouter} from "next/navigation";
 
 

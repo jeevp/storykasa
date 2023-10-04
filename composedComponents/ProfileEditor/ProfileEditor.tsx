@@ -13,6 +13,7 @@ import FeedbackDialog from "@/composedComponents/FeedbackDialog/FeedbackDialog";
 import {useRouter} from "next/navigation";
 import theme from "@/components/theme";
 import {green600, red600} from "@/assets/colorPallet/colors";
+import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION} from "@/config";
 
 export default function ProfileEditor({
     profileToEdit,
@@ -63,6 +64,11 @@ export default function ProfileEditor({
                 avatarFormData.set('file', file)
 
                 // @ts-ignore
+                avatarFormData.set('uploadDetails', {
+                    bucketName: AVATAR_BUCKET_NAME,
+                    extension: AVATAR_FILE_EXTENSION
+                })
+
                 payload.avatarUrl = await StorageHandler.uploadFile(avatarFormData)
             }
 

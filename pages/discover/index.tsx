@@ -7,10 +7,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 import StoryDetailsDialog from "@/composedComponents/StoryDetailsDialog/StoryDetailsDialog";
 import useDevice from "@/customHooks/useDevice";
 import StoryHandler from "@/handlers/StoryHandler";
+import withProfile from "@/HOC/withProfile";
+import withAuth from "@/HOC/withAuth";
 
 export const dynamic = 'force-dynamic'
 
-export default function Discover() {
+function Discover() {
     const { onMobile } = useDevice()
     const [stories, setStories] = useState<StoryWithProfile[]>([])
     const [selectedIndex, setSelectedIndex] = useState<number>()
@@ -79,3 +81,5 @@ export default function Discover() {
         </PageWrapper>
     )
 }
+
+export default withAuth(withProfile(Discover))
