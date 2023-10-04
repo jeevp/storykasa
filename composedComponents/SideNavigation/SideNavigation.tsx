@@ -1,13 +1,11 @@
-import Link from 'next/link'
 import { useContext, useEffect, useState } from 'react'
 import { Profile } from '@/lib/database-helpers.types'
 import { usePathname } from 'next/navigation'
-import { BookOpenText, Books, Microphone } from '@phosphor-icons/react'
+import { BookOpenText, Books } from '@phosphor-icons/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import useDevice from "@/customHooks/useDevice";
 import ProfileHandler from "@/handlers/ProfileHandler";
 import ProfileContext from "@/contexts/ProfileContext";
-import STKButton from "@/components/STKButton/STKButton";
 import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {useRouter} from "next/router";
 import {neutral800} from "@/assets/colorPallet/colors";
@@ -70,7 +68,7 @@ export default function SideNavigation() {
                                <STKButtonTabs
                                    useIconButtonOnMobile
                                    tabs={[
-                                       { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discovery"  },
+                                       { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
                                        { text: "My Library", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/library" },
                                    ]}
                                    onChange={handleTabOnChange}

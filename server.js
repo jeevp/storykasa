@@ -30,7 +30,8 @@ app.prepare().then(() => {
     // Define your custom API routes
     // Stories
     server.delete('/api/stories/:storyId', authMiddleware, StoryController.deleteStory)
-    server.get("/api/stories", authMiddleware,  StoryController.getStories)
+    server.get("/api/stories/library", authMiddleware,  StoryController.getLibraryStories)
+    server.get("/api/stories/discover", authMiddleware, StoryController.getDiscoverStories)
 
     // Profiles
     server.get("/api/profiles", authMiddleware, ProfileController.getProfiles)
