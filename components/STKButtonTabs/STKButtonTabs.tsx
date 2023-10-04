@@ -1,5 +1,5 @@
 import {Button, createTheme, IconButton, styled, ThemeProvider} from "@mui/material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {yellow600} from "@/assets/colorPallet/colors";
 import useDevice from "@/customHooks/useDevice";
 
@@ -53,18 +53,26 @@ const STKButtonTabsTheme = createTheme({
 
 interface STKButtonTabsProps {
     tabs: Array<any>,
-    useIconButtonOnMobile: boolean
+    useIconButtonOnMobile?: boolean
+    initialValue?: object,
     onChange: () => void
 }
 export default function STKButtonTabs({
     tabs = [],
     useIconButtonOnMobile,
+    initialValue,
     onChange = () => ({})
 }: STKButtonTabsProps) {
     const { onMobile } = useDevice()
     // States
     const [activeIndex, setActiveIndex] = useState<number>()
-
+    // Watchers
+    useEffect(() => {
+        if (initialValue) {
+            const index = tabs.findIndex((tab) => tab.pathname === initialValue.pathname)
+            setActiveIndex(index)
+        }
+    }, [initialValue]);
     // Methods
     const handleOnClick = (index: number, tab: any) => {
         setActiveIndex(index)

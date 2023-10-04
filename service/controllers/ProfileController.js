@@ -4,7 +4,6 @@ class ProfileController {
     static async getProfiles(req, res) {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
-            console.log({ userId: user.id })
 
             const userId = user.id
             const { data: profiles } = await supabase

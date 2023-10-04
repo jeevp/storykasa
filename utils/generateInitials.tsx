@@ -1,18 +1,22 @@
 export default function generateInitials(fullName: string): string {
-    // Split the full name into an array of words
-    const nameArray = fullName.split(' ');
+    const nameArray = fullName.trim().split(' ');
 
-    // Check if the nameArray has at least two elements
-    if (nameArray.length < 2) {
-        throw new Error('Full name must contain at least first and last name');
+    if (nameArray.length === 1) {
+        const singleName = nameArray[0];
+        if (singleName.length >= 2) {
+            return singleName.slice(0, 2).toUpperCase();
+        } else if (singleName.length === 1) {
+            return singleName.charAt(0).toUpperCase() + singleName.charAt(0).toUpperCase();
+        } else {
+            throw new Error('Name must contain at least one character');
+        }
     }
 
-    // Get the first character of the first name
-    const firstNameInitial = nameArray[0].charAt(0).toUpperCase();
-
-    // Get the first character of the last name
-    const lastNameInitial = nameArray[nameArray.length - 1].charAt(0).toUpperCase();
-
-    // Combine and return the initials
-    return `${firstNameInitial}${lastNameInitial}`;
+    else if (nameArray.length >= 2) {
+        const firstNameInitial = nameArray[0].charAt(0).toUpperCase();
+        const lastNameInitial = nameArray[nameArray.length - 1].charAt(0).toUpperCase();
+        return `${firstNameInitial}${lastNameInitial}`;
+    } else {
+        throw new Error('Name must contain at least one character');
+    }
 }

@@ -23,7 +23,6 @@ class StoryController {
                 .order('stories(last_updated)', { ascending: false })
 
             const stories = data?.map((story) => story.stories)
-            console.log({ stories })
             return res.status(200).send(stories)
         } catch (error) {
             res.status(400).send({ message: "Something went wrong" })
@@ -38,9 +37,7 @@ class StoryController {
                 .eq('is_public', true)
                 .order('last_updated', { ascending: false })
 
-            const stories = data?.map((story) => story.stories)
-
-            return res.status(200).send(stories)
+            return res.status(200).send(data)
         } catch (error) {
             return res.status(400).send({ message: "Something went wrong" })
         }

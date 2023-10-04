@@ -11,6 +11,11 @@ import {useRouter} from "next/router";
 import {neutral800} from "@/assets/colorPallet/colors";
 import RecordButton from "@/composedComponents/RecordButton/RecordButton";
 
+const navigationOptions = [
+    { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
+    { text: "My Library", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/library" },
+]
+
 export default function SideNavigation() {
     // Hooks
     const pathname = usePathname()
@@ -23,10 +28,14 @@ export default function SideNavigation() {
     // States
     const [currentProfile, setCurrentProfile] = useState<any>(null)
     const [profileOptions, setProfileOptions] = useState<Profile[]>([])
+    const [selectedNavigationOption, setSelectedNavigationOption] = useState<Object>({})
 
     // Mount
     useEffect(() => {
         loadProfiles()
+        setSelectedNavigationOption(navigationOptions.find((navigationOption) => {
+            return navigationOption.pathname === pathname
+        }))
     }, [])
 
     // Watchers
@@ -67,10 +76,8 @@ export default function SideNavigation() {
                            <div className="flex justify-center lg:flex-col -ml-10 lg:ml-0">
                                <STKButtonTabs
                                    useIconButtonOnMobile
-                                   tabs={[
-                                       { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
-                                       { text: "My Library", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/library" },
-                                   ]}
+                                   tabs={navigationOptions}
+                                   initialValue={selectedNavigationOption}
                                    onChange={handleTabOnChange}
                                />
 

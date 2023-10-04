@@ -32,11 +32,11 @@ export default function Discover() {
 
     return (
         <PageWrapper path="discover">
-            <h2>
+            <h2 className="m-0">
                 Discover stories
             </h2>
 
-            <div className="flex sm:w-full">
+            <div className="flex sm:w-full mt-4">
                 {stories && (
                     <AnimatePresence mode="wait">
                         (
@@ -50,7 +50,8 @@ export default function Discover() {
                                 style={{ height: !onMobile ? '80vh' : 'auto' }}
                             >
                                 {stories?.map((story: StoryWithProfile, index: number) => (
-                                    <a
+                                    <div
+                                        className="mt-2 first:mt-0"
                                         key={story?.story_id}
                                         onClick={() => handleStoryClick(index)}
                                     >
@@ -58,7 +59,7 @@ export default function Discover() {
                                             story={story}
                                             selected={index === selectedIndex}
                                         ></StoryCard>
-                                    </a>
+                                    </div>
                                 ))}
                             </div>
                         </motion.div>

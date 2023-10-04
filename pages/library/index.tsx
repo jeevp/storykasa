@@ -92,6 +92,7 @@ function Library() {
                                 <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}>
                                     {filtered?.map((story: StoryWithProfile, index: number) => (
                                         <a
+                                            className="mt-2 first:mt-0"
                                             key={story.story_id}
                                             onClick={() => handleStoryClick(index)}
                                         >

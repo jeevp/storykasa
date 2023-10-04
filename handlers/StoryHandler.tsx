@@ -16,7 +16,6 @@ export default class StoryHandler {
     static async fetchPublicStories() {
         const headers = generateHeaders()
         const response = await axios.get("/api/stories/discover", headers)
-
         return response.data
     }
 }

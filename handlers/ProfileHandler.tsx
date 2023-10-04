@@ -24,8 +24,6 @@ export default class ProfileHandler {
 
         localStorage.setItem('currentProfileID', "22")
 
-
-        console.log({ data: response.data })
         return response.data
     }
 
