@@ -32,6 +32,7 @@ app.prepare().then(() => {
     server.delete('/api/stories/:storyId', authMiddleware, StoryController.deleteStory)
     server.get("/api/stories/library", authMiddleware,  StoryController.getLibraryStories)
     server.get("/api/stories/discover", authMiddleware, StoryController.getDiscoverStories)
+    server.post("/api/stories", authMiddleware, StoryController.createStory)
 
     // Profiles
     server.get("/api/profiles", authMiddleware, ProfileController.getProfiles)

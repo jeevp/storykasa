@@ -78,20 +78,18 @@ function Library() {
                             >
                                 {stories.length > 0 && (
                                     <div className="w-full">
-                                        {/*<div>*/}
-                                        {/*    <MagnifyingGlass size="20" />*/}
-                                        {/*</div>*/}
                                         <STKTextField
                                             placeholder="Search in my library..."
                                             value={filterQuery}
                                             fluid
+                                            startAdornment={<MagnifyingGlass size="20" />}
                                             onChange={handleFilterQueryChange}
                                         />
                                     </div>
                                 )}
                                 <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}>
                                     {filtered?.map((story: StoryWithProfile, index: number) => (
-                                        <a
+                                        <div
                                             className="mt-2 first:mt-0"
                                             key={story.story_id}
                                             onClick={() => handleStoryClick(index)}
@@ -100,7 +98,7 @@ function Library() {
                                                 story={story}
                                                 selected={selectedIndex === index}
                                             ></StoryCard>
-                                        </a>
+                                        </div>
                                     ))}
                                 </div>
 

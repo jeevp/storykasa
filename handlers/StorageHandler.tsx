@@ -6,21 +6,25 @@ export default class StorageHandler {
     static async uploadFile(formData: FormData) {
         if (!formData) throw new Error('unable to get new avatar file')
 
-        const uploadDetails = formData.get("uploadDetails")
+        const uploadDetailsString = formData.get("uploadDetails");
+        if (!uploadDetailsString) throw new Error('uploadDetails not found');
 
-        const allowedBucketNames = [AVATAR_BUCKET_NAME, RECORD_BUCKET_NAME]
+        const uploadDetails = JSON.parse(uploadDetailsString as string);
+
+        const allowedBucketNames = [AVATAR_BUCKET_NAME, RECORD_BUCKET_NAME];
         if (!allowedBucketNames.includes(uploadDetails.bucketName)) {
-            throw new Error("Bucket not allowed")
+            throw new Error("Bucket not allowed");
         }
 
-        const allowedExtensions = [AVATAR_FILE_EXTENSION, RECORD_FILE_EXTENSION]
+        const allowedExtensions = [AVATAR_FILE_EXTENSION, RECORD_FILE_EXTENSION];
         if (!allowedExtensions.includes(uploadDetails.extension)) {
-            throw new Error("Bucket not allowed")
+            throw new Error("File extension not allowed");
         }
 
-        const headers = generateHeaders()
+        const headers = generateHeaders();
         const response = await axios.post("/api/storage/files", formData, headers)
 
-        return response.data.publicUrl
+        return response.data.publicUrl;
     }
+
 }

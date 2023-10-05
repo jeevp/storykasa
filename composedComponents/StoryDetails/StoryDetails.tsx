@@ -27,16 +27,16 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
                 <div className="mt-4 flex items-center">
                     <STKAvatar
                         src={story?.profiles?.avatar_url!}
-                        name={story?.profiles.profile_name}
+                        name={story?.profiles?.profile_name}
                     />
-                    <label className="ml-2 font-semibold text-base">{story?.profiles.profile_name}</label>
+                    <label className="ml-2 font-semibold text-base">{story?.profiles?.profile_name}</label>
                 </div>
                 <div className="flex flex-col mt-4">
                     {story?.age_group && (
                         <div className="flex items-center">
                             <Baby size={20} />
                             <label className="ml-2">
-                                {story.age_group}
+                                {story?.age_group}
                             </label>
                         </div>
                     )}
@@ -44,14 +44,14 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
                         <div className="flex items-center mt-1">
                             <GlobeSimple size={20} />
                             <label className="ml-2">
-                                {story.age_group}
+                                {story?.language}
                             </label>
                         </div>
                     )}
                 </div>
                 {story?.recording_url && (
-                    <div key={story.recording_url} className="mt-6">
-                        <STKAudioPlayer outlined src={story.recording_url} />
+                    <div key={story?.recording_url} className="mt-6">
+                        <STKAudioPlayer outlined src={story?.recording_url} />
                     </div>
                 )}
                 <div className="mb-8 mt-6">
@@ -61,7 +61,7 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
                         </div>
                     </div>
                 </div>
-                {currentProfileId === story?.profiles.profile_id && (
+                {currentProfileId === story?.profiles?.profile_id && (
                     <div>
                         <STKButton variant="outlined" startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
                             Delete story

@@ -19,6 +19,7 @@ import UploadStoryDialog from "@/composedComponents/UploadStoryDialog/UploadStor
 import STKButton from "@/components/STKButton/STKButton";
 import StorageHandler from "@/handlers/StorageHandler";
 import {RECORD_BUCKET_NAME, RECORD_FILE_EXTENSION} from "@/config";
+import StoryHandler from "@/handlers/StoryHandler";
 const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKRecordAudio'), {
     ssr: false,  // Set to false to disable server-side rendering
 });
@@ -48,17 +49,17 @@ export default function StoryForm() {
         try {
             setLoading(true)
             if (!audioBlob) throw new Error('missing audio for story')
-
             // create form to upload audio blob to bucket
             const audioFormData = new FormData()
             audioFormData.set('file', audioBlob)
+
             // @ts-ignore
-            audioFormData.set('uploadDetails', {
+            audioFormData.set('uploadDetails', JSON.stringify({
                 bucketName: RECORD_BUCKET_NAME,
                 extension: RECORD_FILE_EXTENSION
-            })
+            }));
+
             // get the public URL of the recording after uploading to bucket
-            // const recordingURL = await uploadRecording(audioFormData)
             const recordingURL = await StorageHandler.uploadFile(audioFormData)
             // add public URL and recording duration to story form data
             const storyFormData = new FormData()
@@ -70,9 +71,17 @@ export default function StoryForm() {
             storyFormData.set('language', language)
             storyFormData.set('age_group', ageGroup)
 
-            // await addStory(storyFormData)
-            setShowUploadStoryDialog(true)
+            await StoryHandler.createStory({
+                recordingURL,
+                duration: String(audioDuration),
+                recordedBy: currentProfileId,
+                title,
+                description,
+                language,
+                ageGroup
+            })
 
+            setShowUploadStoryDialog(true)
         } finally {
             setLoading(false)
         }

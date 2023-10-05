@@ -1,4 +1,4 @@
-import {TextField, ThemeProvider} from "@mui/material";
+import {InputAdornment, TextField, ThemeProvider} from "@mui/material";
 import {beige300} from "@/assets/colorPallet/colors";
 import theme from "@/components/theme";
 
@@ -11,6 +11,7 @@ interface STKTextFieldProps {
     placeholder?: string
     type?: string
     value?: string
+    startAdornment?: any
 }
 
 function STKTextField({
@@ -19,6 +20,7 @@ function STKTextField({
     minRows = 5,
     maxRows = 10,
     value,
+    startAdornment,
     placeholder,
     type,
     onChange = () => ({})
@@ -33,6 +35,13 @@ function STKTextField({
             value={value}
             placeholder={placeholder}
             maxRows={maxRows}
+            InputProps={startAdornment ? ({
+                startAdornment: (
+                    <InputAdornment position="start">
+                        {startAdornment}
+                    </InputAdornment>
+                ),
+            }) : <></>}
             onChange={(e) => onChange(e.target.value)} />
         </ThemeProvider>
     )

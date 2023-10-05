@@ -1,4 +1,5 @@
 import axios from "axios"
+import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN } from "@/config"
 
 export default class AuthHandler {
     static async signInWithPassword({ email, password }: { email: string, password: string }) {
@@ -7,7 +8,8 @@ export default class AuthHandler {
             password
         })
 
-        localStorage.setItem("STK_ACCESS_TOKEN", response?.data?.session?.access_token)
+        localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)
+        localStorage.setItem(STK_REFRESH_TOKEN, response?.data?.session?.refresh_token)
 
         return response.data
     }
