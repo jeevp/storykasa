@@ -182,7 +182,7 @@ export default function SignupForm() {
                         Sign up with Google
                     </STKButton>
                     <div className="mt-4">
-                        <Link href="/login">
+                        <Link href="/login" className="text-neutral-800">
                             Already have an account? Log in
                         </Link>
                     </div>

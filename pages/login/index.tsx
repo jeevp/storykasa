@@ -13,14 +13,14 @@ function Login() {
                 {showPasswordRecoveryForm ? (
                     <>
                         <h1 className="text-2xl font-bold">Password Recovery</h1>
-                        <div className="mt-5">
+                        <div className="mt-5 w-full lg:w-auto">
                             <PasswordRecoveryForm onCancel={() => setShowPasswordRecoveryForm(false)}></PasswordRecoveryForm>
                         </div>
                     </>
                 ) : (
                     <>
                         <h1 className="text-2xl font-bold ">Log in</h1>
-                        <div className="mt-5">
+                        <div className="mt-5 w-full lg:w-auto">
                             <LoginForm onPasswordRecoveryRequest={() => setShowPasswordRecoveryForm(true)}></LoginForm>
                         </div>
                     </>

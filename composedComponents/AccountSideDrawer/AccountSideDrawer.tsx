@@ -31,7 +31,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
         setCurrentProfileId(null)
         setCurrentProfile(null)
 
-        router.push('/')
+        await router.push('/')
     }
 
     const goToProfilesPage = async () => {
@@ -41,32 +41,36 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
     return (
         <STKDrawer open={open} onClose={() => onClose()} anchor="right">
             <div className="w-52 lg:w-72 p-10">
-                <div className="flex items-center">
-                    <STKAvatar src={
-                        // @ts-ignore
-                        currentProfile?.avatar_url
-                    } name={
-                        // @ts-ignore
-                        currentProfile?.profile_name
-                    } />
-                    <label className="ml-2">{
-                        // @ts-ignore
-                        currentProfile?.profile_name
-                    }</label>
-                </div>
-                <div className="mt-10">
-                    <div>
-                        <STKButton
-                        alignStart
-                        startIcon={<UserSwitch size={20} />}
-                        fullWidth
-                        color="info"
-                        variant="outlined"
-                        onClick={goToProfilesPage}>
-                            Change profile
-                        </STKButton>
+                {currentProfile && (
+                    <div className="flex items-center mb-10">
+                        <STKAvatar src={
+                            // @ts-ignore
+                            currentProfile?.avatar_url
+                        } name={
+                            // @ts-ignore
+                            currentProfile?.profile_name
+                        } />
+                        <label className="ml-2">{
+                            // @ts-ignore
+                            currentProfile?.profile_name
+                        }</label>
                     </div>
-                    <div className="mt-4">
+                )}
+                <div>
+                    {currentProfile && (
+                        <div className="mb-4">
+                            <STKButton
+                                alignStart
+                                startIcon={<UserSwitch size={20} />}
+                                fullWidth
+                                color="info"
+                                variant="outlined"
+                                onClick={goToProfilesPage}>
+                                Change profile
+                            </STKButton>
+                        </div>
+                    )}
+                    <div>
                         <STKButton
                         alignStart
                         color="info"

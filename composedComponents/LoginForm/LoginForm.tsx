@@ -9,6 +9,7 @@ import Link from "next/link";
 import {Divider} from "@mui/material";
 import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
+import {neutral800} from "@/assets/colorPallet/colors";
 
 interface LoginFormProps {
     onPasswordRecoveryRequest?: Function
@@ -113,7 +114,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
                     </STKButton>
 
                     <div className="flex justify-center mt-4">
-                        <Link href="/signup">
+                        <Link href="/signup" className="text-neutral-800">
                             Don&apos;t have an account? Sign up
                         </Link>
                     </div>
