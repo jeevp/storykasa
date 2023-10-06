@@ -5,13 +5,15 @@ import {usePathname, useRouter} from "next/navigation";
 import {useContext} from "react";
 import AuthContext from "@/contexts/AuthContext";
 
+interface PageWrapperProps {
+    children: any
+    path?: string
+}
+
 export default function PageWrapper({
     children,
     path,
-}: {
-    children: React.ReactNode
-    path: string
-}) {
+}: PageWrapperProps) {
     const { currentUser } = useContext(AuthContext)
     const pathname = usePathname()
 
