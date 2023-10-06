@@ -6,7 +6,7 @@ import AuthContext from "@/contexts/AuthContext";
 
 export default function App({ Component, pageProps }: AppProps) {
     const [currentProfileId, setCurrentProfileId] = useState<string>('')
-    const [currentProfile, setCurrentProfile] = useState<object>({})
+    const [currentProfile, setCurrentProfile] = useState<object | null>(null)
 
     const [currentUser, setCurrentUser] = useState<any>(null)
 

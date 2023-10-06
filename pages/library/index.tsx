@@ -65,7 +65,7 @@ function Library() {
                 </h2>
             </div>
             {loaded && (
-                <div className="flex sm:w-full mt-4">
+                <div className="flex sm:w-full mt-4 pb-32 lg:pb-0">
                     {stories.length ? (
                         <AnimatePresence mode="wait">
                             (

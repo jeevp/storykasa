@@ -3,7 +3,7 @@ import {createContext} from "react";
 const ProfileContext = createContext({
     currentProfileId: "",
     setCurrentProfileId: () => ({}),
-    currentProfile: {},
+    currentProfile: null,
     setCurrentProfile: () => ({})
 })
 

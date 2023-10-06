@@ -16,7 +16,7 @@ export default function AccountDetails({ account }: { account: Account }) {
     const { currentProfile } = useContext(ProfileContext)
 
     const [showAccountSideDrawer, setShowAccountSideDrawer] = useState(false)
-
+    console.log({ currentProfile })
 
     return (
         <div className="flex items-center">
@@ -28,7 +28,7 @@ export default function AccountDetails({ account }: { account: Account }) {
                     startIcon={<STKAvatar src={currentProfile?.avatar_url as string}
                     name={currentProfile?.profile_name} />}
                     onClick={() => setShowAccountSideDrawer(true)}>
-                        {currentProfile?.profile_name}
+                        <label className="hidden lg:flex">{currentProfile?.profile_name}</label>
                         <span className="ml-2 flex items-center">
                             <ArrowSquareRight size={20} />
                         </span>

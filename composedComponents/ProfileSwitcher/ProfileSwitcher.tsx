@@ -7,6 +7,7 @@ import {Avatar} from "@mui/material";
 import STKButton from "@/components/STKButton/STKButton";
 import ProfileContext from "@/contexts/ProfileContext";
 import {STK_PROFILE_ID} from "@/config";
+import ProfileCard from "@/composedComponents/ProfileCard/ProfileCard";
 
 export default function ProfileSwitcher({ profiles, managing }: { profiles: Profile[], managing: boolean }) {
     // Context
@@ -55,41 +56,15 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
 
     return (
         <div className="mt-5 flex-col">
-            <div className="flex items-start">
+            <div className="flex items-start flex-col lg:flex-row">
                 {profileOptions.map((profile: Profile) => (
-                    <div className="flex flex-col items-center">
-                        <div
-                            className="flex flex-col items-center justify-center relative"
-                            key={profile.profile_id}
-                        >
-                            <STKButton
-                                iconButton
-                                onClick={() => selectProfile(profile)}
-                            >
-                                <Avatar
-                                    src={profile.avatar_url || ''}
-                                    sx={{ width: 80, height: 80 }} />
-                            </STKButton>
-
-                            <div className="flex items-center mt-2">
-                                <label className="font-bold">
-                                    {profile.profile_name}
-                                </label>
-                            </div>
-                        </div>
-                        {managing && (
-                            <div className="mt-4">
-                                <STKButton
-                                    onClick={() => editProfile(profile.profile_id)}
-                                    variant="outlined"
-                                    rounded
-                                    slim
-                                    startIcon={<PencilSimple size={16} weight="bold" />}
-                                >
-                                    Edit
-                                </STKButton>
-                            </div>
-                        )}
+                    <div key={profile?.profile_id} className="lg:ml-4 mt-2 w-full lg:w-auto lg:mt-2 first:ml-0">
+                        <ProfileCard
+                            managing={managing}
+                            name={profile?.profile_name}
+                            avatarURL={profile?.avatar_url}
+                            onEdit={() => editProfile(profile.profile_id)}
+                            onSelect={() => selectProfile(profile)} />
                     </div>
                 ))}
 

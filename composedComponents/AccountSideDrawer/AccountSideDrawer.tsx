@@ -22,7 +22,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }) {
         await AuthHandler.signOut()
         setCurrentUser(null)
         setCurrentProfileId(null)
-        setCurrentProfile({})
+        setCurrentProfile(null)
 
         router.push('/')
     }
@@ -33,9 +33,9 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }) {
 
     return (
         <STKDrawer open={open} onClose={() => onClose()} anchor="right">
-            <div className="w-72 p-10">
+            <div className="w-52 lg:w-72 p-10">
                 <div className="flex items-center">
-                    <STKAvatar name={currentProfile?.profile_name} />
+                    <STKAvatar src={currentProfile?.avatar_url} name={currentProfile?.profile_name} />
                     <label className="ml-2">{currentProfile?.profile_name}</label>
                 </div>
                 <div className="mt-10">

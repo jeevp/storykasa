@@ -79,7 +79,7 @@ class AuthController {
             }
 
             const redirectToURL = `${process.env.NEXT_PUBLIC_ORIGIN}/update-password`
-            console.log({ redirectToURL })
+
             await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: redirectToURL
             })

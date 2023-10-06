@@ -38,7 +38,7 @@ function Discover() {
                 Discover stories
             </h2>
 
-            <div className="flex sm:w-full mt-4">
+            <div className="flex sm:w-full mt-4 pb-32 lg:pb-0">
                 {stories && (
                     <AnimatePresence mode="wait">
                         (

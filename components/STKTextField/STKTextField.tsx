@@ -35,9 +35,9 @@ function STKTextField({
             sx={{ width: fluid ? '100%' : '300px', backgroundColor: beige300 }}
             multiline={multiline}
             minRows={minRows}
-            type={type}
             value={value}
             placeholder={placeholder}
+            inputProps={{ type }}
             helperText={helperText}
             error={error}
             maxRows={maxRows}

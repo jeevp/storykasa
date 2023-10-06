@@ -69,7 +69,7 @@ export default function STKButton({
                     width: width || "auto",
                     height: height || "auto"
                 }}
-                onClick={() => onClick()}>
+                onClick={(e) => onClick(e)}>
                     {children}
                 </IconButton>
             ) : (
@@ -84,7 +84,7 @@ export default function STKButton({
                     disableElevation
                     variant={variant}
                     sx={{ textTransform: "none", height: slim ? "30px" : height || "40px", width: fullWidth ? "100%" : width || "auto" }}
-                    onClick={() => onClick()}>
+                    onClick={(e) => onClick(e)}>
                     {loading ? (
                         // @ts-ignore
                         <STKLoading color={getLoadingColor()} />

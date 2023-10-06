@@ -11,7 +11,6 @@ import ProfileHandler from "@/handlers/ProfileHandler";
 import StorageHandler from "@/handlers/StorageHandler";
 import FeedbackDialog from "@/composedComponents/FeedbackDialog/FeedbackDialog";
 import {useRouter} from "next/navigation";
-import theme from "@/components/theme";
 import {green600, red600} from "@/assets/colorPallet/colors";
 import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION} from "@/config";
 
