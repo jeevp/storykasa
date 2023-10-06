@@ -13,4 +13,8 @@ export default class AuthHandler {
 
         return response.data
     }
+
+    static async signOut() {
+        await axios.post("/api/auth/signOut")
+    }
 }

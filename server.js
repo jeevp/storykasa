@@ -41,6 +41,7 @@ app.prepare().then(() => {
 
     // Auth
     server.post("/api/auth/signIn", AuthController.signInWithPassword)
+    server.post("/api/auth/signOut", AuthController.signOut)
 
     // Storage
     server.post(

@@ -19,6 +19,16 @@ class AuthController {
             return res.status(400).send({ message: "Something went wrong." })
         }
     }
+
+    static async signOut(req, res) {
+        try {
+            await supabase.auth.signOut()
+
+            return res.status(201).send({ message: "Session has been finished with success" })
+        } catch (error) {
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
 }
 
 

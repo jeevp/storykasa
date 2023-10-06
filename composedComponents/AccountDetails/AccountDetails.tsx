@@ -31,13 +31,6 @@ export default function AccountDetails({ account }: { account: Account }) {
         loadProfiles()
     }, [currentProfileId])
 
-    const handleSignOut = async () => {
-        // localStorage.removeItem('currentProfileID')
-        // await supabase.auth.signOut()
-        //
-        // router.refresh()
-        // router.push('/')
-    }
 
     return (
         <div className="flex items-center">
@@ -51,56 +44,6 @@ export default function AccountDetails({ account }: { account: Account }) {
                 </STKButton>
             </div>
             <AccountSideDrawer open={showAccountSideDrawer} onClose={() => setShowAccountSideDrawer(false)} />
-            {/*{currentProfile && (*/}
-            {/*    <DropdownMenu.Root>*/}
-            {/*        <DropdownMenu.Trigger>*/}
-            {/*            <Button variant="ghost">*/}
-            {/*                <CaretDown size={16} />*/}
-            {/*            </Button>*/}
-            {/*        </DropdownMenu.Trigger>*/}
-            {/*        <DropdownMenu.Content>*/}
-            {/*            <DropdownMenu.Item asChild>*/}
-            {/*                <a href="/profiles">*/}
-            {/*                    <UserSwitch size={20} />{' '}*/}
-            {/*                    <Text weight="regular" ml="2">*/}
-            {/*                        Change profiles*/}
-            {/*                    </Text>*/}
-            {/*                </a>*/}
-            {/*            </DropdownMenu.Item>*/}
-            {/*            <DropdownMenu.Separator />*/}
-            {/*            <Flex*/}
-            {/*                direction="row"*/}
-            {/*                gap="1"*/}
-            {/*                align="center"*/}
-            {/*                p="3"*/}
-            {/*                justify="between"*/}
-            {/*            >*/}
-            {/*                <Avatar*/}
-            {/*                    src={account.avatar_url || ""}*/}
-            {/*                    size="2"*/}
-            {/*                    fallback={initials(account.name)}*/}
-            {/*                    radius="full"*/}
-            {/*                ></Avatar>*/}
-            {/*                <Flex direction="column" gap="0" style={{ maxWidth: 200 }}>*/}
-            {/*                    <Text weight="regular" size="1">*/}
-            {/*                        Account name*/}
-            {/*                    </Text>*/}
-            {/*                    <Text weight="medium" size="2">*/}
-            {/*                        {account.name}*/}
-            {/*                    </Text>*/}
-            {/*                </Flex>*/}
-            {/*            </Flex>*/}
-            {/*            <DropdownMenu.Item asChild>*/}
-            {/*                <a onClick={handleSignOut}>*/}
-            {/*                    <SignOut size={20} />{' '}*/}
-            {/*                    <Text weight="regular" ml="2">*/}
-            {/*                        Log out*/}
-            {/*                    </Text>*/}
-            {/*                </a>*/}
-            {/*            </DropdownMenu.Item>*/}
-            {/*        </DropdownMenu.Content>*/}
-            {/*    </DropdownMenu.Root>*/}
-            {/*)}*/}
         </div>
     )
 }
