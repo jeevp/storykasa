@@ -27,9 +27,11 @@ export default function STKDialog({
         >
             <div className="p-4">
                 <div className="flex justify-end">
-                    <STKButton iconButton onClick={() => onClose()}>
-                        <X size={20} color={neutral800} />
-                    </STKButton>
+                    <div className="absolute">
+                        <STKButton iconButton onClick={() => onClose()}>
+                            <X size={20} color={neutral800} />
+                        </STKButton>
+                    </div>
                 </div>
                 <div>
                     {children}

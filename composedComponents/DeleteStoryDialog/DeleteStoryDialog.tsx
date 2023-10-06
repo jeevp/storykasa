@@ -37,14 +37,14 @@ export default function DeleteStoryDialog({ open, story, onClose = () => ({}) }:
     return (
         <STKDialog active={open} onClose={() => onClose()}>
             <div>
-                <h2 className="text-xl font-bold">
+                <h2 className="text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap" style={{ maxWidth: "87%" }}>
                     Delete &ldquo;{story?.title}&rdquo;?
                 </h2>
                 <p className="mt-4">
                     Are you sure you want to delete this story? Deleting a story is
                     permanent and cannot be undone.
                 </p>
-                <div className="mt-8 flex items-center flex-col lg:flex-row">
+                <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">
                     <div className="w-full lg:w-auto">
                         <STKButton fullWidth={onMobile} variant="outlined" onClick={() => onClose()}>
                             Cancel

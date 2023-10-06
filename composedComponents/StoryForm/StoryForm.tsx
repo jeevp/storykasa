@@ -20,6 +20,7 @@ import STKButton from "@/components/STKButton/STKButton";
 import StorageHandler from "@/handlers/StorageHandler";
 import {RECORD_BUCKET_NAME, RECORD_FILE_EXTENSION} from "@/config";
 import StoryHandler from "@/handlers/StoryHandler";
+import CancelRecordingDialog from "@/composedComponents/CancelRecordingDialog/CancelRecordingDialog";
 const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKRecordAudio'), {
     ssr: false,  // Set to false to disable server-side rendering
 });
@@ -39,6 +40,7 @@ export default function StoryForm() {
     const [ageGroup, setAgeGroup] = useState('')
     const [showUploadStoryDialog, setShowUploadStoryDialog] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [showCancelRecordingDialog, setShowCancelRecordingDialog] = useState(false)
 
     const updateAudioBlob = (blob: Blob, url: string) => {
         setAudioBlob(blob)
@@ -99,7 +101,7 @@ export default function StoryForm() {
 
 
     return (
-        <div>
+        <div className="pb-32 lg:pb-0">
             <div className="lg:pr-2 mt-2">
                 <div className="flex items-center">
                     <NumberCircleOne size={28} />
@@ -188,55 +190,33 @@ export default function StoryForm() {
                         account will be able to listen to it.
                     </p>
                     <div className="flex lg:flex-row flex-col items-center justify-center mt-8 lg:justify-end">
-                        {/*<AlertDialog.Root>*/}
-                        {/*    <AlertDialog.Trigger>*/}
-                        {/*        <Button*/}
-                        {/*            className="w-full lg:w-auto"*/}
-                        {/*            color="tomato"*/}
-                        {/*            variant="outline"*/}
-                        {/*            radius="full"*/}
-                        {/*            size="3"*/}
-                        {/*            type="button"*/}
-                        {/*        >*/}
-                        {/*            <Trash size={20}></Trash>*/}
-                        {/*            <Text>Delete recording</Text>*/}
-                        {/*        </Button>*/}
-                        {/*    </AlertDialog.Trigger>*/}
-                        {/*    <AlertDialog.Content style={{ maxWidth: 450, margin: 20 }}>*/}
-                        {/*        <AlertDialog.Title>Delete recording?</AlertDialog.Title>*/}
-                        {/*        <AlertDialog.Description size="2">*/}
-                        {/*            Are you sure you want to delete this recording and start*/}
-                        {/*            over?*/}
-                        {/*        </AlertDialog.Description>*/}
-
-                        {/*        <Flex gap="3" mt="4" justify="end">*/}
-                        {/*            <AlertDialog.Cancel>*/}
-                        {/*                <Button variant="soft" color="gray">*/}
-                        {/*                    Cancel*/}
-                        {/*                </Button>*/}
-                        {/*            </AlertDialog.Cancel>*/}
-                        {/*            <AlertDialog.Action>*/}
-                        {/*                <Button onClick={() => setAudioBlob(null)} color="red">*/}
-                        {/*                    <Trash size={20}></Trash>*/}
-                        {/*                    Yes, delete recording*/}
-                        {/*                </Button>*/}
-                        {/*            </AlertDialog.Action>*/}
-                        {/*        </Flex>*/}
-                        {/*    </AlertDialog.Content>*/}
-                        {/*</AlertDialog.Root>*/}
                         <div className="ml-0 lg:ml-2 mt-2 lg:mt-0 w-full lg:w-auto">
                             <div>
                                 <STKButton
                                 loading={loading}
+                                fullWidth={onMobile}
                                 startIcon={<CheckCircle size={24} weight="duotone" />}
                                 onClick={uploadAndAddStory}>
                                     Save to library
+                                </STKButton>
+                            </div>
+                            <div className="mt-4 lg:mt-0">
+                                <STKButton
+                                    fullWidth={onMobile}
+                                    variant="outlined"
+                                    onClick={() => setShowCancelRecordingDialog(true)}>
+                                    Cancel
                                 </STKButton>
                             </div>
 
                             <UploadStoryDialog
                                 open={showUploadStoryDialog}
                                 onClose={() => setShowUploadStoryDialog(false)} />
+
+                            <CancelRecordingDialog
+                            open={showCancelRecordingDialog}
+                            onClose={() => setShowCancelRecordingDialog(false)}
+                            onDeleteRecording={() => setAudioBlob(null)}/>
                         </div>
                     </div>
                 </div>
