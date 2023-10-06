@@ -31,7 +31,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             // // @ts-ignore
-            mediaRecorderRef.current = RecordRTC(stream, {type: 'audio', mimeType: 'audio/wav'});
+            mediaRecorderRef.current = (RecordRTC as any)(stream, { type: 'audio', mimeType: 'audio/wav' });
             // @ts-ignore
             mediaRecorderRef.current.startRecording();
             // @ts-ignore
