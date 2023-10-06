@@ -13,7 +13,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }) {
     const router = useRouter()
 
     const { setCurrentUser } = useContext(AuthContext)
-    const { setCurrentProfileId } = useContext(ProfileContext)
+    const { setCurrentProfileId, currentProfile, setCurrentProfile } = useContext(ProfileContext)
 
     const handleLogout = async () => {
         localStorage.removeItem(STK_PROFILE_ID)
@@ -22,6 +22,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }) {
         await AuthHandler.signOut()
         setCurrentUser(null)
         setCurrentProfileId(null)
+        setCurrentProfile({})
 
         router.push('/')
     }
@@ -30,13 +31,12 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }) {
         await router.push("/profiles")
     }
 
-
     return (
         <STKDrawer open={open} onClose={() => onClose()} anchor="right">
             <div className="w-72 p-10">
                 <div className="flex items-center">
-                    <STKAvatar name="Felipe Fernandes" />
-                    <label className="ml-2">Felipe Fernandes</label>
+                    <STKAvatar name={currentProfile?.profile_name} />
+                    <label className="ml-2">{currentProfile?.profile_name}</label>
                 </div>
                 <div className="mt-10">
                     <div>

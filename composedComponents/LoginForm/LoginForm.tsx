@@ -57,7 +57,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
 
 
     return (
-        <div className="mt-5 w-full lg:w-96">
+        <div className="w-full lg:w-96">
             <STKCard>
                 <form className="p-6" onSubmit={handleSigninWithPassword}>
                     <div>

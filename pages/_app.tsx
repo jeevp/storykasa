@@ -6,12 +6,14 @@ import AuthContext from "@/contexts/AuthContext";
 
 export default function App({ Component, pageProps }: AppProps) {
     const [currentProfileId, setCurrentProfileId] = useState<string>('')
+    const [currentProfile, setCurrentProfile] = useState<object>({})
+
     const [currentUser, setCurrentUser] = useState<any>(null)
 
     return (
         <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
             <ProfileContext.Provider
-                value={{ currentProfileId, setCurrentProfileId }}
+                value={{ currentProfileId, setCurrentProfileId, currentProfile, setCurrentProfile }}
             >
                 <Component {...pageProps} />
             </ProfileContext.Provider>

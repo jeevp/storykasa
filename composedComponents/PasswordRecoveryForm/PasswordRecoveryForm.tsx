@@ -2,6 +2,7 @@ import {useState} from 'react'
 import STKButton from "@/components/STKButton/STKButton";
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKCard from "@/components/STKCard/STKCard";
+import AuthHandler from "@/handlers/AuthHandler";
 
 interface LoginFormProps {
     onCancel?: Function
@@ -12,12 +13,18 @@ export default function PasswordRecoveryForm({ onCancel = () => ({}) }: LoginFor
     const [loading, setLoading] = useState(false)
 
 
-    const handlePasswordRecoveryRequest = async () => {
-
+    const handlePasswordRecoveryRequest = async (e: Event) => {
+        e.preventDefault()
+        try {
+            setLoading(true)
+            await AuthHandler.requestPasswordRecovery({ email })
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
-        <div mt="5" className="w-full lg:w-96">
+        <div className="w-full lg:w-96">
             <STKCard>
                 <form className="p-6" onSubmit={handlePasswordRecoveryRequest}>
                     <div>

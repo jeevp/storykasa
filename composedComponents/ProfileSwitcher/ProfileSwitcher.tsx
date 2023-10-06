@@ -10,7 +10,7 @@ import {STK_PROFILE_ID} from "@/config";
 
 export default function ProfileSwitcher({ profiles, managing }: { profiles: Profile[], managing: boolean }) {
     // Context
-    const { setCurrentProfileId } = useContext(ProfileContext) as any
+    const { setCurrentProfileId, setCurrentProfile } = useContext(ProfileContext) as any
 
     // Hooks
     const router = useRouter()
@@ -43,6 +43,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
     const selectProfile = async (profile: Profile) => {
         const id = profile.profile_id
         setCurrentProfileId(id)
+        setCurrentProfile(profile)
         localStorage.setItem(STK_PROFILE_ID, id)
         router.push('/library')
     }

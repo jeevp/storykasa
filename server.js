@@ -36,12 +36,15 @@ app.prepare().then(() => {
 
     // Profiles
     server.get("/api/profiles", authMiddleware, ProfileController.getProfiles)
-    server.post("/api/profiles", authMiddleware, ProfileController.updateProfile)
+    server.post("/api/profiles", authMiddleware, ProfileController.createProfile)
     server.put("/api/profiles/:profileId", authMiddleware, ProfileController.updateProfile)
 
     // Auth
+    server.post("/api/auth/signUp", AuthController.signUp)
     server.post("/api/auth/signIn", AuthController.signInWithPassword)
     server.post("/api/auth/signOut", AuthController.signOut)
+    server.post("/api/auth/passwordRecoveryRequest", AuthController.requestPasswordRecovery)
+    server.put("/api/auth/updatePassword", authMiddleware, AuthController.updatePassword)
 
     // Storage
     server.post(

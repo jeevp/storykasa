@@ -30,12 +30,14 @@
     "jwt-decode": "^3.1.2",
     "multer": "^1.4.5-lts.1",
     "next": "latest",
+    "query-string": "^8.1.0",
     "react": "latest",
     "react-dom": "latest",
     "react-images-uploading": "^3.1.7",
     "recordrtc": "^5.6.2",
     "timeago.js": "^4.0.2",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.0",

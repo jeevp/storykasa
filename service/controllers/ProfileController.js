@@ -9,7 +9,7 @@ class ProfileController {
             const { data: profiles } = await supabase
                 .from('profiles')
                 .select('*')
-                .eq('account_id', "244f51a1-a747-412f-9e72-2deae08b3cc9")
+                .eq('account_id', userId)
 
             return res.status(200).send(profiles)
         } catch (error) {
@@ -49,6 +49,7 @@ class ProfileController {
 
             return res.status(201).send(createdProfile.id)
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

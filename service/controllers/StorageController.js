@@ -8,7 +8,6 @@ class StorageController {
             if (!req.file || !req.body.uploadDetails)
                 return res.status(400).send({ message: "Missing file or file is incomplete" });
 
-            // Parse uploadDetails from JSON string to object
             const uploadDetails = JSON.parse(req.body.uploadDetails);
 
             const uuid = v4();

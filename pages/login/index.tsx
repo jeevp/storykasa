@@ -12,13 +12,17 @@ function Login() {
             <div className="flex flex-col items-center">
                 {showPasswordRecoveryForm ? (
                     <>
-                        <h2 className="text-2xl font-bold ">Password Recovery</h2>
-                        <PasswordRecoveryForm onCancel={() => setShowPasswordRecoveryForm(false)}></PasswordRecoveryForm>
+                        <h1 className="text-2xl font-bold">Password Recovery</h1>
+                        <div className="mt-5">
+                            <PasswordRecoveryForm onCancel={() => setShowPasswordRecoveryForm(false)}></PasswordRecoveryForm>
+                        </div>
                     </>
                 ) : (
                     <>
-                        <h2 className="text-2xl font-bold ">Log in</h2>
-                        <LoginForm onPasswordRecoveryRequest={() => setShowPasswordRecoveryForm(true)}></LoginForm>
+                        <h1 className="text-2xl font-bold ">Log in</h1>
+                        <div className="mt-5">
+                            <LoginForm onPasswordRecoveryRequest={() => setShowPasswordRecoveryForm(true)}></LoginForm>
+                        </div>
                     </>
                 )}
             </div>

@@ -2,7 +2,9 @@ import {createContext} from "react";
 
 const ProfileContext = createContext({
     currentProfileId: "",
-    setCurrentProfileId: () => ({})
+    setCurrentProfileId: () => ({}),
+    currentProfile: {},
+    setCurrentProfile: () => ({})
 })
 
 export default ProfileContext

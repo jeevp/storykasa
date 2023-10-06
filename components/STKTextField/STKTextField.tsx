@@ -9,9 +9,11 @@ interface STKTextFieldProps {
     maxRows?: number
     fluid?: boolean
     placeholder?: string
+    error?: boolean
     type?: string
     value?: string
     startAdornment?: any
+    helperText?: string
 }
 
 function STKTextField({
@@ -22,6 +24,8 @@ function STKTextField({
     value,
     startAdornment,
     placeholder,
+    error,
+    helperText,
     type,
     onChange = () => ({})
 }: STKTextFieldProps) {
@@ -34,6 +38,8 @@ function STKTextField({
             type={type}
             value={value}
             placeholder={placeholder}
+            helperText={helperText}
+            error={error}
             maxRows={maxRows}
             InputProps={startAdornment ? ({
                 startAdornment: (

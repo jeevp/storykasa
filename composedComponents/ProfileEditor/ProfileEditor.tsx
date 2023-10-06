@@ -64,10 +64,10 @@ export default function ProfileEditor({
                 avatarFormData.set('file', file)
 
                 // @ts-ignore
-                avatarFormData.set('uploadDetails', {
+                avatarFormData.set('uploadDetails', JSON.stringify({
                     bucketName: AVATAR_BUCKET_NAME,
                     extension: AVATAR_FILE_EXTENSION
-                })
+                }))
 
                 payload.avatarUrl = await StorageHandler.uploadFile(avatarFormData)
             }
