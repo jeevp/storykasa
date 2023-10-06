@@ -62,7 +62,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
                         <ProfileCard
                             managing={managing}
                             name={profile?.profile_name}
-                            avatarURL={profile?.avatar_url}
+                            avatarURL={profile?.avatar_url || ""}
                             onEdit={() => editProfile(profile.profile_id)}
                             onSelect={() => selectProfile(profile)} />
                     </div>

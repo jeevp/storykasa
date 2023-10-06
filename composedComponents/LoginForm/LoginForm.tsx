@@ -1,3 +1,4 @@
+import { FormEvent } from 'react';
 import Image from 'next/image'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {useEffect, useState} from 'react'
@@ -31,7 +32,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
     }, [email, password]);
 
     // Methods
-    const handleSigninWithPassword = async (e: Event) => {
+    const handleSigninWithPassword = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         try {

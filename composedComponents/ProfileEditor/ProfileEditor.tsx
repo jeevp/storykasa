@@ -68,18 +68,23 @@ export default function ProfileEditor({
                     extension: AVATAR_FILE_EXTENSION
                 }))
 
+                // @ts-ignore
                 payload.avatarUrl = await StorageHandler.uploadFile(avatarFormData)
             }
 
 
             if (profileId) {
                 await ProfileHandler.updateProfile({ profileId }, {
+                    // @ts-ignore
                     name: payload.profileName,
+                    // @ts-ignore
                     avatarUrl: payload.avatarUrl
                 })
             } else {
                 await ProfileHandler.createProfile({
+                    // @ts-ignore
                     name: payload.profileName,
+                    // @ts-ignore
                     avatarUrl: payload.avatarUrl
                 })
             }

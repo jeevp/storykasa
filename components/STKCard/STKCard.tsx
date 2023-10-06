@@ -3,8 +3,7 @@ import Card from '@mui/material/Card';
 import "./style.scss"
 
 interface STKCardProps {
-    children: any,
-    padding: string
+    children: any
 }
 
 export default function STKCard({ children }: STKCardProps) {

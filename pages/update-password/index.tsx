@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {FormEvent, useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import queryString from "query-string"
 import STKButton from "@/components/STKButton/STKButton";
@@ -32,11 +32,13 @@ function UpdatePassword({ onPasswordRecoveryRequest = () => ({}) }: LoginFormPro
     // Methods
     const handleCredentials = () => {
         const queryParams = queryString.parse(location.hash)
+        // @ts-ignore
         setAccessToken(queryParams?.access_token)
+        // @ts-ignore
         setRefreshToken(queryParams?.refresh_token)
     }
 
-    const handleUpdatePassword = async (e: Event) => {
+    const handleUpdatePassword = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         try {

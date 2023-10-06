@@ -9,7 +9,13 @@ import {useContext} from "react";
 import AuthContext from "@/contexts/AuthContext";
 import ProfileContext from "@/contexts/ProfileContext";
 
-export default function AccountSideDrawer({ open, onClose = () => ({}) }) {
+
+interface AccountSideDrawerProps {
+    open: boolean
+    onClose: () => void
+}
+
+export default function AccountSideDrawer({ open, onClose = () => ({}) }: AccountSideDrawerProps) {
     const router = useRouter()
 
     const { setCurrentUser } = useContext(AuthContext)
@@ -20,6 +26,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }) {
         localStorage.removeItem(STK_ACCESS_TOKEN)
         localStorage.removeItem(STK_REFRESH_TOKEN)
         await AuthHandler.signOut()
+
         setCurrentUser(null)
         setCurrentProfileId(null)
         setCurrentProfile(null)
@@ -35,8 +42,17 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }) {
         <STKDrawer open={open} onClose={() => onClose()} anchor="right">
             <div className="w-52 lg:w-72 p-10">
                 <div className="flex items-center">
-                    <STKAvatar src={currentProfile?.avatar_url} name={currentProfile?.profile_name} />
-                    <label className="ml-2">{currentProfile?.profile_name}</label>
+                    <STKAvatar src={
+                        // @ts-ignore
+                        currentProfile?.avatar_url
+                    } name={
+                        // @ts-ignore
+                        currentProfile?.profile_name
+                    } />
+                    <label className="ml-2">{
+                        // @ts-ignore
+                        currentProfile?.profile_name
+                    }</label>
                 </div>
                 <div className="mt-10">
                     <div>

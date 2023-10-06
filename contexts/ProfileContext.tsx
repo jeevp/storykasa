@@ -1,10 +1,17 @@
-import {createContext} from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
-const ProfileContext = createContext({
+interface ProfileContextProps {
+    currentProfileId: string | null;
+    setCurrentProfileId: Dispatch<SetStateAction<string | null>>;
+    currentProfile: Object | null;
+    setCurrentProfile: Dispatch<SetStateAction<Object | null>>;
+}
+
+const ProfileContext = createContext<ProfileContextProps>({
     currentProfileId: "",
-    setCurrentProfileId: () => ({}),
+    setCurrentProfileId: () => {},
     currentProfile: null,
-    setCurrentProfile: () => ({})
-})
+    setCurrentProfile: () => {}
+});
 
-export default ProfileContext
+export default ProfileContext;

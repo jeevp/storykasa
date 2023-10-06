@@ -8,6 +8,11 @@ const StyledButton = styled(Button)(({
     rounded,
     alignStart,
     color
+}: {
+    theme?: any
+    rounded?: boolean
+    alignStart?: boolean
+    color?: string
 }) => ({
     textTransform: 'none',
     borderRadius: rounded ? "20px" : "15px",
@@ -22,10 +27,12 @@ const StyledButton = styled(Button)(({
 }));
 
 const StyledIconButton = styled(IconButton)(({
-     theme,
-     rounded,
-     alignStart,
      color
+}: {
+    theme?: any
+    rounded?: boolean
+    alignStart?: boolean
+    color?: string
 }) => ({
     textTransform: 'none',
     borderRadius: "15px",
@@ -55,7 +62,7 @@ interface STKButtonTabsProps {
     tabs: Array<any>,
     useIconButtonOnMobile?: boolean
     initialValue?: object,
-    onChange: () => void
+    onChange: (tab: any) => void
 }
 export default function STKButtonTabs({
     tabs = [],
@@ -69,6 +76,7 @@ export default function STKButtonTabs({
     // Watchers
     useEffect(() => {
         if (initialValue) {
+            // @ts-ignore
             const index = tabs.findIndex((tab) => tab.pathname === initialValue.pathname)
             setActiveIndex(index)
         }
@@ -85,9 +93,8 @@ export default function STKButtonTabs({
             "ml-4": useIconButtonOnMobile && onMobile && index > 0
         };
 
-        return Object.keys(classesObject)
-            .filter(key => classesObject[key])
-            .join(' ');
+        // @ts-ignore
+        return Object.keys(classesObject).filter(key => classesObject[key]).join(' ');
     };
 
     return (
@@ -97,17 +104,14 @@ export default function STKButtonTabs({
                     <ThemeProvider theme={STKButtonTabsTheme}>
                         {onMobile && useIconButtonOnMobile ? (
                             <StyledIconButton
-                                alignStart={true}
-                                fullWidth
-                                disableElevation
                                 color={activeIndex === index ? 'primary' : 'secondary'}
-                                onClick={() => handleOnClick(index, tab)}
-                                variant="contained">
+                                onClick={() => handleOnClick(index, tab)}>
                                 {tab.icon}
                             </StyledIconButton>
                         ) : (
                             <StyledButton
-                                alignStart={true}
+                                // @ts-ignore
+                                alignStart
                                 fullWidth
                                 disableElevation
                                 color={activeIndex === index ? 'primary' : 'secondary'}

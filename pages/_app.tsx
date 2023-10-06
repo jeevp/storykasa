@@ -5,7 +5,7 @@ import ProfileContext from "@/contexts/ProfileContext";
 import AuthContext from "@/contexts/AuthContext";
 
 export default function App({ Component, pageProps }: AppProps) {
-    const [currentProfileId, setCurrentProfileId] = useState<string>('')
+    const [currentProfileId, setCurrentProfileId] = useState<string | null>('')
     const [currentProfile, setCurrentProfile] = useState<object | null>(null)
 
     const [currentUser, setCurrentUser] = useState<any>(null)
@@ -13,7 +13,12 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
             <ProfileContext.Provider
-                value={{ currentProfileId, setCurrentProfileId, currentProfile, setCurrentProfile }}
+                value={{
+                    currentProfileId,
+                    setCurrentProfileId,
+                    currentProfile,
+                    setCurrentProfile
+            }}
             >
                 <Component {...pageProps} />
             </ProfileContext.Provider>

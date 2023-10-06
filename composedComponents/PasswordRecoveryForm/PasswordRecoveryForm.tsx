@@ -1,10 +1,10 @@
-import {useState} from 'react'
+import {FormEvent, useState} from 'react'
 import STKButton from "@/components/STKButton/STKButton";
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import { CheckCircle } from "@phosphor-icons/react"
-import {green300, green600} from "@/assets/colorPallet/colors";
+import {green600} from "@/assets/colorPallet/colors";
 import {useRouter} from "next/router";
 
 
@@ -19,7 +19,7 @@ export default function PasswordRecoveryForm({ onCancel = () => ({}) }: LoginFor
 
     const router = useRouter()
 
-    const handlePasswordRecoveryRequest = async (e: Event) => {
+    const handlePasswordRecoveryRequest = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
             setLoading(true)

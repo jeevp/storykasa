@@ -16,6 +16,7 @@ export default class ProfileHandler {
 
     static async createProfile({ name,  avatarUrl }: { name: string, avatarUrl: string }) {
         const payload = { name }
+        // @ts-ignore
         if (avatarUrl) payload.avatarUrl = avatarUrl
 
         const headers = generateHeaders()
@@ -33,7 +34,9 @@ export default class ProfileHandler {
     ) {
         const headers = generateHeaders()
         const payload = {}
+        // @ts-ignore
         if (name) payload.name = name
+        // @ts-ignore
         if (avatarUrl) payload.avatarUrl = avatarUrl
 
         const response = await axios.put(`/api/profiles/${profileId}`, payload, headers)

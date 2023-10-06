@@ -1,8 +1,16 @@
-import {createContext} from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
-const AuthContext = createContext({
+interface AuthContextProps {
+    currentUser: Object | null;
+    setCurrentUser: Dispatch<SetStateAction<Object | null>>;
+}
+
+// Assuming User is an interface you've defined elsewhere
+// If you haven't defined User, replace User with any or the actual shape of your user object
+
+const AuthContext = createContext<AuthContextProps>({
     currentUser: null,
-    setCurrentUser: () => ({})
-})
+    setCurrentUser: () => {}
+});
 
-export default AuthContext
+export default AuthContext;

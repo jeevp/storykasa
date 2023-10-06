@@ -89,7 +89,7 @@ export default function SignupForm() {
     const handleSignUp = async () => {
         try {
             if (!validateSignUpFormFields()) return
-            
+
             setProcessingAccountCreation(true)
             await AuthHandler.signUp({
                 email,
@@ -182,7 +182,7 @@ export default function SignupForm() {
                         Sign up with Google
                     </STKButton>
                     <div className="mt-4">
-                        <Link href="/login" underline="always">
+                        <Link href="/login">
                             Already have an account? Log in
                         </Link>
                     </div>

@@ -11,8 +11,9 @@ const withAuth = (WrappedComponent: any) => {
         const router = useRouter()
         const [hasToken, setHasToken] = useState(false);
 
-        const isTokenExpired = (token) => {
+        const isTokenExpired = (token: string) => {
             const decodedToken = jwtDecode(token);
+            // @ts-ignore
             const expirationTime = decodedToken.exp * 1000;  // Convert to milliseconds
             return expirationTime <= Date.now();
         }
@@ -24,28 +25,7 @@ const withAuth = (WrappedComponent: any) => {
         }
 
         const refreshTokens = async (refreshToken: string) => {
-            // try {
-            //     const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/token`, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/x-www-form-urlencoded',
-            //         },
-            //         body: new URLSearchParams({
-            //             grant_type: 'refresh_token',
-            //             refresh_token: refreshToken,
-            //         }),
-            //     });
-            //
-            //     if (!response.ok) {
-            //         throw new Error('Failed to refresh token');
-            //     }
-            //
-            //     const data = await response.json();
-            //     handleLogin(data.access_token);
-            // } catch (error) {
-            //     console.error('Error refreshing token:', error);
-            //     router.push('/');
-            // }
+            // Todo: Implement refresh token logic
         }
 
         useEffect(() => {
