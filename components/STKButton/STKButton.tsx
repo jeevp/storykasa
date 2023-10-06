@@ -1,17 +1,22 @@
-import {Button, IconButton, styled, ThemeProvider} from "@mui/material";
+import {Button, ButtonProps, IconButton, styled, ThemeProvider} from "@mui/material";
 import STKLoading from "@/components/STKLoading/STKLoading";
 import {green600} from "@/assets/colorPallet/colors";
 import theme from "@/components/theme";
 
 
-const StyledButton = styled(Button)(({
+interface StyledButtonProps extends ButtonProps {
+    rounded?: boolean;
+    alignStart?: boolean;
+}
+
+const StyledButton = styled(Button)<StyledButtonProps>(({
     theme,
     rounded,
-    alignStart
+    alignStart,
 }) => ({
     textTransform: 'none',
-    borderRadius: rounded ? "20px" : "8px",
-    justifyContent: alignStart ? "flex-start" : ""
+    borderRadius: rounded ? '20px' : '8px',
+    justifyContent: alignStart ? 'flex-start' : '',
 }));
 
 interface STKButtonProps {
@@ -45,7 +50,7 @@ export default function STKButton({
     rounded,
     height,
     width,
-    type,
+    type = "button",
     iconButton,
     alignStart,
     onClick = () => ({})
@@ -64,7 +69,7 @@ export default function STKButton({
         <ThemeProvider theme={theme}>
             {iconButton ? (
                 <IconButton
-                color={color}
+                color={color as string | any}
                 sx={{
                     width: width || "auto",
                     height: height || "auto"
@@ -77,12 +82,12 @@ export default function STKButton({
                     startIcon={loading ? <></> : startIcon}
                     endIcon={loading ? <></> : endIcon}
                     fullWidth={fullWidth}
-                    color={color}
-                    type={type}
+                    color={color as 'inherit' | 'primary' | 'secondary'}
+                    type={type as 'button' | 'submit' | 'reset'}
                     rounded={rounded}
                     alignStart={alignStart}
                     disableElevation
-                    variant={variant}
+                    variant={variant as 'text' | 'outlined' | 'contained'}
                     sx={{ textTransform: "none", height: slim ? "30px" : height || "40px", width: fullWidth ? "100%" : width || "auto" }}
                     onClick={(e) => onClick(e)}>
                     {loading ? (
