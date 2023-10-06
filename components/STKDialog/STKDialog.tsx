@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Dialog } from '@mui/material';
 import STKButton from "@/components/STKButton/STKButton";
+import { X } from '@phosphor-icons/react'
+import {neutral800} from "@/assets/colorPallet/colors";
 
 interface STKDialogProps {
     active: boolean
@@ -25,9 +27,8 @@ export default function STKDialog({
         >
             <div className="p-4">
                 <div className="flex justify-end">
-                    <STKButton onClick={() => onClose()}>
-                        fechar
-                        {/*<Cross2Icon />*/}
+                    <STKButton iconButton onClick={() => onClose()}>
+                        <X size={20} color={neutral800} />
                     </STKButton>
                 </div>
                 <div>

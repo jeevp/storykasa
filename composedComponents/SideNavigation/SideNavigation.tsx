@@ -33,6 +33,7 @@ export default function SideNavigation() {
     // Mount
     useEffect(() => {
         loadProfiles()
+        // @ts-ignore
         setSelectedNavigationOption(navigationOptions.find((navigationOption) => {
             return navigationOption.pathname === pathname
         }))
@@ -55,7 +56,7 @@ export default function SideNavigation() {
         setProfileOptions(profiles)
     }
 
-    const handleTabOnChange = (selectedTab) => {
+    const handleTabOnChange = (selectedTab: any) => {
         route.push(selectedTab.pathname)
     }
 
@@ -76,7 +77,7 @@ export default function SideNavigation() {
                     >
                         <h2 className="m-0 text-base hidden lg:block">Hi, {currentProfile?.profile_name}!</h2>
 
-                        <div className= "nav lg:mt-8 w-full lg:w-auto flex lg:flex-col bg-white lg:bg-transparent justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
+                        <div style={{ boxShadow: "1px 1px 8px #00000024" }} className="nav lg:mt-8 w-full lg:w-auto flex lg:flex-col bg-white lg:bg-transparent justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
                            <div className="flex justify-center lg:flex-col -ml-10 lg:ml-0">
                                <STKButtonTabs
                                    useIconButtonOnMobile

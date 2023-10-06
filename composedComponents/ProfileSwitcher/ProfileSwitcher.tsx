@@ -8,6 +8,8 @@ import STKButton from "@/components/STKButton/STKButton";
 import ProfileContext from "@/contexts/ProfileContext";
 import {STK_PROFILE_ID} from "@/config";
 import ProfileCard from "@/composedComponents/ProfileCard/ProfileCard";
+import STKCard from "@/components/STKCard/STKCard";
+import useDevice from "@/customHooks/useDevice";
 
 export default function ProfileSwitcher({ profiles, managing }: { profiles: Profile[], managing: boolean }) {
     // Context
@@ -15,6 +17,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
 
     // Hooks
     const router = useRouter()
+    const { onMobile } = useDevice()
 
     // State
     const [editing, setEditing] = useState(false)
@@ -55,10 +58,10 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
 
 
     return (
-        <div className="mt-5 flex-col">
+        <div className="mt-5 flex-col pb-10 lg:pb-0">
             <div className="flex items-start flex-col lg:flex-row">
                 {profileOptions.map((profile: Profile) => (
-                    <div key={profile?.profile_id} className="lg:ml-4 mt-2 w-full lg:w-auto lg:mt-2 first:ml-0">
+                    <div key={profile?.profile_id} className="lg:ml-4 mt-4 lg:mt-0 w-full lg:w-auto first:ml-0">
                         <ProfileCard
                             managing={managing}
                             name={profile?.profile_name}
@@ -69,17 +72,21 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
                 ))}
 
                 {managing && !editing && (
-                    <div className="flex justify-center items-center" style={{ height: "88px", width: "88px" }}>
-                        <div className="ml-4">
-                            <STKButton
-                                iconButton
-                                height="88px"
-                                width="88px"
-                                onClick={addProfile}
-                            >
+                    <div className="ml-0 lg:ml-4 mt-4 lg:mt-0 w-full lg:w-auto">
+                        <STKCard color="transparent">
+                            <div
+                            className="flex flex-col items-center justify-center cursor-pointer"
+                            style={{ height: "258px", width: onMobile ? "100%" :"274px" }}>
+                                <STKButton
+                                    iconButton
+                                    height="88px"
+                                    width="88px"
+                                    onClick={addProfile}
+                                >
                                     <Plus size={24} weight="bold"></Plus>
-                            </STKButton>
-                        </div>
+                                </STKButton>
+                            </div>
+                        </STKCard>
                     </div>
                 )}
             </div>

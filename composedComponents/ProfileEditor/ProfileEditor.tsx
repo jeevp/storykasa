@@ -13,6 +13,7 @@ import FeedbackDialog from "@/composedComponents/FeedbackDialog/FeedbackDialog";
 import {useRouter} from "next/navigation";
 import {green600, red600} from "@/assets/colorPallet/colors";
 import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION} from "@/config";
+import useDevice from "@/customHooks/useDevice";
 
 export default function ProfileEditor({
     profileToEdit,
@@ -21,7 +22,7 @@ export default function ProfileEditor({
 }) {
     // Hooks
     const router = useRouter()
-
+    const { onMobile } = useDevice()
     // States
     const [profileName, setProfileName] = useState('')
     const [loading, setLoading] = useState(false)
@@ -108,16 +109,17 @@ export default function ProfileEditor({
     const feedbackDialogText = "Your profile is now up to date, and you are ready to use StoryKasa"
 
     return (
-        <STKCard padding="10px">
+        <STKCard>
             <div className="p-6">
-                <div className="flex items-center">
-                    <div className="mr-4">
+                <div className="flex items-center flex-col lg:flex-row flex-col-reverse">
+                    <div className="mr-0 lg:mr-4 mt-4 lg:mt-0 w-full lg:w-auto">
                         <label className="font-semibold">
                             Profile name
                         </label>
                         <div className="mt-2">
                             <STKTextField
                                 value={profileName}
+                                fluid={onMobile}
                                 onChange={handleProfileNameOnChange}
                             />
                         </div>
@@ -203,6 +205,7 @@ export default function ProfileEditor({
                     <STKButton
                         startIcon={<UserPlus size={20} weight="duotone" />}
                         loading={loading}
+                        fullWidth={onMobile}
                         onClick={upsertProfile}>
                         Save profile
                     </STKButton>

@@ -3,12 +3,13 @@ import Card from '@mui/material/Card';
 import "./style.scss"
 
 interface STKCardProps {
-    children: any
+    children: any,
+    color?: string
 }
 
-export default function STKCard({ children }: STKCardProps) {
+export default function STKCard({ children, color }: STKCardProps) {
     return (
-        <Card variant="outlined" className="stk-card">
+        <Card variant="outlined" className="stk-card" style={{ backgroundColor: color }}>
             {children}
         </Card>
     );
