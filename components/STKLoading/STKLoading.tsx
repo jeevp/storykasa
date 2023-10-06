@@ -12,7 +12,7 @@ const STKLoading: React.FC = ({ color }: STKLoadingProps) => {
         <div className="loading-dots">
             {[1,2,3].map((dot) => (
                 // eslint-disable-next-line react/jsx-key
-                <div className="dot" style={{ backgroundColor: color || green600 }} />
+                <div key={dot} className="dot" style={{ backgroundColor: color || green600 }} />
             ))}
         </div>
     );

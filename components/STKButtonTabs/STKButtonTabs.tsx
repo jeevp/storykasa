@@ -100,7 +100,7 @@ export default function STKButtonTabs({
     return (
         <div className={`${onMobile && useIconButtonOnMobile ? 'flex' : 'lg:w-full w-auto'}`}>
             {tabs.map((tab: any, index) => (
-                <div className={generateCSSClasses(index)}>
+                <div className={generateCSSClasses(index)} key={index}>
                     <ThemeProvider theme={STKButtonTabsTheme}>
                         {onMobile && useIconButtonOnMobile ? (
                             <StyledIconButton
