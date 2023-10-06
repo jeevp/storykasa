@@ -10,7 +10,7 @@ const StyledButton = styled(Button)(({
     alignStart
 }) => ({
     textTransform: 'none',
-    borderRadius: rounded ? "20px" : "15px",
+    borderRadius: rounded ? "20px" : "8px",
     justifyContent: alignStart ? "flex-start" : ""
 }));
 

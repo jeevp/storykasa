@@ -48,10 +48,8 @@ function Discover() {
                             exit={{ x: 10, opacity: 0 }}
                             key={stories.length}
                         >
-                            <div
-                                style={{ height: !onMobile ? '80vh' : 'auto' }}
-                            >
-                                {stories?.map((story: StoryWithProfile, index: number) => (
+                            <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "75vh" }}>
+                            {stories?.map((story: StoryWithProfile, index: number) => (
                                     <div
                                         className="mt-2 first:mt-0"
                                         key={story?.story_id}
