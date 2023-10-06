@@ -1,9 +1,14 @@
-import {Button, createTheme, IconButton, styled, ThemeProvider} from "@mui/material";
+import {Button, ButtonProps, IconButtonProps, createTheme, IconButton, styled, ThemeProvider} from "@mui/material";
 import {green300, neutral800} from "@/assets/colorPallet/colors";
 import useDevice from "@/customHooks/useDevice";
 import {Microphone} from "@phosphor-icons/react";
 
-const StyledButton = styled(Button)(({
+interface StyledButtonProps extends ButtonProps {
+    rounded?: boolean;
+    alignStart?: boolean;
+}
+
+const StyledButton = styled(Button)<StyledButtonProps>(({
     theme,
     rounded,
     alignStart,
@@ -22,11 +27,13 @@ const StyledButton = styled(Button)(({
     }
 }));
 
-const StyledIconButton = styled(IconButton)(({
+interface StyledIconButtonProps extends IconButtonProps {
+    rounded?: boolean;
+    alignStart?: boolean;
+}
+
+const StyledIconButton = styled(IconButton)<StyledIconButtonProps>(({
     theme,
-    rounded,
-    alignStart,
-    color
 }) => ({
     textTransform: 'none',
     borderRadius: "15px",
@@ -63,12 +70,8 @@ export default function RecordButton({ onClick     = () => ({}) }: STKButtonTabs
         <ThemeProvider theme={STKButtonTabsTheme}>
             {onMobile ? (
                 <StyledIconButton
-                    alignStart={true}
-                    fullWidth
-                    disableElevation
                     color="primary"
-                    onClick={() => onClick()}
-                    variant="contained">
+                    onClick={() => onClick()}>
                     <Microphone size={24} weight="duotone" color={neutral800} />
                 </StyledIconButton>
             ) : (
