@@ -48,7 +48,6 @@ class AuthController {
                 password,
             })
 
-            await supabase.auth.signOut()
             await supabase.auth.setSession({
                 refresh_token: data.session.refresh_token,
                 access_token: data.session.access_token

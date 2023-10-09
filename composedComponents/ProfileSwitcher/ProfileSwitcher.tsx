@@ -60,7 +60,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
     return (
         <div className="mt-5 flex-col pb-10 lg:pb-0">
             <div className="flex items-start flex-col lg:flex-row">
-                {profileOptions.map((profile: Profile) => (
+                {profileOptions?.map((profile: Profile) => (
                     <div key={profile?.profile_id} className="lg:ml-4 mt-4 lg:mt-0 w-full lg:w-auto first:ml-0">
                         <ProfileCard
                             managing={managing}

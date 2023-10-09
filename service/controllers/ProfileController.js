@@ -56,7 +56,7 @@ class ProfileController {
 
     static async updateProfile(req, res) {
         try {
-            const { profileId } = req.params
+            const { profileId } = req.query
 
             if (!profileId) {
                 return res.status(400).send({ message: "Missing params." })
@@ -74,6 +74,7 @@ class ProfileController {
 
             return res.status(202).send({ message: `Profile with ID ${profileId} was updated with success` })
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

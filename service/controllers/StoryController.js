@@ -3,7 +3,7 @@ const supabase = require('../../service/supabase');
 class StoryController {
     static async deleteStory(req, res) {
         try {
-            const { storyId } = req.params
+            const { storyId } = req.query
 
             await supabase.from('stories').delete().eq('story_id', storyId)
 
@@ -101,4 +101,4 @@ class StoryController {
 }
 
 
-module.exports.default = StoryController
+module.exports = StoryController
