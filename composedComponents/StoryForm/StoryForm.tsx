@@ -190,7 +190,7 @@ export default function StoryForm() {
                         account will be able to listen to it.
                     </p>
                     <div className="flex lg:flex-row flex-col items-center justify-center mt-8 lg:justify-end">
-                        <div className="ml-0 lg:ml-2 mt-2 lg:mt-0 w-full lg:w-auto">
+                        <div className="ml-0 lg:ml-2 mt-2 block lg:flex lg:mt-0 w-full lg:w-auto">
                             <div>
                                 <STKButton
                                 loading={loading}
@@ -200,7 +200,7 @@ export default function StoryForm() {
                                     Save to library
                                 </STKButton>
                             </div>
-                            <div className="mt-4 lg:mt-0">
+                            <div className="mt-4 ml-0 lg:ml-2 lg:mt-0">
                                 <STKButton
                                     fullWidth={onMobile}
                                     variant="outlined"
