@@ -37,7 +37,7 @@ export default class AuthHandler {
     }
 
     static async requestPasswordRecovery({ email }: { email: string }) {
-        const response = await axios.post("/api/auth/passwordRecoveryRequest", {
+        const response = await axios.post("/api/auth/requestPasswordRecovery", {
             email
         })
 

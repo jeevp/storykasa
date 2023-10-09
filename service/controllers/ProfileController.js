@@ -5,11 +5,13 @@ class ProfileController {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
+            console.log({ user })
             const userId = user.id
             const { data: profiles } = await supabase
                 .from('profiles')
                 .select('*')
                 .eq('account_id', userId)
+            console.log({ profiles })
 
             return res.status(200).send(profiles)
         } catch (error) {
