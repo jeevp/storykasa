@@ -90,8 +90,6 @@ class AuthController {
 
             const redirectToURL = `${rootURL}/update-password`
 
-            console.log({ redirectToURL })
-
             await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: redirectToURL
             })
