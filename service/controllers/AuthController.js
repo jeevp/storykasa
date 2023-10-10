@@ -77,7 +77,20 @@ class AuthController {
                 return res.status(400).send({ message: "Payload is incorrect." })
             }
 
-            const redirectToURL = `${process.env.NEXT_PUBLIC_ORIGIN}/update-password`
+            let rootURL;
+            if (req.headers.referer) {
+                rootURL = new URL(req.headers.referer).origin;
+            } else if (req.headers.origin) {
+                // If the Referer header is not present, try the Origin header
+                rootURL = req.headers.origin;
+            } else {
+                // If neither header is present, fall back to the environment variable
+                rootURL = process.env.NEXT_PUBLIC_ORIGIN;
+            }
+
+            const redirectToURL = `${rootURL}/update-password`
+
+            console.log({ redirectToURL })
 
             await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: redirectToURL
