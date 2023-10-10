@@ -1,13 +1,20 @@
 const supabase = require('../../service/supabase');
+const axios = require("axios");
+const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
 
 class StoryController {
     static async deleteStory(req, res) {
         try {
             const { storyId } = req.query
 
-            await supabase.from('stories').delete().eq('story_id', storyId)
+            const response = await axios.delete(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+                params: {
+                    story_id: `eq.${storyId}`
+                },
+                headers: generateSupabaseHeaders(req.accessToken)
+            })
 
-            return res.status(204).send({ message: "Story deleted with success" })
+            return res.status(204).send(response.data)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
@@ -17,28 +24,36 @@ class StoryController {
     static async getLibraryStories(req, res) {
         try {
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
-            const { data } = await supabase
-                .from('library_stories')
-                .select('*, stories (*, profiles (*))')
-                .eq('account_id', user?.id)
-                .order('stories(last_updated)', { ascending: false })
 
-            const stories = data?.map((story) => story.stories)
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+                params: {
+                    select: '*,stories(*,profiles(*))',
+                    account_id: `eq.${user?.id}`,
+                    order: "created_at.desc"
+                },
+                headers: generateSupabaseHeaders(req.accessToken)
+            })
+
+            const stories = response.data?.map((story) => story.stories)
             return res.status(200).send(stories)
         } catch (error) {
+            console.error(error)
             res.status(400).send({ message: "Something went wrong" })
         }
     }
 
     static async getDiscoverStories(req, res) {
         try {
-            const { data, error } = await supabase
-                .from('stories')
-                .select('*, profiles (*)')
-                .eq('is_public', true)
-                .order('last_updated', { ascending: false })
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+                params: {
+                    select: '*,profiles(*)',
+                    is_public: 'eq.true',
+                    order: 'last_updated.desc'
+                },
+                headers: generateSupabaseHeaders(req.accessToken)
+            })
 
-            return res.status(200).send(data)
+            return res.status(200).send(response.data)
         } catch (error) {
             return res.status(400).send({ message: "Something went wrong" })
         }
@@ -68,33 +83,52 @@ class StoryController {
                 duration: duration
             }
 
-            const { data, error } = await supabase
-                .from('stories')
-                .insert(newStory)
-                .select()
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`,
+                newStory,
+                {
+                    params: {
+                        select: '*'
+                    },
+                    headers: generateSupabaseHeaders(req.accessToken)
+                }
+            )
 
+            let newStoryID = response.data[0].story_id
 
-            let newStoryID = data[0].story_id
-
-            const {data: { user }} = await supabase.auth.getUser()
+            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
             // simulate the story "saving" process by adding it to the library_stories table
-            if (data && user) {
-                const { data, error } = await supabase
-                    .from('accounts')
-                    .select('*, libraries(*)')
-                    .eq('account_id', user.id)
+            if (newStoryID && user) {
+                const libraryResponse = await axios.get(
+                    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
+                        params: {
+                            select: "*",
+                            "account_id": `eq.${user?.id}`
+                        },
+                        headers: generateSupabaseHeaders(req.accessToken)
+                    }
+                )
 
-                if (error) console.log(error)
-                await supabase.from('library_stories').insert({
-                    account_id: user.id,
-                    story_id: newStoryID,
-                    library_id: data[0].libraries[0].library_id
-                })
+                await axios.post(
+                    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`,
+                    {
+                        account_id: user.id,
+                        story_id: newStoryID,
+                        library_id: libraryResponse?.data[0]?.library_id
+                    },
+                    {
+                        params: {
+                            select: '*'
+                        },
+                        headers: generateSupabaseHeaders(req.accessToken)
+                    }
+                )
             }
 
             return res.status(201).send({ message: "Story created with success" })
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

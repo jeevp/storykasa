@@ -1,5 +1,5 @@
 import axios from "axios"
-import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN } from "@/config"
+import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN, STK_PROFILE_ID } from "@/config"
 
 export default class AuthHandler {
     static async signUp({ email, password, fullName }: {
@@ -13,7 +13,6 @@ export default class AuthHandler {
             fullName
         })
 
-        console.log({ response })
         localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)
         localStorage.setItem(STK_REFRESH_TOKEN, response?.data?.session?.refresh_token)
 
@@ -34,6 +33,9 @@ export default class AuthHandler {
 
     static async signOut() {
         await axios.post("/api/auth/signOut")
+        localStorage.removeItem(STK_ACCESS_TOKEN)
+        localStorage.removeItem(STK_REFRESH_TOKEN)
+        localStorage.removeItem(STK_PROFILE_ID)
     }
 
     static async requestPasswordRecovery({ email }: { email: string }) {

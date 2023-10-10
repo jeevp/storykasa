@@ -59,9 +59,9 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
 
     return (
         <div className="mt-5 flex-col pb-10 lg:pb-0">
-            <div className="flex items-start flex-col lg:flex-row">
+            <div className="flex items-start flex-col lg:flex-row flex-wrap">
                 {profileOptions?.map((profile: Profile) => (
-                    <div key={profile?.profile_id} className="lg:ml-4 mt-4 lg:mt-0 w-full lg:w-auto first:ml-0">
+                    <div key={profile?.profile_id} className="lg:mr-4 w-full lg:w-auto mb-4">
                         <ProfileCard
                             managing={managing}
                             name={profile?.profile_name}
@@ -72,7 +72,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
                 ))}
 
                 {managing && !editing && (
-                    <div className="ml-0 lg:ml-4 mt-4 lg:mt-0 w-full lg:w-auto">
+                    <div className="mr-0 lg:mr-4 mb-4 lg:mb-0 w-full lg:w-auto">
                         <STKCard color="transparent">
                             <div
                             className="flex flex-col items-center justify-center cursor-pointer"

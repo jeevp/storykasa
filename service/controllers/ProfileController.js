@@ -1,21 +1,27 @@
 const supabase = require('../../service/supabase');
+const generateSupabaseHeaders = require("../../service/utils/generateSupabaseHeaders")
+const axios = require("axios");
 
 class ProfileController {
     static async getProfiles(req, res) {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            console.log({ user })
             const userId = user.id
-            const { data: profiles } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('account_id', userId)
-            console.log({ profiles })
 
-            return res.status(200).send(profiles)
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
+                {
+                    params: {
+                        select: "*",
+                        account_id: `eq.${userId}`
+                    },
+                    headers: generateSupabaseHeaders(req.accessToken)
+                }
+            )
+
+            return res.status(200).send(response.data)
         } catch (error) {
-            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
@@ -42,16 +48,20 @@ class ProfileController {
 
             if (avatarUrl) attributes.avatar_url = avatarUrl
 
-            const { data, error } = await supabase
-                .from('profiles')
-                .insert(attributes)
-                .select()
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
+                attributes,
+                {
+                    params: {
+                        select: "*"
+                    },
+                    headers: generateSupabaseHeaders(req.accessToken)
+                }
+            )
 
-            const createdProfile = data[0]
 
-            return res.status(201).send(createdProfile.id)
+            return res.status(201).send(response?.data[0]?.id)
         } catch (error) {
-            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
@@ -69,14 +79,18 @@ class ProfileController {
             if (name) attributesToBeUpdated.profile_name = name
             if (avatarUrl) attributesToBeUpdated.avatar_url = avatarUrl
 
-            await supabase.from("profiles")
-                .update(attributesToBeUpdated)
-                .eq("profile_id", profileId)
-                .select()
+            const response = await axios.patch(
+                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`, attributesToBeUpdated, {
+                    params: {
+                        profile_id: `eq.${profileId}`,
+                        select: '*'
+                    },
+                    headers: generateSupabaseHeaders(req.accessToken)
+                }
+            )
 
-            return res.status(202).send({ message: `Profile with ID ${profileId} was updated with success` })
+            return res.status(202).send(response.data)
         } catch (error) {
-            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

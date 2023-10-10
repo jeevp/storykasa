@@ -7,7 +7,6 @@ export default class ProfileHandler {
         try {
             const headers = generateHeaders()
             const response = await axios.get("/api/profiles", headers)
-            console.log(response.data)
             return response.data
         } catch (error) {
             localStorage.removeItem(STK_ACCESS_TOKEN)
