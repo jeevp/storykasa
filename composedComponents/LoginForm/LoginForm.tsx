@@ -74,7 +74,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
                             <STKTextField fluid placeholder="Password" type="password" onChange={(value: string) => setPassword(value)} />
                         </div>
                     </div>
-                    <div className="mt-8 flex items-center">
+                    <div className="mt-8 flex items-center flex-col lg:flex-row">
                         <div className="w-full">
                             <STKButton
                                 color="primary"
@@ -85,7 +85,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
                                 Log in
                             </STKButton>
                         </div>
-                        <div className="ml-2 w-full">
+                        <div className="ml-0 lg:ml-2 mt-2 lg:mt-0 w-full">
                             <STKButton fullWidth variant="outlined" onClick={() => onPasswordRecoveryRequest()}>Forgot password</STKButton>
                         </div>
                     </div>
