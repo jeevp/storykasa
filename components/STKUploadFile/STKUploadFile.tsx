@@ -19,6 +19,7 @@ interface STKUploadFileProps {
     onFileUpload: (blob: any, audioUrl: any, duration: any) => void
 }
 
+// @ts-ignore
 const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
     const [file, setFile] = useState<File | null>(null);
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -54,6 +55,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
+        // @ts-ignore
         accept: 'audio/mp3',
         multiple: false,
     });
@@ -87,7 +89,10 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
 
     return (
         <div>
-            <div {...getRootProps()} style={styles.dropzone}>
+            <div
+                {...getRootProps()}
+                // @ts-ignore
+                style={styles.dropzone}>
                 {!uploadComplete ? (
                   <>
                       <input {...getInputProps()} />
@@ -102,7 +107,10 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                   </>
                 ) : (
                     <div>
-                        <STKFileCard file={file as File} onRemove={handleRemoveFile} />
+                        <STKFileCard
+                            file={file as File}
+                            // @ts-ignore
+                            onRemove={handleRemoveFile} />
                     </div>
                 )}
             </div>
@@ -113,7 +121,11 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                 message={error}
                 action={
                     <React.Fragment>
-                        <STKButton iconButton onClick={handleClose} style={styles.closeButton}>
+                        <STKButton
+                            iconButton
+                            onClick={handleClose}
+                            // @ts-ignore
+                            style={styles.closeButton}>
                             <X size={18} color="white" />
                         </STKButton>
                     </React.Fragment>

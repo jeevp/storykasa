@@ -37,6 +37,7 @@ export default function STKRadioGroup(props: STKRadioGroupProps) {
                 <RadioGroup
                     row
                     value={internalValue}
+                    // @ts-ignore
                     onChange={handleChange}
                 >
                     {props.options.map((option: any, index: number) => (

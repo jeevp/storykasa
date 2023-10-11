@@ -112,6 +112,7 @@ export default function StoryForm() {
         setAudioDuration(duration)
     }
 
+    // @ts-ignore
     return (
         <div className="pb-32 lg:pb-0">
             <div className="lg:pr-2 mt-2">
@@ -199,7 +200,10 @@ export default function StoryForm() {
                                 <STKRecordAudio onComplete={updateAudioBlob} onDuration={(duration: number) => setAudioDuration(duration)} />
                             ) : (
                                 <div>
-                                    <STKUploadFile onFileUpload={handleStoryAudioFileOnUpload} />
+
+                                    <STKUploadFile
+                                    // @ts-ignore
+                                    onFileUpload={handleStoryAudioFileOnUpload} />
                                 </div>
                             )}
                         </>
