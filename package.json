@@ -36,6 +36,7 @@
     "query-string": "^8.1.0",
     "react": "latest",
     "react-dom": "latest",
+    "react-dropzone": "^14.2.3",
     "react-images-uploading": "^3.1.7",
     "recordrtc": "^5.6.2",
     "timeago.js": "^4.0.2",

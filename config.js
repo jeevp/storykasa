@@ -6,6 +6,7 @@ const AVATAR_BUCKET_NAME = "storykasa-avatars"
 const RECORD_BUCKET_NAME = "storykasa-recordings"
 const AVATAR_FILE_EXTENSION = "webp"
 const RECORD_FILE_EXTENSION = "mp3"
+const MPEG_FILE_EXTENSION = "mpeg"
 
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
     AVATAR_BUCKET_NAME,
     RECORD_BUCKET_NAME,
     AVATAR_FILE_EXTENSION,
-    RECORD_FILE_EXTENSION
+    RECORD_FILE_EXTENSION,
+    MPEG_FILE_EXTENSION
 }
