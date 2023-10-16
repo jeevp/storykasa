@@ -5,6 +5,8 @@ const { v4 } = require('uuid');
 const { AVATAR_BUCKET_NAME, RECORD_BUCKET_NAME } = require('../../config');
 const generateSupabaseHeaders = require("../../service/utils/generateSupabaseHeaders")
 
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
+
 class StorageController {
     static async uploadFile(req, res) {
         try {
@@ -17,9 +19,14 @@ class StorageController {
                         return res.status(400).send({ message: 'Error parsing form' });
                     }
 
-
                     const uploadDetails = JSON.parse(fields.uploadDetails);
                     const file = files.file[0];
+
+                    // Check if the file size exceeds the maximum allowed size
+                    if (file.size > MAX_FILE_SIZE) {
+                        return res.status(413).send({ message: 'File size exceeds the maximum allowed size' });
+                    }
+
                     const uuid = v4();
                     const allowedBucketNames = [AVATAR_BUCKET_NAME, RECORD_BUCKET_NAME];
 

@@ -15,6 +15,9 @@ const RedSnackbar = styled(Snackbar)(({ theme }) => ({
     },
 }));
 
+const MAX_FILE_SIZE_MB = 50;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
 interface STKUploadFileProps {
     onFileUpload: (blob: any, audioUrl: any, duration: any) => void
 }
@@ -29,25 +32,29 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
     const onDrop = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
         if (file && file.type === 'audio/mpeg') {
-            setFile(file);
-            setError(null);  // Reset error state
-            // Mock upload progress
-            let progress = 0;
-            const intervalId = setInterval(() => {
-                progress += 10;
-                setUploadProgress(progress);
-                if (progress === 100) {
-                    clearInterval(intervalId);
-                    setUploadComplete(true);
-                    file.arrayBuffer().then(async (buffer) => {
-                        const blob = new Blob([buffer], { type: 'audio/mpeg' });
-                        const audioURL = URL.createObjectURL(blob);
-                        const duration = await getAudioDuration(file)
+            if (file.size <= MAX_FILE_SIZE_BYTES) {
+                setFile(file);
+                setError(null);  // Reset error state
+                // Mock upload progress
+                let progress = 0;
+                const intervalId = setInterval(() => {
+                    progress += 10;
+                    setUploadProgress(progress);
+                    if (progress === 100) {
+                        clearInterval(intervalId);
+                        setUploadComplete(true);
+                        file.arrayBuffer().then(async (buffer) => {
+                            const blob = new Blob([buffer], { type: 'audio/mpeg' });
+                            const audioURL = URL.createObjectURL(blob);
+                            const duration = await getAudioDuration(file)
 
-                        props.onFileUpload(blob, audioURL, duration);
-                    });
-                }
-            }, 500);
+                            props.onFileUpload(blob, audioURL, duration);
+                        });
+                    }
+                }, 500);
+            } else {
+                setError(`File size exceeds ${MAX_FILE_SIZE_MB}MB. Please upload a smaller file.`)
+            }
         } else {
             setError('Please upload a valid MP3 file.');
         }
@@ -97,9 +104,14 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                   <>
                       <input {...getInputProps()} />
                       {!uploadProgress && (
-                          <Typography variant="subtitle1">
-                              Drag & drop an MP3 file here, or click to select one
-                          </Typography>
+                          <div>
+                              <Typography variant="subtitle1">
+                                  Drag & drop an MP3 file here, or click to select one
+                              </Typography>
+                              <div>
+                                  <label className="text-sm font-semibold">50MB max size</label>
+                              </div>
+                          </div>
                       )}
                       {uploadProgress !== null && (
                           <STKLinearProgress value={uploadProgress} />
@@ -118,6 +130,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                 open={error !== null}
                 autoHideDuration={6000}
                 onClose={handleClose}
+                anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
                 message={error}
                 action={
                     <React.Fragment>
