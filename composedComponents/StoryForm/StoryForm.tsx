@@ -1,5 +1,5 @@
 import {
-    CheckCircle,
+    CheckCircle, NumberCircleFour,
     NumberCircleOne,
     NumberCircleThree,
     NumberCircleTwo,
@@ -203,6 +203,10 @@ export default function StoryForm() {
 
                                     <STKUploadFile
                                     // @ts-ignore
+                                        maxSize={50}
+                                        placeholder="Drag & drop an MP3 file here, or click to select one"
+                                        acceptedTypes={["audio/mp3", "audio/mpeg"]}
+                                        errorMessage="Please upload a valid MP3 file."
                                     onFileUpload={handleStoryAudioFileOnUpload} />
                                 </div>
                             )}
@@ -210,9 +214,41 @@ export default function StoryForm() {
                     )}
                 </div>
 
+                <div className="mt-6">
+                    <div className={`flex items-center ${title.length ? '' : 'disabled'}`}>
+                        <NumberCircleThree size={28} />
+                        <label className="font-semibold ml-1">Ilustrations</label>
+                    </div>
+                    <div className="mt-4">
+                        {audioBlob ? (
+                            <STKAudioPlayer src={audioURL} outlined />
+                        ) : (
+                            <>
+                                {storyCreationMethod === RECORD_STORY_CREATION_METHOD ? (
+                                    <div>
+
+                                    </div>
+                                ) : (
+                                    <div>
+
+                                        <STKUploadFile
+                                            // @ts-ignore
+                                            placeholder="Drag & drop the images here, or click to select"
+                                            maxSize={10}
+                                            acceptedTypes={["image/png", "image/jpeg"]}
+                                            helperText="Up to 15 images allowed"
+                                            errorMessage="Please upload a valid PNG or JPEG file."
+                                            onFileUpload={() => ({})}/>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+
                 <div className={`mt-6 ${title.length && audioBlob ? '' : 'disabled'}`}>
                     <div className="flex items-center">
-                        <NumberCircleThree size={28} />
+                        <NumberCircleFour size={28} />
                         <div>
                             <label className="font-semibold ml-1">
                                 Save your story
