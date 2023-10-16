@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { LinearProgress, Typography, Snackbar } from '@mui/material';
+import { Typography, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { red600 } from "@/assets/colorPallet/colors";
 import { X } from '@phosphor-icons/react'
@@ -19,6 +19,8 @@ interface STKUploadFileProps {
     placeholder?: string
     acceptedTypes: Array<string>
     helperText?: string
+    multiple?: boolean
+    maxFiles?: number
     errorMessage?: string
     onFileUpload: (blob: any, imageUrl: any, audioUrl: any, duration: any) => void
 }
@@ -26,20 +28,28 @@ interface STKUploadFileProps {
 const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
     const MAX_FILE_SIZE_MB = props.maxSize || 5;
     const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+    const MAX_FILES_DEFAULT = 10
 
     const [files, setFiles] = useState<File[]>([]);
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [uploadComplete, setUploadComplete] = useState<boolean>(false);
 
+    const isMaxFilesReached = files.length >= (props.maxFiles || MAX_FILES_DEFAULT);
+
     const onDrop = useCallback((acceptedFiles: File[]) => {
+        if (isMaxFilesReached) {
+            setError('Maximum number of files reached');
+            return;
+        }
+
         const validFiles = acceptedFiles.filter(file => {
             return props.acceptedTypes.includes(file.type) && file.size <= MAX_FILE_SIZE_BYTES;
         });
 
         if (validFiles.length > 0) {
-            setFiles(validFiles);
-            setError(null);  // Reset error state
+            setFiles(prevFiles => [...prevFiles, ...validFiles]);
+            setError(null); // Reset error state
 
             const uploadFiles = async () => {
                 for (let i = 0; i < validFiles.length; i++) {
@@ -57,9 +67,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                     const blob = new Blob([buffer], { type: file.type });
 
                     let imageUrl = null;
-                    if (file.type.startsWith('image/')) {
-                        imageUrl = URL.createObjectURL(blob);
-                    }
+                    if (file.type.startsWith('image/')) imageUrl = URL.createObjectURL(blob);
 
                     let audioUrl = null;
                     let duration = null;
@@ -76,19 +84,19 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
         } else {
             setError(`Please upload valid files with a size not exceeding ${MAX_FILE_SIZE_MB}MB.`);
         }
-    }, []);
+    }, [files, isMaxFilesReached]);
 
     const { getRootProps, getInputProps } = useDropzone({
-        onDrop,
-        accept: props.acceptedTypes.join(','), // Accept multiple types
-        multiple: true, // Allow multiple file selection
+        onDrop: isMaxFilesReached ? undefined : onDrop, // Disable dropzone input when max files are reached
+        accept: props.acceptedTypes.join(','),
+        multiple: props.multiple,
     });
 
     const handleClose = () => {
         setError(null);
     };
 
-    const handleRemoveFile = (e, index: number) => {
+    const handleRemoveFile = (e: Event, index: number) => {
         e.stopPropagation()
         const newFiles = [...files];
         newFiles.splice(index, 1);
@@ -123,10 +131,10 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
             <div
                 {...getRootProps()}
                 style={styles.dropzone}>
-                {!uploadComplete ? (
+                {!uploadComplete || props.multiple ? (
                     <>
                         <input {...getInputProps()} />
-                        {!uploadProgress && (
+                        {(props.multiple || !uploadProgress) && (files.length < (props.maxFiles || MAX_FILES_DEFAULT)) ? (
                             <div>
                                 <Typography variant="subtitle1">
                                     {props.placeholder || "Drag & drop files here, or click to select them"}
@@ -141,19 +149,37 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                                     </label>
                                 </div>
                             </div>
+                        ) : null}
+                        {uploadProgress !== null && !uploadComplete && (
+                            <div className={props.multiple ? 'mt-4' : ''}>
+                                <STKLinearProgress value={uploadProgress} />
+                            </div>
                         )}
-                        {uploadProgress !== null && (
-                            <STKLinearProgress value={uploadProgress} />
-                        )}
+
+                        {props.multiple ? (
+                            <div className={uploadComplete || uploadProgress ? 'mt-4' : ''}>
+                                {files.map((file, index) => (
+                                    <div className="first:mt-0 mt-2" key={index}>
+                                        <STKFileCard
+                                            key={index}
+                                            file={file}
+                                            showImage
+                                            onRemove={(e: Event) => handleRemoveFile(e, index)} />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : null}
                     </>
                 ) : (
                     <div>
                         {files.map((file, index) => (
-                            <STKFileCard
-                                key={index}
-                                file={file}
-                                showImage
-                                onRemove={(e) => handleRemoveFile(e, index)} />
+                            <div className="first:mt-0 mt-2">
+                                <STKFileCard
+                                    key={index}
+                                    file={file}
+                                    showImage
+                                    onRemove={(e) => handleRemoveFile(e, index)} />
+                            </div>
                         ))}
                     </div>
                 )}

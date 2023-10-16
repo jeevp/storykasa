@@ -17,7 +17,7 @@ const FileCard: React.FC<FileCardProps> = ({ file, showImage, onRemove }) => {
                 <div className="flex items-center">
                     {showImage && (
                         <div className="mr-4">
-                            <img className="w-32" src={URL.createObjectURL(file)} alt={file.name} />
+                            <img className="w-32 h-20 object-cover" src={URL.createObjectURL(file)} alt={file.name} />
                         </div>
                     )}
                     <Typography variant="body1">{file.name}</Typography>

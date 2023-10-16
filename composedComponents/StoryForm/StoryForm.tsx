@@ -220,29 +220,16 @@ export default function StoryForm() {
                         <label className="font-semibold ml-1">Ilustrations</label>
                     </div>
                     <div className="mt-4">
-                        {audioBlob ? (
-                            <STKAudioPlayer src={audioURL} outlined />
-                        ) : (
-                            <>
-                                {storyCreationMethod === RECORD_STORY_CREATION_METHOD ? (
-                                    <div>
-
-                                    </div>
-                                ) : (
-                                    <div>
-
-                                        <STKUploadFile
-                                            // @ts-ignore
-                                            placeholder="Drag & drop the images here, or click to select"
-                                            maxSize={10}
-                                            acceptedTypes={["image/png", "image/jpeg"]}
-                                            helperText="Up to 15 images allowed"
-                                            errorMessage="Please upload a valid PNG or JPEG file."
-                                            onFileUpload={() => ({})}/>
-                                    </div>
-                                )}
-                            </>
-                        )}
+                        <STKUploadFile
+                            // @ts-ignore
+                            multiple
+                            placeholder="Drag & drop the images here, or click to select"
+                            maxSize={10}
+                            maxFiles={15}
+                            acceptedTypes={["image/png", "image/jpeg"]}
+                            helperText="Up to 15 images allowed"
+                            errorMessage="Please upload a valid PNG or JPEG file."
+                            onFileUpload={() => ({})}/>
                     </div>
                 </div>
 
