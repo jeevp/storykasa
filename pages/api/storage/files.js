@@ -1,6 +1,5 @@
 import authMiddleware from "../../../middlewares/authMiddleware";
 import StorageController from "../../../service/controllers/StorageController"
-import Busboy from 'busboy';
 
 export const config = {
     api: {

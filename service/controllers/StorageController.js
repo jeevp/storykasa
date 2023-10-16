@@ -47,6 +47,8 @@ class StorageController {
                         headers: generateSupabaseHeaders(req.accessToken, "multipart/form-data")
                     });
 
+                    await fs.promises.unlink(file.filepath);
+
                     if (response.status !== 200) {
                         return res.status(500).send({ message: 'File upload failed' });
                     }
