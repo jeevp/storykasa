@@ -34,6 +34,7 @@ export default class StorageHandler {
 
            const file = formData.get("file")
            // Check if the file size exceeds the maximum allowed size
+           // @ts-ignore
            if (file?.size > MAX_FILE_SIZE) {
                throw new Error("File size exceeds the maximum allowed size");
            }
