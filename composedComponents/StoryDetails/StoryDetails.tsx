@@ -8,6 +8,7 @@ import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
+import STKSlide from "@/components/STKSlide/STKSlide";
 
 interface StoryDetailsProps {
     story: StoryWithProfile | null
@@ -49,6 +50,9 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
                         </div>
                     )}
                 </div>
+                {story?.illustrationsURL?.length > 0 && (
+                    <STKSlide images={story?.illustrationsURL} />
+                )}
                 {story?.recording_url && (
                     <div key={story?.recording_url} className="mt-6">
                         <STKAudioPlayer outlined src={story?.recording_url} />

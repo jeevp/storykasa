@@ -48,9 +48,6 @@ function Library() {
         loadStories()
     }, [])
 
-    const handleRecordOnComplete = (recordUrl: any) => {
-        setRecordedAudioUrl(recordUrl)
-    }
 
     return (
         <PageWrapper path="library">

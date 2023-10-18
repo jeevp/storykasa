@@ -35,7 +35,28 @@ class StoryController {
             })
 
             const stories = response.data?.map((story) => story.stories)
-            return res.status(200).send(stories)
+            const storiesIds = stories.map((story) => story.story_id).join(',');
+
+            // Stories Illustrations
+            const illustrationsResponse = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories_images`, {
+                params: {
+                    select: "*",
+                    story_id: `in.(${storiesIds})`
+                },
+                headers: generateSupabaseHeaders(req.accessToken)
+            });
+
+            const illustrations = illustrationsResponse.data
+
+            const storiesSerialized = stories.map((story) => {
+                story.illustrationsURL = illustrations.filter((illustration) => {
+                    return illustration.story_id ===  story.story_id
+                }).map((storyIllustration) => storyIllustration.image_url)
+
+                return story
+            })
+
+            return res.status(200).send(storiesSerialized)
         } catch (error) {
             console.error(error)
             res.status(400).send({ message: "Something went wrong" })

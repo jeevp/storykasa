@@ -1,0 +1,21 @@
+.stk-slide {
+  position: relative;
+  width: 500px;  /* Default width */
+  height: 300px;  /* Default height */
+  overflow: hidden;
+}
+
+.slide-image {
+  position: absolute;
+  top: 0;
+  left: 100%;  /* Position images to the right */
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: left 0.5s ease-in-out;  /* Sliding transition */
+}
+
+.slide-image.visible {
+  left: 0;  /* Show the current image */
+}
