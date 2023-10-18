@@ -126,24 +126,29 @@ class StoryController {
                     }
                 )
 
-                console.log(response.data)
+                const createdStory = response.data[0]
 
                 // Let's add the illustrations
-                // illustrationsURL.map(async(illustrationURL) => {
-                //     await axios.post(
-                //         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories_images`,
-                //         {
-                //             image_url: illustrationURL,
-                //             story_id:
-                //         }
-                //     )
-                // })
+                illustrationsURL.map(async(illustrationURL) => {
+                    await axios.post(
+                        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories_images`,
+                        {
+                            image_url: illustrationURL,
+                            story_id: createdStory?.story_id
+                        },
+                        {
+                            params: {
+                                select: '*'
+                            },
+                            headers: generateSupabaseHeaders(req.accessToken)
+                        }
+                    )
+                })
 
             }
 
             return res.status(201).send({ message: "Story created with success" })
         } catch (error) {
-            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

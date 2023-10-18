@@ -75,7 +75,8 @@ export default function StoryForm() {
             const recordingURL = await StorageHandler.uploadFile(audioFormData)
 
             const illustrationsURL = []
-            storyIllustrations.map(async(illustrationBob) => {
+            console.log({ storyIllustrations })
+            await Promise.all(storyIllustrations.map(async(illustrationBob) => {
                 const illustrationFormData = new FormData()
                 illustrationFormData.set('file', illustrationBob)
                 illustrationFormData.set('uploadDetails', JSON.stringify({
@@ -85,7 +86,7 @@ export default function StoryForm() {
 
                 const illustrationURL = await StorageHandler.uploadFile(illustrationFormData)
                 illustrationsURL.push(illustrationURL)
-            })
+            }))
 
             // add public URL and recording duration to story form data
             const storyFormData = new FormData()
@@ -105,7 +106,7 @@ export default function StoryForm() {
                 description,
                 language,
                 ageGroup,
-                illustrationsURL: storyIllustrations
+                illustrationsURL
             })
 
             setShowUploadStoryDialog(true)
@@ -132,7 +133,7 @@ export default function StoryForm() {
     }
 
     const handleIllustrationsOnUpload = (blob: any) => {
-        setStoryIllustrations([...storyIllustrations, blob])
+        storyIllustrations.push(blob)
     }
 
     // @ts-ignore
