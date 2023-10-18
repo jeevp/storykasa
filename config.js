@@ -4,9 +4,11 @@ const STK_REFRESH_TOKEN = "STK_REFRESH_TOKEN"
 
 const AVATAR_BUCKET_NAME = "storykasa-avatars"
 const RECORD_BUCKET_NAME = "storykasa-recordings"
+const ILLUSTRATIONS_BUCKET_NAME = "storykasa-illustrations"
 const AVATAR_FILE_EXTENSION = "webp"
 const RECORD_FILE_EXTENSION = "mp3"
 const MPEG_FILE_EXTENSION = "mpeg"
+const PNG_FILE_EXTENSION = "png"
 
 
 module.exports = {
@@ -15,7 +17,9 @@ module.exports = {
     STK_REFRESH_TOKEN,
     AVATAR_BUCKET_NAME,
     RECORD_BUCKET_NAME,
+    ILLUSTRATIONS_BUCKET_NAME,
     AVATAR_FILE_EXTENSION,
     RECORD_FILE_EXTENSION,
-    MPEG_FILE_EXTENSION
+    MPEG_FILE_EXTENSION,
+    PNG_FILE_EXTENSION
 }

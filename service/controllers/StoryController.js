@@ -69,7 +69,8 @@ class StoryController {
                 language,
                 ageGroup,
                 recordingURL,
-                duration
+                duration,
+                illustrationsURL
             } = req.body
 
             const newStory = {
@@ -110,7 +111,7 @@ class StoryController {
                     }
                 )
 
-                await axios.post(
+                const storyResponse = await axios.post(
                     `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`,
                     {
                         account_id: user.id,
@@ -124,6 +125,20 @@ class StoryController {
                         headers: generateSupabaseHeaders(req.accessToken)
                     }
                 )
+
+                console.log(response.data)
+
+                // Let's add the illustrations
+                // illustrationsURL.map(async(illustrationURL) => {
+                //     await axios.post(
+                //         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories_images`,
+                //         {
+                //             image_url: illustrationURL,
+                //             story_id:
+                //         }
+                //     )
+                // })
+
             }
 
             return res.status(201).send({ message: "Story created with success" })

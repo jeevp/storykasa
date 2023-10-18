@@ -18,7 +18,12 @@ import STKTextField from "@/components/STKTextField/STKTextField";
 import UploadStoryDialog from "@/composedComponents/UploadStoryDialog/UploadStoryDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import StorageHandler from "@/handlers/StorageHandler";
-import {RECORD_BUCKET_NAME, RECORD_FILE_EXTENSION} from "@/config";
+import {
+    RECORD_BUCKET_NAME,
+    RECORD_FILE_EXTENSION,
+    PNG_FILE_EXTENSION,
+    ILLUSTRATIONS_BUCKET_NAME
+} from "@/config";
 import StoryHandler from "@/handlers/StoryHandler";
 import CancelRecordingDialog from "@/composedComponents/CancelRecordingDialog/CancelRecordingDialog";
 import STKRadioGroup from "@/components/STKRadioGroup/STKRadioGroup";
@@ -34,8 +39,6 @@ export default function StoryForm() {
     const {currentProfileId} = useContext(ProfileContext) as any
     const {onMobile} = useDevice()
 
-    const router = useRouter()
-
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState("")
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
@@ -47,6 +50,7 @@ export default function StoryForm() {
     const [loading, setLoading] = useState(false)
     const [showCancelRecordingDialog, setShowCancelRecordingDialog] = useState(false)
     const [storyCreationMethod, setStoryCreationMethod] = useState(RECORD_STORY_CREATION_METHOD)
+    const [storyIllustrations, setStoryIllustrations] = useState<Array<Blob>>([])
 
     const updateAudioBlob = (blob: Blob, url: string) => {
         setAudioBlob(blob)
@@ -69,6 +73,20 @@ export default function StoryForm() {
 
             // get the public URL of the recording after uploading to bucket
             const recordingURL = await StorageHandler.uploadFile(audioFormData)
+
+            const illustrationsURL = []
+            storyIllustrations.map(async(illustrationBob) => {
+                const illustrationFormData = new FormData()
+                illustrationFormData.set('file', illustrationBob)
+                illustrationFormData.set('uploadDetails', JSON.stringify({
+                    bucketName: ILLUSTRATIONS_BUCKET_NAME,
+                    extension: PNG_FILE_EXTENSION
+                }));
+
+                const illustrationURL = await StorageHandler.uploadFile(illustrationFormData)
+                illustrationsURL.push(illustrationURL)
+            })
+
             // add public URL and recording duration to story form data
             const storyFormData = new FormData()
             storyFormData.set('recording_url', recordingURL)
@@ -86,7 +104,8 @@ export default function StoryForm() {
                 title,
                 description,
                 language,
-                ageGroup
+                ageGroup,
+                illustrationsURL: storyIllustrations
             })
 
             setShowUploadStoryDialog(true)
@@ -110,6 +129,10 @@ export default function StoryForm() {
         setAudioBlob(blob)
         setAudioURL(url)
         setAudioDuration(duration)
+    }
+
+    const handleIllustrationsOnUpload = (blob: any) => {
+        setStoryIllustrations([...storyIllustrations, blob])
     }
 
     // @ts-ignore
@@ -217,7 +240,7 @@ export default function StoryForm() {
                 <div className="mt-6">
                     <div className={`flex items-center ${title.length ? '' : 'disabled'}`}>
                         <NumberCircleThree size={28} />
-                        <label className="font-semibold ml-1">Ilustrations</label>
+                        <label className="font-semibold ml-1">Illustrations</label>
                     </div>
                     <div className="mt-4">
                         <STKUploadFile
@@ -229,7 +252,7 @@ export default function StoryForm() {
                             acceptedTypes={["image/png", "image/jpeg"]}
                             helperText="Up to 15 images allowed"
                             errorMessage="Please upload a valid PNG or JPEG file."
-                            onFileUpload={() => ({})}/>
+                            onFileUpload={handleIllustrationsOnUpload}/>
                     </div>
                 </div>
 
