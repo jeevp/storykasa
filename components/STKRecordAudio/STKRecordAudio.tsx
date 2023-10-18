@@ -1,5 +1,5 @@
 // STKRecordAudio.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import RecordRTC from 'recordrtc';
 
 import './style.scss';
@@ -26,26 +26,6 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-    useEffect(() => {
-        // Cleanup function to run when the component unmounts
-        return () => {
-            // Stop the media recorder
-            if (mediaRecorderRef.current) {
-                // @ts-ignore
-                mediaRecorderRef.current.stopRecording();
-            }
-            // Clear the recording interval
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-            // Release the microphone
-            if (stream) {
-                // @ts-ignore
-                stream.getTracks().forEach((track: any) => track.stop());
-            }
-        };
-    }, [stream]);
 
     const startRecording = async () => {
         try {
