@@ -14,6 +14,8 @@ interface STKAudioPlayerProps {
     src: string;
     preload?: boolean;
     outlined?: boolean;
+    onPlaying?: (playing: boolean) => void;
+    onEnd?: () => void;
 }
 
 const formatTime = (seconds: number) => {
@@ -25,7 +27,9 @@ const formatTime = (seconds: number) => {
 const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     src,
     preload = true,
-    outlined = false
+    outlined = false,
+    onPlaying = () => ({}),
+    onEnd = () => ({})
 }) => {
     const isAppleDevice = useAppleDevice()
     const [isPlaying, setIsPlaying] = useState(false);
@@ -67,6 +71,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                 setIsPlaying(false);
                 howl.seek(0);
                 setProgress(0);
+                onEnd()
             });
         }
     }, [howl]);
@@ -116,6 +121,11 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     }
 
 
+    const handleStartPlaying = () => {
+        setIsPlaying(!isPlaying)
+        onPlaying(!isPlaying)
+    }
+
     return (
         <div className={`stk-audio-player ${!outlined ? '!border-0' : ''}`} style={{ background: 'white' }}>
             <div className="flex items-center w-full">
@@ -140,7 +150,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                         <Image src={skipIcon} alt="Skip backwards" width={16} style={{ transform: "rotate(180deg)" }} />
                     </STKButton>
                     <div className="px-2">
-                        <STKButton iconButton onClick={() => setIsPlaying(!isPlaying)}>
+                        <STKButton iconButton onClick={handleStartPlaying}>
                             {isPlaying ? <Image width={20} src={pauseIcon} alt="Pause" /> : <Image src={playIcon} width={20} alt="Play" />}
                         </STKButton>
                     </div>

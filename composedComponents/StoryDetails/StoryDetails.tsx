@@ -18,8 +18,24 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
 
     // States
     const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
+    const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false)
+    const [storyHasEnded, setStoryHasEnded] = useState(false)
 
     const { currentProfileId } = useContext(ProfileContext) as any
+
+    const handleStoryOnEnd = () => {
+        setStoryHasEnded(true)
+
+        setTimeout(() => {
+            setStartIllustrationsDisplay(false)
+        }, 1000)
+    }
+
+    const handlePlaying = (playing: boolean) => {
+        if (playing) setStoryHasEnded(false)
+        setStartIllustrationsDisplay(playing)
+    }
+
 
     return (
         <div>
@@ -50,13 +66,40 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
                         </div>
                     )}
                 </div>
-                {story?.illustrationsURL?.length > 0 && (
-                    <STKSlide images={story?.illustrationsURL} />
-                )}
-                {story?.recording_url && (
-                    <div key={story?.recording_url} className="mt-6">
-                        <STKAudioPlayer outlined src={story?.recording_url} />
+
+                {
+                    // @ts-ignore
+                    story?.illustrationsURL?.length > 0 ? (
+                    <div className="mt-6">
+                        <STKSlide
+                        // @ts-ignore
+                        images={story?.illustrationsURL}
+                        isRunning={startIllustrationsDisplay}
+                            // @ts-ignore
+                        duration={story?.duration}
+                        restart={storyHasEnded && startIllustrationsDisplay}/>
+                        <div key={story?.recording_url} className="mt-2">
+                            <STKAudioPlayer
+                                outlined
+                                // @ts-ignore
+                                src={story?.recording_url}
+                                onEnd={handleStoryOnEnd}
+                                // @ts-ignore
+                                onPlaying={handlePlaying} />
+                        </div>
                     </div>
+                ) : (
+                    <>
+                        {story?.recording_url && (
+                            <div key={story?.recording_url} className="mt-6">
+                                <STKAudioPlayer
+                                    outlined src={story?.recording_url}
+                                    onEnd={handleStoryOnEnd}
+                                    // @ts-ignore
+                                    onPlaying={handlePlaying} />
+                            </div>
+                        )}
+                    </>
                 )}
                 <div className="mb-8 mt-6">
                     <div className="mt-4">

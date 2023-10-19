@@ -1,21 +1,29 @@
+
 .stk-slide {
   position: relative;
-  width: 500px;  /* Default width */
-  height: 300px;  /* Default height */
+  width: 500px;
+  height: 300px;
   overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background-color: white;
+
+  @media only screen and (max-width: 900px) {
+    width: 100%;
+  }
+}
+
+.slide-container {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
 }
 
 .slide-image {
-  position: absolute;
-  top: 0;
-  left: 100%;  /* Position images to the right */
+  flex-shrink: 0;
   width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  transition: left 0.5s ease-in-out;  /* Sliding transition */
-}
+  height: 300px;
 
-.slide-image.visible {
-  left: 0;  /* Show the current image */
+  img {
+    object-fit: contain;
+  }
 }
