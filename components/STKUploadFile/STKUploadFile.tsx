@@ -195,7 +195,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                 ) : (
                     <div>
                         {files.map((file, index) => (
-                            <div className="first:mt-0 mt-2">
+                            <div className="first:mt-0 mt-2" key={index}>
                                 <STKFileCard
                                     key={index}
                                     file={file}
