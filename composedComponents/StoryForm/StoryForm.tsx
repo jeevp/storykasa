@@ -74,8 +74,8 @@ export default function StoryForm() {
             // get the public URL of the recording after uploading to bucket
             const recordingURL = await StorageHandler.uploadFile(audioFormData)
 
+            // @ts-ignore
             const illustrationsURL = []
-            console.log({ storyIllustrations })
             await Promise.all(storyIllustrations.map(async(illustrationBob) => {
                 const illustrationFormData = new FormData()
                 illustrationFormData.set('file', illustrationBob)
@@ -106,6 +106,7 @@ export default function StoryForm() {
                 description,
                 language,
                 ageGroup,
+                // @ts-ignore
                 illustrationsURL
             })
 

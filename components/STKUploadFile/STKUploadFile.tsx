@@ -22,9 +22,10 @@ interface STKUploadFileProps {
     multiple?: boolean
     maxFiles?: number
     errorMessage?: string
-    onFileUpload: (blob: any, imageUrl: any, audioUrl: any, duration: any) => void
+    onFileUpload: (blob: any, sourceUrl: any, duration: any) => void
 }
 
+// @ts-ignore
 const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
     const MAX_FILE_SIZE_MB = props.maxSize || 5;
     const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -54,29 +55,47 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
             const uploadFiles = async () => {
                 for (let i = 0; i < validFiles.length; i++) {
                     const file = validFiles[i];
-                    const progress = ((i + 1) / validFiles.length) * 100;
-                    setUploadProgress(progress);
 
-                    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate upload delay
+                    // Reset progress for each file
+                    setUploadProgress(0);
 
-                    if (i === validFiles.length - 1) {
-                        setUploadComplete(true);
-                    }
+                    // Simulate upload progress
+                    let progress = 0;
+                    const intervalId = setInterval(() => {
+                        progress += 10;
+                        setUploadProgress(progress);
+                        if (progress === 100) {
+                            clearInterval(intervalId);
 
-                    const buffer = await file.arrayBuffer();
-                    const blob = new Blob([buffer], { type: file.type });
+                            // Process the file once the progress reaches 100%
+                            processFile(file);
+                        }
+                    }, 500);
+                }
+            };
 
-                    let imageUrl = null;
-                    if (file.type.startsWith('image/')) imageUrl = URL.createObjectURL(blob);
+            const processFile = async (file: any) => {
+                const buffer = await file.arrayBuffer();
+                const blob = new Blob([buffer], { type: file.type });
 
-                    let audioUrl = null;
-                    let duration = null;
-                    if (file.type.startsWith('audio/')) {
-                        audioUrl = URL.createObjectURL(blob);
-                        duration = await getAudioDuration(file);
-                    }
+                let sourceUrl = null;
+                if (file.type.startsWith('image/')) {
+                    sourceUrl = URL.createObjectURL(blob);
+                } else if (file.type.startsWith('audio/')) {
+                    sourceUrl = URL.createObjectURL(blob);
+                }
 
-                    props.onFileUpload(blob, imageUrl, audioUrl, duration);
+                let duration = null;
+                if (file.type.startsWith('audio/')) {
+                    duration = await getAudioDuration(file);
+                }
+
+                // Call the onFileUpload prop function
+                props.onFileUpload(blob, sourceUrl, duration);
+
+                // Set upload complete if this is the last file
+                if (files.indexOf(file) === files.length - 1) {
+                    setUploadComplete(true);
                 }
             };
 
@@ -87,7 +106,8 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
     }, [files, isMaxFilesReached]);
 
     const { getRootProps, getInputProps } = useDropzone({
-        onDrop: isMaxFilesReached ? undefined : onDrop, // Disable dropzone input when max files are reached
+        onDrop: isMaxFilesReached ? undefined : onDrop,
+        // @ts-ignore
         accept: props.acceptedTypes.join(','),
         multiple: props.multiple,
     });
@@ -108,7 +128,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
             setUploadComplete(false);
         }
 
-        props.onFileUpload(null, null, null, null);
+        props.onFileUpload(null, null, null);
     }
 
     const getAudioDuration = async (file: File) => {
@@ -130,6 +150,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
         <div>
             <div
                 {...getRootProps()}
+                // @ts-ignore
                 style={styles.dropzone}>
                 {!uploadComplete || props.multiple ? (
                     <>
@@ -164,6 +185,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                                             key={index}
                                             file={file}
                                             showImage
+                                            // @ts-ignore
                                             onRemove={(e: Event) => handleRemoveFile(e, index)} />
                                     </div>
                                 ))}
@@ -178,7 +200,8 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                                     key={index}
                                     file={file}
                                     showImage
-                                    onRemove={(e) => handleRemoveFile(e, index)} />
+                                    // @ts-ignore
+                                    onRemove={(e: Event) => handleRemoveFile(e, index)} />
                             </div>
                         ))}
                     </div>
@@ -195,6 +218,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                         <STKButton
                             iconButton
                             onClick={handleClose}
+                            // @ts-ignore
                             style={styles.closeButton}>
                             <X size={18} color="white" />
                         </STKButton>
