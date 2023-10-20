@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from "@/composedComponents/Navbar/Navbar";
 import SideNavigation from "@/composedComponents/SideNavigation/SideNavigation";
-import {usePathname, useRouter} from "next/navigation";
+import {usePathname} from "next/navigation";
 import {useContext} from "react";
 import AuthContext from "@/contexts/AuthContext";
 import SnackbarContext from "@/contexts/SnackbarContext";
@@ -46,6 +46,7 @@ export default function PageWrapper({
                 <STKSnackbar
                 open={snackbarBus?.active}
                 message={snackbarBus?.message}
+                // @ts-ignore
                 type={snackbarBus?.type}/>
             </motion.div>
         </AnimatePresence>

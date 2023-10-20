@@ -46,7 +46,9 @@ export default class StoryHandler {
     }: { title: string, description: string }) {
         const headers = generateHeaders()
         const payload = {}
+        // @ts-ignore
         if (title) payload.title = title
+        // @ts-ignore
         if (description) payload.description = description
 
         await axios.put(`/api/stories/${storyId}`, payload, headers)
