@@ -145,6 +145,7 @@ function Library() {
             <StoryDetailsDialog
                 open={showStoryDetailsDialog}
                 story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
+                onLoadStories={() => loadStories()}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
         </PageWrapper>
     )

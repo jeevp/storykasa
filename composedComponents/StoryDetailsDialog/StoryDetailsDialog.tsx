@@ -8,12 +8,13 @@ interface StoryDetailsDialogProps {
     open: boolean;
     story: StoryWithProfile | null;
     onClose?: () => void;
+    onLoadStories?: () => void;
 }
 
-export default function StoryDetailsDialog({ open, story, onClose = () => ({}) }: StoryDetailsDialogProps) {
+export default function StoryDetailsDialog({ open, story, onClose = () => ({}), onLoadStories = () => ({}) }: StoryDetailsDialogProps) {
     return (
         <STKDialog fullScreen active={open} onClose={() => onClose()}>
-            <StoryDetails story={story} />
+            <StoryDetails story={story} onLoadStories={() => onLoadStories()} />
         </STKDialog>
     )
 }
