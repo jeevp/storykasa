@@ -13,9 +13,14 @@ import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStor
 
 interface StoryDetailsProps {
     story: StoryWithProfile | null;
+    editionNotAllowed: boolean;
     onLoadStories?: () => void;
 }
-export default function StoryDetails({ story, onLoadStories = () => ({}) }: StoryDetailsProps) {
+export default function StoryDetails({
+    story,
+    editionNotAllowed,
+    onLoadStories = () => ({})
+}: StoryDetailsProps) {
     const router = useRouter()
 
     // States
@@ -113,12 +118,14 @@ export default function StoryDetails({ story, onLoadStories = () => ({}) }: Stor
                 </div>
                 {currentProfileId === story?.profiles?.profile_id && (
                     <div className="flex items-center">
+                        {!editionNotAllowed && (
+                            <div className="mr-2">
+                                <STKButton startIcon={<Pencil size={18} />} onClick={() => setShowUpdateStoryDialog(true)}>
+                                    Edit story
+                                </STKButton>
+                            </div>
+                        )}
                         <div>
-                            <STKButton startIcon={<Pencil size={18} />} onClick={() => setShowUpdateStoryDialog(true)}>
-                                Edit story
-                            </STKButton>
-                        </div>
-                        <div className="ml-2">
                             <STKButton variant="outlined" startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
                                 Delete story
                             </STKButton>

@@ -67,13 +67,14 @@ function Discover() {
                 )}
                 {selectedIndex !== undefined && (
                     <div className="hidden lg:flex lg:w-full lg:pl-8">
-                        <StoryDetails story={stories[selectedIndex]}></StoryDetails>
+                        <StoryDetails story={stories[selectedIndex]} editionNotAllowed></StoryDetails>
                     </div>
                 )}
             </div>
 
             <StoryDetailsDialog
                 open={showStoryDetailsDialog}
+                editionNotAllowed
                 story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
         </PageWrapper>
