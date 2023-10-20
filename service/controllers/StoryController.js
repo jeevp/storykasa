@@ -21,6 +21,33 @@ class StoryController {
         }
     }
 
+    static async updateStory(req, res) {
+        try {
+            const { storyId } = req.query
+            const { title, description } = req.body
+
+            if (!title && !description) {
+                return res.status(400).send({
+                    message: "Payload is missing"
+                })
+            }
+
+            const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+              title, description
+            }, {
+                params: {
+                    story_id: `eq.${storyId}`
+                },
+                headers: generateSupabaseHeaders(req.accessToken)
+            })
+
+            return res.status(202).send(response.data)
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
     static async getLibraryStories(req, res) {
         try {
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)

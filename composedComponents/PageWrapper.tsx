@@ -4,6 +4,8 @@ import SideNavigation from "@/composedComponents/SideNavigation/SideNavigation";
 import {usePathname, useRouter} from "next/navigation";
 import {useContext} from "react";
 import AuthContext from "@/contexts/AuthContext";
+import SnackbarContext from "@/contexts/SnackbarContext";
+import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 
 interface PageWrapperProps {
     children: any
@@ -15,6 +17,7 @@ export default function PageWrapper({
     path,
 }: PageWrapperProps) {
     const { currentUser } = useContext(AuthContext)
+    const { snackbarBus } = useContext(SnackbarContext)
     const pathname = usePathname()
 
     return (
@@ -40,6 +43,10 @@ export default function PageWrapper({
                         </div>
                     </div>
                 </div>
+                <STKSnackbar
+                open={snackbarBus?.active}
+                message={snackbarBus?.message}
+                type={snackbarBus?.type}/>
             </motion.div>
         </AnimatePresence>
     )

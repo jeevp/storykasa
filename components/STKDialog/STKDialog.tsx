@@ -9,6 +9,7 @@ interface STKDialogProps {
     children: any,
     fullScreen?: boolean
     animationDirection?: "right" | "left" | "up" | "down"
+    maxWidth?: "xs" | "sm" | "md" | "lg" | "xl"
     onClose: () => void
 }
 
@@ -16,6 +17,7 @@ export default function STKDialog({
     active,
     fullScreen,
     children,
+    maxWidth,
     onClose = () => ({})
 }: STKDialogProps) {
 
@@ -23,6 +25,8 @@ export default function STKDialog({
         <Dialog
             open={active}
             fullScreen={fullScreen}
+            maxWidth={maxWidth}
+            fullWidth={!!maxWidth}
             onClose={() => onClose()}
         >
             <div className="p-4">

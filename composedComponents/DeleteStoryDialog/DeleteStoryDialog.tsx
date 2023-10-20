@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import {Trash} from "@phosphor-icons/react";
@@ -6,16 +6,23 @@ import {deleteStory} from "@/lib/_actions";
 import {useRouter} from "next/navigation";
 import useDevice from "@/customHooks/useDevice";
 import StoryHandler from "@/handlers/StoryHandler";
+import SnackbarContext from "@/contexts/SnackbarContext";
 
 
 interface DeleteStoryDialogProps {
     open: boolean;
     story: any;
     onClose?: () => void;
+    onSuccess?: () => void;
 }
 
-export default function DeleteStoryDialog({ open, story, onClose = () => ({}) }: DeleteStoryDialogProps) {
-    const router = useRouter()
+export default function DeleteStoryDialog({
+    open,
+    story,
+    onClose = () => ({}),
+    onSuccess = () => ({})
+}: DeleteStoryDialogProps) {
+    const { setSnackbarBus } = useContext(SnackbarContext)
     const { onMobile } = useDevice()
 
     const [loading, setLoading] = useState(false)
@@ -26,7 +33,14 @@ export default function DeleteStoryDialog({ open, story, onClose = () => ({}) }:
             try {
                 setLoading(true)
                 await StoryHandler.deleteStory(story?.story_id)
-                await router.push('/')
+                setSnackbarBus({
+                    active: true,
+                    message: "Story deleted with success",
+                    type: "success"
+                })
+
+                onSuccess()
+                onClose()
             } finally {
                 setLoading(false)
             }

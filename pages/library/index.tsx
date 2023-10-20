@@ -135,7 +135,7 @@ function Library() {
                                     exit={{ x: 10, opacity: 0 }}
                                     key={selectedIndex}
                                 >
-                                    <StoryDetails story={stories[selectedIndex]}></StoryDetails>
+                                    <StoryDetails story={stories[selectedIndex]} onLoadStories={() => loadStories()}></StoryDetails>
                                 </motion.div>
                             </AnimatePresence>
                         </div>

@@ -1,7 +1,7 @@
 import { Avatar } from "@mui/material"
 import {useContext, useState} from 'react'
 import { useRouter } from 'next/navigation'
-import { Baby, GlobeSimple, Trash } from '@phosphor-icons/react'
+import { Baby, GlobeSimple, Trash, Pencil } from '@phosphor-icons/react'
 import { StoryWithProfile } from '@/lib/database-helpers.types'
 import ProfileContext from '@/contexts/ProfileContext'
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
@@ -9,14 +9,17 @@ import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStor
 import STKButton from "@/components/STKButton/STKButton";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKSlide from "@/components/STKSlide/STKSlide";
+import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStoryDialog";
 
 interface StoryDetailsProps {
-    story: StoryWithProfile | null
+    story: StoryWithProfile | null;
+    onLoadStories?: () => void;
 }
-export default function StoryDetails({ story }: StoryDetailsProps) {
+export default function StoryDetails({ story, onLoadStories = () => ({}) }: StoryDetailsProps) {
     const router = useRouter()
 
     // States
+    const [showUpdateStoryDialog, setShowUpdateStoryDialog] = useState(false)
     const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
     const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false)
     const [storyHasEnded, setStoryHasEnded] = useState(false)
@@ -109,17 +112,30 @@ export default function StoryDetails({ story }: StoryDetailsProps) {
                     </div>
                 </div>
                 {currentProfileId === story?.profiles?.profile_id && (
-                    <div>
-                        <STKButton variant="outlined" startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
-                            Delete story
-                        </STKButton>
-                        <DeleteStoryDialog
-                        open={showDeleteStoryDialog}
-                        story={story}
-                        onClose={() => setShowDeleteStoryDialog(false)} />
+                    <div className="flex items-center">
+                        <div>
+                            <STKButton startIcon={<Pencil size={18} />} onClick={() => setShowUpdateStoryDialog(true)}>
+                                Edit story
+                            </STKButton>
+                        </div>
+                        <div className="ml-2">
+                            <STKButton variant="outlined" startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
+                                Delete story
+                            </STKButton>
+                        </div>
                     </div>
                 )}
             </div>
+            <UpdateStoryDialog
+            open={showUpdateStoryDialog}
+            story={story}
+            onSuccess={() => onLoadStories()}
+            onClose={() => setShowUpdateStoryDialog(false)} />
+            <DeleteStoryDialog
+            open={showDeleteStoryDialog}
+            story={story}
+            onSuccess={() => onLoadStories()}
+            onClose={() => setShowDeleteStoryDialog(false)} />
         </div>
     )
 }

@@ -3,10 +3,15 @@ import "../app/styles/globals.css";
 import {useState} from "react";
 import ProfileContext from "@/contexts/ProfileContext";
 import AuthContext from "@/contexts/AuthContext";
+import SnackbarContext from "@/contexts/SnackbarContext";
 
 export default function App({ Component, pageProps }: AppProps) {
     const [currentProfileId, setCurrentProfileId] = useState<string | null>('')
     const [currentProfile, setCurrentProfile] = useState<object | null>(null)
+    const [snackbarBus, setSnackbarBus] = useState<object>({
+        active: false,
+        message: ""
+    })
 
     const [currentUser, setCurrentUser] = useState<any>(null)
 
@@ -20,7 +25,11 @@ export default function App({ Component, pageProps }: AppProps) {
                     setCurrentProfile
             }}
             >
-                <Component {...pageProps} />
+                <SnackbarContext.Provider
+                // @ts-ignore
+                value={{ snackbarBus, setSnackbarBus }}>
+                    <Component {...pageProps} />
+                </SnackbarContext.Provider>
             </ProfileContext.Provider>
         </AuthContext.Provider>
     )

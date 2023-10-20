@@ -40,6 +40,18 @@ export default class StoryHandler {
         await axios.post("/api/stories", payload, headers)
     }
 
+    static async updateStory({ storyId }: { storyId: string }, {
+        title,
+        description
+    }: { title: string, description: string }) {
+        const headers = generateHeaders()
+        const payload = {}
+        if (title) payload.title = title
+        if (description) payload.description = description
+
+        await axios.put(`/api/stories/${storyId}`, payload, headers)
+    }
+
     static async deleteStory(storyId: any) {
         const headers = generateHeaders()
         await axios.delete(`/api/stories/${storyId}`, headers)
