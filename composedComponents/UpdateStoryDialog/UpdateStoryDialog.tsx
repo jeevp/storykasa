@@ -55,7 +55,8 @@ export default function UpdateStoryDialog({
 
             setSnackbarBus({
                 active: true,
-                message: "Story updated with success"
+                message: "Story updated with success",
+                type: "success"
             })
 
             onSuccess()

@@ -10,7 +10,8 @@ export default function App({ Component, pageProps }: AppProps) {
     const [currentProfile, setCurrentProfile] = useState<object | null>(null)
     const [snackbarBus, setSnackbarBus] = useState<object>({
         active: false,
-        message: ""
+        message: "",
+        type: ""
     })
 
     const [currentUser, setCurrentUser] = useState<any>(null)
