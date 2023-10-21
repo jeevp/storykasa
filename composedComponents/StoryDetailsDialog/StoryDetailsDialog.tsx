@@ -7,7 +7,7 @@ import STKDialog from "@/components/STKDialog/STKDialog";
 interface StoryDetailsDialogProps {
     open: boolean;
     story: StoryWithProfile | null;
-    editionNotAllowed: boolean;
+    editionNotAllowed?: boolean;
     onClose?: () => void;
     onLoadStories?: () => void;
 }

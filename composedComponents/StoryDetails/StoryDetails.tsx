@@ -12,7 +12,7 @@ import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStor
 
 interface StoryDetailsProps {
     story: StoryWithProfile | null;
-    editionNotAllowed: boolean;
+    editionNotAllowed?: boolean;
     onLoadStories?: () => void;
 }
 export default function StoryDetails({
