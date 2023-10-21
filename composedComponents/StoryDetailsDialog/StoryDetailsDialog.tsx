@@ -12,10 +12,22 @@ interface StoryDetailsDialogProps {
     onLoadStories?: () => void;
 }
 
-export default function StoryDetailsDialog({ open, editionNotAllowed, story, onClose = () => ({}), onLoadStories = () => ({}) }: StoryDetailsDialogProps) {
+export default function StoryDetailsDialog({
+    open,
+    editionNotAllowed,
+    story,
+    onClose = () => ({}),
+    onLoadStories = () => ({})
+}: StoryDetailsDialogProps) {
     return (
-        <STKDialog fullScreen active={open} onClose={() => onClose()}>
-            <StoryDetails editionNotAllowed={editionNotAllowed} story={story} onLoadStories={() => onLoadStories()} />
+        <STKDialog
+        fullScreen
+        active={open}
+        onClose={() => onClose()}>
+            <StoryDetails
+            editionNotAllowed={editionNotAllowed}
+            story={story}
+            onLoadStories={() => onLoadStories()} />
         </STKDialog>
     )
 }

@@ -1,4 +1,3 @@
-import { Avatar } from "@mui/material"
 import {useContext, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import { Baby, GlobeSimple, Trash, Pencil } from '@phosphor-icons/react'
@@ -116,22 +115,20 @@ export default function StoryDetails({
                         </div>
                     </div>
                 </div>
-                {currentProfileId === story?.profiles?.profile_id && (
+                {currentProfileId === story?.profiles?.profile_id && !editionNotAllowed ? (
                     <div className="flex items-center">
-                        {!editionNotAllowed && (
-                            <div className="mr-2">
-                                <STKButton startIcon={<Pencil size={18} />} onClick={() => setShowUpdateStoryDialog(true)}>
-                                    Edit story
-                                </STKButton>
-                            </div>
-                        )}
+                        <div className="mr-2">
+                            <STKButton startIcon={<Pencil size={18} />} onClick={() => setShowUpdateStoryDialog(true)}>
+                                Edit story
+                            </STKButton>
+                        </div>
                         <div>
                             <STKButton variant="outlined" startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
                                 Delete story
                             </STKButton>
                         </div>
                     </div>
-                )}
+                ) : null}
             </div>
             <UpdateStoryDialog
             open={showUpdateStoryDialog}
