@@ -7,3 +7,8 @@ body {
   background-color: #fffcef !important;
   font-family: 'DM Sans', sans-serif;
 }
+
+.disabled {
+  opacity: .4;
+  pointer-events: none;
+}

@@ -4,11 +4,14 @@ import playIcon from "../../assets/icons/play.svg";
 import skipIcon from "../../assets/icons/skip.svg";
 import pauseIcon from "../../assets/icons/pause.svg";
 import volumeOnIcon from "../../assets/icons/volume-on.svg"
+import { AnimatePresence, motion } from 'framer-motion'
 import volumeOffIcon from "../../assets/icons/volume-off.svg"
 import Image from "next/image";
 import './style.scss';
 import useAppleDevice from "@/customHooks/useAppleDevice";
 import STKButton from "@/components/STKButton/STKButton";
+import STKLoading from "@/components/STKLoading/STKLoading";
+import {neutral800} from "@/assets/colorPallet/colors";
 
 interface STKAudioPlayerProps {
     src: string;
@@ -38,6 +41,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     const [howl, setHowl] = useState<Howl | null>(null);
     const [currentTime, setCurrentTime] = useState('0:00');
     const [totalDuration, setTotalDuration] = useState('0:00');
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const sound = new Howl({
@@ -46,6 +50,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             onload: () => {
                 setHowl(sound);
                 setTotalDuration(formatTime(sound.duration()));
+                setLoading(false)
             },
             format: ["mp3"]
         });
@@ -131,21 +136,39 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             <div className="flex items-center w-full">
                 <span>{currentTime}</span>
                 <div className="progress-bar px-4 flex items-center">
-                    <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={progress}
-                        onChange={(e) => handleProgressBarOnChange(e)}
-                        // @ts-ignore
-                        style={{ '--progress': `${progress}%` }}
-                    />
+                    {loading ? (
+                        <div className="flex items-center">
+                            <STKLoading
+                                // @ts-ignore
+                                color={neutral800}
+                                size="6px"  />
+                        </div>
+                    ) : (
+                        <AnimatePresence mode="wait">
+                            (
+                            <motion.div
+                                initial={{ opacity: 0, width: "100%"}}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                            >
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={progress}
+                                onChange={(e) => handleProgressBarOnChange(e)}
+                                // @ts-ignore
+                                style={{ '--progress': `${progress}%` }}
+                            />
+                            </motion.div>
+                        </AnimatePresence>
+                    )}
                 </div>
                 <span>{totalDuration}</span>
             </div>
 
             <div className="flex items-center w-full justify-between mt-4">
-                <div className="controls">
+                <div className={`controls ${loading ? 'disabled' : ''}`}>
                     <STKButton onClick={handleBackward} iconButton>
                         <Image src={skipIcon} alt="Skip backwards" width={16} style={{ transform: "rotate(180deg)" }} />
                     </STKButton>
@@ -158,7 +181,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                         <Image src={skipIcon} alt="Skip forward" width={16} />
                     </STKButton>
                 </div>
-                <div className="volume w-30 flex items-center pl-10">
+                <div className={`volume w-30 flex items-center pl-10 ${loading ? 'disabled' : ''}`}>
                     <div className="mr-2">
                         <STKButton iconButton onClick={toggleMute}>
                             <Image src={volume ? volumeOnIcon : volumeOffIcon} alt="Volume Toggle" width={16} />
