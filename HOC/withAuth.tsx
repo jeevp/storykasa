@@ -24,7 +24,6 @@ const withAuth = (WrappedComponent: any) => {
       setCurrentUser(user)
       console.log(user)
       setHasToken(true)
-      document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
     }
 
     const handleSignOut = async () => {
@@ -42,7 +41,6 @@ const withAuth = (WrappedComponent: any) => {
           !accessToken ||
           isTokenExpired(accessToken)
         ) {
-          document.cookie = `loggedIn=false;domain=.storykasa.com;path=/`
           handleSignOut()
           return
         }
@@ -51,7 +49,14 @@ const withAuth = (WrappedComponent: any) => {
       }
     }, [])
 
-    if (!hasToken) return null
+    if (!hasToken) {
+      console.log('setting logged in cookie to false')
+      document.cookie = `loggedIn=false;domain=.storykasa.com;path=/`
+      return null
+    } else {
+      console.log('setting logged in cookie to true')
+      document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
+    }
 
     return (
       <>
