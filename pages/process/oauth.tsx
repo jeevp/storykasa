@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import queryString from 'query-string';
 import STKLoading from "@/components/STKLoading/STKLoading";
 import AuthHandler from "@/handlers/AuthHandler";
@@ -10,6 +10,7 @@ function OauthProcess() {
     useEffect(() => {
         const parsedQuery = queryString.parse(location.search);
         if (parsedQuery?.code) {
+            // @ts-ignore
             authenticateOauth(parsedQuery?.code)
         }
     }, []);
