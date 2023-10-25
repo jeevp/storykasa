@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import axios from "axios";
 
-const requestPasswordRecovery = async (req: NextRequest, res: NextResponse) => {
+const processOauth = async (req: NextRequest, res: NextResponse) => {
     try {
         const { code } = req.body
 
@@ -14,9 +14,9 @@ const requestPasswordRecovery = async (req: NextRequest, res: NextResponse) => {
                     params: {
                         grant_type: "authorization_code",
                         code,
-                        redirect_uri: req.headers.host,
-                        client_id: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-                        client_secret: process.env.NEXT_PUBLIC_SUPABASE_SECRET_KEY
+                        redirect_uri: "https://app.storykasa.com",
+                        client_id: "1083848522772-4rdsvcnnpsd4dc4un6ceoafhs457iaj6.apps.googleusercontent.com",
+                        client_secret: "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"
 
                     },
                     headers: {
@@ -37,4 +37,4 @@ const requestPasswordRecovery = async (req: NextRequest, res: NextResponse) => {
 }
 
 
-export default requestPasswordRecovery
+export default processOauth

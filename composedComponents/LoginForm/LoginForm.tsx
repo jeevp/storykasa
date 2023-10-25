@@ -52,7 +52,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
         await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${location.origin}/api/auth/callback`,
+                redirectTo: `https://app.storykasa.com/process/oauth`,
             },
         })
     }
