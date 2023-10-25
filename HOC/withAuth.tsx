@@ -42,8 +42,8 @@ const withAuth = (WrappedComponent: any) => {
           !accessToken ||
           isTokenExpired(accessToken)
         ) {
-          handleSignOut()
           document.cookie = `loggedIn=false;domain=.storykasa.com;path=/`
+          handleSignOut()
           return
         }
 
