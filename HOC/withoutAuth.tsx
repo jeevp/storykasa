@@ -16,7 +16,6 @@ const withoutAuth = (WrappedComponent: any) => {
         if (accessToken || currentUser) {
           router.push('/library')
         } else {
-          document.cookie = `loggedIn=false;domain=.storykasa.com;path=/`
           setIsValidationComplete(true)
         }
       }

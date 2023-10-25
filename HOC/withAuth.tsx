@@ -45,17 +45,15 @@ const withAuth = (WrappedComponent: any) => {
           return
         }
 
+        document.cookie = `loggedIn=true;path=/`
         handleLogin(accessToken)
       }
     }, [])
 
     if (!hasToken) {
-      console.log('setting logged in cookie to false')
-      document.cookie = `loggedIn=false;domain=.storykasa.com;path=/`
       return null
     } else {
-      console.log('setting logged in cookie to true')
-      document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
+      console.log(' setting logged in cookie to true ')
     }
 
     return (
