@@ -59,4 +59,8 @@ export default class AuthHandler {
             }
         })
     }
+
+    static async authenticateOauth(code) {
+        await axios.post("/api/auth/oauth", { code })
+    }
 }
