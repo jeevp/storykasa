@@ -16,7 +16,7 @@ const processOauth = async (req: NextRequest, res: NextResponse) => {
     } catch (error) {
         console.error(error)
         // @ts-ignore
-        return res.status(400).send({ message: "Something went wrong." })
+        return res.status(400).send(error)
     }
 }
 
