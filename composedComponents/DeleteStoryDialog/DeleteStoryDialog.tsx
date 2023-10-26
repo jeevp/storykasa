@@ -2,8 +2,6 @@ import React, {useContext, useState} from 'react';
 import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import {Trash} from "@phosphor-icons/react";
-import {deleteStory} from "@/lib/_actions";
-import {useRouter} from "next/navigation";
 import useDevice from "@/customHooks/useDevice";
 import StoryHandler from "@/handlers/StoryHandler";
 import SnackbarContext from "@/contexts/SnackbarContext";
