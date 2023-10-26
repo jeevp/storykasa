@@ -95,7 +95,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
                     <div className="py-6">
                         <Divider />
                     </div>
-                    <div className="hidden">
+                    <div>
                         <STKButton
                             variant="outlined"
                             fullWidth
@@ -113,7 +113,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
                         </STKButton>
 
                     </div>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mt-4">
                         <Link href="/signup" className="text-neutral-800">
                             Don&apos;t have an account? Sign up
                         </Link>

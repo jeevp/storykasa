@@ -26,7 +26,7 @@ export default function SignupForm() {
         await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${location.origin}/auth/callback`,
+                redirectTo: `https://app.storykasa.com/process/oauth`,
             },
         })
     }
@@ -165,22 +165,22 @@ export default function SignupForm() {
                     <Divider />
                 </div>
                 <div className="flex flex-col items-center">
-                    {/*<STKButton*/}
-                    {/*    variant="outlined"*/}
-                    {/*    fullWidth*/}
-                    {/*    startIcon={*/}
-                    {/*        <Image*/}
-                    {/*            src="/google.svg"*/}
-                    {/*            width={24}*/}
-                    {/*            height={24}*/}
-                    {/*            alt="Google logo"*/}
-                    {/*        />*/}
-                    {/*    }*/}
-                    {/*    onClick={handleSignInWithGoogle}*/}
-                    {/*>*/}
-                    {/*    Sign up with Google*/}
-                    {/*</STKButton>*/}
-                    <div>
+                    <STKButton
+                        variant="outlined"
+                        fullWidth
+                        startIcon={
+                            <Image
+                                src="/google.svg"
+                                width={24}
+                                height={24}
+                                alt="Google logo"
+                            />
+                        }
+                        onClick={handleSignInWithGoogle}
+                    >
+                        Sign up with Google
+                    </STKButton>
+                    <div className="mt-4">
                         <Link href="/login" className="text-neutral-800">
                             Already have an account? Log in
                         </Link>
