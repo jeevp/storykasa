@@ -8,7 +8,9 @@ import Link from "next/link";
 import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import Validator from "@/utils/Validator";
-import supabase from "../../service/supabase"
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
+const supabase = createClientComponentClient<Database>()
 
 export default function SignupForm() {
     const [processingAccountCreation, setProcessingAccountCreation] = useState(false)
@@ -165,7 +167,7 @@ export default function SignupForm() {
                     <Divider />
                 </div>
                 <div className="flex flex-col items-center">
-                    <div className="hidden">
+                    <div>
                         <STKButton
                             variant="outlined"
                             fullWidth
@@ -182,7 +184,7 @@ export default function SignupForm() {
                             Sign up with Google
                         </STKButton>
                     </div>
-                    <div>
+                    <div className="mt-4">
                         <Link href="/login" className="text-neutral-800">
                             Already have an account? Log in
                         </Link>
