@@ -1,7 +1,7 @@
-import {createContext, useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import ProfileContext from "@/contexts/ProfileContext";
+import supabase from "../../service/supabase"
 
 export default function ProfileProvider({ children }: {
     children: React.ReactNode
@@ -9,7 +9,6 @@ export default function ProfileProvider({ children }: {
     const { currentProfileId } = useContext(ProfileContext)
 
     const router = useRouter()
-    const supabase = createClientComponentClient<Database>()
 
     const [loaded, setLoaded] = useState(false)
 

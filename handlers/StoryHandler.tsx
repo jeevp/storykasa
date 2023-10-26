@@ -1,7 +1,6 @@
 import axios from "axios";
 import generateHeaders from "@/handlers/generateHeaders";
-import {createServerActionClient} from "@supabase/auth-helpers-nextjs";
-import {cookies} from "next/headers";
+
 interface createStoryProps {
     recordingURL: string
     duration: string

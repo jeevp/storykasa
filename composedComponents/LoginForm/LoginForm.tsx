@@ -1,6 +1,5 @@
 import { FormEvent } from 'react';
 import Image from 'next/image'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import STKButton from "@/components/STKButton/STKButton";
@@ -9,7 +8,7 @@ import Link from "next/link";
 import {Divider} from "@mui/material";
 import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
-import {neutral800} from "@/assets/colorPallet/colors";
+import supabase from "@/service/supabase"
 
 interface LoginFormProps {
     onPasswordRecoveryRequest?: Function
@@ -23,9 +22,6 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
-
-
-    const supabase = createClientComponentClient<Database>()
 
     // Watchers
     useEffect(() => {

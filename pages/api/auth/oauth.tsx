@@ -1,35 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-import axios from "axios";
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
 
 const processOauth = async (req: NextRequest, res: NextResponse) => {
     try {
         const { code } = req.body
 
-        if (code) {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/token`,
-                {},
-                {
-                    params: {
-                        grant_type: "authorization_code",
-                        code,
-                        redirect_uri: "https://app.storykasa.com",
-                        client_id: "1083848522772-4rdsvcnnpsd4dc4un6ceoafhs457iaj6.apps.googleusercontent.com",
-                        client_secret: "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"
+        if (!code) return res.status(400).send({ message: "Code is missing." })
 
-                    },
-                    headers: {
-                        'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                }
-            );
+        const supabase = createPagesServerClient({ req, res })
+        const response await supabase.auth.exchangeCodeForSession(String(code))
+        return res.status(201).send({ message: "Authentication succeed." , response })
 
-            console.log(response.data)
-        }
-
-        return res.status(201).send({ message: "Authentication succeed." })
     } catch (error) {
         console.error(error)
         return res.status(400).send({ message: "Something went wrong." })

@@ -14,7 +14,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.11",
     "@phosphor-icons/react": "^2.0.13",
-    "@supabase/auth-helpers-nextjs": "^0.8.1",
+    "@supabase/auth-helpers-nextjs": "^0.8.2",
     "@supabase/auth-ui-react": "^0.4.5",
     "@supabase/auth-ui-shared": "^0.1.7",
     "@supabase/supabase-js": "^2.37.0",

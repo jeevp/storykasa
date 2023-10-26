@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import queryString from 'query-string';
 import STKLoading from "@/components/STKLoading/STKLoading";
-import AuthHandler from "@/handlers/AuthHandler";
 import {useRouter} from "next/router";
+import supabase from "../../service/supabase"
+import AuthHandler from "@/handlers/AuthHandler";
 
 function OauthProcess() {
     const router = useRouter()
@@ -15,8 +16,12 @@ function OauthProcess() {
     }, []);
 
     const authenticateOauth = async (code: string) => {
-        await AuthHandler.authenticateOauth(code)
-        await router.push("/")
+        try {
+            await AuthHandler.authenticateOauth(code)
+            await router.push("/")
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (

@@ -60,7 +60,7 @@ export default class AuthHandler {
         })
     }
 
-    static async authenticateOauth(code) {
+    static async authenticateOauth(code: string) {
         await axios.post("/api/auth/oauth", { code })
     }
 }

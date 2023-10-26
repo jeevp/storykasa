@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import STKTextField from "@/components/STKTextField/STKTextField";
@@ -9,6 +8,7 @@ import Link from "next/link";
 import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import Validator from "@/utils/Validator";
+import supabase from "../../service/supabase"
 
 export default function SignupForm() {
     const [processingAccountCreation, setProcessingAccountCreation] = useState(false)
@@ -21,7 +21,6 @@ export default function SignupForm() {
     const [fullNameError, setFullNameError] = useState("")
 
     const router = useRouter()
-    const supabase = createClientComponentClient<Database>()
 
     const handleSignInWithGoogle = async () => {
         await supabase.auth.signInWithOAuth({
