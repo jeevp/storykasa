@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import queryString from 'query-string';
 import STKLoading from "@/components/STKLoading/STKLoading";
 import {useRouter} from "next/router";
-import supabase from "../../service/supabase"
 import AuthHandler from "@/handlers/AuthHandler";
 
 function OauthProcess() {
