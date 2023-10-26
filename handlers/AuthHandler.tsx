@@ -66,6 +66,7 @@ export default class AuthHandler {
     }
 
     static async authenticateOauth(code: string) {
-        await axios.post("/api/auth/oauth", { code })
+       const response = await axios.post("/api/auth/oauth", { code })
+        console.log({ data: response.data })
     }
 }

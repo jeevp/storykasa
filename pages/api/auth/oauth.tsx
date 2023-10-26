@@ -11,7 +11,7 @@ const processOauth = async (req: NextRequest, res: NextResponse) => {
         const supabase = createPagesServerClient({ req, res })
         const response = await supabase.auth.exchangeCodeForSession(String(code))
         // @ts-ignore
-        return res.status(201).send({ message: "Authentication succeed." , response })
+        return res.status(201).send(response)
 
     } catch (error) {
         console.error(error)
