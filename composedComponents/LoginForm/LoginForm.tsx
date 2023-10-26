@@ -8,7 +8,9 @@ import Link from "next/link";
 import {Divider} from "@mui/material";
 import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
-import supabase from "@/service/supabase"
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
+const supabase = createClientComponentClient<Database>()
 
 interface LoginFormProps {
     onPasswordRecoveryRequest?: Function
