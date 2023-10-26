@@ -11,6 +11,7 @@ function OauthProcess() {
     useEffect(() => {
         const parsedQuery = queryString.parse(location.search);
         if (parsedQuery?.code) {
+            // @ts-ignore
             authenticateOauth(parsedQuery?.code)
         }
     }, []);

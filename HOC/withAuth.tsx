@@ -22,7 +22,6 @@ const withAuth = (WrappedComponent: any) => {
     const handleLogin = (accessToken: string) => {
       const user = decodeJWT(accessToken)
       setCurrentUser(user)
-      console.log(user)
       setHasToken(true)
     }
 

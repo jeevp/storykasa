@@ -8,7 +8,7 @@ const processOauth = async (req: NextRequest, res: NextResponse) => {
         if (!code) return res.status(400).send({ message: "Code is missing." })
 
         const supabase = createPagesServerClient({ req, res })
-        const response await supabase.auth.exchangeCodeForSession(String(code))
+        const response = await supabase.auth.exchangeCodeForSession(String(code))
         return res.status(201).send({ message: "Authentication succeed." , response })
 
     } catch (error) {

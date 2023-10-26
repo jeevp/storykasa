@@ -93,23 +93,23 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
                     <div className="py-6">
                         <Divider />
                     </div>
-                    <STKButton
-                        variant="outlined"
-                        fullWidth
-                        startIcon={
-                            <Image
-                                src="/google.svg"
-                                width={24}
-                                height={24}
-                                alt="Google logo"
-                            />
-                        }
-                        onClick={handleSignInWithGoogle}
-                    >
-                        Log in with Google
-                    </STKButton>
+                    {/*<STKButton*/}
+                    {/*    variant="outlined"*/}
+                    {/*    fullWidth*/}
+                    {/*    startIcon={*/}
+                    {/*        <Image*/}
+                    {/*            src="/google.svg"*/}
+                    {/*            width={24}*/}
+                    {/*            height={24}*/}
+                    {/*            alt="Google logo"*/}
+                    {/*        />*/}
+                    {/*    }*/}
+                    {/*    onClick={handleSignInWithGoogle}*/}
+                    {/*>*/}
+                    {/*    Log in with Google*/}
+                    {/*</STKButton>*/}
 
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center">
                         <Link href="/signup" className="text-neutral-800">
                             Don&apos;t have an account? Sign up
                         </Link>

@@ -1,5 +1,6 @@
 import axios from "axios"
 import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN, STK_PROFILE_ID } from "@/config"
+import identifyPendoVisitor from "@/tools/Pendo/identifyPendoVisitor";
 
 export default class AuthHandler {
     static async signUp({ email, password, fullName }: {
@@ -16,6 +17,8 @@ export default class AuthHandler {
         localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)
         localStorage.setItem(STK_REFRESH_TOKEN, response?.data?.session?.refresh_token)
 
+        identifyPendoVisitor({ userId: response.data.user.id })
+
         return response.data
     }
 
@@ -27,6 +30,8 @@ export default class AuthHandler {
 
         localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)
         localStorage.setItem(STK_REFRESH_TOKEN, response?.data?.session?.refresh_token)
+
+        identifyPendoVisitor({ userId: response.data.user.id })
 
         return response.data
     }
