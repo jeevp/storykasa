@@ -6,7 +6,7 @@ export default function identifyPendoVisitor({ userId }) {
             y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
             z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
 
-        pendo.identify({
+        pendo.initialize({
             visitor: {
                 id: userId
             }
