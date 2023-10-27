@@ -5,10 +5,14 @@ import decodeJWT from '@/utils/decodeJWT'
 import jwtDecode from 'jwt-decode' // Import jwt-decode to validate tokens
 import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN } from '@/config'
 import AuthHandler from '@/handlers/AuthHandler'
+import identifyPendoVisitor from "@/tools/Pendo/identifyPendoVisitor";
+import ToolsContext from "@/contexts/ToolsContext";
 
 const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
     const { setCurrentUser } = useContext(AuthContext)
+    const { pendoTrackingEnabled, setPendoTrackingEnabled } = useContext(ToolsContext)
+
     const router = useRouter()
     const [hasToken, setHasToken] = useState(false)
 
@@ -23,6 +27,11 @@ const withAuth = (WrappedComponent: any) => {
       const user = decodeJWT(accessToken)
       setCurrentUser(user)
       setHasToken(true)
+
+      if (!pendoTrackingEnabled) {
+        identifyPendoVisitor({ userId: user.sub })
+        setPendoTrackingEnabled(true)
+      }
     }
 
     const handleSignOut = async () => {

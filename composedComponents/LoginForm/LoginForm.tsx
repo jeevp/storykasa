@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import {FormEvent, useContext} from 'react';
 import Image from 'next/image'
 import {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation'
@@ -9,6 +9,7 @@ import {Divider} from "@mui/material";
 import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import ToolsContext from "@/contexts/ToolsContext";
 
 const supabase = createClientComponentClient<Database>()
 
@@ -16,6 +17,9 @@ interface LoginFormProps {
     onPasswordRecoveryRequest?: Function
 }
 export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: LoginFormProps) {
+    // Contexts
+    const { setPendoTrackingEnabled } = useContext(ToolsContext)
+
     // Hooks
     const router = useRouter()
 
@@ -38,7 +42,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
             setLoading(true)
 
             await AuthHandler.signInWithPassword({ email, password })
-
+            setPendoTrackingEnabled(true)
             await router.push('/profiles')
         } catch(error) {
             setErrorMsg("Something went wrong")
