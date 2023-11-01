@@ -27,6 +27,7 @@ function STKAutocomplete({
                 id="combo-box-demo"
                 options={options}
                 sx={{ width: fluid ? '100%' : '300px', backgroundColor: "white" }}
+                // @ts-ignore
                 groupBy={(option) => option[groupByProp]}
                 // @ts-ignore
                 getOptionLabel={(option) => option[optionLabel]}
