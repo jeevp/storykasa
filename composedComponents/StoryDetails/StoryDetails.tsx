@@ -58,7 +58,7 @@ export default function StoryDetails({
                 <div className="flex flex-col mt-4">
                     {story?.ageGroups && (
                         <div className="flex items-start">
-                            <Baby size={30} />
+                            <Baby size={20} />
                             <label className="ml-2">
                                 {story?.ageGroupsLabel}
                             </label>
