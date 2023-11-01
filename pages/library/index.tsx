@@ -1,5 +1,4 @@
 import StoryCard from '@/composedComponents/StoryCard/StoryCard'
-import { StoryWithProfile } from '@/lib/database-helpers.types'
 import { useEffect, useState} from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
@@ -13,22 +12,22 @@ import Link from "next/link";
 import StoryHandler from "@/handlers/StoryHandler";
 import withAuth from "@/HOC/withAuth";
 import withProfile from "@/HOC/withProfile";
+import Story from "@/models/Story";
 
 function Library() {
     const { onMobile } = useDevice()
     const [filterQuery, setFilterQuery] = useState('')
-    const [stories, setStories] = useState<StoryWithProfile[]>([])
+    const [stories, setStories] = useState<Story[]>([])
     const [selectedIndex, setSelectedIndex] = useState<number>()
     const [loaded, setLoaded] = useState(false)
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
-    const [recordedAudioUrl, setRecordedAudioUrl] = useState("")
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
     }
 
     const loadStories = async () => {
-        const allStories: StoryWithProfile[] = await StoryHandler.fetchStories()
+        const allStories: Story[] = await StoryHandler.fetchStories()
         setStories(allStories)
         setLoaded(true)
     }
@@ -85,10 +84,10 @@ function Library() {
                                     </div>
                                 )}
                                 <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}>
-                                    {filtered?.map((story: StoryWithProfile, index: number) => (
+                                    {filtered?.map((story: Story, index: number) => (
                                         <div
                                             className="mt-2 first:mt-0"
-                                            key={story.story_id}
+                                            key={story.storyId}
                                             onClick={() => handleStoryClick(index)}
                                         >
                                             <StoryCard

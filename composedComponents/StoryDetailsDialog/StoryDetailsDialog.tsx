@@ -1,12 +1,12 @@
 import React from 'react';
 import StoryDetails from "@/composedComponents/StoryDetails/StoryDetails";
-import {StoryWithProfile} from "@/lib/database-helpers.types";
 import STKDialog from "@/components/STKDialog/STKDialog";
+import Story from "@/models/Story";
 
 
 interface StoryDetailsDialogProps {
     open: boolean;
-    story: StoryWithProfile | null;
+    story: Story | null;
     editionNotAllowed?: boolean;
     onClose?: () => void;
     onLoadStories?: () => void;

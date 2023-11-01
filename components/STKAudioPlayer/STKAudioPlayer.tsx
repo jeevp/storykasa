@@ -17,6 +17,7 @@ interface STKAudioPlayerProps {
     src: string;
     preload?: boolean;
     outlined?: boolean;
+    html5?: boolean;
     onPlaying?: (playing: boolean) => void;
     onEnd?: () => void;
 }
@@ -31,6 +32,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     src,
     preload = true,
     outlined = false,
+    html5 = false,
     onPlaying = () => ({}),
     onEnd = () => ({})
 }) => {
@@ -47,7 +49,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         const sound = new Howl({
             src: [src],
             preload,
-            html5: true,
+            html5,
             onload: () => {
                 setHowl(sound);
                 setTotalDuration(formatTime(sound.duration()));

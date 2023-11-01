@@ -10,6 +10,7 @@ import Stop from "@/assets/icons/iconsJS/Stop";
 import Formatter from "@/utils/Formatter";
 import STKAudioWave from "@/components/STKAudioWave/STKAudioWave";
 import STKLoading from "@/components/STKLoading/STKLoading";
+import {Howl} from "howler";
 
 interface STKRecordAudioProps {
     onComplete: Function,
@@ -67,11 +68,12 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
         mediaRecorderRef.current?.stopRecording(async () => {
             // @ts-ignore
             const blob = mediaRecorderRef.current?.getBlob();
+
             if (blob && typeof window !== "undefined") {
-                const audioURL = URL.createObjectURL(blob);
-                onComplete(blob, audioURL);
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 onDuration(duration);
+                const audioURL = URL.createObjectURL(blob);
+                onComplete(blob, audioURL);
             }
         });
     };

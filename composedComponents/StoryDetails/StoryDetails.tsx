@@ -88,6 +88,7 @@ export default function StoryDetails({
                         <div key={story?.recordingUrl} className="mt-2">
                             <STKAudioPlayer
                                 outlined
+                                html5
                                 // @ts-ignore
                                 src={story?.recordingUrl}
                                 onEnd={handleStoryOnEnd}
@@ -101,6 +102,7 @@ export default function StoryDetails({
                             <div key={story?.recordingUrl} className="mt-6">
                                 <STKAudioPlayer
                                     outlined src={story?.recordingUrl}
+                                    html5
                                     onEnd={handleStoryOnEnd}
                                     // @ts-ignore
                                     onPlaying={handlePlaying} />
