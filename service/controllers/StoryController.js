@@ -115,7 +115,7 @@ class StoryController {
                 isPublic,
                 recordedBy,
                 language,
-                ageGroup,
+                ageGroups,
                 recordingURL,
                 duration,
                 illustrationsURL
@@ -128,7 +128,7 @@ class StoryController {
                 recording_url: recordingURL,
                 description: description,
                 language: language,
-                age_group: ageGroup,
+                age_groups: ageGroups,
                 duration: duration
             }
 

@@ -8,8 +8,7 @@ import dynamic from 'next/dynamic';
 
 import { SetStateAction, useContext, useState} from 'react'
 import ProfileContext from '@/contexts/ProfileContext'
-import {ageGroups, languages} from '@/app/enums'
-import {useRouter} from 'next/navigation'
+import {allowedAgeGroups, languages} from "@/models/Story"
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import STKAutocomplete from "@/components/STKAutocomplete/STKAutocomplete";
 import useDevice from "@/customHooks/useDevice";
@@ -45,7 +44,7 @@ export default function StoryForm() {
     const [audioDuration, setAudioDuration] = useState(0)
     const [audioURL, setAudioURL] = useState('')
     const [language, setLanguage] = useState('')
-    const [ageGroup, setAgeGroup] = useState('')
+    const [ageGroups, setAgeGroups] = useState('')
     const [showUploadStoryDialog, setShowUploadStoryDialog] = useState(false)
     const [loading, setLoading] = useState(false)
     const [showCancelRecordingDialog, setShowCancelRecordingDialog] = useState(false)
@@ -96,7 +95,7 @@ export default function StoryForm() {
             storyFormData.set('title', title)
             storyFormData.set('description', description)
             storyFormData.set('language', language)
-            storyFormData.set('age_group', ageGroup)
+            storyFormData.set('age_groups', ageGroups)
 
             await StoryHandler.createStory({
                 recordingURL,
@@ -105,7 +104,7 @@ export default function StoryForm() {
                 title,
                 description,
                 language,
-                ageGroup,
+                ageGroups,
                 // @ts-ignore
                 illustrationsURL
             })
@@ -121,9 +120,9 @@ export default function StoryForm() {
         setLanguage(selectedLanguage?.name)
     }
 
-    const handleAgeGroupOnChange = (selectedAgeGroup: SetStateAction<string>) => {
+    const handleAgeGroupOnChange = (selectedAgeGroups: SetStateAction<string>) => {
         // @ts-ignore
-        setAgeGroup(selectedAgeGroup.code)
+        setAgeGroups(selectedAgeGroups)
     }
 
 
@@ -187,9 +186,10 @@ export default function StoryForm() {
                             </label>
                             <div className="mt-2">
                                 <STKSelect
-                                    options={ageGroups}
+                                    options={allowedAgeGroups}
                                     optionLabel="name"
-                                    optionValue="code"
+                                    multiple
+                                    value={[]}
                                     fluid={onMobile}
                                     onChange={handleAgeGroupOnChange}  />
                             </div>

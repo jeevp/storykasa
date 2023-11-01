@@ -4,7 +4,6 @@ const signInWithPasswordHandler = async (req, res) => {
         if (req.method !== "POST") return res.status(404).send({ message: "API not found" })
         return AuthController.signInWithPassword(req, res)
     } catch (error) {
-        console.log(error)
         return res.status(400).send({ message: "Something went wrong." })
     }
 }

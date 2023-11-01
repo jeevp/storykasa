@@ -227,6 +227,27 @@ export interface Database {
           }
         ]
       }
+      stories_images: {
+        Row: {
+          created_at: string
+          id: number
+          image_url: string
+          story_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image_url?: string
+          story_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image_url?: string
+          story_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

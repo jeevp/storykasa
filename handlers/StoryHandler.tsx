@@ -1,5 +1,6 @@
 import axios from "axios";
 import generateHeaders from "@/handlers/generateHeaders";
+import Story from "@/models/Story";
 
 interface createStoryProps {
     recordingURL: string
@@ -8,7 +9,7 @@ interface createStoryProps {
     title: string,
     description: string
     language: string
-    ageGroup: string
+    ageGroups: string
     illustrationsURL: Array<string>
 }
 
@@ -20,7 +21,7 @@ export default class StoryHandler {
         title,
         description,
         language,
-        ageGroup,
+        ageGroups,
         illustrationsURL
     }: createStoryProps) {
         const payload = {
@@ -30,7 +31,7 @@ export default class StoryHandler {
             recordingURL: recordingURL,
             description: description,
             language: language,
-            ageGroup: ageGroup,
+            ageGroups: ageGroups,
             duration: duration,
             illustrationsURL
         }
@@ -62,7 +63,21 @@ export default class StoryHandler {
         const headers = generateHeaders()
         const response = await axios.get("/api/stories/library", headers)
 
-        return response.data
+        return response.data.map((story: any) => new Story({
+            storyId: story.story_id,
+            isPublic: story.is_public,
+            duration: story.duration,
+            recordingUrl: story.recording_url,
+            recordedBy: story.recorded_by,
+            title: story.title,
+            ageGroups: story.age_groups || [],
+            description: story.description,
+            language: story.language,
+            profileId: story?.profiles?.profile_id,
+            profileName: story?.profiles?.profile_name,
+            profileAvatar: story?.profiles?.avatar_url,
+            lastUpdated: story?.last_updated
+        }))
     }
 
     static async fetchPublicStories() {

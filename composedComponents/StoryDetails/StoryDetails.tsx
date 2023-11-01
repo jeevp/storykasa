@@ -1,7 +1,6 @@
 import {useContext, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import { Baby, GlobeSimple, Trash, Pencil } from '@phosphor-icons/react'
-import { StoryWithProfile } from '@/lib/database-helpers.types'
 import ProfileContext from '@/contexts/ProfileContext'
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
@@ -9,9 +8,10 @@ import STKButton from "@/components/STKButton/STKButton";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKSlide from "@/components/STKSlide/STKSlide";
 import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStoryDialog";
+import Story from "@/models/Story";
 
 interface StoryDetailsProps {
-    story: StoryWithProfile | null;
+    story: Story | null;
     editionNotAllowed?: boolean;
     onLoadStories?: () => void;
 }
@@ -50,22 +50,22 @@ export default function StoryDetails({
                 <h1 className="m-0 max-w-[12em] text-2xl font-semibold">{story?.title}</h1>
                 <div className="mt-4 flex items-center">
                     <STKAvatar
-                        src={story?.profiles?.avatar_url!}
-                        name={story?.profiles?.profile_name}
+                        src={story?.profileAvatar}
+                        name={story?.profileName}
                     />
-                    <label className="ml-2 font-semibold text-base">{story?.profiles?.profile_name}</label>
+                    <label className="ml-2 font-semibold text-base">{story?.profileName}</label>
                 </div>
                 <div className="flex flex-col mt-4">
-                    {story?.age_group && (
-                        <div className="flex items-center">
-                            <Baby size={20} />
+                    {story?.ageGroups && (
+                        <div className="flex items-start">
+                            <Baby size={30} />
                             <label className="ml-2">
-                                {story?.age_group}
+                                {story?.ageGroupsLabel}
                             </label>
                         </div>
                     )}
                     {story?.language && (
-                        <div className="flex items-center mt-1">
+                        <div className="flex items-center mt-2">
                             <GlobeSimple size={20} />
                             <label className="ml-2">
                                 {story?.language}
@@ -85,11 +85,11 @@ export default function StoryDetails({
                             // @ts-ignore
                         duration={story?.duration}
                         restart={storyHasEnded && startIllustrationsDisplay}/>
-                        <div key={story?.recording_url} className="mt-2">
+                        <div key={story?.recordingUrl} className="mt-2">
                             <STKAudioPlayer
                                 outlined
                                 // @ts-ignore
-                                src={story?.recording_url}
+                                src={story?.recordingUrl}
                                 onEnd={handleStoryOnEnd}
                                 // @ts-ignore
                                 onPlaying={handlePlaying} />
@@ -97,10 +97,10 @@ export default function StoryDetails({
                     </div>
                 ) : (
                     <>
-                        {story?.recording_url && (
-                            <div key={story?.recording_url} className="mt-6">
+                        {story?.recordingUrl && (
+                            <div key={story?.recordingUrl} className="mt-6">
                                 <STKAudioPlayer
-                                    outlined src={story?.recording_url}
+                                    outlined src={story?.recordingUrl}
                                     onEnd={handleStoryOnEnd}
                                     // @ts-ignore
                                     onPlaying={handlePlaying} />
@@ -115,7 +115,7 @@ export default function StoryDetails({
                         </div>
                     </div>
                 </div>
-                {currentProfileId === story?.profiles?.profile_id && !editionNotAllowed ? (
+                {currentProfileId === story?.profileId && !editionNotAllowed ? (
                     <div className="flex items-center">
                         <div className="mr-2">
                             <STKButton startIcon={<Pencil size={18} />} onClick={() => setShowUpdateStoryDialog(true)}>
