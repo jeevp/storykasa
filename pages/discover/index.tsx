@@ -1,5 +1,4 @@
 import StoryCard from '@/composedComponents/StoryCard/StoryCard'
-import { StoryWithProfile } from '@/lib/database-helpers.types'
 import { useEffect, useState } from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
@@ -9,17 +8,18 @@ import useDevice from "@/customHooks/useDevice";
 import StoryHandler from "@/handlers/StoryHandler";
 import withProfile from "@/HOC/withProfile";
 import withAuth from "@/HOC/withAuth";
+import Story from "@/models/Story";
 
 export const dynamic = 'force-dynamic'
 
 function Discover() {
     const { onMobile } = useDevice()
-    const [stories, setStories] = useState<StoryWithProfile[]>([])
+    const [stories, setStories] = useState<Story[]>([])
     const [selectedIndex, setSelectedIndex] = useState<number>()
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
 
     const loadStories = async () => {
-        const publicStories: StoryWithProfile[] = await StoryHandler.fetchPublicStories()
+        const publicStories: Story[] = await StoryHandler.fetchPublicStories()
         setStories(publicStories)
     }
 
@@ -49,10 +49,10 @@ function Discover() {
                             key={stories.length}
                         >
                             <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "75vh" }}>
-                            {stories?.map((story: StoryWithProfile, index: number) => (
+                            {stories?.map((story: Story, index: number) => (
                                     <div
                                         className="mt-2 first:mt-0"
-                                        key={story?.story_id}
+                                        key={story?.storyId}
                                         onClick={() => handleStoryClick(index)}
                                     >
                                         <StoryCard
@@ -75,6 +75,7 @@ function Discover() {
             <StoryDetailsDialog
                 open={showStoryDetailsDialog}
                 editionNotAllowed
+                // @ts-ignore
                 story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
         </PageWrapper>

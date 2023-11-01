@@ -83,6 +83,21 @@ export default class StoryHandler {
     static async fetchPublicStories() {
         const headers = generateHeaders()
         const response = await axios.get("/api/stories/discover", headers)
-        return response.data
+
+        return response.data.map((story: any) => new Story({
+            storyId: story.story_id,
+            isPublic: story.is_public,
+            duration: story.duration,
+            recordingUrl: story.recording_url,
+            recordedBy: story.recorded_by,
+            title: story.title,
+            ageGroups: story.age_groups || [],
+            description: story.description,
+            language: story.language,
+            profileId: story?.profiles?.profile_id,
+            profileName: story?.profiles?.profile_name,
+            profileAvatar: story?.profiles?.avatar_url,
+            lastUpdated: story?.last_updated
+        }))
     }
 }

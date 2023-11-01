@@ -232,7 +232,7 @@ export default class Story {
     }
 
     get ageGroupsShortLabel() {
-        if (this.ageGroups.length === 0) return "Ages not defined"
+        if (this.ageGroups.length === 0 || !this.ageGroups) return "All ages"
         const ageGroups = allowedAgeGroups.filter((ageGroup) => {
             // @ts-ignore
             return this.ageGroups.includes(ageGroup.value)
