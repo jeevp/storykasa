@@ -46,10 +46,13 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        // @ts-ignored
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        console.log({ isIOS })
         const sound = new Howl({
             src: [src],
             preload,
-            html5,
+            html5: isIOS,
             onload: () => {
                 setHowl(sound);
                 setTotalDuration(formatTime(sound.duration()));

@@ -30,7 +30,7 @@ export default function DeleteStoryDialog({
         if (story) {
             try {
                 setLoading(true)
-                await StoryHandler.deleteStory(story?.story_id)
+                await StoryHandler.deleteStory(story?.storyId)
                 setSnackbarBus({
                     active: true,
                     message: "Story deleted with success",

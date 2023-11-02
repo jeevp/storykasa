@@ -48,7 +48,7 @@ export default function UpdateStoryDialog({
     const handleSave = async () => {
         try {
             setLoading(true)
-            await StoryHandler.updateStory({ storyId: story.story_id }, {
+            await StoryHandler.updateStory({ storyId: story.storyId }, {
                 title,
                 description
             })
