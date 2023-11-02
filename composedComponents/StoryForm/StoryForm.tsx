@@ -177,6 +177,7 @@ export default function StoryForm() {
                                     options={languages}
                                     optionLabel="name"
                                     fluid={onMobile}
+                                    placeholder="Select a language"
                                     onChange={handleLanguageOnChange} />
                             </div>
                         </div>
@@ -188,6 +189,7 @@ export default function StoryForm() {
                                 <STKSelect
                                     options={allowedAgeGroups}
                                     optionLabel="name"
+                                    placeholder="Select an age group"
                                     multiple
                                     value={[]}
                                     fluid={onMobile}

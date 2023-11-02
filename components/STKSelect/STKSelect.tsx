@@ -7,6 +7,7 @@ interface STKSelectProps {
     options: Array<Object>
     optionValue?: string
     optionLabel?: string
+    placeholder?: string
     multiple?: boolean
     value?: object
     id?: string
@@ -19,6 +20,7 @@ function STKSelect({
     fluid,
     value,
     multiple,
+    placeholder,
     optionValue = "value",
     optionLabel = "label",
     id,
@@ -39,6 +41,7 @@ function STKSelect({
     const handleChange = (e: Event) => {
         // @ts-ignore
         const { value } = e.target
+        if (value === null) return
 
         if (multiple) {
             setSelectedOptions(value)
@@ -62,7 +65,14 @@ function STKSelect({
             <Select
                 id={id}
                 multiple={multiple}
-                renderValue={(selected) => getRenderInputValue(selected)}
+                displayEmpty
+                renderValue={(selected) => {
+                    // @ts-ignore
+                    if (selected?.length === 0) {
+                        return <label className="text-neutral-400">{placeholder}</label>
+                    }
+                    return getRenderInputValue(selected)
+                }}
                 value={multiple ? selectedOptions : value}
                 sx={{ width: fluid ? '100%' : '300px', backgroundColor: "white" }}
                 // @ts-ignore

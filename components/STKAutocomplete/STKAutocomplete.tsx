@@ -6,6 +6,7 @@ interface STKAutocompleteProps {
     optionLabel: string
     fluid?: boolean
     groupByProp?: string
+    placeholder?: string
     onChange: Function
 }
 function STKAutocomplete({
@@ -13,6 +14,7 @@ function STKAutocomplete({
     optionLabel = "label",
     fluid = false,
     groupByProp = "category",
+    placeholder,
     onChange = (value: Object) => ({})
 }: STKAutocompleteProps) {
 
@@ -31,7 +33,7 @@ function STKAutocomplete({
                 groupBy={(option) => option[groupByProp]}
                 // @ts-ignore
                 getOptionLabel={(option) => option[optionLabel]}
-                renderInput={(params) => <TextField {...params}  />}
+                renderInput={(params) => <TextField {...params} placeholder={placeholder}  />}
                 // @ts-ignore
                 onChange={handleOnChange}
             />
