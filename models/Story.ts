@@ -202,6 +202,11 @@ export default class Story {
         if (ageGroups.length === 1) {
             return ageGroups[0].name
         }
+        console.log({ ageGroups, allowedAgeGroups })
+
+        if (ageGroups.length === allowedAgeGroups.length) {
+            return "All ages"
+        }
 
         return `${ageGroups[0]?.name} - ${ageGroups[ageGroups.length - 1]?.name}`
     }
@@ -219,6 +224,10 @@ export default class Story {
 
         if (ageGroups.length === 1) {
             return ageGroups[0].name
+        }
+
+        if (ageGroups.length === allowedAgeGroups.length) {
+            return "All ages"
         }
 
         return `${ageGroups[0]?.minAge} - ${ageGroups[ageGroups.length - 1]?.maxAge} years old`
