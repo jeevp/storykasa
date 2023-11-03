@@ -190,8 +190,9 @@ export default function StoryForm() {
                                     options={allowedAgeGroups}
                                     optionLabel="name"
                                     placeholder="Select an age group"
+                                    enableSelectAll
+                                    selectAllLabel="All ages"
                                     multiple
-                                    value={[]}
                                     fluid={onMobile}
                                     onChange={handleAgeGroupOnChange}  />
                             </div>

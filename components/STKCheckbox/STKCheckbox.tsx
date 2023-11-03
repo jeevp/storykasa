@@ -4,12 +4,13 @@ import theme from "@/components/theme";
 
 interface STKCheckboxProps {
     checked: boolean
+    onChange?: () => void
 }
 
-export default function STkCheckbox({ checked }: STKCheckboxProps) {
+export default function STkCheckbox({ checked, onChange = () => ({}) }: STKCheckboxProps) {
     return (
         <ThemeProvider theme={theme}>
-            <Checkbox checked={checked} />
+            <Checkbox checked={checked} onChange={(e: Event) => onChange(e.target.checked)}/>
         </ThemeProvider>
     );
 }

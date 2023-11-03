@@ -9,6 +9,8 @@ interface STKSelectProps {
     optionLabel?: string
     placeholder?: string
     multiple?: boolean
+    enableSelectAll?: boolean
+    selectAllLabel?: string
     value?: object
     id?: string
     fluid?: boolean
@@ -20,6 +22,8 @@ function STKSelect({
     fluid,
     value,
     multiple,
+    enableSelectAll,
+    selectAllLabel = "All",
     placeholder,
     optionValue = "value",
     optionLabel = "label",
@@ -28,6 +32,7 @@ function STKSelect({
 }: STKSelectProps) {
     const [optionsHash, setOptionsHash] = useState({})
     const [selectedOptions, setSelectedOptions] = useState([])
+    const [cleanSelectedOptions, setCleanSelectedOptions] = useState(false)
 
     useEffect(() => {
         setOptionsHash(options.reduce((acc, item) => {
@@ -38,14 +43,24 @@ function STKSelect({
         }, {}))
     }, [options]);
 
+
     const handleChange = (e: Event) => {
         // @ts-ignore
         const { value } = e.target
         if (value === null) return
 
         if (multiple) {
-            setSelectedOptions(value)
-            onChange(value)
+            // @ts-ignore
+            if (e?.target?.value?.includes("")) {
+                // @ts-ignore
+                const _options = [...options.map((option) => option[optionValue]), ""]
+                // @ts-ignore
+                setSelectedOptions(_options)
+                onChange(_options.filter((_option) => _option !== ""))
+            } else {
+                setSelectedOptions(cleanSelectedOptions ? [] : value)
+                onChange(value)
+            }
         } else {
             // @ts-ignore
             const _selectedOption = options.find((option) => value === option[optionValue])
@@ -58,6 +73,11 @@ function STKSelect({
 
         // @ts-ignore
         return value.map((_value: any) => optionsHash[_value]).join(', ')
+    }
+
+    const handleAllOnClick = () => {
+        // @ts-ignore
+        setCleanSelectedOptions(!selectedOptions.includes(""))
     }
 
     return (
@@ -78,9 +98,19 @@ function STKSelect({
                 // @ts-ignore
                 onChange={handleChange}
             >
+                {enableSelectAll ? (
+                    <MenuItem value={""} onClick={handleAllOnClick}>
+                        <STkCheckbox
+                        // @ts-ignore
+                        checked={selectedOptions && selectedOptions?.includes("")}/>
+                        <label>{selectAllLabel}</label>
+                    </MenuItem>
+                ) : null}
                 {options?.map((option: any, index) => (
                     multiple ? (
                         <MenuItem
+                        // @ts-ignore
+                        className={selectedOptions.includes("") ? 'disabled' : ''}
                         key={index}
                         value={option[optionValue]}>
                             <STkCheckbox
@@ -100,3 +130,6 @@ function STKSelect({
 
 
 export default STKSelect
+
+
+
