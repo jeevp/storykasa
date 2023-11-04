@@ -71,6 +71,10 @@ function STKSelect({
     const getRenderInputValue = (value: any) => {
         if (!multiple) return value
 
+        if (value.includes("")) {
+            return "All ages"
+        }
+
         // @ts-ignore
         return value.map((_value: any) => optionsHash[_value]).join(', ')
     }
