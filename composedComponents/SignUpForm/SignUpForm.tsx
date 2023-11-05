@@ -113,7 +113,7 @@ export default function SignupForm() {
                     <div className="mt-4">
                        <STKTextField
                        fluid
-                       placeholder="Enter account name"
+                       placeholder="Enter full name or organization name"
                        value={fullName}
                        error={Boolean(fullNameError)}
                        helperText={fullNameError}
@@ -125,7 +125,7 @@ export default function SignupForm() {
                     <div className="mt-4">
                         <STKTextField
                         fluid
-                        placeholder="Enter email address"
+                        placeholder="Enter a valid email address"
                         value={email}
                         error={Boolean(emailError)}
                         helperText={emailError}
@@ -137,7 +137,7 @@ export default function SignupForm() {
                     <div className="mt-4">
                         <STKTextField
                         fluid
-                        placeholder="Enter password"
+                        placeholder="Enter a password"
                         value={password}
                         type="password"
                         error={Boolean(passwordError)}
