@@ -12,7 +12,11 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 const supabase = createClientComponentClient<Database>()
 
-export default function SignupForm() {
+interface SignupFormProps {
+    onSuccess?: () => void
+}
+
+export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) {
     const [processingAccountCreation, setProcessingAccountCreation] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
     const [email, setEmail] = useState("")
@@ -21,8 +25,6 @@ export default function SignupForm() {
     const [emailError, setEmailError] = useState("")
     const [passwordError, setPasswordError] = useState("")
     const [fullNameError, setFullNameError] = useState("")
-
-    const router = useRouter()
 
     const handleSignInWithGoogle = async () => {
         await supabase.auth.signInWithOAuth({
@@ -98,7 +100,7 @@ export default function SignupForm() {
                 fullName
             })
 
-            router.push('/profiles')
+            onSuccess()
         } catch (error) {
             setErrorMsg("Something went wrong.")
             setProcessingAccountCreation(false)

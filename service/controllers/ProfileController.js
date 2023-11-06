@@ -59,8 +59,7 @@ class ProfileController {
                 }
             )
 
-
-            return res.status(201).send(response?.data[0]?.id)
+            return res.status(201).send(response?.data[0])
         } catch (error) {
             return res.status(400).send({ message: "Something went wrong" })
         }

@@ -22,8 +22,6 @@ export default class ProfileHandler {
 
         const response = await axios.post(`/api/profiles`, payload, headers)
 
-        localStorage.setItem('currentProfileID', "22")
-
         return response.data
     }
 
