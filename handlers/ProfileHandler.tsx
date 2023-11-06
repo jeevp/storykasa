@@ -1,6 +1,7 @@
 import axios from "axios"
 import generateHeaders from "@/handlers/generateHeaders";
 import {STK_ACCESS_TOKEN} from "@/config";
+import Profile from "@/models/Profile";
 
 export default class ProfileHandler {
     static async fetchProfiles() {
@@ -20,9 +21,14 @@ export default class ProfileHandler {
 
         const headers = generateHeaders()
 
+
         const response = await axios.post(`/api/profiles`, payload, headers)
 
-        return response.data
+        return new Profile({
+            profileName: response.data.profile_name,
+            profileId: response.data.profile_id,
+            avatarUrl: response.data.avatar_url
+        })
     }
 
     static async updateProfile(

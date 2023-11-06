@@ -1,46 +1,51 @@
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKButton from "@/components/STKButton/STKButton";
-import {Avatar, Badge, Divider} from "@mui/material";
-import Image from "next/image";
-import Link from "next/link";
+import {Avatar, Badge} from "@mui/material";
+import Profile from "@/models/Profile"
 import STKCard from "@/components/STKCard/STKCard";
 import ImageUploading, {ImageListType} from "react-images-uploading";
 import {green600, red600} from "@/assets/colorPallet/colors";
 import {PencilSimple, UserPlus, X} from "@phosphor-icons/react";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import useDevice from "@/customHooks/useDevice";
 import {resizeImage} from "@/lib/utils";
-import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION, STK_PROFILE_ID} from "@/config";
+import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION} from "@/config";
 import StorageHandler from "@/handlers/StorageHandler";
 import ProfileHandler from "@/handlers/ProfileHandler";
 import ProfileContext from "@/contexts/ProfileContext";
 
 interface ProfileCreationFormProps {
-    profileId?: string,
-    avatarUrl?: string,
+    profile?: Profile | any,
     onSuccess?: () => void
 }
 
 export default function ProfileCreationForm({
-    profileId,
-    avatarUrl,
+    profile,
     onSuccess = () => ({})
 }: ProfileCreationFormProps) {
     // States
     const [loading, setLoading] = useState(false)
-    const [profileName, setProfileName] = useState("")
-    const [images, setImages] = useState(
-        profileId ? [{ dataURL: avatarUrl } as any] : []
-    )
+    const [profileName, setProfileName] = useState<string>("")
+    const [images, setImages] = useState<Array<any>>([])
 
     // Contexts
     const {
-        setCurrentProfileId,
-        setCurrentProfile
+        setCurrentProfile,
+        currentProfileId
     } = useContext(ProfileContext) as any
 
     // Hooks
     const { onMobile } = useDevice()
+
+    // Watchers
+    useEffect(() => {
+        if (profile) {
+            setProfileName(String(profile?.profileName))
+            if (profile.avatarUrl) {
+                setImages([{ dataURL: profile?.avatarUrl }])
+            }
+        }
+    }, [profile]);
 
     // Methods
     const handleProfileNameOnChange = (name: string) => {
@@ -74,25 +79,24 @@ export default function ProfileCreationForm({
                 payload.avatarUrl = await StorageHandler.uploadFile(avatarFormData)
             }
 
-
-            if (profileId) {
-                await ProfileHandler.updateProfile({ profileId }, {
+            if (profile?.profileId) {
+                await ProfileHandler.updateProfile({ profileId: profile.profileId }, {
                     // @ts-ignore
                     name: payload.profileName,
                     // @ts-ignore
                     avatarUrl: payload.avatarUrl
                 })
             } else {
-                const createdProfile = await ProfileHandler.createProfile({
+                const createdProfile = await ProfileHandler.updateProfile({
+                    profileId: currentProfileId
+                }, {
                     // @ts-ignore
                     name: payload.profileName,
                     // @ts-ignore
                     avatarUrl: payload.avatarUrl
                 })
 
-                setCurrentProfileId(createdProfile?.profile_id)
                 setCurrentProfile(createdProfile)
-                localStorage.setItem(STK_PROFILE_ID, createdProfile?.profile_id)
             }
 
             onSuccess()
@@ -106,11 +110,10 @@ export default function ProfileCreationForm({
     }
 
 
-
     return (
         <STKCard>
             <form onSubmit={handleProfileCreation} className="p-6">
-                <div className="flex items-center flex-col lg:flex-row flex-col-reverse">
+                <div className="flex items-center flex-col lg:flex-row">
                     <ImageUploading
                         multiple
                         value={images}
@@ -185,7 +188,7 @@ export default function ProfileCreationForm({
                             </div>
                         )}
                     </ImageUploading>
-                    <div className="mr-0 lg:mr-4 mt-4 lg:mt-0 w-full lg:w-auto ml-4">
+                    <div className="mr-0 lg:mr-4 mt-4 lg:mt-0 w-full lg:w-auto lg:ml-4">
                         <label className="font-semibold">
                             Profile name
                         </label>

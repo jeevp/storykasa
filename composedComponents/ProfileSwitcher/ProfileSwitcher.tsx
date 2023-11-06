@@ -10,6 +10,7 @@ import {STK_PROFILE_ID} from "@/config";
 import ProfileCard from "@/composedComponents/ProfileCard/ProfileCard";
 import STKCard from "@/components/STKCard/STKCard";
 import useDevice from "@/customHooks/useDevice";
+import {MAX_PROFILES_ALLOWED} from "@/models/Profile";
 
 export default function ProfileSwitcher({ profiles, managing }: { profiles: Profile[], managing: boolean }) {
     // Context
@@ -71,7 +72,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
                     </div>
                 ))}
 
-                {managing && !editing && (
+                {managing && !editing && profiles?.length < MAX_PROFILES_ALLOWED ? (
                     <div className="mr-0 lg:mr-4 mb-4 lg:mb-0 w-full lg:w-auto">
                         <STKCard color="transparent">
                             <div
@@ -88,7 +89,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
                             </div>
                         </STKCard>
                     </div>
-                )}
+                ): null}
             </div>
 
             {managing && editing && !profileToEdit && !profiles.length && (

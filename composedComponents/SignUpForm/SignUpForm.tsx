@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { useState } from 'react'
+import {useContext, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKButton from "@/components/STKButton/STKButton";
@@ -9,6 +9,7 @@ import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import Validator from "@/utils/Validator";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import ProfileContext from "@/contexts/ProfileContext";
 
 const supabase = createClientComponentClient<Database>()
 
@@ -17,6 +18,7 @@ interface SignupFormProps {
 }
 
 export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) {
+    // States
     const [processingAccountCreation, setProcessingAccountCreation] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
     const [email, setEmail] = useState("")
@@ -26,6 +28,13 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
     const [passwordError, setPasswordError] = useState("")
     const [fullNameError, setFullNameError] = useState("")
 
+    // Contexts
+    const {
+        setCurrentProfileId,
+        setCurrentProfile
+    } = useContext(ProfileContext) as any
+
+    // Methods
     const handleSignInWithGoogle = async () => {
         await supabase.auth.signInWithOAuth({
             provider: 'google',
@@ -94,11 +103,14 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
             if (!validateSignUpFormFields()) return
 
             setProcessingAccountCreation(true)
-            await AuthHandler.signUp({
+            const account = await AuthHandler.signUp({
                 email,
                 password,
                 fullName
             })
+
+            setCurrentProfileId(account?.profile?.profileId)
+            setCurrentProfile(account?.profile)
 
             onSuccess()
         } catch (error) {

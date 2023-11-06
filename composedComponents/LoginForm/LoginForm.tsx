@@ -10,6 +10,7 @@ import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import ToolsContext from "@/contexts/ToolsContext";
+import ProfileContext from "@/contexts/ProfileContext";
 
 const supabase = createClientComponentClient<Database>()
 
@@ -19,6 +20,7 @@ interface LoginFormProps {
 export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: LoginFormProps) {
     // Contexts
     const { setPendoTrackingEnabled } = useContext(ToolsContext)
+    const { setCurrentProfile } = useContext(ProfileContext)
 
     // Hooks
     const router = useRouter()
@@ -41,9 +43,11 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
         try {
             setLoading(true)
 
-            await AuthHandler.signInWithPassword({ email, password })
+            const account = await AuthHandler.signInWithPassword({ email, password })
             setPendoTrackingEnabled(true)
-            await router.push('/profiles')
+
+            setCurrentProfile(account?.defaultProfile)
+            await router.push('/discover')
         } catch(error) {
             setErrorMsg("Something went wrong")
             setLoading(false)

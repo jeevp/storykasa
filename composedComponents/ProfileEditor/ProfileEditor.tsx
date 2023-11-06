@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import ImageUploading, {ImageListType} from 'react-images-uploading'
 import {ArrowCircleRight, PencilSimple, UserPlus, X,} from '@phosphor-icons/react'
 import {Profile} from '@/lib/database-helpers.types'
@@ -12,8 +12,9 @@ import StorageHandler from "@/handlers/StorageHandler";
 import FeedbackDialog from "@/composedComponents/FeedbackDialog/FeedbackDialog";
 import {useRouter} from "next/navigation";
 import {green600, red600} from "@/assets/colorPallet/colors";
-import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION} from "@/config";
+import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION, STK_PROFILE_ID} from "@/config";
 import useDevice from "@/customHooks/useDevice";
+import ProfileContext from "@/contexts/ProfileContext";
 
 export default function ProfileEditor({
     profileToEdit,
@@ -23,11 +24,16 @@ export default function ProfileEditor({
     // Hooks
     const router = useRouter()
     const { onMobile } = useDevice()
+
+    // Contexts
+    const { setCurrentProfile, setCurrentProfileId } = useContext(ProfileContext)
+
     // States
     const [profileName, setProfileName] = useState('')
     const [loading, setLoading] = useState(false)
     const [showFeedbackDialog, setShowFeedbackDialog] = useState(false)
     const [processingRouteChange, setProcessingRouteChange] = useState(false)
+    const [createdProfile, setCreatedProfile] = useState<Profile | any>(null)
     const [images, setImages] = useState(
         profileToEdit ? [{ dataURL: profileToEdit.avatar_url } as any] : []
     )
@@ -82,12 +88,15 @@ export default function ProfileEditor({
                     avatarUrl: payload.avatarUrl
                 })
             } else {
-                await ProfileHandler.createProfile({
+                const _createdProfile = await ProfileHandler.createProfile({
                     // @ts-ignore
                     name: payload.profileName,
                     // @ts-ignore
                     avatarUrl: payload.avatarUrl
                 })
+
+
+                setCreatedProfile(_createdProfile)
             }
 
             setShowFeedbackDialog(true)
@@ -102,7 +111,11 @@ export default function ProfileEditor({
 
     const goToDiscoveryPage = async () => {
         setProcessingRouteChange(true)
-        await router.push("/library")
+        setCurrentProfile(createdProfile)
+        setCurrentProfileId(createdProfile?.profileId)
+        localStorage.setItem(STK_PROFILE_ID, createdProfile?.profileId)
+
+        await router.push("/discover")
     }
 
     const feedbackDialogTitle = `${profileToEdit ? 'Update' : 'Create'} profile for ${profileName}`
