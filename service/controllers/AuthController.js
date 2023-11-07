@@ -1,4 +1,5 @@
 const supabase = require("../supabase")
+const ProfileServiceHandler = require("../handlers/ProfileServiceHandler");
 
 class AuthController {
     static async signUp(req, res) {
@@ -26,9 +27,16 @@ class AuthController {
                 access_token: data.session.access_token
             })
 
-            return res.status(200).send(data)
+            // Create default profile
+            const profile = await ProfileServiceHandler.createProfile({
+                name: fullName
+            }, { accessToken: data.session.access_token })
+
+            return res.status(200).send({
+                ...data,
+                profile
+            })
         } catch (error) {
-            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
@@ -48,13 +56,23 @@ class AuthController {
                 password,
             })
 
+            const defaultProfile = await ProfileServiceHandler.getDefaultAccountProfile({
+                accessToken: data.session.access_token
+            })
+
+            console.log({ defaultProfile })
+
             await supabase.auth.setSession({
                 refresh_token: data.session.refresh_token,
                 access_token: data.session.access_token
             })
 
-            return res.status(200).send(data)
+            return res.status(200).send({
+                ...data,
+                defaultProfile
+            })
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong." })
         }
     }

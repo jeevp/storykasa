@@ -1,6 +1,8 @@
 const supabase = require('../../service/supabase');
 const generateSupabaseHeaders = require("../../service/utils/generateSupabaseHeaders")
 const axios = require("axios");
+const ProfileServiceHandler = require("../handlers/ProfileServiceHandler");
+const ProfileValidator = require("../validators/ProfileValidator")
 
 class ProfileController {
     static async getProfiles(req, res) {
@@ -35,33 +37,15 @@ class ProfileController {
                 })
             }
 
-            const { data: { user }} = await supabase.auth.getUser(req.accessToken)
+            await ProfileValidator.validateMaxProfiles(req, res)
 
-            if (!user) return res.status(404).send({
-                message: "User not found"
-            })
+            const profile = await ProfileServiceHandler.createProfile({
+                name, avatarUrl
+            }, { accessToken: req.accessToken })
 
-            const attributes = {
-                account_id: user.id,
-                profile_name: name
-            }
-
-            if (avatarUrl) attributes.avatar_url = avatarUrl
-
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
-                attributes,
-                {
-                    params: {
-                        select: "*"
-                    },
-                    headers: generateSupabaseHeaders(req.accessToken)
-                }
-            )
-
-
-            return res.status(201).send(response?.data[0]?.id)
+            return res.status(201).send(profile)
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

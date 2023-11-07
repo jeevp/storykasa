@@ -14,7 +14,7 @@ const withoutAuth = (WrappedComponent: any) => {
         const accessToken = localStorage.getItem(STK_ACCESS_TOKEN)
 
         if (accessToken || currentUser) {
-          router.push('/library')
+          router.push('/discover')
         } else {
           setIsValidationComplete(true)
         }

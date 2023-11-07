@@ -1,4 +1,5 @@
 import axios from "axios"
+import Profile from "@/models/Profile"
 import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN, STK_PROFILE_ID } from "@/config"
 import identifyPendoVisitor from "@/tools/Pendo/identifyPendoVisitor";
 
@@ -16,10 +17,18 @@ export default class AuthHandler {
 
         localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)
         localStorage.setItem(STK_REFRESH_TOKEN, response?.data?.session?.refresh_token)
+        localStorage.setItem(STK_PROFILE_ID, response?.data?.profile?.profile_id)
 
         identifyPendoVisitor({ userId: response.data.user.id })
 
-        return response.data
+        return {
+            ...response.data,
+            profile: new Profile({
+                profileName: response.data.profile.profile_name,
+                profileId: response.data.profile.profile_id,
+                avatarUrl: response.data.profile.avatar_url
+            })
+        }
     }
 
     static async signInWithPassword({ email, password }: { email: string, password: string }) {
@@ -30,8 +39,7 @@ export default class AuthHandler {
 
         localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)
         localStorage.setItem(STK_REFRESH_TOKEN, response?.data?.session?.refresh_token)
-
-        identifyPendoVisitor({ userId: response.data.user.id })
+        localStorage.setItem(STK_PROFILE_ID, response?.data?.defaultProfile?.profile_id)
 
         return response.data
     }

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { useState } from 'react'
+import {useContext, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKButton from "@/components/STKButton/STKButton";
@@ -9,10 +9,16 @@ import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import Validator from "@/utils/Validator";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import ProfileContext from "@/contexts/ProfileContext";
 
 const supabase = createClientComponentClient<Database>()
 
-export default function SignupForm() {
+interface SignupFormProps {
+    onSuccess?: () => void
+}
+
+export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) {
+    // States
     const [processingAccountCreation, setProcessingAccountCreation] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
     const [email, setEmail] = useState("")
@@ -22,8 +28,13 @@ export default function SignupForm() {
     const [passwordError, setPasswordError] = useState("")
     const [fullNameError, setFullNameError] = useState("")
 
-    const router = useRouter()
+    // Contexts
+    const {
+        setCurrentProfileId,
+        setCurrentProfile
+    } = useContext(ProfileContext) as any
 
+    // Methods
     const handleSignInWithGoogle = async () => {
         await supabase.auth.signInWithOAuth({
             provider: 'google',
@@ -92,13 +103,16 @@ export default function SignupForm() {
             if (!validateSignUpFormFields()) return
 
             setProcessingAccountCreation(true)
-            await AuthHandler.signUp({
+            const account = await AuthHandler.signUp({
                 email,
                 password,
                 fullName
             })
 
-            router.push('/profiles')
+            setCurrentProfileId(account?.profile?.profileId)
+            setCurrentProfile(account?.profile)
+
+            onSuccess()
         } catch (error) {
             setErrorMsg("Something went wrong.")
             setProcessingAccountCreation(false)
@@ -113,7 +127,7 @@ export default function SignupForm() {
                     <div className="mt-4">
                        <STKTextField
                        fluid
-                       placeholder="Enter account name"
+                       placeholder="Enter full name or organization name"
                        value={fullName}
                        error={Boolean(fullNameError)}
                        helperText={fullNameError}
@@ -125,7 +139,7 @@ export default function SignupForm() {
                     <div className="mt-4">
                         <STKTextField
                         fluid
-                        placeholder="Enter email address"
+                        placeholder="Enter a valid email address"
                         value={email}
                         error={Boolean(emailError)}
                         helperText={emailError}
@@ -137,7 +151,7 @@ export default function SignupForm() {
                     <div className="mt-4">
                         <STKTextField
                         fluid
-                        placeholder="Enter password"
+                        placeholder="Enter a password"
                         value={password}
                         type="password"
                         error={Boolean(passwordError)}

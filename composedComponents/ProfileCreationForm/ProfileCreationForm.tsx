@@ -1,61 +1,61 @@
-import {useContext, useEffect, useState} from 'react'
-import ImageUploading, {ImageListType} from 'react-images-uploading'
-import {ArrowCircleRight, PencilSimple, UserPlus, X,} from '@phosphor-icons/react'
-import {Profile} from '@/lib/database-helpers.types'
-import {resizeImage} from '@/lib/utils'
-import STKCard from "@/components/STKCard/STKCard";
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKButton from "@/components/STKButton/STKButton";
 import {Avatar, Badge} from "@mui/material";
-import ProfileHandler from "@/handlers/ProfileHandler";
-import StorageHandler from "@/handlers/StorageHandler";
-import FeedbackDialog from "@/composedComponents/FeedbackDialog/FeedbackDialog";
-import {useRouter} from "next/navigation";
+import Profile from "@/models/Profile"
+import STKCard from "@/components/STKCard/STKCard";
+import ImageUploading, {ImageListType} from "react-images-uploading";
 import {green600, red600} from "@/assets/colorPallet/colors";
-import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION, STK_PROFILE_ID} from "@/config";
+import {PencilSimple, UserPlus, X} from "@phosphor-icons/react";
+import {useContext, useEffect, useState} from "react";
 import useDevice from "@/customHooks/useDevice";
+import {resizeImage} from "@/lib/utils";
+import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION} from "@/config";
+import StorageHandler from "@/handlers/StorageHandler";
+import ProfileHandler from "@/handlers/ProfileHandler";
 import ProfileContext from "@/contexts/ProfileContext";
 
-export default function ProfileEditor({
-    profileToEdit,
-}: {
-    profileToEdit?: Profile | null
-}) {
-    // Hooks
-    const router = useRouter()
-    const { onMobile } = useDevice()
+interface ProfileCreationFormProps {
+    profile?: Profile | any,
+    onSuccess?: () => void
+}
+
+export default function ProfileCreationForm({
+    profile,
+    onSuccess = () => ({})
+}: ProfileCreationFormProps) {
+    // States
+    const [loading, setLoading] = useState(false)
+    const [profileName, setProfileName] = useState<string>("")
+    const [images, setImages] = useState<Array<any>>([])
 
     // Contexts
-    const { setCurrentProfile, setCurrentProfileId } = useContext(ProfileContext)
+    const {
+        setCurrentProfile,
+        currentProfileId
+    } = useContext(ProfileContext) as any
 
-    // States
-    const [profileName, setProfileName] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [showFeedbackDialog, setShowFeedbackDialog] = useState(false)
-    const [processingRouteChange, setProcessingRouteChange] = useState(false)
-    const [createdProfile, setCreatedProfile] = useState<Profile | any>(null)
-    const [images, setImages] = useState(
-        profileToEdit ? [{ dataURL: profileToEdit.avatar_url } as any] : []
-    )
-
+    // Hooks
+    const { onMobile } = useDevice()
 
     // Watchers
     useEffect(() => {
-        if (profileToEdit) setProfileName(profileToEdit.profile_name)
-    }, [profileToEdit]);
+        if (profile) {
+            setProfileName(String(profile?.profileName))
+            if (profile.avatarUrl) {
+                setImages([{ dataURL: profile?.avatarUrl }])
+            }
+        }
+    }, [profile]);
 
     // Methods
-    const onChange = (imageList: ImageListType) => {
-        setImages(imageList as never[])
+    const handleProfileNameOnChange = (name: string) => {
+        setProfileName(name)
     }
 
-    const upsertProfile = async () => {
+    const handleProfileCreation = async () => {
         try {
             setLoading(true)
             const payload = {}
-            let profileId = null
-            if (profileToEdit) profileId = profileToEdit.profile_id
-
             if (profileName && profileName!.length > 0) {
                 // @ts-ignore
                 payload["profileName"] = profileName
@@ -79,65 +79,41 @@ export default function ProfileEditor({
                 payload.avatarUrl = await StorageHandler.uploadFile(avatarFormData)
             }
 
-
-            if (profileId) {
-                await ProfileHandler.updateProfile({ profileId }, {
+            if (profile?.profileId) {
+                await ProfileHandler.updateProfile({ profileId: profile.profileId }, {
                     // @ts-ignore
                     name: payload.profileName,
                     // @ts-ignore
                     avatarUrl: payload.avatarUrl
                 })
             } else {
-                const _createdProfile = await ProfileHandler.createProfile({
+                const createdProfile = await ProfileHandler.updateProfile({
+                    profileId: currentProfileId
+                }, {
                     // @ts-ignore
                     name: payload.profileName,
                     // @ts-ignore
                     avatarUrl: payload.avatarUrl
                 })
 
-
-                setCreatedProfile(_createdProfile)
+                setCurrentProfile(createdProfile)
             }
 
-            setShowFeedbackDialog(true)
+            onSuccess()
         } finally {
             setLoading(false)
         }
     }
 
-    const handleProfileNameOnChange = (name: string) => {
-        setProfileName(name)
+    const onChange = (imageList: ImageListType) => {
+        setImages(imageList as never[])
     }
 
-    const goToDiscoveryPage = async () => {
-        setProcessingRouteChange(true)
-        setCurrentProfile(createdProfile)
-        setCurrentProfileId(createdProfile?.profileId)
-        localStorage.setItem(STK_PROFILE_ID, createdProfile?.profileId)
-
-        await router.push("/discover")
-    }
-
-    const feedbackDialogTitle = `${profileToEdit ? 'Update' : 'Create'} profile for ${profileName}`
-    const feedbackDialogText = "Your profile is now up to date, and you are ready to use StoryKasa"
 
     return (
         <STKCard>
-            <div className="p-6">
-                <div className="flex items-center flex-col lg:flex-row flex-col-reverse">
-                    <div className="mr-0 lg:mr-4 mt-4 lg:mt-0 w-full lg:w-auto">
-                        <label className="font-semibold">
-                            Profile name
-                        </label>
-                        <div className="mt-2">
-                            <STKTextField
-                                value={profileName}
-                                fluid={onMobile}
-                                onChange={handleProfileNameOnChange}
-                            />
-                        </div>
-                    </div>
-
+            <form onSubmit={handleProfileCreation} className="p-6">
+                <div className="flex items-center flex-col lg:flex-row">
                     <ImageUploading
                         multiple
                         value={images}
@@ -212,27 +188,29 @@ export default function ProfileEditor({
                             </div>
                         )}
                     </ImageUploading>
+                    <div className="mr-0 lg:mr-4 mt-4 lg:mt-0 w-full lg:w-auto lg:ml-4">
+                        <label className="font-semibold">
+                            Profile name
+                        </label>
+                        <div className="mt-2">
+                            <STKTextField
+                                value={profileName}
+                                fluid={onMobile}
+                                onChange={handleProfileNameOnChange}
+                            />
+                        </div>
+                    </div>
                 </div>
-
-                <div className="mt-4">
+                <div className="mt-4 flex justify-end">
                     <STKButton
                         startIcon={<UserPlus size={20} weight="duotone" />}
                         loading={loading}
                         fullWidth={onMobile}
-                        onClick={upsertProfile}>
+                        onClick={handleProfileCreation}>
                         Save profile
                     </STKButton>
                 </div>
-            </div>
-            <FeedbackDialog
-            open={showFeedbackDialog}
-            onClose={() => setShowFeedbackDialog(false)}
-            title={feedbackDialogTitle}
-            text={feedbackDialogText}
-            loading={processingRouteChange}
-            actionButtonStartIcon={() => <ArrowCircleRight size="20" />}
-            actionButtonText="Enter StoryKasa"
-            onAction={goToDiscoveryPage}/>
+            </form>
         </STKCard>
     )
 }

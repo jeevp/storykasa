@@ -83,7 +83,7 @@ export default function RecordButton({ onClick     = () => ({}) }: STKButtonTabs
                     onClick={() => onClick()}
                     variant="contained"
                     startIcon={<Microphone size={24} weight="duotone" />}>
-                    Add a story
+                    Create a story
                 </StyledButton>
             )}
         </ThemeProvider>
