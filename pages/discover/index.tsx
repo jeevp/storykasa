@@ -9,6 +9,7 @@ import StoryHandler from "@/handlers/StoryHandler";
 import withProfile from "@/HOC/withProfile";
 import withAuth from "@/HOC/withAuth";
 import Story from "@/models/Story";
+import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
 
 export const dynamic = 'force-dynamic'
 
@@ -17,10 +18,13 @@ function Discover() {
     const [stories, setStories] = useState<Story[]>([])
     const [selectedIndex, setSelectedIndex] = useState<number>()
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const loadStories = async () => {
+        setLoading(true)
         const publicStories: Story[] = await StoryHandler.fetchPublicStories()
         setStories(publicStories)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -34,12 +38,20 @@ function Discover() {
 
     return (
         <PageWrapper path="discover">
-            <h2 className="m-0">
-                Discover stories
-            </h2>
+            <div>
+                <h2 className="m-0">
+                    Discover stories
+                </h2>
+                <div className="mt-4 max-w-2xl">
+                    <p>
+                        Browse the StoryKasa collection of stories from around the world, recorded and narrated by
+                        real people. Filter by language or age group and click a story to start listening.
+                    </p>
+                </div>
+            </div>
 
             <div className="flex sm:w-full mt-4 pb-32 lg:pb-0">
-                {stories && (
+                {!loading && stories ? (
                     <AnimatePresence mode="wait">
                         (
                         <motion.div
@@ -64,7 +76,16 @@ function Discover() {
                             </div>
                         </motion.div>
                     </AnimatePresence>
+                ): (
+                    <div className="w-full mt-10">
+                        {[1,2,3].map((_, index) => (
+                            <div className="w-full first:mt-0 mt-2" key={index}>
+                                <StoryCardSkeleton />
+                            </div>
+                        ))}
+                    </div>
                 )}
+
                 {selectedIndex !== undefined && (
                     <div className="hidden lg:flex lg:w-full lg:pl-8">
                         <StoryDetails story={stories[selectedIndex]} editionNotAllowed></StoryDetails>

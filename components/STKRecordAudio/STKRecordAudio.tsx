@@ -10,7 +10,6 @@ import Stop from "@/assets/icons/iconsJS/Stop";
 import Formatter from "@/utils/Formatter";
 import STKAudioWave from "@/components/STKAudioWave/STKAudioWave";
 import STKLoading from "@/components/STKLoading/STKLoading";
-import {Howl} from "howler";
 
 interface STKRecordAudioProps {
     onComplete: Function,

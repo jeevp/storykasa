@@ -5,6 +5,7 @@ import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKButton from "@/components/STKButton/STKButton";
 import AccountSideDrawer from "@/composedComponents/AccountSideDrawer/AccountSideDrawer";
 import { ArrowSquareRight } from '@phosphor-icons/react'
+import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 
 export default function AccountDetails() {
     const router = useRouter()

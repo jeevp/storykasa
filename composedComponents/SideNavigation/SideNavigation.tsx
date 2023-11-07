@@ -10,6 +10,7 @@ import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {useRouter} from "next/router";
 import {neutral800} from "@/assets/colorPallet/colors";
 import RecordButton from "@/composedComponents/RecordButton/RecordButton";
+import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 
 const navigationOptions = [
     { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
@@ -23,39 +24,22 @@ export default function SideNavigation() {
     const route = useRouter()
 
     // Context
-    const { currentProfileId } = useContext(ProfileContext) as any
+    const { currentProfile } = useContext(ProfileContext) as any
 
+    console.log({ currentProfile })
     // States
-    const [currentProfile, setCurrentProfile] = useState<any>(null)
     const [profileOptions, setProfileOptions] = useState<Profile[]>([])
     const [selectedNavigationOption, setSelectedNavigationOption] = useState<Object>({})
 
     // Mount
     useEffect(() => {
-        loadProfiles()
         // @ts-ignore
         setSelectedNavigationOption(navigationOptions.find((navigationOption) => {
             return navigationOption.pathname === pathname
         }))
     }, [])
 
-    // Watchers
-    useEffect(() => {
-        if (profileOptions?.length > 0) {
-            const _currentProfile = profileOptions.find(
-                (p) => p.profile_id === currentProfileId
-            )
-
-            setCurrentProfile(_currentProfile)
-        }
-    }, [profileOptions]);
-
     // Methods
-    const loadProfiles = async () => {
-        const profiles: Profile[] = await ProfileHandler.fetchProfiles()
-        setProfileOptions(profiles)
-    }
-
     const handleTabOnChange = (selectedTab: any) => {
         route.push(selectedTab.pathname)
     }
@@ -66,7 +50,6 @@ export default function SideNavigation() {
 
     return (
         <nav>
-            {currentProfile && (
                 <AnimatePresence mode="wait">
                     (
                     <motion.div
@@ -75,7 +58,11 @@ export default function SideNavigation() {
                         exit={{ x: 10, opacity: 0 }}
                         key={currentProfile?.profile_id}
                     >
-                        <h2 className="m-0 text-base hidden lg:block">Hi, {currentProfile?.profile_name}!</h2>
+                        {!currentProfile ? (
+                            <STKSkeleton width="70%" height="20px" />
+                        ) : (
+                            <h2 className="m-0 text-base hidden lg:block">Hi, {currentProfile?.profile_name}!</h2>
+                        )}
 
                         <div
                         style={{ boxShadow: onMobile ? "1px 1px 8px #00000024" : '' }}
@@ -95,7 +82,6 @@ export default function SideNavigation() {
                         </div>
                     </motion.div>
                 </AnimatePresence>
-            )}
         </nav>
     )
 }

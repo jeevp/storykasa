@@ -13,6 +13,9 @@ import StoryHandler from "@/handlers/StoryHandler";
 import withAuth from "@/HOC/withAuth";
 import withProfile from "@/HOC/withProfile";
 import Story from "@/models/Story";
+import STKLoading from "@/components/STKLoading/STKLoading";
+import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
+import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
 
 function Library() {
     const { onMobile } = useDevice()
@@ -50,17 +53,45 @@ function Library() {
 
     return (
         <PageWrapper path="library">
-            <div className="flex items-center">
-                <h2 className="m-0 text-2xl">
-                    My story library
-                    <span>
+            <div>
+                <div className="flex items-center">
+                    <h2 className="m-0 text-2xl">
+                        My story library
+                        <span>
                         <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles.">
 
                         </STKTooltip>
                     </span>
-                </h2>
+                    </h2>
+                </div>
+                <div className="mt-4 max-w-2xl">
+                    {!loaded ? (
+                        <div>
+                            <STKSkeleton width="500px" height="20px" />
+                            <div className="mt-1">
+                                <STKSkeleton width="300px" height="20px" />
+                            </div>
+                        </div>
+                    ) : (
+                     <>
+                         {stories.length ? (
+                             <p>
+                                 These stories can only be seen by other profiles in your account. This is the home for
+                                 the stories you record.
+                             </p>
+                         ) : (
+                             <p>
+                                 Your library is empty, but you can change that! It’s easy to
+                                 <span className="font-semibold underline-offset-0">
+                                <Link href="/record"> create your own story</Link>
+                            </span>.
+                             </p>
+                         )}
+                     </>
+                    )}
+                </div>
             </div>
-            {loaded && (
+            {loaded ? (
                 <div className="flex sm:w-full mt-4 pb-32 lg:pb-0">
                     {stories.length ? (
                         <AnimatePresence mode="wait">
@@ -100,27 +131,7 @@ function Library() {
 
                             </motion.div>
                         </AnimatePresence>
-                    ) : (
-                        <div className="flex flex-col mt-4">
-                            <div>
-                                <div>
-                                    <div>
-                                        No stories yet...{' '}
-                                    </div>
-                                    <p>
-                                        Get started by{' '}
-                                        <Link
-                                            color="grass"
-                                            href="/record"
-                                        >
-                                            adding your first story
-                                        </Link>{' '}
-                                        to your personal library.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    ) : null}
 
                     {selectedIndex !== undefined && (
                         <div
@@ -139,6 +150,19 @@ function Library() {
                             </AnimatePresence>
                         </div>
                     )}
+                </div>
+            ) : (
+                <div className="w-full mt-4">
+                    <div>
+                        <STKSkeleton width="100%" height="56px" />
+                    </div>
+                    <div className="mt-10">
+                        {[1,2,3].map((_, index) => (
+                            <div className="w-full first:mt-0 mt-2" key={index}>
+                                <StoryCardSkeleton />
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
             <StoryDetailsDialog
