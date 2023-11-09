@@ -77,7 +77,7 @@ function Discover() {
                             {stories.length > 0 && (
                                 <div className="w-full">
                                     <STKTextField
-                                        placeholder="Search in my library..."
+                                        placeholder="Search a story..."
                                         value={filterQuery}
                                         fluid
                                         startAdornment={<MagnifyingGlass size="20" />}
