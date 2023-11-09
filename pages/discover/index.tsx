@@ -10,6 +10,9 @@ import withProfile from "@/HOC/withProfile";
 import withAuth from "@/HOC/withAuth";
 import Story from "@/models/Story";
 import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
+import STKTextField from "@/components/STKTextField/STKTextField";
+import {MagnifyingGlass} from "@phosphor-icons/react";
+import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 
 export const dynamic = 'force-dynamic'
 
@@ -19,6 +22,7 @@ function Discover() {
     const [selectedIndex, setSelectedIndex] = useState<number>()
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [filterQuery, setFilterQuery] = useState('')
 
     const loadStories = async () => {
         setLoading(true)
@@ -31,10 +35,20 @@ function Discover() {
         loadStories()
     }, [])
 
+    const handleFilterQueryChange = (value: string) => {
+        setFilterQuery(value)
+    }
+
     const handleStoryClick = (index: number) => {
         setSelectedIndex(index)
         if (onMobile) setShowStoryDetailsDialog(true)
     }
+
+    const filtered = stories
+        ? stories.filter((story) =>
+            story.title.toLowerCase().includes(filterQuery.toLowerCase())
+        )
+        : []
 
     return (
         <PageWrapper path="discover">
@@ -60,8 +74,19 @@ function Discover() {
                             exit={{ x: 10, opacity: 0 }}
                             key={stories.length}
                         >
+                            {stories.length > 0 && (
+                                <div className="w-full">
+                                    <STKTextField
+                                        placeholder="Search in my library..."
+                                        value={filterQuery}
+                                        fluid
+                                        startAdornment={<MagnifyingGlass size="20" />}
+                                        onChange={handleFilterQueryChange}
+                                    />
+                                </div>
+                            )}
                             <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "75vh" }}>
-                            {stories?.map((story: Story, index: number) => (
+                            {filtered?.map((story: Story, index: number) => (
                                     <div
                                         className="mt-2 first:mt-0"
                                         key={story?.storyId}
@@ -77,12 +102,17 @@ function Discover() {
                         </motion.div>
                     </AnimatePresence>
                 ): (
-                    <div className="w-full mt-10">
-                        {[1,2,3].map((_, index) => (
-                            <div className="w-full first:mt-0 mt-2" key={index}>
-                                <StoryCardSkeleton />
-                            </div>
-                        ))}
+                    <div className="w-full mt-4">
+                        <div>
+                            <STKSkeleton width="100%" height="56px" />
+                        </div>
+                        <div className="mt-10">
+                            {[1,2,3].map((_, index) => (
+                                <div className="w-full first:mt-0 mt-2" key={index}>
+                                    <StoryCardSkeleton />
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
 

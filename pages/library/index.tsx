@@ -13,7 +13,6 @@ import StoryHandler from "@/handlers/StoryHandler";
 import withAuth from "@/HOC/withAuth";
 import withProfile from "@/HOC/withProfile";
 import Story from "@/models/Story";
-import STKLoading from "@/components/STKLoading/STKLoading";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
 
