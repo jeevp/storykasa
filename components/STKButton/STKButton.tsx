@@ -1,6 +1,6 @@
 import {Button, ButtonProps, IconButton, styled, ThemeProvider} from "@mui/material";
 import STKLoading from "@/components/STKLoading/STKLoading";
-import {green600} from "@/assets/colorPallet/colors";
+import {green600, neutral800} from "@/assets/colorPallet/colors";
 import theme from "@/components/theme";
 
 
@@ -55,6 +55,23 @@ export default function STKButton({
     alignStart,
     onClick = () => ({})
 }: STKButtonProps) {
+    const isThemeColor = color.includes('.');
+
+    const buttonSx = isThemeColor ? {
+        backgroundColor: (theme: any) => theme.palette[color.split('.')[0]][color.split('.')[1]],
+        '&:hover': {
+            backgroundColor: (theme: any) => theme.palette[color.split('.')[0]].dark,
+        },
+        textTransform: "none",
+        height: slim ? "30px" : height || "40px",
+        width: fullWidth ? "100%" : width || "auto",
+        color: neutral800
+    } : {
+        textTransform: "none",
+        height: slim ? "30px" : height || "40px",
+        width: fullWidth ? "100%" : width || "auto"
+    };
+
     const getLoadingColor = () => {
         if (color === "primary") {
             return "white"
@@ -82,13 +99,13 @@ export default function STKButton({
                     startIcon={loading ? <></> : startIcon}
                     endIcon={loading ? <></> : endIcon}
                     fullWidth={fullWidth}
-                    color={color as 'inherit' | 'primary' | 'secondary'}
+                    color={!isThemeColor ? color : undefined}
                     type={type as 'button' | 'submit' | 'reset'}
                     rounded={rounded}
                     alignStart={alignStart}
                     disableElevation
                     variant={variant as 'text' | 'outlined' | 'contained'}
-                    sx={{ textTransform: "none", height: slim ? "30px" : height || "40px", width: fullWidth ? "100%" : width || "auto" }}
+                    sx={buttonSx}
                     onClick={(e) => onClick(e)}>
                     {loading ? (
                         // @ts-ignore

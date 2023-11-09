@@ -1,4 +1,5 @@
 export const neutral800 = "#292524"
+export const neutral400 = "#c5c5c5"
 export const neutral300 = "#d4d4d4"
 
 export const red800 = "#991b1b"

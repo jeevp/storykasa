@@ -13,6 +13,9 @@ import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton"
 import STKTextField from "@/components/STKTextField/STKTextField";
 import {MagnifyingGlass} from "@phosphor-icons/react";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
+import STKSelect from "@/components/STKSelect/STKSelect";
+import StoryFilters from "@/composedComponents/StoryFilters/StoryFilters";
+import {Divider} from "@mui/material";
 
 export const dynamic = 'force-dynamic'
 
@@ -63,8 +66,24 @@ function Discover() {
                     </p>
                 </div>
             </div>
-
-            <div className="flex sm:w-full mt-4 pb-32 lg:pb-0">
+            {stories.length > 0 && (
+                <>
+                    <div className="w-full flex mb-10 justify-between">
+                        <div className="w-full max-w-xl">
+                            <STKTextField
+                                placeholder="Search in my library..."
+                                value={filterQuery}
+                                fluid
+                                startAdornment={<MagnifyingGlass size="20" />}
+                                onChange={handleFilterQueryChange}
+                            />
+                        </div>
+                        <StoryFilters />
+                    </div>
+                    <Divider />
+                </>
+            )}
+            <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">
                 {!loading && stories ? (
                     <AnimatePresence mode="wait">
                         (
@@ -74,18 +93,7 @@ function Discover() {
                             exit={{ x: 10, opacity: 0 }}
                             key={stories.length}
                         >
-                            {stories.length > 0 && (
-                                <div className="w-full">
-                                    <STKTextField
-                                        placeholder="Search in my library..."
-                                        value={filterQuery}
-                                        fluid
-                                        startAdornment={<MagnifyingGlass size="20" />}
-                                        onChange={handleFilterQueryChange}
-                                    />
-                                </div>
-                            )}
-                            <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "75vh" }}>
+                            <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "75vh" }}>
                             {filtered?.map((story: Story, index: number) => (
                                     <div
                                         className="mt-2 first:mt-0"
