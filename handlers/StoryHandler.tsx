@@ -74,8 +74,6 @@ export default class StoryHandler {
             params: { ...filterOptions }
         })
 
-        console.log(response.data)
-
         return response.data.map((story: any) => new Story({
             storyId: story.story_id,
             isPublic: story.is_public,
@@ -120,7 +118,6 @@ export default class StoryHandler {
     static async fetchStoriesFilters({ privateStories }: { privateStories: boolean }) {
         const headers = generateHeaders()
 
-        console.log({  })
         const response = await axios.get("/api/stories/filters", {
             ...headers,
             params: {

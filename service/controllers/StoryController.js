@@ -67,7 +67,6 @@ class StoryController {
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
-            console.log(">>>>>>>")
             const privateStories = await StoryServiceHandler.getStories({
                 narrator,
                 language,
@@ -100,7 +99,6 @@ class StoryController {
 
             const illustrations = illustrationsResponse.data
 
-            console.log({ privateStories })
             const storiesSerialized = privateStories?.map((story) => {
                 story.illustrationsURL = illustrations.filter((illustration) => {
                     return illustration?.story_id ===  story?.story_id
@@ -132,6 +130,7 @@ class StoryController {
                 language,
                 ageGroups,
                 storyLengths,
+                private: false
             }, { accessToken: req.accessToken })
             return res.status(200).send(publicStories)
         } catch (error) {
@@ -243,7 +242,7 @@ class StoryController {
             }
 
             let stories = await StoryServiceHandler.getStories({
-                private: req.query.private
+                private: req.query.private === 'true'
             }, { accessToken: req.accessToken, userId })
 
             const uniqueNarrators = new Set();
