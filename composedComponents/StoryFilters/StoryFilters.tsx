@@ -6,10 +6,11 @@ import {useStory} from "@/contexts/story/StoryContext";
 import useDevice from "@/customHooks/useDevice";
 
 interface StoryFiltersProps {
+    privateStories?: boolean
     onChange?: () => void
 }
 
-function StoryFilters({ onChange = () => ({}) }: StoryFiltersProps) {
+function StoryFilters({ privateStories, onChange = () => ({}) }: StoryFiltersProps) {
     // States
     const [showFiltersDialog, setShowFiltersDialog] = useState(false)
 
@@ -40,6 +41,7 @@ function StoryFilters({ onChange = () => ({}) }: StoryFiltersProps) {
             </STKButton>
             <StoryFiltersDialog
             active={showFiltersDialog}
+            privateStories={privateStories}
             onClose={() => setShowFiltersDialog(false)}
             onChange={() => onChange()}/>
         </div>

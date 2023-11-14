@@ -1,52 +1,59 @@
 import axios from "axios";
 import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
-import {storyLengths} from "../../models/Story";
 
 class StoryServiceHandler {
-    static async getPublicStories(filters = {
+    static async getStories(filters = {
         narrator: "",
         language: "",
         ageGroups: [],
-        storyLengths: []
-    }, { accessToken }) {
+        storyLengths: [],
+        private: false
+    }, { accessToken, userId }) {
         // Prepare query parameters for filtering
         const queryParams = {
             select: '*,profiles!inner(*)',
-            is_public: 'eq.true',
-            order: 'last_updated.desc'
         };
 
-        let ageGroups = filters.ageGroups
-        if (!(ageGroups instanceof Array)) ageGroups = [filters.ageGroups]
+        let endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`
+        if (filters?.private && userId) {
+            endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`
+            queryParams.select = '*,stories(*,profiles(*))'
+            queryParams.account_id = `eq.${userId}`
+        } else {
+            queryParams.is_public = "eq.true"
+            queryParams.order = 'last_updated.desc'
+        }
 
-        let storyLengths = filters.storyLengths
-        if (!(storyLengths instanceof Array)) storyLengths = [filters.storyLengths]
+        let ageGroups = filters?.ageGroups
+        if (!(ageGroups instanceof Array)) ageGroups = [filters?.ageGroups]
 
         // Add filter for narrator if provided
-        if (filters.narrator) {
-            queryParams['profiles.profile_name'] = `eq.${filters.narrator}`;
+        if (filters?.narrator) {
+            queryParams['profiles.profile_name'] = `eq.${filters?.narrator}`;
         }
 
         // Add filter for language if provided
-        if (filters.language) {
-            queryParams['language'] = `eq.${filters.language}`;
+        if (filters?.language) {
+            queryParams[filters.private ? 'stories.language' : 'language'] = `eq.${filters?.language}`;
         }
 
         // Add filter for ages if provided
         if (ageGroups && ageGroups.length) {
-            queryParams['age_groups'] = `cs.{${ageGroups.join(',')}}`;
+            queryParams[filters.private ? 'stories.age_groups' : 'age_groups'] = `cs.{${ageGroups.join(',')}}`;
         }
 
         // Make the request to Supabase
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+        const response = await axios.get(endpoint, {
             params: queryParams,
             headers: generateSupabaseHeaders(accessToken)
         });
 
         let data = response.data;
 
+        if (filters?.private) data = response.data?.map((story) => story.stories)
+
         // Apply additional filtering for story lengths
-        if (filters.storyLengths && filters.storyLengths.length) {
+        if (filters?.storyLengths && filters?.storyLengths.length) {
             data = data.filter(story => {
                 if (filters.storyLengths.includes('short') && story.duration <= 300) {
                     return true;
@@ -61,7 +68,7 @@ class StoryServiceHandler {
             });
         }
 
-        return data;
+        return data.filter((d) => d !== null);
     }
 
 }

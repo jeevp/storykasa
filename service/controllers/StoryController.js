@@ -60,45 +60,51 @@ class StoryController {
 
             const {
                 narrator,
-                language
-            } = req.query
-
-            console.log({
-                narrator,
                 language,
-                ageGroups: req.query["ageGroups[]"],
-                storyLengths: req.query["storyLengths[]"],
-            })
+                ageGroups,
+                storyLengths
+            } = req.query
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
-                params: {
-                    select: '*,stories(*,profiles(*))',
-                    account_id: `eq.${user?.id}`,
-                    order: "created_at.desc"
-                },
-                headers: generateSupabaseHeaders(req.accessToken)
+            console.log(">>>>>>>")
+            const privateStories = await StoryServiceHandler.getStories({
+                narrator,
+                language,
+                ageGroups,
+                storyLengths,
+                private: true
+            }, {
+                accessToken: req.accessToken,
+                userId: user.id
             })
 
-            const stories = response.data?.map((story) => story.stories)
-            const storiesIds = stories.map((story) => story.story_id).join(',');
+
+            if (privateStories.length === 0) return res.status(200).send([])
+
+            let storiesIds = []
+            privateStories.forEach((story) => {
+                if (story?.story_id) storiesIds.push(story?.story_id)
+            })
+
+            if (storiesIds.length > 0) storiesIds = storiesIds.join(',')
+
+            let illustrationParams = { select: "*" }
+            if (storiesIds.length > 0) illustrationParams["story_id"] =`in.(${storiesIds})`
 
             // Stories Illustrations
             const illustrationsResponse = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories_images`, {
-                params: {
-                    select: "*",
-                    story_id: `in.(${storiesIds})`
-                },
+                params: illustrationParams,
                 headers: generateSupabaseHeaders(req.accessToken)
             });
 
             const illustrations = illustrationsResponse.data
 
-            const storiesSerialized = stories.map((story) => {
+            console.log({ privateStories })
+            const storiesSerialized = privateStories?.map((story) => {
                 story.illustrationsURL = illustrations.filter((illustration) => {
-                    return illustration.story_id ===  story.story_id
-                }).map((storyIllustration) => storyIllustration.image_url)
+                    return illustration?.story_id ===  story?.story_id
+                }).map((storyIllustration) => storyIllustration?.image_url)
 
                 return story
             })
@@ -121,11 +127,11 @@ class StoryController {
             const ageGroups = req.query["ageGroups[]"]
             const storyLengths = req.query["storyLengths[]"]
 
-            const publicStories = await StoryServiceHandler.getPublicStories({
+            const publicStories = await StoryServiceHandler.getStories({
                 narrator,
                 language,
                 ageGroups,
-                storyLengths
+                storyLengths,
             }, { accessToken: req.accessToken })
             return res.status(200).send(publicStories)
         } catch (error) {
@@ -230,12 +236,20 @@ class StoryController {
 
     static async getStoriesFilters(req, res) {
         try {
-            const publicStories = await StoryServiceHandler.getPublicStories({},{ accessToken: req.accessToken })
+            let userId = null
+            if (req.query.private) {
+                const { data: { user } } = await supabase.auth.getUser(req.accessToken)
+                userId = user.id
+            }
+
+            let stories = await StoryServiceHandler.getStories({
+                private: req.query.private
+            }, { accessToken: req.accessToken, userId })
 
             const uniqueNarrators = new Set();
             const uniqueLanguages = new Set()
 
-            const narrators = publicStories.reduce((acc, story) => {
+            const narrators = stories.reduce((acc, story) => {
                 const narratorName = story?.profiles?.profile_name;
                 if (!uniqueNarrators.has(narratorName)) {
                     uniqueNarrators.add(narratorName);
@@ -245,7 +259,7 @@ class StoryController {
                 return acc;
             }, []);
 
-            const languages = publicStories.reduce((acc, story) => {
+            const languages = stories.reduce((acc, story) => {
                 if (!uniqueLanguages.has(story.language)) {
                     uniqueLanguages.add(story.language);
                     acc.push({ language: story.language });

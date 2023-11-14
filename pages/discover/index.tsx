@@ -57,7 +57,6 @@ function Discover() {
     }
 
     const disableSearchAndFilters = () => {
-        console.log({ storyFilters })
         return (
             publicStories?.length === 0
             && Object.keys(storyFilters).length === 0
@@ -96,7 +95,7 @@ function Discover() {
                         />
                     </div>
                     <div className="mt-2 lg:mt-0">
-                        <StoryFilters onChange={() => setSelectedIndex(undefined)} />
+                        <StoryFilters privateStories={false} onChange={() => setSelectedIndex(undefined)} />
                     </div>
                 </div>
                 <Divider />

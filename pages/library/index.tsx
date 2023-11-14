@@ -15,14 +15,19 @@ import withProfile from "@/HOC/withProfile";
 import Story from "@/models/Story";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
+import StoryFilters from "@/composedComponents/StoryFilters/StoryFilters";
+import {Divider} from "@mui/material";
+import {useStory} from "@/contexts/story/StoryContext";
 
 function Library() {
     const { onMobile } = useDevice()
     const [filterQuery, setFilterQuery] = useState('')
-    const [stories, setStories] = useState<Story[]>([])
     const [selectedIndex, setSelectedIndex] = useState<number>()
     const [loaded, setLoaded] = useState(false)
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
+
+    // Contexts
+    const { privateStories, setPrivateStories } = useStory()
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
@@ -30,19 +35,27 @@ function Library() {
 
     const loadStories = async () => {
         const allStories: Story[] = await StoryHandler.fetchStories({})
-        setStories(allStories)
+        setPrivateStories(allStories)
         setLoaded(true)
     }
 
-    const filtered = stories
-        ? stories.filter((story) =>
-            story.title.toLowerCase().includes(filterQuery.toLowerCase())
+    console.log({ privateStories })
+    const filtered = privateStories
+        ? privateStories.filter((story) =>
+            story?.title?.toLowerCase()?.includes(filterQuery.toLowerCase())
         )
         : []
 
     const handleStoryClick = (index: number) => {
         setSelectedIndex(index)
         if (onMobile) setShowStoryDetailsDialog(true)
+    }
+
+    const disableSearchAndFilters = () => {
+        return (
+            privateStories?.length === 0
+            && Object.keys(privateStories).length === 0
+        )
     }
 
     useEffect(() => {
@@ -73,7 +86,7 @@ function Library() {
                         </div>
                     ) : (
                      <>
-                         {stories.length ? (
+                         {privateStories.length ? (
                              <p>
                                  These stories can only be seen by other profiles in your account. This is the home for
                                  the stories you record.
@@ -89,10 +102,29 @@ function Library() {
                      </>
                     )}
                 </div>
+                <>
+                    <div className={`w-full flex flex-col lg:flex-row mb-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
+                        <div className="w-full max-w-xl">
+                            <STKTextField
+                                placeholder="Search in my library..."
+                                value={filterQuery}
+                                fluid
+                                startAdornment={<MagnifyingGlass size="20" />}
+                                onChange={handleFilterQueryChange}
+                            />
+                        </div>
+                        <div className="mt-2 lg:mt-0">
+                            <StoryFilters
+                            privateStories
+                            onChange={() => setSelectedIndex(undefined)} />
+                        </div>
+                    </div>
+                    <Divider />
+                </>
             </div>
             {loaded ? (
                 <div className="flex sm:w-full mt-4 pb-32 lg:pb-0">
-                    {stories.length ? (
+                    {privateStories.length ? (
                         <AnimatePresence mode="wait">
                             (
                             <motion.div
@@ -100,19 +132,8 @@ function Library() {
                                 initial={{ x: 10, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: 10, opacity: 0 }}
-                                key={stories.length}
+                                key={privateStories.length}
                             >
-                                {stories.length > 0 && (
-                                    <div className="w-full">
-                                        <STKTextField
-                                            placeholder="Search in my library..."
-                                            value={filterQuery}
-                                            fluid
-                                            startAdornment={<MagnifyingGlass size="20" />}
-                                            onChange={handleFilterQueryChange}
-                                        />
-                                    </div>
-                                )}
                                 <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}>
                                     {filtered?.map((story: Story, index: number) => (
                                         <div
@@ -144,7 +165,7 @@ function Library() {
                                     exit={{ x: 10, opacity: 0 }}
                                     key={selectedIndex}
                                 >
-                                    <StoryDetails story={stories[selectedIndex]} onLoadStories={() => loadStories()}></StoryDetails>
+                                    <StoryDetails story={privateStories[selectedIndex]} onLoadStories={() => loadStories()}></StoryDetails>
                                 </motion.div>
                             </AnimatePresence>
                         </div>
@@ -166,7 +187,7 @@ function Library() {
             )}
             <StoryDetailsDialog
                 open={showStoryDetailsDialog}
-                story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
+                story={selectedIndex !== undefined && selectedIndex !== null ? privateStories[selectedIndex] : null}
                 onLoadStories={() => loadStories()}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
         </PageWrapper>
