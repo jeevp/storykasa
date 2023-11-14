@@ -99,12 +99,14 @@ export default function STKButton({
                     startIcon={loading ? <></> : startIcon}
                     endIcon={loading ? <></> : endIcon}
                     fullWidth={fullWidth}
+                    // @ts-ignore
                     color={!isThemeColor ? color : undefined}
                     type={type as 'button' | 'submit' | 'reset'}
                     rounded={rounded}
                     alignStart={alignStart}
                     disableElevation
                     variant={variant as 'text' | 'outlined' | 'contained'}
+                    // @ts-ignore
                     sx={buttonSx}
                     onClick={(e) => onClick(e)}>
                     {loading ? (

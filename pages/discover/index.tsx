@@ -129,7 +129,7 @@ function Discover() {
                                 <div className="flex flex-col items-center">
                                     <SmileyMeh size={100} color={neutral300} />
                                     <p className="mt-4 text-center max-w-lg">
-                                        It looks like we couldn't find any stories matching your filters.
+                                        It looks like we could not find any stories matching your filters.
                                         Try adjusting your filter settings to see more results.
                                     </p>
                                 </div>

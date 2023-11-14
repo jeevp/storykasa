@@ -35,13 +35,14 @@ function Library() {
 
     const loadStories = async () => {
         const allStories: Story[] = await StoryHandler.fetchStories({})
+        // @ts-ignore
         setPrivateStories(allStories)
         setLoaded(true)
     }
 
-    console.log({ privateStories })
     const filtered = privateStories
         ? privateStories.filter((story) =>
+            // @ts-ignore
             story?.title?.toLowerCase()?.includes(filterQuery.toLowerCase())
         )
         : []

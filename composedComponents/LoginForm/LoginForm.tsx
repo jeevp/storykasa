@@ -44,6 +44,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
             setLoading(true)
 
             const account = await AuthHandler.signInWithPassword({ email, password })
+            // @ts-ignore
             setPendoTrackingEnabled(true)
 
             setCurrentProfile(account?.defaultProfile)
