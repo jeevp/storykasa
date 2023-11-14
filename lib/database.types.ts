@@ -35,6 +35,7 @@ export interface Database {
           {
             foreignKeyName: "accounts_account_id_fkey"
             columns: ["account_id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -63,6 +64,7 @@ export interface Database {
           {
             foreignKeyName: "libraries_account_id_fkey"
             columns: ["account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["account_id"]
           }
@@ -94,18 +96,21 @@ export interface Database {
           {
             foreignKeyName: "library_stories_account_id_fkey"
             columns: ["account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["account_id"]
           },
           {
             foreignKeyName: "library_stories_library_id_fkey"
             columns: ["library_id"]
+            isOneToOne: false
             referencedRelation: "libraries"
             referencedColumns: ["library_id"]
           },
           {
             foreignKeyName: "library_stories_story_id_fkey"
             columns: ["story_id"]
+            isOneToOne: false
             referencedRelation: "stories"
             referencedColumns: ["story_id"]
           }
@@ -134,6 +139,7 @@ export interface Database {
           {
             foreignKeyName: "profile_activity_log_account_id_fkey"
             columns: ["account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["account_id"]
           }
@@ -166,6 +172,7 @@ export interface Database {
       stories: {
         Row: {
           age_group: string | null
+          age_groups: string[] | null
           category: string | null
           created_at: string
           description: string | null
@@ -184,6 +191,7 @@ export interface Database {
         }
         Insert: {
           age_group?: string | null
+          age_groups?: string[] | null
           category?: string | null
           created_at?: string
           description?: string | null
@@ -202,6 +210,7 @@ export interface Database {
         }
         Update: {
           age_group?: string | null
+          age_groups?: string[] | null
           category?: string | null
           created_at?: string
           description?: string | null
@@ -222,6 +231,7 @@ export interface Database {
           {
             foreignKeyName: "stories_recorded_by_fkey"
             columns: ["recorded_by"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["profile_id"]
           }
