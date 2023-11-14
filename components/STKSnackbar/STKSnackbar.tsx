@@ -1,10 +1,10 @@
 import { Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
-import React, { useContext } from "react";
+import React from "react";
 import STKButton from "@/components/STKButton/STKButton";
 import { X } from "@phosphor-icons/react";
-import SnackbarContext from "@/contexts/SnackbarContext";
 import {neutral800} from "@/assets/colorPallet/colors";
+import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 
 interface STKSnackbarProps {
     open: boolean;
@@ -14,12 +14,12 @@ interface STKSnackbarProps {
 }
 
 export default function STKSnackbar({
-                                        open,
-                                        message,
-                                        type,
-                                        onClose = () => ({})
-                                    }: STKSnackbarProps) {
-    const { setSnackbarBus } = useContext(SnackbarContext);
+    open,
+    message,
+    type,
+    onClose = () => ({})
+}: STKSnackbarProps) {
+    const { setSnackbarBus } = useSnackbar()
 
     const handleOnClose = () => {
         setSnackbarBus({

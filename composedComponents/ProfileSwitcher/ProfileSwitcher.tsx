@@ -1,20 +1,19 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Profile } from '@/lib/database-helpers.types'
 import ProfileEditor from '../ProfileEditor/ProfileEditor'
-import { PencilSimple, Plus } from '@phosphor-icons/react'
+import { Plus } from '@phosphor-icons/react'
 import { useRouter } from 'next/navigation'
-import {Avatar} from "@mui/material";
 import STKButton from "@/components/STKButton/STKButton";
-import ProfileContext from "@/contexts/ProfileContext";
 import {STK_PROFILE_ID} from "@/config";
 import ProfileCard from "@/composedComponents/ProfileCard/ProfileCard";
 import STKCard from "@/components/STKCard/STKCard";
 import useDevice from "@/customHooks/useDevice";
 import {MAX_PROFILES_ALLOWED} from "@/models/Profile";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 export default function ProfileSwitcher({ profiles, managing }: { profiles: Profile[], managing: boolean }) {
     // Context
-    const { setCurrentProfileId, setCurrentProfile } = useContext(ProfileContext) as any
+    const { setCurrentProfileId, setCurrentProfile } = useProfile()
 
     // Hooks
     const router = useRouter()

@@ -1,6 +1,5 @@
 import Image from 'next/image'
-import {useContext, useState} from 'react'
-import { useRouter } from 'next/navigation'
+import {useState} from 'react'
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKButton from "@/components/STKButton/STKButton";
 import {Divider} from "@mui/material";
@@ -9,7 +8,7 @@ import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import Validator from "@/utils/Validator";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import ProfileContext from "@/contexts/ProfileContext";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 const supabase = createClientComponentClient<Database>()
 
@@ -32,7 +31,7 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
     const {
         setCurrentProfileId,
         setCurrentProfile
-    } = useContext(ProfileContext) as any
+    } = useProfile()
 
     // Methods
     const handleSignInWithGoogle = async () => {

@@ -3,7 +3,11 @@ import {FadersHorizontal} from "@phosphor-icons/react";
 import StoryFiltersDialog from "@/composedComponents/StoryFilters/StoryFiltersDialog/StoryFiltersDialog";
 import {useState} from "react";
 
-function StoryFilters() {
+interface StoryFiltersProps {
+    onChange?: () => void
+}
+
+function StoryFilters({ onChange = () => ({}) }: StoryFiltersProps) {
     // States
     const [showFiltersDialog, setShowFiltersDialog] = useState(false)
 
@@ -18,7 +22,10 @@ function StoryFilters() {
             onClick={() => setShowFiltersDialog(!showFiltersDialog)}>
                 Filters
             </STKButton>
-            <StoryFiltersDialog active={showFiltersDialog} onClose={() => setShowFiltersDialog(false)} />
+            <StoryFiltersDialog
+            active={showFiltersDialog}
+            onClose={() => setShowFiltersDialog(false)}
+            onChange={() => onChange()}/>
         </div>
     )
 }

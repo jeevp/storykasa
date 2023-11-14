@@ -29,7 +29,7 @@ function Library() {
     }
 
     const loadStories = async () => {
-        const allStories: Story[] = await StoryHandler.fetchStories()
+        const allStories: Story[] = await StoryHandler.fetchStories({})
         setStories(allStories)
         setLoaded(true)
     }

@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
-import { useContext, useEffect, useState } from 'react'
-import AuthContext from '@/contexts/AuthContext'
+import { useEffect, useState } from 'react'
 import { STK_ACCESS_TOKEN } from '@/config'
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 const withoutAuth = (WrappedComponent: any) => {
   return (props: any) => {
-    const { currentUser } = useContext(AuthContext)
+    const { currentUser } = useAuth()
     const router = useRouter()
     const [isValidationComplete, setIsValidationComplete] = useState(false)
 

@@ -6,8 +6,7 @@ import {
 } from '@phosphor-icons/react'
 import dynamic from 'next/dynamic';
 
-import { SetStateAction, useContext, useState} from 'react'
-import ProfileContext from '@/contexts/ProfileContext'
+import { SetStateAction, useState} from 'react'
 import {allowedAgeGroups, languages} from "@/models/Story"
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import STKAutocomplete from "@/components/STKAutocomplete/STKAutocomplete";
@@ -27,6 +26,7 @@ import StoryHandler from "@/handlers/StoryHandler";
 import CancelRecordingDialog from "@/composedComponents/CancelRecordingDialog/CancelRecordingDialog";
 import STKRadioGroup from "@/components/STKRadioGroup/STKRadioGroup";
 import STKUploadFile from "@/components/STKUploadFile/STKUploadFile";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKRecordAudio'), {
     ssr: false,  // Set to false to disable server-side rendering
 });
@@ -35,7 +35,7 @@ const RECORD_STORY_CREATION_METHOD = "RECORD_STORY_CREATION_METHOD"
 const UPLOAD_STORY_CREATION_METHOD = "UPLOAD_STORY_CREATION_METHOD"
 
 export default function StoryForm() {
-    const {currentProfileId} = useContext(ProfileContext) as any
+    const {currentProfileId} = useProfile()
     const {onMobile} = useDevice()
 
     const [title, setTitle] = useState('')

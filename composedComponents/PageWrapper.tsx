@@ -1,11 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from "@/composedComponents/Navbar/Navbar";
 import SideNavigation from "@/composedComponents/SideNavigation/SideNavigation";
-import {usePathname} from "next/navigation";
-import {useContext} from "react";
-import AuthContext from "@/contexts/AuthContext";
-import SnackbarContext from "@/contexts/SnackbarContext";
 import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
+import {useAuth} from "@/contexts/auth/AuthContext";
+import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
+import {usePathname} from "next/navigation";
 
 interface PageWrapperProps {
     children: any
@@ -16,8 +15,8 @@ export default function PageWrapper({
     children,
     path,
 }: PageWrapperProps) {
-    const { currentUser } = useContext(AuthContext)
-    const { snackbarBus } = useContext(SnackbarContext)
+    const { currentUser } = useAuth()
+    const { snackbarBus } = useSnackbar()
     const pathname = usePathname()
 
     return (

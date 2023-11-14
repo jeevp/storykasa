@@ -5,9 +5,8 @@ import { UserSwitch, SignOut } from '@phosphor-icons/react'
 import { STK_PROFILE_ID, STK_ACCESS_TOKEN, STK_REFRESH_TOKEN } from "@/config"
 import AuthHandler from "@/handlers/AuthHandler";
 import {useRouter} from "next/router";
-import {useContext} from "react";
-import AuthContext from "@/contexts/AuthContext";
-import ProfileContext from "@/contexts/ProfileContext";
+import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 
 interface AccountSideDrawerProps {
@@ -18,8 +17,8 @@ interface AccountSideDrawerProps {
 export default function AccountSideDrawer({ open, onClose = () => ({}) }: AccountSideDrawerProps) {
     const router = useRouter()
 
-    const { setCurrentUser } = useContext(AuthContext)
-    const { setCurrentProfileId, currentProfile, setCurrentProfile } = useContext(ProfileContext)
+    const { setCurrentUser } = useAuth()
+    const { setCurrentProfileId, currentProfile, setCurrentProfile } = useProfile()
 
     const handleLogout = async () => {
         localStorage.removeItem(STK_PROFILE_ID)

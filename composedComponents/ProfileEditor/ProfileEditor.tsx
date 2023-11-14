@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import ImageUploading, {ImageListType} from 'react-images-uploading'
 import {ArrowCircleRight, PencilSimple, UserPlus, X,} from '@phosphor-icons/react'
 import {Profile} from '@/lib/database-helpers.types'
@@ -14,7 +14,7 @@ import {useRouter} from "next/navigation";
 import {green600, red600} from "@/assets/colorPallet/colors";
 import {AVATAR_BUCKET_NAME, AVATAR_FILE_EXTENSION, STK_PROFILE_ID} from "@/config";
 import useDevice from "@/customHooks/useDevice";
-import ProfileContext from "@/contexts/ProfileContext";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 export default function ProfileEditor({
     profileToEdit,
@@ -26,7 +26,7 @@ export default function ProfileEditor({
     const { onMobile } = useDevice()
 
     // Contexts
-    const { setCurrentProfile, setCurrentProfileId } = useContext(ProfileContext)
+    const { setCurrentProfile, setCurrentProfileId } = useProfile()
 
     // States
     const [profileName, setProfileName] = useState('')
@@ -60,7 +60,7 @@ export default function ProfileEditor({
                 // @ts-ignore
                 payload["profileName"] = profileName
             } else {
-                alert('Profile name cannot be empty')
+                alert('profile name cannot be empty')
             }
 
             // if there is a new avatar file, we need to upload to the bucket

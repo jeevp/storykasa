@@ -1,10 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import {Trash} from "@phosphor-icons/react";
 import useDevice from "@/customHooks/useDevice";
 import StoryHandler from "@/handlers/StoryHandler";
-import SnackbarContext from "@/contexts/SnackbarContext";
+import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 
 
 interface DeleteStoryDialogProps {
@@ -20,7 +20,7 @@ export default function DeleteStoryDialog({
     onClose = () => ({}),
     onSuccess = () => ({})
 }: DeleteStoryDialogProps) {
-    const { setSnackbarBus } = useContext(SnackbarContext)
+    const { setSnackbarBus } = useSnackbar()
     const { onMobile } = useDevice()
 
     const [loading, setLoading] = useState(false)

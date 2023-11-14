@@ -1,17 +1,17 @@
 import { useRouter } from 'next/router'
-import { useContext, useEffect, useState } from 'react'
-import AuthContext from '@/contexts/AuthContext'
+import { useEffect, useState } from 'react'
 import decodeJWT from '@/utils/decodeJWT'
-import jwtDecode from 'jwt-decode' // Import jwt-decode to validate tokens
+import jwtDecode from 'jwt-decode'
 import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN } from '@/config'
 import AuthHandler from '@/handlers/AuthHandler'
 import identifyPendoVisitor from "@/tools/Pendo/identifyPendoVisitor";
-import ToolsContext from "@/contexts/ToolsContext";
+import {useAuth} from "@/contexts/auth/AuthContext";
+import {useTools} from "@/contexts/tools/ToolsContext";
 
 const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
-    const { setCurrentUser } = useContext(AuthContext)
-    const { pendoTrackingEnabled, setPendoTrackingEnabled } = useContext(ToolsContext)
+    const { setCurrentUser } = useAuth()
+    const { pendoTrackingEnabled, setPendoTrackingEnabled } = useTools()
 
     const router = useRouter()
     const [hasToken, setHasToken] = useState(false)

@@ -60,8 +60,6 @@ class AuthController {
                 accessToken: data.session.access_token
             })
 
-            console.log({ defaultProfile })
-
             await supabase.auth.setSession({
                 refresh_token: data.session.refresh_token,
                 access_token: data.session.access_token

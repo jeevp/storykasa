@@ -1,6 +1,9 @@
 const supabase = require('../../service/supabase');
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
+const StoryServiceHandler = require("../handlers/StoryServiceHandler")
+const Validator = require("../../utils/Validator");
+const APIValidator = require("../validators/APIValidator");
 
 class StoryController {
     static async deleteStory(req, res) {
@@ -50,6 +53,23 @@ class StoryController {
 
     static async getLibraryStories(req, res) {
         try {
+            APIValidator.optionalParams({
+                allowedParams: ["narrator", "language", "ageGroups", "storyLengths"],
+                incomeParams: req.query
+            }, res)
+
+            const {
+                narrator,
+                language
+            } = req.query
+
+            console.log({
+                narrator,
+                language,
+                ageGroups: req.query["ageGroups[]"],
+                storyLengths: req.query["storyLengths[]"],
+            })
+
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
             const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
@@ -92,17 +112,24 @@ class StoryController {
 
     static async getDiscoverStories(req, res) {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
-                params: {
-                    select: '*,profiles(*)',
-                    is_public: 'eq.true',
-                    order: 'last_updated.desc'
-                },
-                headers: generateSupabaseHeaders(req.accessToken)
-            })
+            APIValidator.optionalParams({
+                allowedParams: ["narrator", "language", "ageGroups[]", "storyLengths[]"],
+                incomeParams: req.query
+            }, res)
 
-            return res.status(200).send(response.data)
+            const { narrator, language } = req.query
+            const ageGroups = req.query["ageGroups[]"]
+            const storyLengths = req.query["storyLengths[]"]
+
+            const publicStories = await StoryServiceHandler.getPublicStories({
+                narrator,
+                language,
+                ageGroups,
+                storyLengths
+            }, { accessToken: req.accessToken })
+            return res.status(200).send(publicStories)
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
@@ -197,6 +224,27 @@ class StoryController {
 
             return res.status(201).send({ message: "Story created with success" })
         } catch (error) {
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async getPublicStoriesNarrators(req, res) {
+        try {
+            const publicStories = await StoryServiceHandler.getPublicStories({},{ accessToken: req.accessToken })
+
+            const uniqueNarrators = new Set();
+            const narrators = publicStories.reduce((acc, story) => {
+                const narratorName = story?.profiles?.profile_name;
+                if (!uniqueNarrators.has(narratorName)) {
+                    uniqueNarrators.add(narratorName);
+                    acc.push({ narratorName });
+                }
+                return acc;
+            }, []);
+
+            return res.status(200).send(narrators)
+        } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

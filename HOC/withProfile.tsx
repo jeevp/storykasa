@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
-import ProfileContext from "@/contexts/ProfileContext";
+import { useEffect, useState } from 'react';
 import {STK_PROFILE_ID} from "@/config";
 import ProfileHandler from "@/handlers/ProfileHandler";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 const withProfile = (WrappedComponent: any) => {
     return (props: any) => {
@@ -10,7 +10,7 @@ const withProfile = (WrappedComponent: any) => {
             currentProfileId,
             setCurrentProfileId,
             setCurrentProfile
-        } = useContext(ProfileContext);
+        } = useProfile();
         const router = useRouter();
         const [isValidationComplete, setIsValidationComplete] = useState(false);
 

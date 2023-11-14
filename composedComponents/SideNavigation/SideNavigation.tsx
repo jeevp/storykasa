@@ -1,16 +1,15 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Profile } from '@/lib/database-helpers.types'
 import { usePathname } from 'next/navigation'
 import { BookOpenText, Books } from '@phosphor-icons/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import useDevice from "@/customHooks/useDevice";
-import ProfileHandler from "@/handlers/ProfileHandler";
-import ProfileContext from "@/contexts/ProfileContext";
 import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {useRouter} from "next/router";
 import {neutral800} from "@/assets/colorPallet/colors";
 import RecordButton from "@/composedComponents/RecordButton/RecordButton";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 const navigationOptions = [
     { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
@@ -24,9 +23,8 @@ export default function SideNavigation() {
     const route = useRouter()
 
     // Context
-    const { currentProfile } = useContext(ProfileContext) as any
+    const { currentProfile } = useProfile()
 
-    console.log({ currentProfile })
     // States
     const [profileOptions, setProfileOptions] = useState<Profile[]>([])
     const [selectedNavigationOption, setSelectedNavigationOption] = useState<Object>({})

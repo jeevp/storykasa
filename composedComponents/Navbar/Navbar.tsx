@@ -1,12 +1,11 @@
 import Image from 'next/image'
 import {Divider} from "@mui/material";
 import AccountDetails from "@/composedComponents/AccountDetails/AccountDetails";
-import {useContext} from "react";
-import AuthContext from "@/contexts/AuthContext";
 import {useRouter} from "next/router";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 export default function Navbar() {
-    const { currentUser } = useContext(AuthContext)
+    const { currentUser } = useAuth()
     const router = useRouter()
 
     const goToRoot = async () => {

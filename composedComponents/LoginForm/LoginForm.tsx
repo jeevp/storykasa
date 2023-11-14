@@ -1,4 +1,4 @@
-import {FormEvent, useContext} from 'react';
+import {FormEvent} from 'react';
 import Image from 'next/image'
 import {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation'
@@ -9,8 +9,8 @@ import {Divider} from "@mui/material";
 import STKCard from "@/components/STKCard/STKCard";
 import AuthHandler from "@/handlers/AuthHandler";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import ToolsContext from "@/contexts/ToolsContext";
-import ProfileContext from "@/contexts/ProfileContext";
+import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useTools} from "@/contexts/tools/ToolsContext";
 
 const supabase = createClientComponentClient<Database>()
 
@@ -19,8 +19,8 @@ interface LoginFormProps {
 }
 export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: LoginFormProps) {
     // Contexts
-    const { setPendoTrackingEnabled } = useContext(ToolsContext)
-    const { setCurrentProfile } = useContext(ProfileContext)
+    const { setPendoTrackingEnabled } = useTools()
+    const { setCurrentProfile } = useProfile()
 
     // Hooks
     const router = useRouter()

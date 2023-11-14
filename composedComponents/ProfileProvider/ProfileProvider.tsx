@@ -1,12 +1,12 @@
-import {useContext, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation'
-import ProfileContext from "@/contexts/ProfileContext";
 import supabase from "../../service/supabase"
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 export default function ProfileProvider({ children }: {
     children: React.ReactNode
 }) {
-    const { currentProfileId } = useContext(ProfileContext)
+    const { currentProfileId } = useProfile()
 
     const router = useRouter()
 

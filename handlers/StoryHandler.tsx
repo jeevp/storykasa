@@ -13,6 +13,13 @@ interface createStoryProps {
     illustrationsURL: Array<string>
 }
 
+interface StoryFilterOptions {
+    narrator?: string
+    language?: string
+    ageGroups?: Array<string>
+    storyLengths?: Array<string>
+}
+
 export default class StoryHandler {
     static async createStory({
         recordingURL,
@@ -59,9 +66,13 @@ export default class StoryHandler {
         await axios.delete(`/api/stories/${storyId}`, headers)
     }
 
-    static async fetchStories() {
+    static async fetchStories(filterOptions: StoryFilterOptions) {
         const headers = generateHeaders()
-        const response = await axios.get("/api/stories/library", headers)
+
+        const response = await axios.get("/api/stories/library", {
+            ...headers,
+            params: { ...filterOptions }
+        })
 
         return response.data.map((story: any) => new Story({
             storyId: story.story_id,
@@ -80,9 +91,12 @@ export default class StoryHandler {
         }))
     }
 
-    static async fetchPublicStories() {
+    static async fetchPublicStories(filterOptions: StoryFilterOptions) {
         const headers = generateHeaders()
-        const response = await axios.get("/api/stories/discover", headers)
+        const response = await axios.get("/api/stories/discover", {
+            ...headers,
+            params: { ...filterOptions }
+        })
 
         return response.data.map((story: any) => new Story({
             storyId: story.story_id,
@@ -99,5 +113,15 @@ export default class StoryHandler {
             profileAvatar: story?.profiles?.avatar_url,
             lastUpdated: story?.last_updated
         }))
+    }
+
+    static async fetchStoriesNarrators({ privateStories }: { privateStories: boolean }) {
+        const headers = generateHeaders()
+        let endpoint = "/api/public/stories/narrators"
+        if (privateStories) endpoint = "/api/private/stories/narrators"
+
+        const response = await axios.get(endpoint, headers)
+
+        return response.data
     }
 }

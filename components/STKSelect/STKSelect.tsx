@@ -43,6 +43,17 @@ function STKSelect({
         }, {}))
     }, [options]);
 
+    useEffect(() => {
+        if (multiple && Array.isArray(value)) {
+            // @ts-ignore
+            setSelectedOptions(value.map(val => val[optionValue]));
+        } else if (!multiple && value) {
+            // @ts-ignore
+            setSelectedOptions([value[optionValue]]);
+        } else {
+            setSelectedOptions([]);
+        }
+    }, [value, multiple, optionValue]);
 
     const handleChange = (e: Event) => {
         // @ts-ignore

@@ -1,7 +1,6 @@
-import {useContext, useState} from 'react'
+import {useState} from 'react'
 import { useRouter } from 'next/navigation'
 import { Baby, GlobeSimple, Trash, Pencil } from '@phosphor-icons/react'
-import ProfileContext from '@/contexts/ProfileContext'
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
 import STKButton from "@/components/STKButton/STKButton";
@@ -9,6 +8,7 @@ import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKSlide from "@/components/STKSlide/STKSlide";
 import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStoryDialog";
 import Story from "@/models/Story";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 interface StoryDetailsProps {
     story: Story | null;
@@ -20,15 +20,13 @@ export default function StoryDetails({
     editionNotAllowed,
     onLoadStories = () => ({})
 }: StoryDetailsProps) {
-    const router = useRouter()
-
     // States
     const [showUpdateStoryDialog, setShowUpdateStoryDialog] = useState(false)
     const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
     const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false)
     const [storyHasEnded, setStoryHasEnded] = useState(false)
 
-    const { currentProfileId } = useContext(ProfileContext) as any
+    const { currentProfileId } = useProfile()
 
     const handleStoryOnEnd = () => {
         setStoryHasEnded(true)

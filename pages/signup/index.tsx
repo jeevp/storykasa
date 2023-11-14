@@ -1,9 +1,9 @@
 import PageWrapper from '@/composedComponents/PageWrapper'
 import SignupForm from '@/composedComponents/SignUpForm/SignUpForm'
-import {useContext, useState} from "react";
+import {useState} from "react";
 import ProfileCreationForm from "@/composedComponents/ProfileCreationForm/ProfileCreationForm";
 import {useRouter} from "next/router";
-import ProfileContext from "@/contexts/ProfileContext";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 const USER_DETAILS_STEP = "USER_DETAILS_STEP"
 const PROFILE_CREATION_STEP = "PROFILE_CREATION_STEP"
@@ -12,7 +12,7 @@ export default function Signup() {
     const [currentStep, setCurrentStep] = useState(USER_DETAILS_STEP)
 
     const router = useRouter()
-    const { currentProfile } = useContext(ProfileContext)
+    const { currentProfile } = useProfile()
 
     // Methods
     const goToDiscoverPage = async () => {

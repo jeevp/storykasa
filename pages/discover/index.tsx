@@ -16,6 +16,7 @@ import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import STKSelect from "@/components/STKSelect/STKSelect";
 import StoryFilters from "@/composedComponents/StoryFilters/StoryFilters";
 import {Divider} from "@mui/material";
+import {useStory} from "@/contexts/story/StoryContext";
 
 export const dynamic = 'force-dynamic'
 
@@ -27,10 +28,14 @@ function Discover() {
     const [loading, setLoading] = useState(true)
     const [filterQuery, setFilterQuery] = useState('')
 
+    // Contexts
+    const { publicStories, setPublicStories } = useStory()
+
     const loadStories = async () => {
         setLoading(true)
-        const publicStories: Story[] = await StoryHandler.fetchPublicStories()
-        setStories(publicStories)
+        const _publicStories: Story[] = await StoryHandler.fetchPublicStories({})
+        // @ts-ignore
+        setPublicStories(_publicStories)
         setLoading(false)
     }
 
@@ -47,9 +52,10 @@ function Discover() {
         if (onMobile) setShowStoryDetailsDialog(true)
     }
 
-    const filtered = stories
-        ? stories.filter((story) =>
-            story.title.toLowerCase().includes(filterQuery.toLowerCase())
+    const filtered = publicStories
+        ? publicStories.filter((story) =>
+            // @ts-ignore
+            story?.title?.toLowerCase().includes(filterQuery.toLowerCase())
         )
         : []
 
@@ -66,7 +72,7 @@ function Discover() {
                     </p>
                 </div>
             </div>
-            {stories.length > 0 && (
+            {publicStories.length > 0 && (
                 <>
                     <div className="w-full flex mb-10 justify-between">
                         <div className="w-full max-w-xl">
@@ -78,7 +84,7 @@ function Discover() {
                                 onChange={handleFilterQueryChange}
                             />
                         </div>
-                        <StoryFilters />
+                        <StoryFilters onChange={() => setSelectedIndex(undefined)} />
                     </div>
                     <Divider />
                 </>
@@ -126,7 +132,7 @@ function Discover() {
 
                 {selectedIndex !== undefined && (
                     <div className="hidden lg:flex lg:w-full lg:pl-8">
-                        <StoryDetails story={stories[selectedIndex]} editionNotAllowed></StoryDetails>
+                        <StoryDetails story={publicStories[selectedIndex]} editionNotAllowed></StoryDetails>
                     </div>
                 )}
             </div>

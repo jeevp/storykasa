@@ -1,15 +1,12 @@
-import { useRouter } from 'next/navigation'
-import { useContext, useState } from 'react'
-import ProfileContext from "@/contexts/ProfileContext";
+import { useState } from 'react'
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKButton from "@/components/STKButton/STKButton";
 import AccountSideDrawer from "@/composedComponents/AccountSideDrawer/AccountSideDrawer";
 import { ArrowSquareRight } from '@phosphor-icons/react'
-import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 export default function AccountDetails() {
-    const router = useRouter()
-    const { currentProfile } = useContext(ProfileContext)
+    const { currentProfile } = useProfile()
 
     const [showAccountSideDrawer, setShowAccountSideDrawer] = useState(false)
 

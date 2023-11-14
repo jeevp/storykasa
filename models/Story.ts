@@ -6,6 +6,12 @@ export const allowedAgeGroups = [
     { name: 'Teenagers and up (13+)', value: "50", minAge: "13", maxAge: "13+" },
 ]
 
+export const storyLengths = [
+    { name: "Short", value: "short" },
+    { name: "Medium", value: "medium" },
+    { name: "Long", value: "long" }
+]
+
 export const languages = [
     { name: 'English', code: 'en', category: "" },
     { name: 'Spanish - español', code: 'es', category: "" },
@@ -202,7 +208,6 @@ export default class Story {
         if (ageGroups.length === 1) {
             return ageGroups[0].name
         }
-        console.log({ ageGroups, allowedAgeGroups })
 
         if (ageGroups.length === allowedAgeGroups.length) {
             return "All ages"
