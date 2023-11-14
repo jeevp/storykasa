@@ -11,12 +11,12 @@ import withAuth from "@/HOC/withAuth";
 import Story from "@/models/Story";
 import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
 import STKTextField from "@/components/STKTextField/STKTextField";
-import {MagnifyingGlass} from "@phosphor-icons/react";
+import {MagnifyingGlass, SmileyMeh} from "@phosphor-icons/react";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
-import STKSelect from "@/components/STKSelect/STKSelect";
 import StoryFilters from "@/composedComponents/StoryFilters/StoryFilters";
 import {Divider} from "@mui/material";
 import {useStory} from "@/contexts/story/StoryContext";
+import {neutral300} from "@/assets/colorPallet/colors";
 
 export const dynamic = 'force-dynamic'
 
@@ -29,7 +29,11 @@ function Discover() {
     const [filterQuery, setFilterQuery] = useState('')
 
     // Contexts
-    const { publicStories, setPublicStories } = useStory()
+    const {
+        publicStories,
+        setPublicStories,
+        storyFilters
+    } = useStory()
 
     const loadStories = async () => {
         setLoading(true)
@@ -52,6 +56,14 @@ function Discover() {
         if (onMobile) setShowStoryDetailsDialog(true)
     }
 
+    const disableSearchAndFilters = () => {
+        console.log({ storyFilters })
+        return (
+            publicStories?.length === 0
+            && Object.keys(storyFilters).length === 0
+        )
+    }
+
     const filtered = publicStories
         ? publicStories.filter((story) =>
             // @ts-ignore
@@ -72,23 +84,23 @@ function Discover() {
                     </p>
                 </div>
             </div>
-            {publicStories.length > 0 && (
-                <>
-                    <div className="w-full flex mb-10 justify-between">
-                        <div className="w-full max-w-xl">
-                            <STKTextField
-                                placeholder="Search in my library..."
-                                value={filterQuery}
-                                fluid
-                                startAdornment={<MagnifyingGlass size="20" />}
-                                onChange={handleFilterQueryChange}
-                            />
-                        </div>
+            <>
+                <div className={`w-full flex flex-col lg:flex-row mb-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
+                    <div className="w-full max-w-xl">
+                        <STKTextField
+                            placeholder="Search in my library..."
+                            value={filterQuery}
+                            fluid
+                            startAdornment={<MagnifyingGlass size="20" />}
+                            onChange={handleFilterQueryChange}
+                        />
+                    </div>
+                    <div className="mt-2 lg:mt-0">
                         <StoryFilters onChange={() => setSelectedIndex(undefined)} />
                     </div>
-                    <Divider />
-                </>
-            )}
+                </div>
+                <Divider />
+            </>
             <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">
                 {!loading && stories ? (
                     <AnimatePresence mode="wait">
@@ -99,20 +111,31 @@ function Discover() {
                             exit={{ x: 10, opacity: 0 }}
                             key={stories.length}
                         >
-                            <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "75vh" }}>
-                            {filtered?.map((story: Story, index: number) => (
-                                    <div
-                                        className="mt-2 first:mt-0"
-                                        key={story?.storyId}
-                                        onClick={() => handleStoryClick(index)}
-                                    >
-                                        <StoryCard
-                                            story={story}
-                                            selected={index === selectedIndex}
-                                        ></StoryCard>
-                                    </div>
-                                ))}
-                            </div>
+                            {filtered.length > 0  ? (
+                                <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "75vh" }}>
+                                    {filtered?.map((story: Story, index: number) => (
+                                        <div
+                                            className="mt-2 first:mt-0"
+                                            key={story?.storyId}
+                                            onClick={() => handleStoryClick(index)}
+                                        >
+                                            <StoryCard
+                                                story={story}
+                                                selected={index === selectedIndex}
+                                            ></StoryCard>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : filtered.length === 0 && Object.keys(storyFilters).length > 0 ? (
+                                <div className="flex flex-col items-center">
+                                    <SmileyMeh size={100} color={neutral300} />
+                                    <p className="mt-4 text-center max-w-lg">
+                                        It looks like we couldn't find any stories matching your filters.
+                                        Try adjusting your filter settings to see more results.
+                                    </p>
+                                </div>
+                            ) : null}
+
                         </motion.div>
                     </AnimatePresence>
                 ): (
@@ -135,6 +158,7 @@ function Discover() {
                         <StoryDetails story={publicStories[selectedIndex]} editionNotAllowed></StoryDetails>
                     </div>
                 )}
+
             </div>
 
             <StoryDetailsDialog

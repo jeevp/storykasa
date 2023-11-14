@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import StoryHandler from "@/handlers/StoryHandler";
 import {useStory} from "@/contexts/story/StoryContext";
 import {allowedAgeGroups, languages, storyLengths} from "@/models/Story";
+import useDevice from "@/customHooks/useDevice";
 
 interface StoryFiltersDialogProps {
     active?: boolean,
@@ -35,6 +36,9 @@ export default function StoryFiltersDialog({
         storyNarrators,
         storyFilters
     } = useStory()
+
+    // Hooks
+    const { onMobile } = useDevice()
 
     // Mounted
     useEffect(() => {
@@ -114,7 +118,7 @@ export default function StoryFiltersDialog({
 
 
     return (
-        <STKDialog maxWidth="xs" active={active} onClose={handleClose}>
+        <STKDialog maxWidth="xs" active={active} fullScreen={onMobile} onClose={handleClose}>
             <h2 className="">Filters</h2>
             <div className="mt-4">
                 <div>
