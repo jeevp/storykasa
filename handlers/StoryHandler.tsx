@@ -115,12 +115,16 @@ export default class StoryHandler {
         }))
     }
 
-    static async fetchStoriesNarrators({ privateStories }: { privateStories: boolean }) {
+    static async fetchStoriesFilters({ privateStories }: { privateStories: boolean }) {
         const headers = generateHeaders()
-        let endpoint = "/api/public/stories/narrators"
-        if (privateStories) endpoint = "/api/private/stories/narrators"
+        let endpoint = "/api/stories/filters"
 
-        const response = await axios.get(endpoint, headers)
+        const response = await axios.get("/api/stories/filters", {
+            ...headers,
+            params: {
+                private: privateStories
+            }
+        })
 
         return response.data
     }

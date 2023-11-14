@@ -28,16 +28,18 @@ export default function StoryFiltersDialog({
     const {
         setPrivateStories,
         setPublicStories,
-        setPrivateStoryNarrators ,
-        setPublicStoryNarrators,
-        publicStoryNarrators,
+        setStoryNarrators ,
+        setStoryLanguages,
         setStoryFilters,
+        storyLanguages,
+        storyNarrators,
         storyFilters
     } = useStory()
 
     // Mounted
     useEffect(() => {
-        handleFetchStoriesNarrators()
+        setFilters({})
+        handleFetchStoryFilters()
     }, []);
 
     // Watchers
@@ -48,20 +50,24 @@ export default function StoryFiltersDialog({
     }, [storyFilters]);
 
     // Methods
-    const handleFetchStoriesNarrators = async () => {
-        const storyNarrators = await StoryHandler.fetchStoriesNarrators({ privateStories })
-        if (privateStories) {
-            setPrivateStoryNarrators(storyNarrators)
-        } else {
-            setPublicStoryNarrators(storyNarrators)
-        }
+    const handleFetchStoryFilters = async () => {
+        const { narrators, languages } = await StoryHandler.fetchStoriesFilters({ privateStories })
+
+        setStoryNarrators(narrators)
+        setStoryLanguages(languages)
     }
 
     const handleFilterOnChange = (key: string, value: any) => {
-        setFilters({
-            ...filters,
-            [key]: value
-        })
+        const _filters = { ...filters }
+        if (!value) {
+            // @ts-ignore
+            delete _filters[key]
+        } else {
+            // @ts-ignore
+            _filters[key] = value
+        }
+
+        setFilters({ ..._filters })
     }
 
     const handleApplyFilters = async () => {
@@ -84,9 +90,31 @@ export default function StoryFiltersDialog({
         }
     }
 
+    const handleClose = () => {
+        removeFiltersNotApplied()
+        onClose()
+    }
+
+    const removeFiltersNotApplied = () => {
+        const appliedFilters = Object.keys(storyFilters)
+        if (appliedFilters.length === 0) {
+            setFilters({})
+            return
+        }
+
+        Object.keys(filters).forEach((filter) => {
+            if (!appliedFilters.includes(filter)) {
+                setFilters({
+                    ...filters,
+                    [filter]: ""
+                })
+            }
+        })
+    }
+
 
     return (
-        <STKDialog maxWidth="xs" active={active} onClose={() => onClose()}>
+        <STKDialog maxWidth="xs" active={active} onClose={handleClose}>
             <h2 className="">Filters</h2>
             <div className="mt-4">
                 <div>
@@ -97,8 +125,8 @@ export default function StoryFiltersDialog({
                         placeholder="Filter by narrator"
                         fluid
                         // @ts-ignore
-                        value={publicStoryNarrators.find((narrator) => narrator?.narratorName === filters?.narrator)}
-                        options={publicStoryNarrators}
+                        value={storyNarrators.find((narrator) => narrator?.narratorName === filters?.narrator)}
+                        options={storyNarrators}
                         onChange={(narrator: any) => handleFilterOnChange("narrator", narrator?.narratorName)}/>
                     </div>
                 </div>
@@ -107,12 +135,12 @@ export default function StoryFiltersDialog({
                     <div className="mt-2">
                         <STKAutocomplete
                         placeholder="Filter by language"
-                        options={languages}
-                        optionLabel="name"
+                        options={storyLanguages}
+                        optionLabel="language"
                         // @ts-ignore
-                        value={languages.find((language) => language?.name === filters?.language)}
+                        value={storyLanguages.find((language) => language?.language === filters?.language)}
                         fluid
-                        onChange={(language: any) => handleFilterOnChange("language", language?.name)}/>
+                        onChange={(language: any) => handleFilterOnChange("language", language?.language)}/>
                     </div>
                 </div>
                 <div className="mt-4">

@@ -228,21 +228,36 @@ class StoryController {
         }
     }
 
-    static async getPublicStoriesNarrators(req, res) {
+    static async getStoriesFilters(req, res) {
         try {
             const publicStories = await StoryServiceHandler.getPublicStories({},{ accessToken: req.accessToken })
 
             const uniqueNarrators = new Set();
+            const uniqueLanguages = new Set()
+
             const narrators = publicStories.reduce((acc, story) => {
                 const narratorName = story?.profiles?.profile_name;
                 if (!uniqueNarrators.has(narratorName)) {
                     uniqueNarrators.add(narratorName);
                     acc.push({ narratorName });
                 }
+
                 return acc;
             }, []);
 
-            return res.status(200).send(narrators)
+            const languages = publicStories.reduce((acc, story) => {
+                if (!uniqueLanguages.has(story.language)) {
+                    uniqueLanguages.add(story.language);
+                    acc.push({ language: story.language });
+                }
+
+                return acc;
+            }, []);
+
+            return res.status(200).send({
+                narrators,
+                languages
+            })
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
