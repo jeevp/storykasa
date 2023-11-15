@@ -63,7 +63,7 @@ export default function StoryFiltersDialog({
 
     const handleFilterOnChange = (key: string, value: any) => {
         const _filters = { ...filters }
-        if (!value) {
+        if (!value || value?.length === 0) {
             // @ts-ignore
             delete _filters[key]
         } else {
@@ -74,19 +74,19 @@ export default function StoryFiltersDialog({
         setFilters({ ..._filters })
     }
 
-    const handleApplyFilters = async () => {
+    const handleApplyFilters = async (_filters: any) => {
         try {
             setLoading(true)
             if (privateStories) {
-                const publicStories = await StoryHandler.fetchStories({ ...filters })
+                const publicStories = await StoryHandler.fetchStories({ ..._filters })
                 setPrivateStories(publicStories)
             } else {
-                const privateStories = await StoryHandler.fetchPublicStories({ ...filters })
+                const privateStories = await StoryHandler.fetchPublicStories({ ..._filters })
                 setPublicStories(privateStories)
             }
 
             onChange()
-            setStoryFilters(filters)
+            setStoryFilters(_filters)
         } finally {
             setLoading(false)
             onClose()
@@ -116,6 +116,12 @@ export default function StoryFiltersDialog({
         })
     }
 
+
+    const handleClearFilters = async () => {
+        setStoryFilters({})
+        setFilters({})
+        await handleApplyFilters({})
+    }
 
     return (
         <STKDialog maxWidth="xs" active={active} fullScreen={onMobile} onClose={handleClose}>
@@ -176,12 +182,12 @@ export default function StoryFiltersDialog({
                     </div>
                 </div>
                 <div className="flex items-center justify-end mt-10">
-                    <div>
-                        <STKButton variant="outlined" onClick={() => onClose()}>Cancel</STKButton>
+                    <div className={Object.keys(storyFilters).length === 0 ? 'disabled' : ''}>
+                        <STKButton variant="outlined" onClick={handleClearFilters}>Clear filters</STKButton>
                     </div>
                     <div className="ml-2">
                         <STKButton
-                        onClick={handleApplyFilters}
+                        onClick={() => handleApplyFilters(filters)}
                         loading={loading}>
                             Apply filters
                         </STKButton>

@@ -17,6 +17,7 @@ import StoryFilters from "@/composedComponents/StoryFilters/StoryFilters";
 import {Divider} from "@mui/material";
 import {useStory} from "@/contexts/story/StoryContext";
 import {neutral300} from "@/assets/colorPallet/colors";
+import StoryFiltersSummary from "@/composedComponents/StoryFilters/StoryFiltersSummary/StoryFiltersSummary";
 
 export const dynamic = 'force-dynamic'
 
@@ -98,6 +99,7 @@ function Discover() {
                         <StoryFilters privateStories={false} onChange={() => setSelectedIndex(undefined)} />
                     </div>
                 </div>
+                <StoryFiltersSummary />
                 <Divider />
             </>
             <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">

@@ -25,7 +25,7 @@ class StoryServiceHandler {
         }
 
         let ageGroups = filters?.ageGroups
-        if (!(ageGroups instanceof Array)) ageGroups = [filters?.ageGroups]
+        if (ageGroups && !(ageGroups instanceof Array)) ageGroups = [filters?.ageGroups]
 
         // Add filter for narrator if provided
         if (filters?.narrator) {
@@ -39,7 +39,7 @@ class StoryServiceHandler {
 
         // Add filter for ages if provided
         if (ageGroups && ageGroups.length) {
-            queryParams[filters.private ? 'stories.age_groups' : 'age_groups'] = `cs.{${ageGroups.join(',')}}`;
+            queryParams[filters.private ? 'stories.age_groups' : 'age_groups'] = `ov.{${ageGroups.join(',')}}`;
         }
 
         // Make the request to Supabase
