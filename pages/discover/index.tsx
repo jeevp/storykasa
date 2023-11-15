@@ -99,7 +99,11 @@ function Discover() {
                         <StoryFilters privateStories={false} onChange={() => setSelectedIndex(undefined)} />
                     </div>
                 </div>
-                <StoryFiltersSummary />
+                {Object.keys(storyFilters).length > 0 ? (
+                    <div className="mb-4">
+                        <StoryFiltersSummary privateStories={false} />
+                    </div>
+                ) : null}
                 <Divider />
             </>
             <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">
@@ -113,7 +117,7 @@ function Discover() {
                             key={stories.length}
                         >
                             {filtered.length > 0  ? (
-                                <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "75vh" }}>
+                                <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "62vh" }}>
                                     {filtered?.map((story: Story, index: number) => (
                                         <div
                                             className="mt-2 first:mt-0"
