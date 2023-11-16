@@ -102,6 +102,9 @@ class StoryController {
                 }).map((storyIllustration) => storyIllustration?.image_url)
 
                 return story
+            }).sort((a, b) => {
+                if (a.created_at < b.created_at) return 1
+                if (a.created_at > b.created_at) return -1
             })
 
             return res.status(200).send(storiesSerialized)

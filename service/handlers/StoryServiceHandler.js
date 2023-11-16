@@ -78,7 +78,10 @@ class StoryServiceHandler {
             });
         }
 
-        return data.filter((d) => d !== null);
+        return data.filter((d) => d !== null).sort((a, b) => {
+            if (a.created_at < b.created_at) return 1
+            if (a.created_at > b.created_at) return -1
+        });
     }
 
 }
