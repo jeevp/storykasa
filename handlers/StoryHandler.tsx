@@ -87,7 +87,8 @@ export default class StoryHandler {
             profileId: story?.profiles?.profile_id,
             profileName: story?.profiles?.profile_name,
             profileAvatar: story?.profiles?.avatar_url,
-            lastUpdated: story?.last_updated
+            lastUpdated: story?.last_updated,
+            illustrationsURL: story?.illustrationsURL
         }))
     }
 
@@ -111,7 +112,8 @@ export default class StoryHandler {
             profileId: story?.profiles?.profile_id,
             profileName: story?.profiles?.profile_name,
             profileAvatar: story?.profiles?.avatar_url,
-            lastUpdated: story?.last_updated
+            lastUpdated: story?.last_updated,
+            illustrationsURL: story?.illustrationsURL
         }))
     }
 

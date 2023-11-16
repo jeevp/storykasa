@@ -173,7 +173,7 @@ function Library() {
                     {selectedIndex !== undefined && (
                         <div
                         className="hidden lg:flex lg:ml-10 w-full overflow-y-scroll"
-                        style={onMobile ? { maxHeight: "auto" } : { maxHeight: "80vh" }}>
+                        style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
                             <AnimatePresence mode="wait">
                                 (
                                 <motion.div
