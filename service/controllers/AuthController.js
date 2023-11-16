@@ -24,7 +24,9 @@ class AuthController {
                 },
             })
 
-            if (error) APIValidator.generateErrorMessage(error, { response: res })
+            if (error) {
+                return res.status(400).send({ message: error?.message })
+            }
 
             await supabase.auth.setSession({
                 refresh_token: data.session.refresh_token,
