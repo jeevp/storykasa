@@ -1,5 +1,4 @@
 import {useState} from 'react'
-import { useRouter } from 'next/navigation'
 import { Baby, GlobeSimple, Trash, Pencil } from '@phosphor-icons/react'
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
@@ -25,6 +24,7 @@ export default function StoryDetails({
     const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
     const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false)
     const [storyHasEnded, setStoryHasEnded] = useState(false)
+    const [storyCurrentTime, setStoryCurrentTime] = useState(0)
 
     const { currentProfileId } = useProfile()
 
@@ -41,6 +41,9 @@ export default function StoryDetails({
         setStartIllustrationsDisplay(playing)
     }
 
+    const handleOnTimeChange = (time: any) => {
+        setStoryCurrentTime(time)
+    }
 
     return (
         <div>
@@ -82,6 +85,7 @@ export default function StoryDetails({
                         isRunning={startIllustrationsDisplay}
                             // @ts-ignore
                         duration={story?.duration}
+                        targetDuration={storyCurrentTime}
                         restart={storyHasEnded && startIllustrationsDisplay}/>
                         <div key={story?.recordingUrl} className="mt-2">
                             <STKAudioPlayer
@@ -91,6 +95,7 @@ export default function StoryDetails({
                                 src={story?.recordingUrl}
                                 onEnd={handleStoryOnEnd}
                                 // @ts-ignore
+                                onTimeChange={handleOnTimeChange}
                                 onPlaying={handlePlaying} />
                         </div>
                     </div>
@@ -103,7 +108,9 @@ export default function StoryDetails({
                                     html5
                                     onEnd={handleStoryOnEnd}
                                     // @ts-ignore
-                                    onPlaying={handlePlaying} />
+                                    onPlaying={handlePlaying}
+                                    // @ts-ignore
+                                    onTimeChange={handleOnTimeChange}/>
                             </div>
                         )}
                     </>

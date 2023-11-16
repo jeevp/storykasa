@@ -20,6 +20,7 @@ interface STKAudioPlayerProps {
     html5?: boolean;
     onPlaying?: (playing: boolean) => void;
     onEnd?: () => void;
+    onTimeChange?: () => void
 }
 
 const formatTime = (seconds: number) => {
@@ -34,7 +35,8 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     outlined = false,
     html5 = false,
     onPlaying = () => ({}),
-    onEnd = () => ({})
+    onEnd = () => ({}),
+    onTimeChange = () => ({})
 }) => {
     const isAppleDevice = useAppleDevice()
     const [isPlaying, setIsPlaying] = useState(false);
@@ -106,6 +108,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             const newTime = Math.max((howl.seek() as number) - 10, 0);
             howl.seek(newTime);
             setProgress((newTime / howl.duration()) * 100);
+            onTimeChange(newTime)
         }
     };
 
@@ -114,6 +117,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             const newTime = Math.min((howl.seek() as number) + 10, howl.duration());
             howl.seek(newTime);
             setProgress((newTime / howl.duration()) * 100);
+            onTimeChange(newTime)
         }
     };
 
@@ -126,7 +130,9 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
     const handleProgressBarOnChange = (e: any) => {
         if (howl) {
-            howl.seek((howl.duration() / 100) * +e?.target?.value)
+            const newTime = (howl.duration() / 100) * +e?.target?.value
+            howl.seek(newTime)
+            onTimeChange(newTime)
         }
     }
 
