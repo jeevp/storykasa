@@ -30,10 +30,8 @@ export default function StoryDetails({
 
     const handleStoryOnEnd = () => {
         setStoryHasEnded(true)
-
-        setTimeout(() => {
-            setStartIllustrationsDisplay(false)
-        }, 1000)
+        setStartIllustrationsDisplay(false)
+        setStoryCurrentTime(0)
     }
 
     const handlePlaying = (playing: boolean) => {

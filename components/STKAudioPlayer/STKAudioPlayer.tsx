@@ -83,6 +83,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                 setIsPlaying(false);
                 howl.seek(0);
                 setProgress(0);
+                setCurrentTime("0:00")
                 onEnd()
             });
         }
