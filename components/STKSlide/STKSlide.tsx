@@ -24,7 +24,6 @@ const STKSlide: React.FC<STKSlideProps> = ({
 
     useEffect(() => {
         if (restart !== restartToggle) {
-            console.log(">>>>>>>>")
             setCurrentIndex(0);
             setElapsedTime(0);
             setRestartToggle(restart);
@@ -58,7 +57,6 @@ const STKSlide: React.FC<STKSlideProps> = ({
 
     const offset = -currentIndex * 100;
 
-    console.log({ restart })
     return (
         <div className="stk-slide">
             <div className="slide-container" style={{ transform: `translateX(${offset}%)` }}>
