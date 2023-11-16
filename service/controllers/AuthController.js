@@ -60,7 +60,7 @@ class AuthController {
                 password,
             })
 
-            if (error) APIValidator.generateErrorMessage(error, { response: res })
+            // if (error) APIValidator.generateErrorMessage(error, { response: res })
 
             const defaultProfile = await ProfileServiceHandler.getDefaultAccountProfile({
                 accessToken: data.session.access_token
