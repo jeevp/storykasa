@@ -101,7 +101,9 @@ function Discover() {
                 </div>
                 {Object.keys(storyFilters).length > 0 ? (
                     <div className="mb-4">
-                        <StoryFiltersSummary privateStories={false} />
+                        <StoryFiltersSummary
+                        privateStories={false}
+                        onChange={() => setSelectedIndex(undefined)}/>
                     </div>
                 ) : null}
                 <Divider />

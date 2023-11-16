@@ -54,16 +54,14 @@ class StoryController {
     static async getLibraryStories(req, res) {
         try {
             APIValidator.optionalParams({
-                allowedParams: ["narrator", "language", "ageGroups", "storyLengths"],
+                allowedParams: ["narrator", "language", "ageGroups[]", "storyLengths[]"],
                 incomeParams: req.query
             }, res)
 
-            const {
-                narrator,
-                language,
-                ageGroups,
-                storyLengths
-            } = req.query
+            const { narrator, language } = req.query
+
+            const ageGroups = req.query["ageGroups[]"]
+            const storyLengths = req.query["storyLengths[]"]
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
@@ -77,7 +75,6 @@ class StoryController {
                 accessToken: req.accessToken,
                 userId: user.id
             })
-
 
             if (privateStories.length === 0) return res.status(200).send([])
 

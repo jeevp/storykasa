@@ -45,8 +45,10 @@ function STKSelect({
 
     useEffect(() => {
         if (multiple && Array.isArray(value)) {
+            const options = value.map(val => val[optionValue])
+            if (value.includes("")) options.push("")
             // @ts-ignore
-            setSelectedOptions(value.map(val => val[optionValue]));
+            setSelectedOptions(options);
         } else if (!multiple && value) {
             // @ts-ignore
             setSelectedOptions([value[optionValue]]);
@@ -69,8 +71,10 @@ function STKSelect({
                 setSelectedOptions(_options)
                 onChange(_options.filter((_option) => _option !== ""))
             } else {
-                setSelectedOptions(cleanSelectedOptions ? [] : value)
-                onChange(value)
+                // @ts-ignore
+                setSelectedOptions(cleanSelectedOptions || selectedOptions.includes("") ? [] : value)
+                // @ts-ignore
+                onChange(cleanSelectedOptions  || selectedOptions.includes("") ? [] : value)
             }
         } else {
             // @ts-ignore

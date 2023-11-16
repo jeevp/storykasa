@@ -5,7 +5,7 @@ import STKButton from "@/components/STKButton/STKButton";
 import {useEffect, useState} from "react";
 import StoryHandler from "@/handlers/StoryHandler";
 import {useStory} from "@/contexts/story/StoryContext";
-import {allowedAgeGroups, languages, storyLengths} from "@/models/Story";
+import {allowedAgeGroups, storyLengths} from "@/models/Story";
 import useDevice from "@/customHooks/useDevice";
 
 interface StoryFiltersDialogProps {
@@ -78,11 +78,11 @@ export default function StoryFiltersDialog({
         try {
             setLoading(true)
             if (privateStories) {
-                const publicStories = await StoryHandler.fetchStories({ ..._filters })
-                setPrivateStories(publicStories)
+                const privateStories = await StoryHandler.fetchStories({ ..._filters })
+                setPrivateStories(privateStories)
             } else {
-                const privateStories = await StoryHandler.fetchPublicStories({ ..._filters })
-                setPublicStories(privateStories)
+                const publicStories = await StoryHandler.fetchPublicStories({ ..._filters })
+                setPublicStories(publicStories)
             }
 
             onChange()
@@ -123,6 +123,31 @@ export default function StoryFiltersDialog({
         await handleApplyFilters({})
     }
 
+    const getNarratorValue = () => {
+        // @ts-ignore
+        if (!filters?.narrator) return null
+        // @ts-ignore
+        return storyNarrators.find((narrator) => narrator?.narratorName === filters?.narrator)
+    }
+
+    const getAgeGroupsValue = () => {
+        const _allowedAgeGroups = allowedAgeGroups.map((ageGroup) => ageGroup.value)
+        let values = []
+        // @ts-ignore
+        if (_allowedAgeGroups?.every((ageGroup: any) => filters?.ageGroups?.includes(ageGroup))) {
+            values.push("")
+        }
+
+        const ageGroups = allowedAgeGroups.filter((ageGroup) => {
+            // @ts-ignore
+            return filters?.ageGroups?.includes(ageGroup.value)
+        })
+
+        values = [...values, ...ageGroups]
+
+        return values
+    }
+
     return (
         <STKDialog maxWidth="xs" active={active} fullScreen={onMobile} onClose={handleClose}>
             <h2 className="">Filters</h2>
@@ -135,7 +160,7 @@ export default function StoryFiltersDialog({
                         placeholder="Filter by narrator"
                         fluid
                         // @ts-ignore
-                        value={storyNarrators.find((narrator) => narrator?.narratorName === filters?.narrator)}
+                        value={getNarratorValue()}
                         options={storyNarrators}
                         onChange={(narrator: any) => handleFilterOnChange("narrator", narrator?.narratorName)}/>
                     </div>
@@ -160,8 +185,10 @@ export default function StoryFiltersDialog({
                         fluid
                         placeholder="Filter by ages"
                         options={allowedAgeGroups}
+                        enableSelectAll
+                        selectAllLabel="All ages"
                         // @ts-ignore
-                        value={allowedAgeGroups.filter((ageGroup) => filters?.ageGroups?.includes(ageGroup.value))}
+                        value={getAgeGroupsValue()}
                         optionLabel="name"
                         multiple
                         onChange={(ages: any) => handleFilterOnChange("ageGroups", ages)}/>

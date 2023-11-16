@@ -18,6 +18,7 @@ import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton"
 import StoryFilters from "@/composedComponents/StoryFilters/StoryFilters";
 import {Divider} from "@mui/material";
 import {useStory} from "@/contexts/story/StoryContext";
+import StoryFiltersSummary from "@/composedComponents/StoryFilters/StoryFiltersSummary/StoryFiltersSummary";
 
 function Library() {
     const { onMobile } = useDevice()
@@ -27,7 +28,7 @@ function Library() {
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
 
     // Contexts
-    const { privateStories, setPrivateStories } = useStory()
+    const { privateStories, setPrivateStories, storyFilters } = useStory()
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
@@ -120,11 +121,18 @@ function Library() {
                             onChange={() => setSelectedIndex(undefined)} />
                         </div>
                     </div>
+                    {Object.keys(storyFilters).length > 0 ? (
+                        <div className="mb-4">
+                            <StoryFiltersSummary
+                            privateStories
+                            onChange={() => setSelectedIndex(undefined)} />
+                        </div>
+                    ) : null}
                     <Divider />
                 </>
             </div>
             {loaded ? (
-                <div className="flex sm:w-full mt-4 pb-32 lg:pb-0">
+                <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">
                     {privateStories.length ? (
                         <AnimatePresence mode="wait">
                             (
@@ -135,7 +143,7 @@ function Library() {
                                 exit={{ x: 10, opacity: 0 }}
                                 key={privateStories.length}
                             >
-                                <div className="overflow-y-scroll mt-10" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "70vh" }}>
+                                <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
                                     {filtered?.map((story: Story, index: number) => (
                                         <div
                                             className="mt-2 first:mt-0"

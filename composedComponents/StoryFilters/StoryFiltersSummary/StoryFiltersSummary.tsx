@@ -6,10 +6,11 @@ import {XCircle} from "@phosphor-icons/react";
 import StoryHandler from "@/handlers/StoryHandler";
 
 interface StoryFiltersSummaryProps {
-    privateStories: boolean
+    privateStories?: boolean
+    onChange?: () => void
 }
 
-export default function StoryFiltersSummary({ privateStories }: StoryFiltersSummaryProps) {
+export default function StoryFiltersSummary({ privateStories, onChange = () => ({}) }: StoryFiltersSummaryProps) {
     // State
     const [filterChips, setFilterChips] = useState([])
 
@@ -85,10 +86,11 @@ export default function StoryFiltersSummary({ privateStories }: StoryFiltersSumm
         }
 
         setStoryFilters(_filters)
+        onChange()
     }
 
     return (
-        <div className="flex items-center overflow-x-auto">
+        <div className="flex items-center overflow-x-auto hide-scrollbar">
             {filterChips.map((filterChip, index) => (
                 <div key={index} className="mr-1">
                     <Chip

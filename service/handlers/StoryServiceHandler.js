@@ -17,7 +17,7 @@ class StoryServiceHandler {
         let endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`
         if (filters?.private && userId) {
             endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`
-            queryParams.select = '*,stories(*,profiles(*))'
+            queryParams.select = '*, stories (*, profiles (*))'
             queryParams.account_id = `eq.${userId}`
         } else {
             queryParams.is_public = "eq.true"
@@ -28,7 +28,7 @@ class StoryServiceHandler {
         if (ageGroups && !(ageGroups instanceof Array)) ageGroups = [filters?.ageGroups]
 
         // Add filter for narrator if provided
-        if (filters?.narrator) {
+        if (!filters.private && filters?.narrator) {
             queryParams['profiles.profile_name'] = `eq.${filters?.narrator}`;
         }
 
@@ -55,16 +55,26 @@ class StoryServiceHandler {
         // Apply additional filtering for story lengths
         if (filters?.storyLengths && filters?.storyLengths.length) {
             data = data.filter(story => {
-                if (filters.storyLengths.includes('short') && story.duration <= 300) {
+                if (!story?.duration) return false
+
+                if (filters.storyLengths.includes('short') && story?.duration <= 300) {
                     return true;
                 }
-                if (filters.storyLengths.includes('medium') && story.duration > 300 && story.duration <= 600) {
+                if (filters.storyLengths.includes('medium') && story?.duration > 300 && story?.duration <= 600) {
                     return true;
                 }
-                if (filters.storyLengths.includes('long') && story.duration > 600) {
+                if (filters.storyLengths.includes('long') && story?.duration > 600) {
                     return true;
                 }
                 return false;
+            });
+        }
+
+        if (filters?.private && filters.narrator) {
+            data = data.filter(story => {
+                if (!story?.profiles) return false
+
+                return story?.profiles?.profile_name === filters.narrator
             });
         }
 
