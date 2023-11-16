@@ -172,7 +172,7 @@ function Discover() {
                 open={showStoryDetailsDialog}
                 editionNotAllowed
                 // @ts-ignore
-                story={selectedIndex !== undefined && selectedIndex !== null ? stories[selectedIndex] : null}
+                story={selectedIndex !== undefined && selectedIndex !== null ? publicStories[selectedIndex] : null}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
         </PageWrapper>
     )
