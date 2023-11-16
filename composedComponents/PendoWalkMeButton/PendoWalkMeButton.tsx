@@ -10,7 +10,7 @@ const PendoWalkMeButton = () => {
     if (!showPendoWalkMeButton) return null;
 
     return (
-        <div style={{
+        <div id="storykasa-pendo-walk-me-button" style={{
             position: 'fixed',
             right: '16px',
             bottom: '16px',
