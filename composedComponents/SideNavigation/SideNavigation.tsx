@@ -51,38 +51,32 @@ export default function SideNavigation() {
 
     return (
         <nav>
-                <AnimatePresence mode="wait">
-                    (
-                    <motion.div
-                        initial={{ x: onMobile ? 0 : 10, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: 10, opacity: 0 }}
-                        key={currentProfile?.profile_id}
-                    >
-                        {!currentProfile ? (
-                            <STKSkeleton width="70%" height="20px" />
-                        ) : (
-                            <h2 className="m-0 text-base hidden lg:block">Hi, {currentProfile?.profile_name}!</h2>
-                        )}
+            <div>
+                <div key={currentProfile?.profile_id}>
+                    {!currentProfile ? (
+                        <STKSkeleton width="70%" height="20px" />
+                    ) : (
+                        <h2 className="m-0 text-base hidden lg:block">Hi, {currentProfile?.profile_name}!</h2>
+                    )}
 
-                        <div
-                        style={{ boxShadow: onMobile ? "1px 1px 8px #00000024" : '' }}
-                        className="nav lg:mt-8 w-full lg:w-auto flex lg:flex-col bg-white lg:bg-transparent justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
-                           <div className="flex justify-center lg:flex-col -ml-10 lg:ml-0">
-                               <STKButtonTabs
-                                   useIconButtonOnMobile
-                                   tabs={navigationOptions}
-                                   initialValue={selectedNavigationOption}
-                                   onChange={handleTabOnChange}
-                               />
+                    <div
+                    style={{ boxShadow: onMobile ? "1px 1px 8px #00000024" : '' }}
+                    className="nav lg:mt-8 w-full lg:w-auto flex lg:flex-col bg-white lg:bg-transparent justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
+                       <div className="flex justify-center lg:flex-col -ml-10 lg:ml-0">
+                           <STKButtonTabs
+                               useIconButtonOnMobile
+                               tabs={navigationOptions}
+                               initialValue={selectedNavigationOption}
+                               onChange={handleTabOnChange}
+                           />
 
-                               <div className="lg:mt-6 ml-4 lg:ml-0 lg:w-full">
-                                   <RecordButton onClick={goToRecordPage} />
-                               </div>
+                           <div className="lg:mt-6 ml-4 lg:ml-0 lg:w-full">
+                               <RecordButton onClick={goToRecordPage} />
                            </div>
-                        </div>
-                    </motion.div>
-                </AnimatePresence>
+                       </div>
+                    </div>
+                </div>
+            </div>
         </nav>
     )
 }

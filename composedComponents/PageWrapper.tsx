@@ -22,9 +22,9 @@ export default function PageWrapper({
     return (
         <AnimatePresence mode="wait">
             <motion.div
-                initial={{ x: 10, opacity: 0}}
+                initial={{ x: 0, opacity: 0}}
                 animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 10, opacity: 0 }}
+                exit={{ x: 0, opacity: 0 }}
                 key={path}
             >
                 <div className="w-full flex justify-center mt-4">

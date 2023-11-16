@@ -81,10 +81,10 @@ function Library() {
                 </div>
                 <div className="mt-4 max-w-2xl">
                     {!loaded ? (
-                        <div>
-                            <STKSkeleton width="500px" height="20px" />
+                        <div className="mb-10">
+                            <STKSkeleton width={onMobile ? '300px' : '500px'} height="20px" />
                             <div className="mt-1">
-                                <STKSkeleton width="300px" height="20px" />
+                                <STKSkeleton width={onMobile ? '200px' : '300px'} height="20px" />
                             </div>
                         </div>
                     ) : (
@@ -106,7 +106,7 @@ function Library() {
                     )}
                 </div>
                 <>
-                    <div className={`w-full flex flex-col lg:flex-row mb-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
+                    <div className={`w-full flex flex-col lg:flex-row mb-10 mt-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
                         <div className="w-full max-w-xl">
                             <STKTextField
                                 placeholder="Search in my library..."
