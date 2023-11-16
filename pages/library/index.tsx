@@ -3,7 +3,7 @@ import { useEffect, useState} from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
 import {AnimatePresence, motion} from 'framer-motion'
-import {MagnifyingGlass} from '@phosphor-icons/react'
+import {MagnifyingGlass, SmileyMeh} from '@phosphor-icons/react'
 import useDevice from "@/customHooks/useDevice";
 import StoryDetailsDialog from "@/composedComponents/StoryDetailsDialog/StoryDetailsDialog";
 import STKTooltip from "@/composedComponents/STKTooltip/STKTooltip";
@@ -19,6 +19,7 @@ import StoryFilters from "@/composedComponents/StoryFilters/StoryFilters";
 import {Divider} from "@mui/material";
 import {useStory} from "@/contexts/story/StoryContext";
 import StoryFiltersSummary from "@/composedComponents/StoryFilters/StoryFiltersSummary/StoryFiltersSummary";
+import {neutral300} from "@/assets/colorPallet/colors";
 
 function Library() {
     const { onMobile } = useDevice()
@@ -56,7 +57,7 @@ function Library() {
     const disableSearchAndFilters = () => {
         return (
             privateStories?.length === 0
-            && Object.keys(privateStories).length === 0
+            && Object.keys(storyFilters).length === 0
         )
     }
 
@@ -88,19 +89,19 @@ function Library() {
                         </div>
                     ) : (
                      <>
-                         {privateStories.length ? (
+                         {privateStories.length || (privateStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
                              <p>
                                  These stories can only be seen by other profiles in your account. This is the home for
                                  the stories you record.
                              </p>
-                         ) : (
+                         ) : privateStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
                              <p>
                                  Your library is empty, but you can change that! It’s easy to
                                  <span className="font-semibold underline-offset-0">
                                 <Link href="/record"> create your own story</Link>
                             </span>.
                              </p>
-                         )}
+                         ) : null}
                      </>
                     )}
                 </div>
@@ -133,16 +134,16 @@ function Library() {
             </div>
             {loaded ? (
                 <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">
-                    {privateStories.length ? (
-                        <AnimatePresence mode="wait">
-                            (
-                            <motion.div
-                                className="w-full"
-                                initial={{ x: 10, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: 10, opacity: 0 }}
-                                key={privateStories.length}
-                            >
+                    <AnimatePresence mode="wait">
+                        (
+                        <motion.div
+                            className="w-full"
+                            initial={{ x: 10, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: 10, opacity: 0 }}
+                            key={privateStories.length}
+                        >
+                            {filtered.length > 0 ? (
                                 <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
                                     {filtered?.map((story: Story, index: number) => (
                                         <div
@@ -157,10 +158,17 @@ function Library() {
                                         </div>
                                     ))}
                                 </div>
-
-                            </motion.div>
-                        </AnimatePresence>
-                    ) : null}
+                            ) : filtered.length === 0 && Object.keys(storyFilters).length > 0 ? (
+                                <div className="flex flex-col items-center">
+                                    <SmileyMeh size={100} color={neutral300} />
+                                    <p className="mt-4 text-center max-w-lg">
+                                        It looks like we could not find any stories matching your filters.
+                                        Try adjusting your filter settings to see more results.
+                                    </p>
+                                </div>
+                            ) : null}
+                        </motion.div>
+                    </AnimatePresence>
 
                     {selectedIndex !== undefined && (
                         <div

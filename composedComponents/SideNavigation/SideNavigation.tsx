@@ -10,6 +10,7 @@ import {neutral800} from "@/assets/colorPallet/colors";
 import RecordButton from "@/composedComponents/RecordButton/RecordButton";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useStory} from "@/contexts/story/StoryContext";
 
 const navigationOptions = [
     { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
@@ -24,6 +25,7 @@ export default function SideNavigation() {
 
     // Context
     const { currentProfile } = useProfile()
+    const { setStoryFilters } = useStory()
 
     // States
     const [profileOptions, setProfileOptions] = useState<Profile[]>([])
@@ -38,8 +40,9 @@ export default function SideNavigation() {
     }, [])
 
     // Methods
-    const handleTabOnChange = (selectedTab: any) => {
-        route.push(selectedTab.pathname)
+    const handleTabOnChange = async (selectedTab: any) => {
+        await route.push(selectedTab.pathname)
+        setStoryFilters({})
     }
 
     const goToRecordPage = () => {
