@@ -67,7 +67,7 @@ function Library() {
 
 
     return (
-        <PageWrapper path="library">
+        <PageWrapper path="library" withPendoHelp>
             <div>
                 <div className="flex items-center">
                     <h2 className="m-0 text-2xl">

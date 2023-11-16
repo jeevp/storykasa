@@ -5,7 +5,7 @@ import withProfile from "@/HOC/withProfile"
 
 function Record() {
     return (
-        <PageWrapper path="record">
+        <PageWrapper path="record" withPendoHelp>
             <div>
                 <h2 className="m-0">Create a story</h2>
                 <p className="mt-4 max-w-2xl">

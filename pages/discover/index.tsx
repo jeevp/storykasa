@@ -72,7 +72,7 @@ function Discover() {
         : []
 
     return (
-        <PageWrapper path="discover">
+        <PageWrapper path="discover" withPendoHelp>
             <div>
                 <h2 className="m-0">
                     Discover stories
