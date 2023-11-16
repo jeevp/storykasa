@@ -108,6 +108,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             const newTime = Math.max((howl.seek() as number) - 10, 0);
             howl.seek(newTime);
             setProgress((newTime / howl.duration()) * 100);
+            // @ts-ignore
             onTimeChange(newTime)
         }
     };
@@ -117,6 +118,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             const newTime = Math.min((howl.seek() as number) + 10, howl.duration());
             howl.seek(newTime);
             setProgress((newTime / howl.duration()) * 100);
+            // @ts-ignore
             onTimeChange(newTime)
         }
     };
@@ -132,6 +134,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         if (howl) {
             const newTime = (howl.duration() / 100) * +e?.target?.value
             howl.seek(newTime)
+            // @ts-ignore
             onTimeChange(newTime)
         }
     }
