@@ -43,7 +43,6 @@ export default function StoryDetails({
         setStoryCurrentTime(time)
     }
 
-    console.log({ story })
 
     return (
         <div>

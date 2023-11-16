@@ -50,7 +50,8 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
             setCurrentProfile(account?.defaultProfile)
             await router.push('/discover')
         } catch(error) {
-            setErrorMsg("Something went wrong")
+            // @ts-ignore
+            setErrorMsg(error?.response?.data?.message || "")
             setLoading(false)
         }
     }

@@ -113,7 +113,8 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
 
             onSuccess()
         } catch (error) {
-            setErrorMsg("Something went wrong.")
+            // @ts-ignore
+            setErrorMsg(error?.response?.data?.message || "")
             setProcessingAccountCreation(false)
         }
     }

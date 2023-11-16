@@ -1,5 +1,7 @@
 const supabase = require("../supabase")
 const ProfileServiceHandler = require("../handlers/ProfileServiceHandler");
+const APIValidator = require("../validators/APIValidator")
+
 
 class AuthController {
     static async signUp(req, res) {
@@ -21,6 +23,8 @@ class AuthController {
                     },
                 },
             })
+
+            if (error) APIValidator.generateErrorMessage(error, { response: res })
 
             await supabase.auth.setSession({
                 refresh_token: data.session.refresh_token,
@@ -55,6 +59,8 @@ class AuthController {
                 email,
                 password,
             })
+
+            if (error) APIValidator.generateErrorMessage(error, { response: res })
 
             const defaultProfile = await ProfileServiceHandler.getDefaultAccountProfile({
                 accessToken: data.session.access_token

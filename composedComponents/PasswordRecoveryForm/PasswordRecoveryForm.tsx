@@ -6,6 +6,7 @@ import AuthHandler from "@/handlers/AuthHandler";
 import { CheckCircle } from "@phosphor-icons/react"
 import {green600} from "@/assets/colorPallet/colors";
 import {useRouter} from "next/router";
+import Validator from "@/utils/Validator";
 
 
 interface LoginFormProps {
@@ -16,11 +17,15 @@ export default function PasswordRecoveryForm({ onCancel = () => ({}) }: LoginFor
     const [email, setEmail] = useState("")
     const [loading, setLoading] = useState(false)
     const [passwordRequestedWithSuccess, setPasswordRequestedWithSuccess] = useState(false)
-
-    const router = useRouter()
+    const [errorMessage, setErrorMessage] = useState("")
 
     const handlePasswordRecoveryRequest = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if (!Validator.isEmailValid(email)) {
+            setErrorMessage("This email address is not valid.")
+            return
+        }
+
         try {
             setLoading(true)
             await AuthHandler.requestPasswordRecovery({ email })
@@ -28,6 +33,11 @@ export default function PasswordRecoveryForm({ onCancel = () => ({}) }: LoginFor
         } finally {
             setLoading(false)
         }
+    }
+
+    const handleEmailOnChange = (value: any) => {
+        setEmail(value)
+        setErrorMessage("")
     }
 
 
@@ -63,9 +73,14 @@ export default function PasswordRecoveryForm({ onCancel = () => ({}) }: LoginFor
                         <div>
                             <label className="font-semibold">Email address</label>
                             <div className="mt-2">
-                                <STKTextField fluid placeholder="Type your email" onChange={(value: string) => setEmail(value)} />
+                                <STKTextField fluid placeholder="Type your email" onChange={handleEmailOnChange} />
                             </div>
                         </div>
+
+                        {errorMessage && (
+                            <div className="flex justify-center mt-6">
+                                <label className="text-red-800">{errorMessage}</label>
+                            </div>                        )}
 
                         <div className="mt-6 flex items-center">
                             <div className="w-full">
