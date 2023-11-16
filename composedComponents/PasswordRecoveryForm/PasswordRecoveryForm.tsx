@@ -52,7 +52,8 @@ export default function PasswordRecoveryForm({ onCancel = () => ({}) }: LoginFor
                         <p className="text-center">
                             Thank you for submitting your password recovery request. If the email address you provided
                             is associated with an account in our system, you will receive an email with instructions
-                            on how to reset your password shortly.
+                            on how to reset your password shortly. Please note that it may take a few minutes for
+                            the email to arrive in your inbox. We appreciate your patience.
                         </p>
                         <div className="mt-6 flex justify-center">
                             <STKButton
