@@ -18,6 +18,7 @@ class StoryServiceHandler {
         if (filters?.private && userId) {
             endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`
             queryParams.select = '*, stories (*, profiles (*))'
+            queryParams.account_id = `eq.${userId}`
         } else {
             queryParams.is_public = "eq.true"
             queryParams.order = 'last_updated.desc'
