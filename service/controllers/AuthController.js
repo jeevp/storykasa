@@ -25,7 +25,7 @@ class AuthController {
             })
 
             if (error) {
-                return res.status(400).send({ message: error?.message })
+                return APIValidator.generateErrorMessage({ serverErrorMessage: error?.message }, res)
             }
 
             await supabase.auth.setSession({
@@ -63,7 +63,7 @@ class AuthController {
             })
 
             if (error) {
-                return res.status(400).send({ message: error?.message })
+                return APIValidator.generateErrorMessage({ serverErrorMessage: error?.message }, res)
             }
 
             const defaultProfile = await ProfileServiceHandler.getDefaultAccountProfile({
