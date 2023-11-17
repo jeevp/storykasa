@@ -50,7 +50,6 @@ export default function PageWrapper({
                 message={snackbarBus?.message}
                 // @ts-ignore
                 type={snackbarBus?.type}/>
-                {withPendoHelp && <PendoWalkMeButton />}
             </motion.div>
         </AnimatePresence>
     )
