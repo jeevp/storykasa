@@ -39,6 +39,10 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
     // Methods
     const handleSigninWithPassword = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if (!password || !email) {
+            setErrorMsg("Please enter both your email and password to log in. These fields cannot be blank.")
+            return
+        }
 
         try {
             setLoading(true)
@@ -99,7 +103,7 @@ export default function LoginForm({ onPasswordRecoveryRequest = () => ({}) }: Lo
                     </div>
                     {errorMsg && (
                         <div className="flex justify-center mt-6">
-                            <label className="text-red-800">{errorMsg}</label>
+                            <label className="text-red-800 text-center">{errorMsg}</label>
                         </div>
                     )}
                     <div className="py-6">
