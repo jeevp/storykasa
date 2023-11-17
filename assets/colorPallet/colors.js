@@ -11,6 +11,9 @@ export const beige400 = "#c2bdaf"
 export const beige300 = "#f5efdc"
 export const beige200 = "#d9d1bd"
 
+
+export const green800 = "#358c62"
+
 export const green600 = "#3d996d"
 export const green300 = "#96ea8f"
 
