@@ -5,18 +5,15 @@ import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useAuth} from "@/contexts/auth/AuthContext";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import {usePathname} from "next/navigation";
-import PendoWalkMeButton from "@/composedComponents/PendoWalkMeButton/PendoWalkMeButton";
 
 interface PageWrapperProps {
     children: any
-    path?: string,
-    withPendoHelp?: boolean
+    path?: string
 }
 
 export default function PageWrapper({
     children,
     path,
-    withPendoHelp
 }: PageWrapperProps) {
     const { currentUser } = useAuth()
     const { snackbarBus } = useSnackbar()

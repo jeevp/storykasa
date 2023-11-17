@@ -27,7 +27,7 @@ function Profiles() {
     }
 
     return (
-        <PageWrapper path="profiles" withPendoHelp>
+        <PageWrapper path="profiles">
             <div className="flex items-center flex-col lg:flex-row">
                 <h1>
                     Choose a profile
