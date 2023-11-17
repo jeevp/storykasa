@@ -9,6 +9,30 @@ class APIValidator {
         }
     }
 
+    static requiredParams({ req, res }, { requiredParams }) {
+        const incomingParamsList = Object.keys(req.params);
+
+        if (
+            incomingParamsList.every(
+                (incomingParam) => !requiredParams.includes(incomingParam)
+            )
+        ) {
+            return res.status(400).send({ message: "Incorrect params" });
+        }
+    }
+
+    static requiredPayload({ req, res }, { requiredPayload }) {
+        const incomingPayloadKeys = Object.keys(req.body);
+
+        if (
+            incomingPayloadKeys.every(
+                (incomingPayloadKey) => !requiredPayload.includes(incomingPayloadKey)
+            )
+        ) {
+            return res.status(400).send({ message: "Incorrect payload" });
+        }
+    }
+
     static generateErrorMessage({ serverErrorMessage }, response) {
         switch(serverErrorMessage) {
             case "Invalid login credentials":

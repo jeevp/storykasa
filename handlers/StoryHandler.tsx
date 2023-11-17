@@ -129,4 +129,13 @@ export default class StoryHandler {
 
         return response.data
     }
+
+    static async addStoryToLibrary({ storyId, profileId }: { storyId: string, profileId: string }) {
+        const headers = generateHeaders()
+
+        await axios.post("/api/stories/library", {
+            storyId,
+            profileId
+        }, headers)
+    }
 }

@@ -83,7 +83,6 @@ class StoryServiceHandler {
             if (a.created_at > b.created_at) return -1
         });
     }
-
 }
 
 module.exports = StoryServiceHandler

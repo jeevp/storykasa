@@ -9,23 +9,36 @@ import STKButton from "@/components/STKButton/STKButton";
 import {useState} from "react";
 import {green600} from "@/assets/colorPallet/colors";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
+import StoryHandler from "@/handlers/StoryHandler";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 export default function StoryCard({ story }: {
     story: Story
     selected: boolean
 }) {
     const [liked, setLiked] = useState(false)
+    const { currentProfileId } = useProfile()
 
     const { setSnackbarBus } = useSnackbar()
 
-    const handleLikedStories = (e) => {
+    const handleLikedStories = async (e: any) => {
         e.stopPropagation()
         setLiked(!liked)
-        setSnackbarBus({
-            type: "success",
-            message: !liked ? "Added to library" : "Removed from library",
-            active: true
-        })
+
+        try {
+            await StoryHandler.addStoryToLibrary({ storyId: story.storyId, profileId: currentProfileId })
+            setSnackbarBus({
+                type: "success",
+                message: !liked ? "Added to library" : "Removed from library",
+                active: true
+            })
+        } catch (error) {
+            setSnackbarBus({
+                type: "error",
+                message: "Oops, something went wrong!",
+                active: true
+            })
+        }
     }
 
 

@@ -2,8 +2,9 @@ const supabase = require('../../service/supabase');
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
 const StoryServiceHandler = require("../handlers/StoryServiceHandler")
-const Validator = require("../../utils/Validator");
 const APIValidator = require("../validators/APIValidator");
+const LikedStories = require("../models/LikedStories")
+
 
 class StoryController {
     static async deleteStory(req, res) {
@@ -271,6 +272,24 @@ class StoryController {
                 narrators,
                 languages
             })
+        } catch (error) {
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async addStoryToLibrary(req, res) {
+        try {
+            APIValidator.requiredPayload({ req, res }, {
+                requiredPayload: ["storyId", "profileId"]
+            })
+
+            const { storyId, profileId } = req.body
+
+            await LikedStories.create({ storyId, profileId }, {
+                accessToken: req.accessToken
+            })
+
+            return res.status(201).send({ message: "Story added to library with success" })
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
