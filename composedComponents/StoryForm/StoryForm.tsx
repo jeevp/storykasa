@@ -164,6 +164,7 @@ export default function StoryForm() {
                             <STKTextField
                                 multiline
                                 fluid
+                                enableRichText
                                 onChange={(value: SetStateAction<string>) => setDescription(value)} />
                         </div>
                     </div>

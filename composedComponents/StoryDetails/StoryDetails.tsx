@@ -8,6 +8,7 @@ import STKSlide from "@/components/STKSlide/STKSlide";
 import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStoryDialog";
 import Story from "@/models/Story";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import ReactMarkdown from 'react-markdown';
 
 interface StoryDetailsProps {
     story: Story | null;
@@ -117,7 +118,9 @@ export default function StoryDetails({
                 <div className="mb-8 mt-6">
                     <div className="mt-4">
                         <div className="overflow-y-scroll">
-                            {story?.description}
+                            <ReactMarkdown>
+                                {story?.description}
+                            </ReactMarkdown>
                         </div>
                     </div>
                 </div>

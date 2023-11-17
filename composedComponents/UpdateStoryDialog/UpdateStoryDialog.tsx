@@ -91,6 +91,7 @@ export default function UpdateStoryDialog({
                             <STKTextField
                             fluid
                             multiline
+                            enableRichText
                             value={description}
                             maxRows={20}
                             placeholder="Type the story description"

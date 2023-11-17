@@ -1,0 +1,24 @@
+@import "../../assets/colorPallet/colors";
+
+.stk-text-field--rich-editor {
+  border-radius: 8px;
+  border: 1px solid $beige400;
+  .DraftEditor-root {
+    min-height: 200px;
+    max-height: 400px;
+
+    .DraftEditor-editorContainer {
+      min-height: 200px;
+      max-height: 400px;
+
+      .public-DraftEditor-content {
+        min-height: 200px;
+        max-height: 400px;
+      }
+    }
+  }
+
+  &:hover {
+    border-color: $neutral800;
+  }
+}

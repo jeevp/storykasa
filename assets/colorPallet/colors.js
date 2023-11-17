@@ -1,4 +1,5 @@
 export const neutral800 = "#292524"
+export const neutral600 = "#b7b7b7"
 export const neutral400 = "#c5c5c5"
 export const neutral300 = "#d4d4d4"
 
@@ -6,6 +7,7 @@ export const red800 = "#991b1b"
 export const red300 = "#fca5a5"
 
 
+export const beige400 = "#c2bdaf"
 export const beige300 = "#f5efdc"
 export const beige200 = "#d9d1bd"
 
