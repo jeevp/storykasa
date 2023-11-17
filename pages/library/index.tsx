@@ -144,7 +144,7 @@ function Library() {
                             key={privateStories.length}
                         >
                             {filtered.length > 0 ? (
-                                <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
+                                <div className="overflow-y-scroll hide-scrollbar" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
                                     {filtered?.map((story: Story, index: number) => (
                                         <div
                                             className="mt-2 first:mt-0"

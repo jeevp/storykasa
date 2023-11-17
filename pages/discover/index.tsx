@@ -119,7 +119,7 @@ function Discover() {
                             key={stories.length}
                         >
                             {filtered.length > 0  ? (
-                                <div className="overflow-y-scroll" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "62vh" }}>
+                                <div className="overflow-y-scroll hide-scrollbar" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "62vh" }}>
                                     {filtered?.map((story: Story, index: number) => (
                                         <div
                                             className="mt-2 first:mt-0"
