@@ -10,6 +10,7 @@ interface createStoryProps {
     description: string
     language: string
     ageGroup: string
+    illustrationsURL: Array<string>
 }
 
 export default class StoryHandler {
@@ -20,7 +21,8 @@ export default class StoryHandler {
         title,
         description,
         language,
-        ageGroup
+        ageGroup,
+        illustrationsURL
     }: createStoryProps) {
         const payload = {
             isPublic: false,
@@ -30,7 +32,8 @@ export default class StoryHandler {
             description: description,
             language: language,
             ageGroup: ageGroup,
-            duration: duration
+            duration: duration,
+            illustrationsURL
         }
 
         const headers = generateHeaders()

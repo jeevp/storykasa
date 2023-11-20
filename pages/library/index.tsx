@@ -48,9 +48,6 @@ function Library() {
         loadStories()
     }, [])
 
-    const handleRecordOnComplete = (recordUrl: any) => {
-        setRecordedAudioUrl(recordUrl)
-    }
 
     return (
         <PageWrapper path="library">
@@ -127,7 +124,9 @@ function Library() {
                     )}
 
                     {selectedIndex !== undefined && (
-                        <div className="hidden lg:flex lg:ml-10 w-full">
+                        <div
+                        className="hidden lg:flex lg:ml-10 w-full overflow-y-scroll"
+                        style={onMobile ? { maxHeight: "auto" } : { maxHeight: "80vh" }}>
                             <AnimatePresence mode="wait">
                                 (
                                 <motion.div

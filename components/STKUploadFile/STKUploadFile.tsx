@@ -1,9 +1,8 @@
-// components/STKUploadFile.tsx
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { LinearProgress, Typography, Snackbar } from '@mui/material';
+import { Typography, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import {red600} from "@/assets/colorPallet/colors";
+import { red600 } from "@/assets/colorPallet/colors";
 import { X } from '@phosphor-icons/react'
 import STKButton from "@/components/STKButton/STKButton";
 import STKFileCard from "@/composedComponents/FileCard/FileCard";
@@ -15,67 +14,120 @@ const RedSnackbar = styled(Snackbar)(({ theme }) => ({
     },
 }));
 
-const MAX_FILE_SIZE_MB = 50;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-
 interface STKUploadFileProps {
-    onFileUpload: (blob: any, audioUrl: any, duration: any) => void
+    maxSize?: number
+    placeholder?: string
+    acceptedTypes: Array<string>
+    helperText?: string
+    multiple?: boolean
+    maxFiles?: number
+    errorMessage?: string
+    onFileUpload: (blob: any, sourceUrl: any, duration: any) => void
 }
 
 // @ts-ignore
 const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
-    const [file, setFile] = useState<File | null>(null);
+    const MAX_FILE_SIZE_MB = props.maxSize || 5;
+    const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+    const MAX_FILES_DEFAULT = 10
+
+    const [files, setFiles] = useState<File[]>([]);
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [uploadComplete, setUploadComplete] = useState<boolean>(false);
 
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-        const file = acceptedFiles[0];
-        if (file && file.type === 'audio/mpeg') {
-            if (file.size <= MAX_FILE_SIZE_BYTES) {
-                setFile(file);
-                setError(null);  // Reset error state
-                // Mock upload progress
-                let progress = 0;
-                const intervalId = setInterval(() => {
-                    progress += 10;
-                    setUploadProgress(progress);
-                    if (progress === 100) {
-                        clearInterval(intervalId);
-                        setUploadComplete(true);
-                        file.arrayBuffer().then(async (buffer) => {
-                            const blob = new Blob([buffer], { type: 'audio/mpeg' });
-                            const audioURL = URL.createObjectURL(blob);
-                            const duration = await getAudioDuration(file)
+    const isMaxFilesReached = files.length >= (props.maxFiles || MAX_FILES_DEFAULT);
 
-                            props.onFileUpload(blob, audioURL, duration);
-                        });
-                    }
-                }, 500);
-            } else {
-                setError(`File size exceeds ${MAX_FILE_SIZE_MB}MB. Please upload a smaller file.`)
-            }
-        } else {
-            setError('Please upload a valid MP3 file.');
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        if (isMaxFilesReached) {
+            setError('Maximum number of files reached');
+            return;
         }
-    }, []);
+
+        const validFiles = acceptedFiles.filter(file => {
+            return props.acceptedTypes.includes(file.type) && file.size <= MAX_FILE_SIZE_BYTES;
+        });
+
+        if (validFiles.length > 0) {
+            setFiles(prevFiles => [...prevFiles, ...validFiles]);
+            setError(null); // Reset error state
+
+            const uploadFiles = async () => {
+                for (let i = 0; i < validFiles.length; i++) {
+                    const file = validFiles[i];
+
+                    // Reset progress for each file
+                    setUploadProgress(0);
+
+                    // Simulate upload progress
+                    let progress = 0;
+                    const intervalId = setInterval(() => {
+                        progress += 10;
+                        setUploadProgress(progress);
+                        if (progress === 100) {
+                            clearInterval(intervalId);
+
+                            // Process the file once the progress reaches 100%
+                            processFile(file);
+                        }
+                    }, 500);
+                }
+            };
+
+            const processFile = async (file: any) => {
+                const buffer = await file.arrayBuffer();
+                const blob = new Blob([buffer], { type: file.type });
+
+                let sourceUrl = null;
+                if (file.type.startsWith('image/')) {
+                    sourceUrl = URL.createObjectURL(blob);
+                } else if (file.type.startsWith('audio/')) {
+                    sourceUrl = URL.createObjectURL(blob);
+                }
+
+                let duration = null;
+                if (file.type.startsWith('audio/')) {
+                    duration = await getAudioDuration(file);
+                }
+
+                // Call the onFileUpload prop function
+                props.onFileUpload(blob, sourceUrl, duration);
+
+                // Set upload complete if this is the last file
+                if (files.indexOf(file) === files.length - 1) {
+                    setUploadComplete(true);
+                }
+            };
+
+            uploadFiles();
+        } else {
+            setError(`Please upload valid files with a size not exceeding ${MAX_FILE_SIZE_MB}MB.`);
+        }
+    }, [files, isMaxFilesReached]);
 
     const { getRootProps, getInputProps } = useDropzone({
-        onDrop,
+        onDrop: isMaxFilesReached ? undefined : onDrop,
         // @ts-ignore
-        accept: 'audio/mp3',
-        multiple: false,
+        accept: props.acceptedTypes.join(','),
+        multiple: props.multiple,
     });
 
     const handleClose = () => {
         setError(null);
     };
 
-    const handleRemoveFile = (e: Event) => {
+    const handleRemoveFile = (e: Event, index: number) => {
         e.stopPropagation()
-        setFile(null);
-        setUploadProgress(null);
-        setUploadComplete(false);
+        const newFiles = [...files];
+        newFiles.splice(index, 1);
+        setFiles(newFiles);
+
+        // If there are no files left, reset the upload progress and completion state
+        if (newFiles.length === 0) {
+            setUploadProgress(null);
+            setUploadComplete(false);
+        }
+
         props.onFileUpload(null, null, null);
     }
 
@@ -100,29 +152,58 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                 {...getRootProps()}
                 // @ts-ignore
                 style={styles.dropzone}>
-                {!uploadComplete ? (
-                  <>
-                      <input {...getInputProps()} />
-                      {!uploadProgress && (
-                          <div>
-                              <Typography variant="subtitle1">
-                                  Drag & drop an MP3 file here, or click to select one
-                              </Typography>
-                              <div>
-                                  <label className="text-sm font-semibold">50MB max size</label>
-                              </div>
-                          </div>
-                      )}
-                      {uploadProgress !== null && (
-                          <STKLinearProgress value={uploadProgress} />
-                      )}
-                  </>
+                {!uploadComplete || props.multiple ? (
+                    <>
+                        <input {...getInputProps()} />
+                        {(props.multiple || !uploadProgress) && (files.length < (props.maxFiles || MAX_FILES_DEFAULT)) ? (
+                            <div>
+                                <Typography variant="subtitle1">
+                                    {props.placeholder || "Drag & drop files here, or click to select them"}
+                                </Typography>
+                                <div>
+                                    <label className="text-sm font-semibold">
+                                        {props.helperText ? props.helperText : (
+                                            <>
+                                                {props.maxSize || 5}MB max size
+                                            </>
+                                        )}
+                                    </label>
+                                </div>
+                            </div>
+                        ) : null}
+                        {uploadProgress !== null && !uploadComplete && (
+                            <div className={props.multiple ? 'mt-4' : ''}>
+                                <STKLinearProgress value={uploadProgress} />
+                            </div>
+                        )}
+
+                        {props.multiple ? (
+                            <div className={uploadComplete || uploadProgress ? 'mt-4' : ''}>
+                                {files.map((file, index) => (
+                                    <div className="first:mt-0 mt-2" key={index}>
+                                        <STKFileCard
+                                            key={index}
+                                            file={file}
+                                            showImage
+                                            // @ts-ignore
+                                            onRemove={(e: Event) => handleRemoveFile(e, index)} />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : null}
+                    </>
                 ) : (
                     <div>
-                        <STKFileCard
-                            file={file as File}
-                            // @ts-ignore
-                            onRemove={handleRemoveFile} />
+                        {files.map((file, index) => (
+                            <div className="first:mt-0 mt-2" key={index}>
+                                <STKFileCard
+                                    key={index}
+                                    file={file}
+                                    showImage
+                                    // @ts-ignore
+                                    onRemove={(e: Event) => handleRemoveFile(e, index)} />
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>

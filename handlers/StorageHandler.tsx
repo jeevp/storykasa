@@ -4,7 +4,10 @@ import {
     AVATAR_FILE_EXTENSION,
     RECORD_BUCKET_NAME,
     RECORD_FILE_EXTENSION,
-    MPEG_FILE_EXTENSION, STK_ACCESS_TOKEN
+    ILLUSTRATIONS_BUCKET_NAME,
+    PNG_FILE_EXTENSION,
+    MPEG_FILE_EXTENSION,
+    STK_ACCESS_TOKEN
 } from "@/config";
 import {v4} from "uuid";
 import generateSupabaseHeaders from "@/service/utils/generateSupabaseHeaders";
@@ -22,12 +25,23 @@ export default class StorageHandler {
 
            const uploadDetails = JSON.parse(uploadDetailsString as string);
 
-           const allowedBucketNames = [AVATAR_BUCKET_NAME, RECORD_BUCKET_NAME];
+           const allowedBucketNames = [
+               AVATAR_BUCKET_NAME,
+               RECORD_BUCKET_NAME,
+               ILLUSTRATIONS_BUCKET_NAME
+           ];
+
            if (!allowedBucketNames.includes(uploadDetails.bucketName)) {
                throw new Error("Bucket not allowed");
            }
 
-           const allowedExtensions = [AVATAR_FILE_EXTENSION, RECORD_FILE_EXTENSION, MPEG_FILE_EXTENSION];
+           const allowedExtensions = [
+               AVATAR_FILE_EXTENSION,
+               RECORD_FILE_EXTENSION,
+               MPEG_FILE_EXTENSION,
+               PNG_FILE_EXTENSION
+           ];
+
            if (!allowedExtensions.includes(uploadDetails.extension)) {
                throw new Error("File extension not allowed");
            }
