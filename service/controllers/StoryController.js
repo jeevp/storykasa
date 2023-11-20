@@ -107,8 +107,8 @@ class StoryController {
 
                 return story
             }).sort((a, b) => {
-                if (a.created_at < b.created_at) return 1
-                if (a.created_at > b.created_at) return -1
+                if (a.library_created_at < b.library_created_at) return 1
+                if (a.library_created_at > b.library_created_at) return -1
             })
 
             return res.status(200).send(storiesSerialized)
@@ -145,11 +145,14 @@ class StoryController {
 
     static async createStory(req, res) {
         try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["profileId"]
+            })
+
             const {
                 title,
                 description,
                 isPublic,
-                recordedBy,
                 language,
                 ageGroups,
                 recordingURL,
@@ -157,10 +160,12 @@ class StoryController {
                 illustrationsURL
             } = req.body
 
+            const { profileId } = req.query
+
             const newStory = {
                 is_public: isPublic,
                 title: title,
-                recorded_by: recordedBy,
+                recorded_by: profileId,
                 recording_url: recordingURL,
                 description: description,
                 language: language,
@@ -200,7 +205,8 @@ class StoryController {
                     {
                         account_id: user.id,
                         story_id: newStoryID,
-                        library_id: libraryResponse?.data[0]?.library_id
+                        library_id: libraryResponse?.data[0]?.library_id,
+                        profile_id: profileId
                     },
                     {
                         params: {

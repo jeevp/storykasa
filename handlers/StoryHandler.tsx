@@ -5,7 +5,6 @@ import Story from "@/models/Story";
 interface createStoryProps {
     recordingURL: string
     duration: string
-    recordedBy: string
     title: string,
     description: string
     language: string
@@ -24,21 +23,23 @@ interface StoryParameters {
     profileId: string
 }
 
+interface CreateStoryParameters {
+    profileId?: string
+}
+
 export default class StoryHandler {
     static async createStory({
         recordingURL,
         duration,
-        recordedBy,
         title,
         description,
         language,
         ageGroups,
         illustrationsURL
-    }: createStoryProps) {
+    }: createStoryProps, parameters: CreateStoryParameters) {
         const payload = {
             isPublic: false,
             title: title,
-            recordedBy: recordedBy,
             recordingURL: recordingURL,
             description: description,
             language: language,
@@ -48,7 +49,7 @@ export default class StoryHandler {
         }
 
         const headers = generateHeaders()
-        await axios.post("/api/stories", payload, headers)
+        await axios.post(`/api/profiles/${parameters.profileId}/stories`, payload, headers)
     }
 
     static async updateStory({ storyId }: { storyId: string }, {

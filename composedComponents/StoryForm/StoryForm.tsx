@@ -100,14 +100,13 @@ export default function StoryForm() {
             await StoryHandler.createStory({
                 recordingURL,
                 duration: String(audioDuration),
-                recordedBy: currentProfileId,
                 title,
                 description,
                 language,
                 ageGroups,
                 // @ts-ignore
                 illustrationsURL
-            })
+            }, { profileId: currentProfileId })
 
             setShowUploadStoryDialog(true)
         } finally {

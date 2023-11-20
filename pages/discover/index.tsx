@@ -88,7 +88,7 @@ function Discover() {
                 <div className={`w-full flex flex-col lg:flex-row mb-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
                     <div className="w-full max-w-xl">
                         <STKTextField
-                            placeholder="Search in my library..."
+                            placeholder="Search our story collection."
                             value={filterQuery}
                             fluid
                             startAdornment={<MagnifyingGlass size="20" />}

@@ -95,8 +95,7 @@ function Library() {
                      <>
                          {privateStories.length || (privateStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
                              <p>
-                                 These stories can only be seen by other profiles in your account. This is the home for
-                                 the stories you record.
+                                 This is the home for the stories you save or record.
                              </p>
                          ) : privateStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
                              <p>

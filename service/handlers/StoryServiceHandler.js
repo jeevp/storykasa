@@ -52,7 +52,10 @@ class StoryServiceHandler {
         let data = response.data;
 
         if (filters?.private) {
-            data = response.data?.filter((story) => story.stories).map((story) => story.stories)
+            data = response.data?.filter((story) => story.stories).map((story) => ({
+                ...story.stories,
+                library_created_at: story.created_at
+            }))
         }
 
         if (data.length === 0) {
@@ -86,8 +89,8 @@ class StoryServiceHandler {
         }
 
         return data.filter((d) => d !== null).sort((a, b) => {
-            if (a.created_at < b.created_at) return 1
-            if (a.created_at > b.created_at) return -1
+            if (a.library_created_at < b.library_created_at) return 1
+            if (a.library_created_at > b.library_created_at) return -1
         });
     }
 }
