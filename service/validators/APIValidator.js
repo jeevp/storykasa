@@ -10,7 +10,7 @@ class APIValidator {
     }
 
     static requiredParams({ req, res }, { requiredParams }) {
-        const incomingParamsList = Object.keys(req.params);
+        const incomingParamsList = Object.keys(req.query);
 
         if (
             incomingParamsList.every(

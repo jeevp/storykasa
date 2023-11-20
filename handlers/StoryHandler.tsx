@@ -20,6 +20,10 @@ interface StoryFilterOptions {
     storyLengths?: Array<string>
 }
 
+interface StoryParameters {
+    profileId: string
+}
+
 export default class StoryHandler {
     static async createStory({
         recordingURL,
@@ -66,10 +70,10 @@ export default class StoryHandler {
         await axios.delete(`/api/stories/${storyId}`, headers)
     }
 
-    static async fetchStories(filterOptions: StoryFilterOptions) {
+    static async fetchPrivateStories(filterOptions: StoryFilterOptions, parameters: StoryParameters) {
         const headers = generateHeaders()
 
-        const response = await axios.get("/api/stories/library", {
+        const response = await axios.get(`/api/profiles/${parameters.profileId}/library/stories`, {
             ...headers,
             params: { ...filterOptions }
         })
@@ -117,13 +121,13 @@ export default class StoryHandler {
         }))
     }
 
-    static async fetchStoriesFilters({ privateStories }: { privateStories: boolean }) {
+    static async fetchStoriesFilters({ profileId }: { profileId: string }) {
         const headers = generateHeaders()
 
         const response = await axios.get("/api/stories/filters", {
             ...headers,
             params: {
-                private: privateStories
+                profileId
             }
         })
 
@@ -133,9 +137,12 @@ export default class StoryHandler {
     static async addStoryToLibrary({ storyId, profileId }: { storyId: string, profileId: string }) {
         const headers = generateHeaders()
 
-        await axios.post("/api/stories/library", {
-            storyId,
-            profileId
-        }, headers)
+        await axios.post(`/api/profiles/${profileId}/library/stories/${storyId}`, {}, headers)
+    }
+
+    static async removeStoryFromLibrary({ storyId, profileId }: { storyId: string, profileId: string }) {
+        const headers = generateHeaders()
+
+        await axios.delete(`/api/profiles/${profileId}/library/stories/${storyId}`, headers)
     }
 }

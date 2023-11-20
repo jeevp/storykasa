@@ -6,11 +6,12 @@ import Story, { languages } from '@/models/Story'
 import STKCard from "@/components/STKCard/STKCard";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKButton from "@/components/STKButton/STKButton";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {green600} from "@/assets/colorPallet/colors";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import StoryHandler from "@/handlers/StoryHandler";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useStory} from "@/contexts/story/StoryContext";
 
 export default function StoryCard({ story }: {
     story: Story
@@ -18,15 +19,53 @@ export default function StoryCard({ story }: {
 }) {
     const [liked, setLiked] = useState(false)
     const { currentProfileId } = useProfile()
-
+    const { privateStories, setPrivateStories } = useStory()
     const { setSnackbarBus } = useSnackbar()
+
+    useEffect(() => {
+        if (story?.recordedBy) {
+            // @ts-ignore
+            const storyHasBeenAddedToLibrary = privateStories.find((_story) => _story?.storyId === story.storyId)
+            setLiked(Boolean(storyHasBeenAddedToLibrary))
+        }
+    }, [story]);
 
     const handleLikedStories = async (e: any) => {
         e.stopPropagation()
         setLiked(!liked)
 
+        const _liked = !liked
+        setLiked(_liked)
+
         try {
-            await StoryHandler.addStoryToLibrary({ storyId: story.storyId, profileId: currentProfileId })
+            let _privateStories = [...privateStories]
+
+            if (_liked) {
+                // @ts-ignore
+                _privateStories.push(story)
+                // @ts-ignore
+                setPrivateStories(_privateStories)
+
+                await StoryHandler.addStoryToLibrary({
+                    storyId: story.storyId,
+                    profileId: currentProfileId
+                })
+            } else {
+                _privateStories = privateStories.filter((_story) => {
+                    // @ts-ignore
+                    return _story.storyId !== story.storyId
+                })
+
+                // @ts-ignore
+                setPrivateStories(_privateStories)
+
+
+                await StoryHandler.removeStoryFromLibrary({
+                    storyId: story.storyId,
+                    profileId: currentProfileId
+                })
+            }
+
             setSnackbarBus({
                 type: "success",
                 message: !liked ? "Added to library" : "Removed from library",
@@ -91,9 +130,11 @@ export default function StoryCard({ story }: {
                                     </div>
                                 )}
                             </div>
-                            <STKButton iconButton onClick={handleLikedStories}>
-                                {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
-                            </STKButton>
+                            {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                                <STKButton iconButton onClick={handleLikedStories}>
+                                    {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                                </STKButton>
+                            )}
                         </div>
                     </div>
                 </div>

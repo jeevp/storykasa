@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import Story,{storyLengths} from "@/models/Story";
 import {XCircle} from "@phosphor-icons/react";
 import StoryHandler from "@/handlers/StoryHandler";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 interface StoryFiltersSummaryProps {
     privateStories?: boolean
@@ -21,6 +22,8 @@ export default function StoryFiltersSummary({ privateStories, onChange = () => (
         setPrivateStories,
         setPublicStories
     } = useStory()
+
+    const { currentProfileId } = useProfile()
 
     // Watchers
     useEffect(() => {
@@ -77,7 +80,9 @@ export default function StoryFiltersSummary({ privateStories, onChange = () => (
 
         if (privateStories) {
             // @ts-ignore
-            const publicStories = await StoryHandler.fetchStories({ ..._filters })
+            const publicStories = await StoryHandler.fetchPrivateStories({ ..._filters }, {
+                profileId: currentProfileId
+            })
             setPrivateStories(publicStories)
         } else {
             // @ts-ignore

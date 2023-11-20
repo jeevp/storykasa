@@ -7,6 +7,7 @@ import StoryHandler from "@/handlers/StoryHandler";
 import {useStory} from "@/contexts/story/StoryContext";
 import {allowedAgeGroups, storyLengths} from "@/models/Story";
 import useDevice from "@/customHooks/useDevice";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 interface StoryFiltersDialogProps {
     active?: boolean,
@@ -26,6 +27,7 @@ export default function StoryFiltersDialog({
     const [loading, setLoading] = useState(false)
 
     // Context
+    const { currentProfileId } = useProfile()
     const {
         setPrivateStories,
         setPublicStories,
@@ -55,7 +57,7 @@ export default function StoryFiltersDialog({
 
     // Methods
     const handleFetchStoryFilters = async () => {
-        const { narrators, languages } = await StoryHandler.fetchStoriesFilters({ privateStories })
+        const { narrators, languages } = await StoryHandler.fetchStoriesFilters({ profileId: currentProfileId })
 
         setStoryNarrators(narrators)
         setStoryLanguages(languages)
@@ -78,7 +80,9 @@ export default function StoryFiltersDialog({
         try {
             setLoading(true)
             if (privateStories) {
-                const privateStories = await StoryHandler.fetchStories({ ..._filters })
+                const privateStories = await StoryHandler.fetchPrivateStories({ ..._filters }, {
+                    profileId: currentProfileId
+                })
                 setPrivateStories(privateStories)
             } else {
                 const publicStories = await StoryHandler.fetchPublicStories({ ..._filters })

@@ -5,6 +5,7 @@ const getStoriesFilters = async (req, res) => {
     try {
         return StoryController.getStoriesFilters(req, res)
     } catch (error) {
+        console.error(error)
         return res.status(400).send({ message: "Something went wrong" })
     }
 }

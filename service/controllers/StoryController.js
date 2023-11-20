@@ -3,7 +3,7 @@ const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
 const StoryServiceHandler = require("../handlers/StoryServiceHandler")
 const APIValidator = require("../validators/APIValidator");
-const LikedStories = require("../models/LikedStories")
+const LibraryStory = require("../models/LibraryStory")
 
 
 class StoryController {
@@ -54,12 +54,14 @@ class StoryController {
 
     static async getLibraryStories(req, res) {
         try {
+            APIValidator.requiredParams({ req, res }, { requiredParams: ["profileId"] })
+
             APIValidator.optionalParams({
-                allowedParams: ["narrator", "language", "ageGroups[]", "storyLengths[]"],
+                allowedParams: ["narrator", "language", "ageGroups[]", "storyLengths[]", "profileId"],
                 incomeParams: req.query
             }, res)
 
-            const { narrator, language } = req.query
+            const { narrator, language, profileId } = req.query
 
             const ageGroups = req.query["ageGroups[]"]
             const storyLengths = req.query["storyLengths[]"]
@@ -74,7 +76,8 @@ class StoryController {
                 private: true
             }, {
                 accessToken: req.accessToken,
-                userId: user.id
+                userId: user.id,
+                profileId
             })
 
             if (privateStories.length === 0) return res.status(200).send([])
@@ -237,14 +240,18 @@ class StoryController {
     static async getStoriesFilters(req, res) {
         try {
             let userId = null
-            if (req.query.private) {
+            if (req.query.profileId) {
                 const { data: { user } } = await supabase.auth.getUser(req.accessToken)
                 userId = user.id
             }
 
             let stories = await StoryServiceHandler.getStories({
-                private: req.query.private === 'true'
-            }, { accessToken: req.accessToken, userId })
+                private: Boolean(req.query.profileId)
+            }, {
+                accessToken: req.accessToken,
+                userId,
+                profileId: req.query.profileId
+            })
 
             const uniqueNarrators = new Set();
             const uniqueLanguages = new Set()
@@ -257,7 +264,7 @@ class StoryController {
                 }
 
                 return acc;
-            }, []);
+            }, []).filter((narrator) => narrator?.narratorName !== undefined);
 
             const languages = stories.reduce((acc, story) => {
                 if (!uniqueLanguages.has(story.language)) {
@@ -279,13 +286,19 @@ class StoryController {
 
     static async addStoryToLibrary(req, res) {
         try {
-            APIValidator.requiredPayload({ req, res }, {
-                requiredPayload: ["storyId", "profileId"]
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["storyId", "profileId"]
             })
 
-            const { storyId, profileId } = req.body
+            const { storyId, profileId } = req.query
 
-            await LikedStories.create({ storyId, profileId }, {
+            const { data: { user } } = await supabase.auth.getUser(req.accessToken)
+
+            await LibraryStory.create({
+                storyId,
+                profileId,
+                accountId: user.id
+            }, {
                 accessToken: req.accessToken
             })
 
@@ -293,6 +306,31 @@ class StoryController {
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async removeStoryFromLibrary(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["storyId", "profileId"]
+            })
+
+            const { storyId, profileId } = req.query
+
+            const { data: { user } } = await supabase.auth.getUser(req.accessToken)
+
+            await LibraryStory.delete({
+                storyId,
+                profileId,
+                accountId: user.id
+            }, {
+                accessToken: req.accessToken
+            })
+
+            return res.status(204).send({ message: "Story removed from library with success" })
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong." })
         }
     }
 }

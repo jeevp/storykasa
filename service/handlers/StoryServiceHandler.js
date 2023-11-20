@@ -8,7 +8,7 @@ class StoryServiceHandler {
         ageGroups: [],
         storyLengths: [],
         private: false
-    }, { accessToken, userId }) {
+    }, { accessToken, userId, profileId}) {
         // Prepare query parameters for filtering
         const queryParams = {
             select: '*,profiles!inner(*)',
@@ -19,6 +19,7 @@ class StoryServiceHandler {
             endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`
             queryParams.select = '*, stories (*, profiles (*))'
             queryParams.account_id = `eq.${userId}`
+            queryParams.profile_id = `eq.${profileId}`
         } else {
             queryParams.is_public = "eq.true"
             queryParams.order = 'last_updated.desc'
@@ -50,7 +51,13 @@ class StoryServiceHandler {
 
         let data = response.data;
 
-        if (filters?.private) data = response.data?.map((story) => story.stories)
+        if (filters?.private) {
+            data = response.data?.filter((story) => story.stories).map((story) => story.stories)
+        }
+
+        if (data.length === 0) {
+            return []
+        }
 
         // Apply additional filtering for story lengths
         if (filters?.storyLengths && filters?.storyLengths.length) {

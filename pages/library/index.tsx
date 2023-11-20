@@ -20,6 +20,7 @@ import {Divider} from "@mui/material";
 import {useStory} from "@/contexts/story/StoryContext";
 import StoryFiltersSummary from "@/composedComponents/StoryFilters/StoryFiltersSummary/StoryFiltersSummary";
 import {neutral300} from "@/assets/colorPallet/colors";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 function Library() {
     const { onMobile } = useDevice()
@@ -30,13 +31,16 @@ function Library() {
 
     // Contexts
     const { privateStories, setPrivateStories, storyFilters } = useStory()
+    const { currentProfileId } = useProfile()
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
     }
 
     const loadStories = async () => {
-        const allStories: Story[] = await StoryHandler.fetchStories({})
+        const allStories: Story[] = await StoryHandler.fetchPrivateStories({}, {
+            profileId: currentProfileId
+        })
         // @ts-ignore
         setPrivateStories(allStories)
         setLoaded(true)
