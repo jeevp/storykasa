@@ -153,7 +153,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     return (
         <div className={`stk-audio-player ${!outlined ? '!border-0' : ''}`} style={{ background: 'white' }}>
             <div className="flex items-center w-full">
-                <span>{currentTime}</span>
+                <span className="timestamp">{currentTime}</span>
                 <div className="progress-bar px-4 flex items-center">
                     {loading ? (
                         <div className="flex items-center">
@@ -183,7 +183,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                         </AnimatePresence>
                     )}
                 </div>
-                <span>{totalDuration}</span>
+                <span className="timestamp">{totalDuration}</span>
             </div>
 
             <div className="flex items-center w-full justify-between mt-4">
