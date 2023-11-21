@@ -131,39 +131,51 @@ export default function StoryCard({ story }: {
                                 )}
                             </div>
                             {story?.recordedBy && story.recordedBy !== currentProfileId && (
-                                <STKButton iconButton onClick={handleLikedStories}>
-                                    {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
-                                </STKButton>
+                                <div className="hidden lg:block">
+                                    <STKButton iconButton onClick={handleLikedStories}>
+                                        {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                                    </STKButton>
+                                </div>
                             )}
                         </div>
                     </div>
                 </div>
-                <div className="flex lg:hidden items-center flex-wrap opacity-60 mt-4 pr-14">
-                    {story?.duration && (
-                        <div className="flex items-center mr-4 mb-1 lg:mb-0">
-                            <Timer size={14} weight="bold" />
-                            <label className="ml-1">
-                                {Math.ceil(story?.duration / 60)} min
-                            </label>
-                        </div>
-                    )}
-                    {story?.ageGroups && (
-                        <div className="flex items-center mr-4 mb-1 lg:mb-0">
-                            <Baby size={14} weight="bold" />
-                            <label className="ml-1">
-                                {story?.ageGroupsShortLabel}
-                            </label>
-                        </div>
-                    )}
-                    {story?.language && (
-                        <div className="flex items-center">
-                            <GlobeSimple size={14} weight="bold" />
-                            <label className="ml-1">
-                                {story?.language}
-                            </label>
+                <div className="lg:hidden flex items-end justify-between mt-4">
+                    <div className="flex items-center flex-wrap opacity-60 pr-14">
+                        {story?.duration && (
+                            <div className="flex items-center mr-4 mb-1 lg:mb-0">
+                                <Timer size={14} weight="bold" />
+                                <label className="ml-1">
+                                    {Math.ceil(story?.duration / 60)} min
+                                </label>
+                            </div>
+                        )}
+                        {story?.ageGroups && (
+                            <div className="flex items-center mr-4 mb-1 lg:mb-0">
+                                <Baby size={14} weight="bold" />
+                                <label className="ml-1">
+                                    {story?.ageGroupsShortLabel}
+                                </label>
+                            </div>
+                        )}
+                        {story?.language && (
+                            <div className="flex items-center">
+                                <GlobeSimple size={14} weight="bold" />
+                                <label className="ml-1">
+                                    {story?.language}
+                                </label>
+                            </div>
+                        )}
+                    </div>
+                    {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                        <div className="block lg:hidden">
+                            <STKButton iconButton onClick={handleLikedStories}>
+                                {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                            </STKButton>
                         </div>
                     )}
                 </div>
+
             </div>
         </STKCard>
     )
