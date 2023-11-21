@@ -133,12 +133,14 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
     const handleProgressBarOnChange = (e: any) => {
         if (howl) {
-            const newTime = (howl.duration() / 100) * +e?.target?.value
-            howl.seek(newTime)
+            const newTime = (howl.duration() / 100) * +e.target.value;
+            howl.seek(newTime);
+            setCurrentTime(formatTime(newTime));
+            setProgress((newTime / howl.duration()) * 100);
             // @ts-ignore
-            onTimeChange(newTime)
+            onTimeChange(newTime);
         }
-    }
+    };
 
 
     const handleStartPlaying = () => {
