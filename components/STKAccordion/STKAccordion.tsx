@@ -18,7 +18,7 @@ export default function STKAccordion({ title, text, list }: STKAccordionProps) {
                 </AccordionSummary>
                 <AccordionDetails>
                     {list ? (
-                        <ul>
+                        <ul className="m-0">
                             {list.map((listItem: any, index: any) => (
                                 <li key={index} className="text-sm">{listItem}</li>
                             ))}
