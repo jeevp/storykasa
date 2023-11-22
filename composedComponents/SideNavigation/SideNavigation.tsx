@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Profile } from '@/lib/database-helpers.types'
 import { usePathname } from 'next/navigation'
-import { BookOpenText, Books } from '@phosphor-icons/react'
-import { AnimatePresence, motion } from 'framer-motion'
+import {BookOpenText, Books, Info} from '@phosphor-icons/react'
 import useDevice from "@/customHooks/useDevice";
 import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {useRouter} from "next/router";
@@ -11,6 +10,8 @@ import RecordButton from "@/composedComponents/RecordButton/RecordButton";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import {useStory} from "@/contexts/story/StoryContext";
+import STKButton from "@/components/STKButton/STKButton"
+import {Divider} from "@mui/material";
 
 const navigationOptions = [
     { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
@@ -45,10 +46,6 @@ export default function SideNavigation() {
         setStoryFilters({})
     }
 
-    const goToRecordPage = () => {
-        route.push("/record")
-    }
-
     return (
         <nav>
             <div>
@@ -71,7 +68,20 @@ export default function SideNavigation() {
                            />
 
                            <div className="lg:mt-6 ml-4 lg:ml-0 lg:w-full">
-                               <RecordButton onClick={goToRecordPage} />
+                               <RecordButton onClick={() => route.push("/record")} />
+                           </div>
+                           <div className="pt-10 pb-6">
+                               <Divider />
+                           </div>
+                           <div>
+                               <STKButton
+                               startIcon={<Info />}
+                               alignStart
+                               variant="none"
+                               fullWidth
+                               onClick={() => route.push("/faq")}>
+                                   FAQ
+                               </STKButton>
                            </div>
                        </div>
                     </div>
