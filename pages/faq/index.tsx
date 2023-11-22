@@ -3,8 +3,10 @@ import withAuth from "@/HOC/withAuth";
 import withProfile from "@/HOC/withProfile";
 import STKAccordion from "@/components/STKAccordion/STKAccordion";
 import FAQContents from "@/contents/FAQ"
+import useDevice from "@/customHooks/useDevice";
 
-function Index() {
+function FAQ() {
+    const { onMobile } = useDevice()
     return (
         <PageWrapper path="faq">
             <div className="pb-10">
@@ -14,7 +16,7 @@ function Index() {
                 <div className="mt-4">
                     <p className="text-base">Explore answers to common questions about StoryKasa and enhance your storytelling journey with us.</p>
                 </div>
-                <div className="mt-10">
+                <div className="mt-10 lg:overflow-auto" style={{ maxHeight: !onMobile ? '58vh' : 'unset' }}>
                     {FAQContents.map((FAQContent, index) => (
                         <div key={index} className="first:mt-0 mt-2">
                             <STKAccordion
@@ -37,4 +39,4 @@ function Index() {
 }
 
 
-export default withAuth(withProfile((Index)))
+export default withAuth(withProfile((FAQ)))
