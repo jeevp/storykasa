@@ -5,7 +5,7 @@
 
 body {
   background-color: #fffcef !important;
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans",sans-serif !important;
 }
 
 .disabled {

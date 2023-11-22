@@ -21,6 +21,17 @@ const theme = createTheme({
             dark: neutral400
         }
     },
+    typography: {
+        // @ts-ignore
+        fontFamily: [
+            "DM Sans !important",
+            "system-ui",
+            "Avenir",
+            "Helvetica",
+            "Arial",
+            "sans-serif"
+        ]
+    }
 });
 
 

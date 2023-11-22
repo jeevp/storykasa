@@ -58,6 +58,13 @@ const STKButtonTabsTheme = createTheme({
             main: "#faf5e3"
         }
     },
+    typography: {
+        // @ts-ignore
+        fontFamily: [
+            "DM Sans !important",
+            "sans-serif"
+        ]
+    }
 });
 
 interface STKButtonTabsProps {

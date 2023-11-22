@@ -17,6 +17,7 @@ const StyledButton = styled(Button)(({
     textTransform: 'none',
     borderRadius: rounded ? "20px" : "15px",
     height: "46px",
+    fontFamily: 'DM Sans',
     justifyContent: alignStart ? "flex-start" : "",
     boxShadow: color === "primary" ? '0 0 0 2px #dcbe54' :  color === 'secondary' ? '0 0 0 2px #eee7ce' : '',
     "&:hover": {
@@ -56,6 +57,13 @@ const STKButtonTabsTheme = createTheme({
             main: "#faf5e3"
         }
     },
+    typography: {
+        // @ts-ignore
+        fontFamily: [
+            "DM Sans !important",
+            "sans-serif"
+        ]
+    }
 });
 
 interface STKButtonTabsProps {

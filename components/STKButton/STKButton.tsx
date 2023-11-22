@@ -17,6 +17,7 @@ const StyledButton = styled(Button)<StyledButtonProps>(({
     textTransform: 'none',
     borderRadius: rounded ? '20px' : '8px',
     justifyContent: alignStart ? 'flex-start' : '',
+    fontFamily: 'DM Sans'
 }));
 
 interface STKButtonProps {
