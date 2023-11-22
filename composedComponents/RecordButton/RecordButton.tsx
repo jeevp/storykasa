@@ -71,28 +71,19 @@ interface STKButtonTabsProps {
     onClick: () => void
 }
 export default function RecordButton({ onClick     = () => ({}) }: STKButtonTabsProps) {
-    const { onMobile } = useDevice()
 
     return (
         <ThemeProvider theme={STKButtonTabsTheme}>
-            {onMobile ? (
-                <StyledIconButton
-                    color="primary"
-                    onClick={() => onClick()}>
-                    <Microphone size={24} weight="duotone" color={neutral800} />
-                </StyledIconButton>
-            ) : (
-                <StyledButton
-                    alignStart={true}
-                    fullWidth
-                    disableElevation
-                    color="primary"
-                    onClick={() => onClick()}
-                    variant="contained"
-                    startIcon={<Microphone size={24} weight="duotone" />}>
-                    Create a story
-                </StyledButton>
-            )}
+            <StyledButton
+                alignStart={true}
+                fullWidth
+                disableElevation
+                color="primary"
+                onClick={() => onClick()}
+                variant="contained"
+                startIcon={<Microphone size={24} weight="duotone" />}>
+                Create a story
+            </StyledButton>
         </ThemeProvider>
     )
 }

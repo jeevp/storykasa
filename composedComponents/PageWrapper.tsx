@@ -32,7 +32,7 @@ export default function PageWrapper({
                         <Navbar />
                         <div className="mt-8 flex w-full">
                             {currentUser && pathname !== "/profiles" && (
-                                <div className="mr-20 w-80 absolute lg:relative">
+                                <div className="hidden lg:block mr-20 w-80 absolute lg:relative">
                                     <SideNavigation />
                                 </div>
                             )}

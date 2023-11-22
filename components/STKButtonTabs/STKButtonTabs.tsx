@@ -2,14 +2,13 @@ import {Button, createTheme, IconButton, styled, ThemeProvider} from "@mui/mater
 import {useEffect, useState} from "react";
 import {yellow600} from "@/assets/colorPallet/colors";
 import useDevice from "@/customHooks/useDevice";
+import {useRouter} from "next/router";
 
 const StyledButton = styled(Button)(({
-    theme,
     rounded,
     alignStart,
     color
 }: {
-    theme?: any
     rounded?: boolean
     alignStart?: boolean
     color?: string
@@ -27,26 +26,6 @@ const StyledButton = styled(Button)(({
     }
 }));
 
-const StyledIconButton = styled(IconButton)(({
-     color
-}: {
-    theme?: any
-    rounded?: boolean
-    alignStart?: boolean
-    color?: string
-}) => ({
-    textTransform: 'none',
-    borderRadius: "15px",
-    height: "48px",
-    width: "56px",
-    justifyContent: "justify-center",
-    boxShadow: color === "primary" ? '0 0 0 2px #dcbe54' :  color === 'secondary' ? '0 0 0 2px #eee7ce' : '',
-    "&:hover": {
-        //you want this to be the same as the backgroundColor above
-        backgroundColor: color === "primary" ? yellow600 :  color === 'secondary' ? '#faf5e3' : '',
-        boxShadow: color === "primary" ? '0 0 0 2px #dcbe54' :  color === 'secondary' ? '0 0 0 2px #eee7ce' : ''
-    }
-}));
 
 const STKButtonTabsTheme = createTheme({
     palette: {
@@ -68,17 +47,15 @@ const STKButtonTabsTheme = createTheme({
 
 interface STKButtonTabsProps {
     tabs: Array<any>,
-    useIconButtonOnMobile?: boolean
     initialValue?: object,
     onChange: (tab: any) => void
 }
 export default function STKButtonTabs({
     tabs = [],
-    useIconButtonOnMobile,
     initialValue,
     onChange = () => ({})
 }: STKButtonTabsProps) {
-    const { onMobile } = useDevice()
+    const router = useRouter()
     // States
     const [activeIndex, setActiveIndex] = useState<number>()
     // Watchers
@@ -97,8 +74,7 @@ export default function STKButtonTabs({
 
     const generateCSSClasses = (index: number): string => {
         const classesObject = {
-            "mt-4": !onMobile && index > 0,
-            "ml-4": useIconButtonOnMobile && onMobile && index > 0
+            "mt-4": index > 0,
         };
 
         // @ts-ignore
@@ -106,29 +82,21 @@ export default function STKButtonTabs({
     };
 
     return (
-        <div className={`${onMobile && useIconButtonOnMobile ? 'flex' : 'lg:w-full w-auto'}`}>
+        <div className={'lg:w-full w-auto'}>
             {tabs.map((tab: any, index) => (
                 <div className={generateCSSClasses(index)} key={index}>
                     <ThemeProvider theme={STKButtonTabsTheme}>
-                        {onMobile && useIconButtonOnMobile ? (
-                            <StyledIconButton
-                                color={activeIndex === index ? 'primary' : 'secondary'}
-                                onClick={() => handleOnClick(index, tab)}>
-                                {tab.icon}
-                            </StyledIconButton>
-                        ) : (
-                            <StyledButton
-                                // @ts-ignore
-                                alignStart
-                                fullWidth
-                                disableElevation
-                                color={activeIndex === index ? 'primary' : 'secondary'}
-                                onClick={() => handleOnClick(index, tab)}
-                                variant="contained"
-                                startIcon={tab?.icon}>
-                                {tab.text}
-                            </StyledButton>
-                        )}
+                        <StyledButton
+                            // @ts-ignore
+                            alignStart
+                            fullWidth
+                            disableElevation
+                            color={activeIndex === index || tab.pathname === router.pathname ? 'primary' : 'secondary'}
+                            onClick={() => handleOnClick(index, tab)}
+                            variant="contained"
+                            startIcon={tab?.icon}>
+                            {tab.text}
+                        </StyledButton>
                     </ThemeProvider>
                 </div>
             ))}

@@ -5,24 +5,28 @@ import theme from "@/components/theme";
 
 
 interface StyledButtonProps extends ButtonProps {
+    active?: boolean;
     rounded?: boolean;
     alignStart?: boolean;
 }
 
 const StyledButton = styled(Button)<StyledButtonProps>(({
     theme,
+    active,
     rounded,
     alignStart,
 }) => ({
     textTransform: 'none',
     borderRadius: rounded ? '20px' : '8px',
     justifyContent: alignStart ? 'flex-start' : '',
-    fontFamily: 'DM Sans'
+    fontFamily: 'DM Sans',
+    backgroundColor: active ? "#f7f3e7": ""
 }));
 
 interface STKButtonProps {
     children: any
     startIcon?: any
+    active?: boolean
     endIcon?: any
     variant?: string
     color?: string
@@ -43,6 +47,7 @@ export default function STKButton({
     children,
     startIcon,
     endIcon,
+    active = false,
     variant = "contained",
     color = "primary",
     fullWidth,
@@ -97,6 +102,7 @@ export default function STKButton({
                 </IconButton>
             ) : (
                 <StyledButton
+                    active={active}
                     startIcon={loading ? <></> : startIcon}
                     endIcon={loading ? <></> : endIcon}
                     fullWidth={fullWidth}

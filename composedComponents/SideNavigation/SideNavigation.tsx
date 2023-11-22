@@ -61,7 +61,6 @@ export default function SideNavigation() {
                     className="nav lg:mt-8 w-full lg:w-auto flex lg:flex-col bg-white lg:bg-transparent justify-center py-6 px-6 lg:p-0 left-0 lg:left-auto fixed z-10 lg:relative bottom-0 lg:bottom-auto">
                        <div className="flex justify-center lg:flex-col -ml-10 lg:ml-0">
                            <STKButtonTabs
-                               useIconButtonOnMobile
                                tabs={navigationOptions}
                                initialValue={selectedNavigationOption}
                                onChange={handleTabOnChange}
@@ -77,6 +76,7 @@ export default function SideNavigation() {
                                <STKButton
                                startIcon={<Info />}
                                alignStart
+                               active={route.pathname === "/faq"}
                                variant="none"
                                fullWidth
                                onClick={() => route.push("/faq")}>

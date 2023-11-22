@@ -2,7 +2,7 @@ import { useState } from 'react'
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKButton from "@/components/STKButton/STKButton";
 import AccountSideDrawer from "@/composedComponents/AccountSideDrawer/AccountSideDrawer";
-import { ArrowSquareRight } from '@phosphor-icons/react'
+import { List } from '@phosphor-icons/react'
 import {useProfile} from "@/contexts/profile/ProfileContext";
 
 export default function AccountDetails() {
@@ -29,12 +29,12 @@ export default function AccountDetails() {
                             }
                         </label>
                         <span className="ml-2 flex items-center">
-                            <ArrowSquareRight size={20} />
+                            <List size={20} />
                         </span>
                     </STKButton>
                 ) : (
                     <STKButton color="info" iconButton onClick={() => setShowAccountSideDrawer(true)}>
-                        <ArrowSquareRight size={20} />
+                        <List size={20} />
                     </STKButton>
                 )}
             </div>
