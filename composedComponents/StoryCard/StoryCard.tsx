@@ -12,12 +12,26 @@ import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import StoryHandler from "@/handlers/StoryHandler";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import {useStory} from "@/contexts/story/StoryContext";
+import STKMenu from "@/components/STKMenu/STKMenu";
+import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
+
+const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
+
 
 export default function StoryCard({ story }: {
     story: Story
     selected: boolean
 }) {
+    // States
     const [liked, setLiked] = useState(false)
+    const [showSubmitStoryToPublicLibraryInfoDialog, setShowSubmitStoryToPublicLibraryInfoDialog] = useState(false)
+    const [infoDialogContent, setInfoDialogContent] = useState({
+        title: "Thank you for sharing your story!",
+        text: `We will review it and get back to you within 24 hours. Please note that 
+        only a small number of user submitted stories are included in the public library`
+    })
+
+    // Contexts
     const { currentProfileId } = useProfile()
     const { privateStories, setPrivateStories } = useStory()
     const { setSnackbarBus } = useSnackbar()
@@ -80,6 +94,42 @@ export default function StoryCard({ story }: {
         }
     }
 
+    const handleMenuOnChange = async (menu: Object) => {
+        if (story?.publicStoryRequest) {
+            const { completed, approved } = story.publicStoryRequest
+
+            let title = "Request is processing"
+            let text = "You have already submitted a request to add this story to the public library. "
+
+            if (completed && !approved) {
+                title = "Request not approved"
+                text = "Sorry, but this time we could not approve your story to be part of the public library."
+            }
+
+            setInfoDialogContent({ title, text})
+
+            return
+        }
+
+        if (menu?.value === SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION) {
+            const response = await StoryHandler.submitToPublicLibrary({
+                storyId: story.storyId,
+                profileId: currentProfileId
+            })
+
+            if (response.status === 200) {
+                setInfoDialogContent({
+                    title: "Request is processing",
+                    text: "You have already submitted a request to add this story to the public library. "
+                })
+            }
+
+            setShowSubmitStoryToPublicLibraryInfoDialog(true)
+        }
+
+    }
+
+    if (story?.publicStoryRequest) console.log(story)
 
     return (
         <STKCard>
@@ -130,13 +180,25 @@ export default function StoryCard({ story }: {
                                     </div>
                                 )}
                             </div>
-                            {story?.recordedBy && story.recordedBy !== currentProfileId && (
-                                <div className="hidden lg:block">
-                                    <STKButton iconButton onClick={handleLikedStories}>
-                                        {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
-                                    </STKButton>
-                                </div>
-                            )}
+                            <div className="flex items-center">
+                                {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                                    <div className="hidden lg:block">
+                                        <STKButton iconButton onClick={handleLikedStories}>
+                                            {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                                        </STKButton>
+                                    </div>
+                                )}
+                                {story?.recordedBy && story.recordedBy === currentProfileId && (
+                                    <div className={`hidden lg:block ${story?.publicStoryRequestRefused || story?.publicStoryRequestProcessing ? 'disabled' : ''}`}>
+                                        <STKMenu
+                                        options={[{
+                                            label: "Submit to public library",
+                                            value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+                                        }]}
+                                        onChange={handleMenuOnChange}/>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,16 +229,32 @@ export default function StoryCard({ story }: {
                             </div>
                         )}
                     </div>
-                    {story?.recordedBy && story.recordedBy !== currentProfileId && (
-                        <div className="block lg:hidden">
-                            <STKButton iconButton onClick={handleLikedStories}>
-                                {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
-                            </STKButton>
-                        </div>
-                    )}
+                    <div className="flex items-center">
+                        {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                            <div className="block lg:hidden">
+                                <STKButton iconButton onClick={handleLikedStories}>
+                                    {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                                </STKButton>
+                            </div>
+                        )}
+                        {story?.recordedBy && story.recordedBy === currentProfileId && (
+                            <div className={`block lg:hidden ${story?.publicStoryRequestRefused || story?.publicStoryRequestProcessing ? 'disabled' : ''}`}>
+                                <STKMenu
+                                options={[{
+                                    label: "Submit to public library",
+                                    value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+                                }]}
+                                onChange={handleMenuOnChange}/>
+                            </div>
+                        )}
+                    </div>
                 </div>
-
             </div>
+            <InfoDialog
+            active={showSubmitStoryToPublicLibraryInfoDialog}
+            title={infoDialogContent.title}
+            text={infoDialogContent.text}
+            onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
         </STKCard>
     )
 }

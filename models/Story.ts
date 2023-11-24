@@ -1,3 +1,5 @@
+import PublicStoryRequest from "@/service/models/PublicStoryRequest";
+
 export const allowedAgeGroups = [
     { name: 'Infants/Toddlers (0-3 years)', value: "10", minAge:"0", maxAge: "3" },
     { name: 'Preschoolers (3-5 years)', value: "20", minAge: "3", maxAge: "5" },
@@ -165,6 +167,7 @@ export default class Story {
     profileAvatar: string
     lastUpdated: string
     illustrationsURL: Array<string>
+    publicStoryRequest: any
 
     constructor({
         storyId,
@@ -180,7 +183,8 @@ export default class Story {
         profileName,
         profileAvatar,
         lastUpdated,
-        illustrationsURL = []
+        illustrationsURL = [],
+        publicStoryRequest
     }: StoryProps) {
         this.storyId = storyId
         this.isPublic = isPublic
@@ -196,6 +200,7 @@ export default class Story {
         this.profileAvatar = profileAvatar
         this.lastUpdated = lastUpdated
         this.illustrationsURL = illustrationsURL
+        this.publicStoryRequest = publicStoryRequest
     }
 
     get ageGroupsLabel() {
@@ -240,5 +245,13 @@ export default class Story {
         }
 
         return `${ageGroups[0]?.minAge} - ${ageGroups[ageGroups.length - 1]?.maxAge} years old`
+    }
+
+    get publicStoryRequestRefused() {
+        return this.publicStoryRequest?.completed && !this.publicStoryRequest?.approved
+    }
+
+    get publicStoryRequestProcessing() {
+        return this.publicStoryRequest?.completed && !this.publicStoryRequestRefused?.approved
     }
 }

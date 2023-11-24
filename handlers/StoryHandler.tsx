@@ -79,6 +79,7 @@ export default class StoryHandler {
             params: { ...filterOptions }
         })
 
+
         return response.data.map((story: any) => new Story({
             storyId: story.story_id,
             isPublic: story.is_public,
@@ -93,7 +94,8 @@ export default class StoryHandler {
             profileName: story?.profiles?.profile_name,
             profileAvatar: story?.profiles?.avatar_url,
             lastUpdated: story?.last_updated,
-            illustrationsURL: story?.illustrationsURL
+            illustrationsURL: story?.illustrationsURL,
+            publicStoryRequest: story?.publicStoryRequest || {}
         }))
     }
 
@@ -145,5 +147,11 @@ export default class StoryHandler {
         const headers = generateHeaders()
 
         await axios.delete(`/api/profiles/${profileId}/library/stories/${storyId}`, headers)
+    }
+
+    static async submitToPublicLibrary({ storyId, profileId }: { storyId: string, profileId: string }) {
+        const headers = generateHeaders()
+
+        return await axios.post(`/api/profiles/${profileId}/stories/${storyId}/publicStoryRequest`, {}, headers)
     }
 }

@@ -10,7 +10,7 @@ interface STKDialogProps {
     fullScreen?: boolean
     animationDirection?: "right" | "left" | "up" | "down"
     maxWidth?: "xs" | "sm" | "md" | "lg" | "xl"
-    onClose: () => void
+    onClose: (e: MouseEvent) => void
 }
 
 export default function STKDialog({
@@ -18,7 +18,7 @@ export default function STKDialog({
     fullScreen,
     children,
     maxWidth,
-    onClose = () => ({})
+    onClose = (e: MouseEvent) => (e)
 }: STKDialogProps) {
 
     return (
@@ -27,12 +27,12 @@ export default function STKDialog({
             fullScreen={fullScreen}
             maxWidth={maxWidth}
             fullWidth={!!maxWidth}
-            onClose={() => onClose()}
+            onClose={(e: MouseEvent) => onClose(e)}
         >
             <div className="p-4">
                 <div className="flex justify-end">
                     <div className="absolute">
-                        <STKButton iconButton onClick={() => onClose()}>
+                        <STKButton iconButton onClick={(e: MouseEvent) => onClose(e)}>
                             <X size={20} color={neutral800} />
                         </STKButton>
                     </div>

@@ -4,6 +4,8 @@ const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
 const StoryServiceHandler = require("../handlers/StoryServiceHandler")
 const APIValidator = require("../validators/APIValidator");
 const LibraryStory = require("../models/LibraryStory")
+const PublicStoryRequest = require("../models/PublicStoryRequest");
+const convertArrayToHash = require("../../utils/convertArrayToHash");
 
 
 class StoryController {
@@ -100,7 +102,16 @@ class StoryController {
 
             const illustrations = illustrationsResponse.data
 
+            // Public story request
+            const publicStoriesRequests = await PublicStoryRequest.findAll({
+                storyIds: storiesIds
+            }, { accessToken: req.accessToken })
+
+            const publicStoriesRequestHash = convertArrayToHash(publicStoriesRequests, "storyId")
+
             const storiesSerialized = privateStories?.map((story) => {
+                const publicStoryRequest = publicStoriesRequestHash[story.storyId]
+                if (publicStoryRequest) story.publicStoryRequest = publicStoryRequest
                 story.illustrationsURL = illustrations.filter((illustration) => {
                     return illustration?.story_id ===  story?.story_id
                 }).map((storyIllustration) => storyIllustration?.image_url)
@@ -337,6 +348,27 @@ class StoryController {
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong." })
+        }
+    }
+
+    static async submitStoryToPublicLibrary(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["storyId", "profileId"]
+            })
+
+            const { storyId, profileId } = req.query
+
+            const { publicStoryRequest, error } = await PublicStoryRequest.create({ storyId, profileId }, {
+                accessToken: req.accessToken
+            })
+
+            if (error) return res.status(200).send({ message: error })
+
+            return res.status(201).send({ message: "Public story request has been created with success." })
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
         }
     }
 }
