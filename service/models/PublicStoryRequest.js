@@ -1,5 +1,8 @@
 import axios from "axios"
 import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
+import Story from "../models/Story"
+import Profile from "../models/Profile";
+
 
 class PublicStoryRequest {
     constructor({
@@ -7,13 +10,15 @@ class PublicStoryRequest {
         storyId,
         approved,
         completed,
-        profileId
+        profileId,
+        createdAt
     }) {
         this.id = id
         this.storyId = storyId
         this.approved = approved
         this.completed = completed
         this.profileId = profileId
+        this.createdAt = createdAt
     }
 
     static async create({ storyId, profileId }, { accessToken }) {
@@ -28,7 +33,7 @@ class PublicStoryRequest {
             }
         }
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_request`, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
             story_id: storyId,
             profile_id: profileId
         }, {
@@ -44,10 +49,36 @@ class PublicStoryRequest {
         }
     }
 
+    static async update({ publicStoryRequestId }, { approved, completed }, { accessToken }) {
+
+        const response = await axios.patch(
+            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
+                approved,
+                completed
+            },{
+                params: {
+                    select: "*",
+                    id: `eq.${publicStoryRequestId}`
+                },
+                headers: generateSupabaseHeaders(accessToken)
+            }
+        )
+
+        const publicStoryRequest = response.data[0]
+
+        return new PublicStoryRequest({
+            id: publicStoryRequest.id,
+            storyId: publicStoryRequest.story_id,
+            approved: publicStoryRequest.approved,
+            completed: publicStoryRequest.completed,
+            profileId: publicStoryRequest.profile_id,
+            createdAt: publicStoryRequest.created_at
+        })
+    }
     static async findAll({ storyIds = [] }, { accessToken }) {
         if (storyIds.length === 0) throw new Error("storyIds must not be empty")
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_request`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
             params: {
                 select: "*",
                 story_id: `in.(${storyIds})`
@@ -66,7 +97,7 @@ class PublicStoryRequest {
     }
 
     static async validateRequestExistence({ storyId, profileId }, { accessToken }) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_request`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
             params: {
                 story_id: `eq.${storyId}`,
                 profile_id: `eq.${profileId}`,
@@ -82,6 +113,43 @@ class PublicStoryRequest {
         }
 
         return true
+    }
+
+    static async getPublicStoryRequests(filters = {}, { accessToken }) {
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`,
+            {
+                params: {
+                    select: "*",
+                    completed: `eq.false`
+                },
+                headers: generateSupabaseHeaders(accessToken)
+            }
+        )
+
+        const publicStoryRequests = response.data.map((publicStoryRequest) => {
+            return new PublicStoryRequest({
+                id: publicStoryRequest.id,
+                storyId: publicStoryRequest.story_id,
+                approved: publicStoryRequest.approved,
+                completed: publicStoryRequest.completed,
+                profileId: publicStoryRequest.profile_id,
+                createdAt: publicStoryRequest.created_at
+            })
+        })
+
+        return publicStoryRequests
+    }
+
+    async serializer(accessToken) {
+        const story = await Story.getStory(this.storyId, accessToken)
+        const profile = await Profile.getProfile(this.profileId, accessToken)
+
+        return {
+            ...this,
+            story,
+            profile
+        }
     }
 }
 

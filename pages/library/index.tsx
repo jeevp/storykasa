@@ -41,6 +41,7 @@ function Library() {
         const allStories: Story[] = await StoryHandler.fetchPrivateStories({}, {
             profileId: currentProfileId
         })
+
         // @ts-ignore
         setPrivateStories(allStories)
         setLoaded(true)

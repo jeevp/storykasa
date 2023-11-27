@@ -1,6 +1,8 @@
 import axios from "axios";
 import generateHeaders from "@/handlers/generateHeaders";
 import Story from "@/models/Story";
+import PublicStoryRequest from "@/models/PublicStoryRequest"
+import Profile from "@/models/Profile";
 
 interface createStoryProps {
     recordingURL: string
@@ -153,5 +155,33 @@ export default class StoryHandler {
         const headers = generateHeaders()
 
         return await axios.post(`/api/profiles/${profileId}/stories/${storyId}/publicStoryRequest`, {}, headers)
+    }
+
+    static async fetchPublicStoryRequests() {
+        const headers = generateHeaders()
+
+        const response = await axios.get("/api/admin/publicStoryRequests", headers)
+
+        return response.data.map((publicStoryRequest: any) => {
+            return new PublicStoryRequest({
+                ...publicStoryRequest,
+                story: new Story({
+                    ...publicStoryRequest.story
+                }),
+                profile: new Profile({
+                    ...publicStoryRequest.profile
+                })
+            })
+        })
+    }
+
+    static async updatePublicStoryRequest({ publicStoryRequestId }: { publicStoryRequestId: string }, {
+        approved }: { approved: boolean }
+    ) {
+        const headers = generateHeaders()
+
+        await axios.put(`/api/admin/publicStoryRequests/${publicStoryRequestId}`, {
+            approved
+        }, headers)
     }
 }

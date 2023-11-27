@@ -9,10 +9,12 @@ import {usePathname} from "next/navigation";
 interface PageWrapperProps {
     children: any
     path?: string
+    admin?: boolean
 }
 
 export default function PageWrapper({
     children,
+    admin,
     path,
 }: PageWrapperProps) {
     const { currentUser } = useAuth()
@@ -31,7 +33,7 @@ export default function PageWrapper({
                     <div className="w-full px-2" style={{ maxWidth: "1280px" }}>
                         <Navbar />
                         <div className="mt-8 flex w-full">
-                            {currentUser && pathname !== "/profiles" && (
+                            {!admin && currentUser && pathname !== "/profiles" && (
                                 <div className="hidden lg:block mr-20 w-80 absolute lg:relative">
                                     <SideNavigation />
                                 </div>

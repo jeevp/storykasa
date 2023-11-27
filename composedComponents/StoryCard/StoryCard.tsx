@@ -1,8 +1,8 @@
 import { format } from 'timeago.js'
-import { Baby, GlobeSimple, Timer, Heart } from '@phosphor-icons/react'
+import { Baby, GlobeSimple, Timer } from '@phosphor-icons/react'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import Story, { languages } from '@/models/Story'
+import Story from '@/models/Story'
 import STKCard from "@/components/STKCard/STKCard";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKButton from "@/components/STKButton/STKButton";
@@ -14,8 +14,10 @@ import {useProfile} from "@/contexts/profile/ProfileContext";
 import {useStory} from "@/contexts/story/StoryContext";
 import STKMenu from "@/components/STKMenu/STKMenu";
 import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
-
+import PublicIcon from '@mui/icons-material/Public';
+import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 
 
 export default function StoryCard({ story }: {
@@ -23,6 +25,8 @@ export default function StoryCard({ story }: {
     selected: boolean
 }) {
     // States
+    const [loadingRequest, setLoadingRequest] = useState(false)
+    const [publicStoryRequestSent, setPublicStoryRequestSent] = useState(false)
     const [liked, setLiked] = useState(false)
     const [showSubmitStoryToPublicLibraryInfoDialog, setShowSubmitStoryToPublicLibraryInfoDialog] = useState(false)
     const [infoDialogContent, setInfoDialogContent] = useState({
@@ -95,23 +99,26 @@ export default function StoryCard({ story }: {
     }
 
     const handleMenuOnChange = async (menu: Object) => {
-        if (story?.publicStoryRequest) {
-            const { completed, approved } = story.publicStoryRequest
-
+        if (story?.publicStoryRequestProcessing || story?.publicStoryRequestRefused) {
             let title = "Request is processing"
             let text = "You have already submitted a request to add this story to the public library. "
 
-            if (completed && !approved) {
+            if (story?.publicStoryRequestRefused) {
                 title = "Request not approved"
                 text = "Sorry, but this time we could not approve your story to be part of the public library."
             }
 
             setInfoDialogContent({ title, text})
+            setShowSubmitStoryToPublicLibraryInfoDialog(true)
 
             return
         }
 
+        // @ts-ignore
         if (menu?.value === SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION) {
+            setLoadingRequest(true)
+            setShowSubmitStoryToPublicLibraryInfoDialog(true)
+
             const response = await StoryHandler.submitToPublicLibrary({
                 storyId: story.storyId,
                 profileId: currentProfileId
@@ -124,12 +131,19 @@ export default function StoryCard({ story }: {
                 })
             }
 
-            setShowSubmitStoryToPublicLibraryInfoDialog(true)
+            setLoadingRequest(false)
+            setPublicStoryRequestSent(true)
         }
 
     }
 
-    if (story?.publicStoryRequest) console.log(story)
+    const disableMenu = (
+        story?.publicStoryRequestRefused
+        || story?.publicStoryRequestProcessing
+        || story.publicStoryRequestApproved
+        || publicStoryRequestSent
+    )
+
 
     return (
         <STKCard>
@@ -152,6 +166,26 @@ export default function StoryCard({ story }: {
                         <label className="font-semibold text-lg">
                             {story?.title}
                         </label>
+                        {story?.publicStoryRequestApproved && (
+                            <div className="flex items-center mt-2 bg-green-50 p-2 w-28 justify-center rounded-2xl">
+                                <PublicIcon sx={{ fill: green600, width: "14px", height: "14px" }} />
+                                <label className="ml-2 text-sm">Public story</label>
+                            </div>
+                        )}
+
+                        {story?.publicStoryRequestProcessing || publicStoryRequestSent ? (
+                            <div className="flex items-center mt-2 bg-orange-50 p-2 w-36 justify-center rounded-2xl">
+                                <PendingOutlinedIcon sx={{ width: "14px", height: "14px" }} />
+                                <label className="ml-2 text-sm">Pending approval</label>
+                            </div>
+                        ) : null}
+
+                        {story?.publicStoryRequestRefused && (
+                            <div className="flex items-center mt-2 bg-red-50 p-2 w-36 justify-center rounded-2xl">
+                                <DoNotDisturbIcon sx={{ width: "14px", height: "14px" }} />
+                                <label className="ml-2 text-sm">Approval refused</label>
+                            </div>
+                        )}
 
                         <div className="flex justify-between">
                             <div className="lg:flex hidden items-center flex-wrap opacity-60 mt-4 pr-14">
@@ -189,7 +223,7 @@ export default function StoryCard({ story }: {
                                     </div>
                                 )}
                                 {story?.recordedBy && story.recordedBy === currentProfileId && (
-                                    <div className={`hidden lg:block ${story?.publicStoryRequestRefused || story?.publicStoryRequestProcessing ? 'disabled' : ''}`}>
+                                    <div className={`hidden lg:block ${disableMenu ? 'disabled' : ''}`}>
                                         <STKMenu
                                         options={[{
                                             label: "Submit to public library",
@@ -254,6 +288,7 @@ export default function StoryCard({ story }: {
             active={showSubmitStoryToPublicLibraryInfoDialog}
             title={infoDialogContent.title}
             text={infoDialogContent.text}
+            loadingBeforeContent={loadingRequest}
             onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
         </STKCard>
     )

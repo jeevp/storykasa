@@ -13,7 +13,7 @@ import {neutral800} from "@/assets/colorPallet/colors";
 import {useState} from "react";
 import {useStory} from "@/contexts/story/StoryContext";
 import {Divider} from "@mui/material";
-
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 
 interface AccountSideDrawerProps {
     open: boolean
@@ -92,7 +92,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                         <Divider />
                     </div>
                     {currentProfile && (
-                        <div className="mb-4">
+                        <div>
                             <div>
                                 <STKButton
                                     alignStart
@@ -117,6 +117,18 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                             </div>
                         </div>
                     )}
+                    <div className="py-6">
+                        <Divider />
+                    </div>
+                    <STKButton
+                        startIcon={<AdminPanelSettingsOutlinedIcon />}
+                        alignStart
+                        color="info"
+                        variant="outlined"
+                        fullWidth
+                        onClick={() => router.push("/admin/public-story-requests")}>
+                        Admin
+                    </STKButton>
                     <div className="py-6">
                         <Divider />
                     </div>

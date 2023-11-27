@@ -28,3 +28,8 @@ body {
 .timestamp {
   font-family: 'DM Mono', monospace;
 }
+
+p {
+  margin: 0;
+  padding: 0;
+}

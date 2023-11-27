@@ -110,8 +110,10 @@ class StoryController {
             const publicStoriesRequestHash = convertArrayToHash(publicStoriesRequests, "storyId")
 
             const storiesSerialized = privateStories?.map((story) => {
-                const publicStoryRequest = publicStoriesRequestHash[story.storyId]
-                if (publicStoryRequest) story.publicStoryRequest = publicStoryRequest
+                const publicStoryRequest = publicStoriesRequestHash[story.story_id]
+                if (publicStoryRequest) {
+                    story.publicStoryRequest = publicStoryRequest
+                }
                 story.illustrationsURL = illustrations.filter((illustration) => {
                     return illustration?.story_id ===  story?.story_id
                 }).map((storyIllustration) => storyIllustration?.image_url)
@@ -366,6 +368,33 @@ class StoryController {
             if (error) return res.status(200).send({ message: error })
 
             return res.status(201).send({ message: "Public story request has been created with success." })
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async getPublicStoryRequests(req, res) {
+        try {
+            const { data: { user } } = await supabase.auth.getUser(req.accessToken)
+
+            const allowedUsers = ["felipecpfernandes@gmail.com"]
+            if (!allowedUsers.includes(user.email)) {
+                return res.status(401).send({ message: "Not allowed" })
+            }
+
+            const publicStoryRequests = await StoryServiceHandler.getPublicStoryRequests({},
+                { accessToken: req.accessToken }
+            )
+
+            const publicStoryRequestsSerialized = []
+            await Promise.all(publicStoryRequests.map(async(publicStoryRequest) => {
+                const publicStoryRequestSerialized = await publicStoryRequest.serializer(req.accessToken)
+
+                publicStoryRequestsSerialized.push(publicStoryRequestSerialized)
+            }))
+
+            return res.status(200).send(publicStoryRequestsSerialized)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })

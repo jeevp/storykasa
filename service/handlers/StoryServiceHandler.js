@@ -1,5 +1,7 @@
 import axios from "axios";
 import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
+import PublicStoryRequest from "../models/PublicStoryRequest"
+
 
 class StoryServiceHandler {
     static async getStories(filters = {
