@@ -14,7 +14,6 @@ import {useState} from "react";
 import {useStory} from "@/contexts/story/StoryContext";
 import {Divider} from "@mui/material";
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import {allowedAdminUsers} from "@/HOC/withAdmin";
 
 interface AccountSideDrawerProps {
     open: boolean
