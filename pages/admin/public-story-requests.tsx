@@ -9,6 +9,7 @@ import PublicStoryRequestCard from "@/composedComponents/PublicStoryRequestCard/
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
 import PublicStoryRequestCardSkeleton from "@/composedComponents/PublicStoryRequestCard/PublicStoryRequestCardSkeleton";
+import withAdmin from "@/HOC/withAdmin";
 
 export const dynamic = 'force-dynamic'
 
@@ -46,11 +47,8 @@ function PublicStoryRequests() {
                 </div>
                 <div className="mt-10">
                     {loading ? (
-                        <div className="w-full mt-4">
+                        <div className="w-full">
                             <div>
-                                <STKSkeleton width="100%" height="56px" />
-                            </div>
-                            <div className="mt-10">
                                 {[1,2,3].map((_, index) => (
                                     <div className="w-full first:mt-0 mt-2" key={index}>
                                         <PublicStoryRequestCardSkeleton />
@@ -102,4 +100,4 @@ function PublicStoryRequests() {
     )
 }
 
-export default withAuth(withProfile(PublicStoryRequests))
+export default withAuth(withProfile(withAdmin(PublicStoryRequests)))

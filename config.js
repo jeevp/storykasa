@@ -10,7 +10,6 @@ const RECORD_FILE_EXTENSION = "mp3"
 const MPEG_FILE_EXTENSION = "mpeg"
 const PNG_FILE_EXTENSION = "png"
 
-
 module.exports = {
     STK_ACCESS_TOKEN,
     STK_PROFILE_ID,

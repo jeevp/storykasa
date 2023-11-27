@@ -7,10 +7,11 @@ import AuthHandler from '@/handlers/AuthHandler'
 import identifyPendoVisitor from "@/tools/Pendo/identifyPendoVisitor";
 import {useAuth} from "@/contexts/auth/AuthContext";
 import {useTools} from "@/contexts/tools/ToolsContext";
+import { allowedAdminUsers } from "@/service/config"
 
 const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
-    const { setCurrentUser } = useAuth()
+    const { setCurrentUser, setCurrentUserIsAdmin } = useAuth()
     const { pendoTrackingEnabled, setPendoTrackingEnabled } = useTools()
 
     const router = useRouter()
@@ -25,6 +26,9 @@ const withAuth = (WrappedComponent: any) => {
 
     const handleLogin = (accessToken: string) => {
       const user = decodeJWT(accessToken)
+      const _currentUserIsAdmin = allowedAdminUsers.includes(user.email)
+      setCurrentUserIsAdmin(_currentUserIsAdmin)
+
       setCurrentUser(user)
       setHasToken(true)
 

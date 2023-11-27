@@ -14,6 +14,7 @@ import {useState} from "react";
 import {useStory} from "@/contexts/story/StoryContext";
 import {Divider} from "@mui/material";
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import {allowedAdminUsers} from "@/HOC/withAdmin";
 
 interface AccountSideDrawerProps {
     open: boolean
@@ -29,7 +30,7 @@ const navigationOptions = [
 export default function AccountSideDrawer({ open, onClose = () => ({}) }: AccountSideDrawerProps) {
     const router = useRouter()
 
-    const { setCurrentUser } = useAuth()
+    const { setCurrentUser, currentUserIsAdmin, currentUser } = useAuth()
     const { setCurrentProfileId, currentProfile, setCurrentProfile } = useProfile()
     const [selectedNavigationOption, setSelectedNavigationOption] = useState<Object>({})
     const { setStoryFilters } = useStory()
@@ -55,7 +56,6 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
         await router.push(selectedTab.pathname)
         setStoryFilters({})
     }
-
 
     return (
         <STKDrawer open={open} onClose={() => onClose()} anchor="right">
@@ -117,18 +117,23 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                             </div>
                         </div>
                     )}
-                    <div className="py-6">
-                        <Divider />
-                    </div>
-                    <STKButton
-                        startIcon={<AdminPanelSettingsOutlinedIcon />}
-                        alignStart
-                        color="info"
-                        variant="outlined"
-                        fullWidth
-                        onClick={() => router.push("/admin/public-story-requests")}>
-                        Admin
-                    </STKButton>
+                    {currentUserIsAdmin && (
+                        <>
+                            <div className="py-6">
+                                <Divider />
+                            </div>
+                            <STKButton
+                                startIcon={<AdminPanelSettingsOutlinedIcon />}
+                                alignStart
+                                color="info"
+                                variant="outlined"
+                                fullWidth
+                                onClick={() => router.push("/admin/public-story-requests")}>
+                                Admin
+                            </STKButton>
+                        </>
+                    )}
+
                     <div className="py-6">
                         <Divider />
                     </div>
