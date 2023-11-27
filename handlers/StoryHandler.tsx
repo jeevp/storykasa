@@ -108,6 +108,7 @@ export default class StoryHandler {
             params: { ...filterOptions }
         })
 
+        // @ts-ignore
         return response.data.map((story: any) => new Story({
             storyId: story.story_id,
             isPublic: story.is_public,
@@ -175,7 +176,7 @@ export default class StoryHandler {
         })
     }
 
-    static async updatePublicStoryRequest({ publicStoryRequestId }: { publicStoryRequestId: string }, {
+    static async updatePublicStoryRequest({ publicStoryRequestId }: { publicStoryRequestId: any }, {
         approved }: { approved: boolean }
     ) {
         const headers = generateHeaders()

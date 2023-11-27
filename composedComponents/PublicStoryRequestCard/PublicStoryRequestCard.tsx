@@ -65,6 +65,7 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
         try {
             setLoadingAction(true)
             const approved = Boolean(actionType === APPROVE_ACTION_TYPE)
+
             await StoryHandler.updatePublicStoryRequest({
                 publicStoryRequestId: publicStoryRequest.id
             }, {
@@ -99,7 +100,10 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
             <div className="p-4">
                 <div className="flex">
                     <div className="flex justify-items-start">
-                        <STKAvatar src={publicStoryRequest?.profile?.avatarUrl!} name={publicStoryRequest?.profile?.profileName} />
+                        <STKAvatar
+                        src={publicStoryRequest?.profile?.avatarUrl!}
+                        // @ts-ignore
+                        name={publicStoryRequest?.profile?.profileName} />
                     </div>
                     <div className="w-full cursor-pointer ml-4">
                         <div className="flex items-center justify-between w-full">

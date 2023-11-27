@@ -13,7 +13,7 @@ interface PublicStoryRequestProps {
 }
 
 
-class PublicStoryRequest {
+export default class PublicStoryRequest {
     id: boolean
     storyId: string
     approved: boolean
@@ -44,5 +44,3 @@ class PublicStoryRequest {
     }
 }
 
-
-module.exports = PublicStoryRequest

@@ -67,7 +67,10 @@ export default function STKMenu({
                 >
                     {options.map((option, index) => (
                         <MenuItem key={index} onClick={(e) => handleOptionOnClick(e, option)}>
-                            {option[optionLabel]}
+                            {
+                                // @ts-ignore
+                                option[optionLabel]
+                            }
                         </MenuItem>
                     ))}
                 </Menu>
