@@ -186,7 +186,7 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
             active={showConfirmationDialog}
             title={dialogContent.title}
             text={dialogContent.text}
-            enableComment
+            enableComment={actionType === REFUSE_ACTION_TYPE}
             loading={loadingAction}
             confirmationButtonText={dialogContent.confirmationButtonText}
             onAction={handleAction}
