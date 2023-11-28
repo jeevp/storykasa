@@ -1,9 +1,12 @@
 import STKDialog from "@/components/STKDialog/STKDialog"
 import STKButton from "@/components/STKButton/STKButton";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import {beige400, green600, neutral600, neutral800} from "@/assets/colorPallet/colors";
-import {orange} from "@mui/material/colors";
+import {beige400} from "@/assets/colorPallet/colors";
 import STKLoading from "@/components/STKLoading/STKLoading";
+import STKTextField from "@/components/STKTextField/STKTextField";
+import {useState} from "react";
+
+
 interface InfoDialogProps {
     active: boolean
     icon?: any
@@ -12,8 +15,9 @@ interface InfoDialogProps {
     confirmationButtonText?: string
     title: string
     loading?: boolean
+    enableComment?: boolean
     onClose?: () => void
-    onAction?: () => void
+    onAction?: (comment: string) => void
 }
 
 export default function InfoDialog({
@@ -23,10 +27,14 @@ export default function InfoDialog({
     title,
     text,
     loading,
+    enableComment,
     confirmationButtonText,
     onClose = () => ({}),
     onAction = () => ({})
 }: InfoDialogProps) {
+    // States
+    const [comment, setComment] = useState("")
+
     // Methods
     const handleClose = (e: MouseEvent) => {
         e.stopPropagation()
@@ -35,11 +43,15 @@ export default function InfoDialog({
 
     const handleAction = (e: MouseEvent) => {
         e.stopPropagation()
-        onAction()
+        onAction(comment)
+    }
+
+    const handleCommentOnChange = (value: string) => {
+        setComment(value)
     }
 
     return (
-        <STKDialog maxWidth="xs" active={active} onClose={handleClose}>
+        <STKDialog title={title} maxWidth="xs" active={active} onClose={handleClose}>
             <div>
 
                 {loadingBeforeContent ? (
@@ -50,13 +62,21 @@ export default function InfoDialog({
                         </div>
                     </div>
                 ) : (
-                  <>
-                      <div className="flex justify-center">
-                          {icon || <InfoOutlinedIcon sx={{ width: "40px", height: "40px", fill: beige400 }} /> }
-                      </div>
-                      <h3 className="text-center text-neutral-800">{title}</h3>
-                      <p className="text-center px-10 text-neutral-800">{text}</p>
-                  </>
+                  <div className="mt-6">
+                      <p className="text-neutral-800">{text}</p>
+                      {enableComment && (
+                          <div className="mt-6">
+                              <label className="font-semibold text-md">Write a comment to the user</label>
+                              <div className="mt-4">
+                                  <STKTextField
+                                      multiline
+                                      fluid
+                                      value={comment}
+                                      onChange={handleCommentOnChange} />
+                              </div>
+                          </div>
+                      )}
+                  </div>
                 )}
                 <div className="mt-10 flex justify-end items-center">
                     {confirmationButtonText ? (

@@ -177,12 +177,15 @@ export default class StoryHandler {
     }
 
     static async updatePublicStoryRequest({ publicStoryRequestId }: { publicStoryRequestId: any }, {
-        approved }: { approved: boolean }
+        approved,
+        moderatorComment
+    }: { approved: boolean, moderatorComment: string }
     ) {
         const headers = generateHeaders()
 
         await axios.put(`/api/admin/publicStoryRequests/${publicStoryRequestId}`, {
-            approved
+            approved,
+            moderatorComment
         }, headers)
     }
 }

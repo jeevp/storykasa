@@ -1,0 +1,24 @@
+.stk-tooltip-container {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip-content {
+  position: absolute;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  display: none;
+  z-index: 1000;
+  max-width: 20em;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.2s, opacity 0.2s ease;
+}
+
+.tooltip-content.visible {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}

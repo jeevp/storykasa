@@ -59,16 +59,17 @@ class PublicStoryRequestController {
             })
 
             APIValidator.requiredPayload({ req, res }, {
-                requiredPayload: ["approved"]
+                requiredPayload: ["approved", "moderatorComment"]
             })
 
             const { publicStoryRequestId } = req.query
-            const { approved } = req.body
+            const { approved, moderatorComment } = req.body
 
 
             const publicStoryRequest = await PublicStoryRequest.update({ publicStoryRequestId }, {
                 approved,
-                completed: true
+                completed: true,
+                moderatorComment
             }, { accessToken: req.accessToken })
 
             if (approved) {

@@ -197,7 +197,7 @@ function STKTextField({
                         <InputAdornment position="start">
                             {startAdornment}
                         </InputAdornment>
-                    ),
+                    )
                 }) : <></>}
                 onChange={(e) => onChange(e.target.value)} />
         </ThemeProvider>

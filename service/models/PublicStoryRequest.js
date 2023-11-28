@@ -49,12 +49,13 @@ class PublicStoryRequest {
         }
     }
 
-    static async update({ publicStoryRequestId }, { approved, completed }, { accessToken }) {
+    static async update({ publicStoryRequestId }, { approved, completed, moderatorComment }, { accessToken }) {
 
         const response = await axios.patch(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
                 approved,
-                completed
+                completed,
+                moderator_comment: moderatorComment
             },{
                 params: {
                     select: "*",
@@ -92,7 +93,8 @@ class PublicStoryRequest {
             storyId: publicStoryRequest.story_id,
             profileId: publicStoryRequest.profile_id,
             approved: publicStoryRequest.approved,
-            completed: publicStoryRequest.completed
+            completed: publicStoryRequest.completed,
+            moderatorComment: publicStoryRequest.moderator_comment
         }))
     }
 

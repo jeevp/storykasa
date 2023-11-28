@@ -17,7 +17,8 @@ import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
 import PublicIcon from '@mui/icons-material/Public';
 import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
-import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import STKTooltip from "@/components/STKTooltip/STKTooltip";
 
 
 export default function StoryCard({ story }: {
@@ -105,7 +106,7 @@ export default function StoryCard({ story }: {
 
             if (story?.publicStoryRequestRefused) {
                 title = "Request not approved"
-                text = "Sorry, but this time we could not approve your story to be part of the public library."
+                text = "Sorry, but this time we could not accept your story to be part of the public library."
             }
 
             setInfoDialogContent({ title, text})
@@ -182,10 +183,20 @@ export default function StoryCard({ story }: {
                         ) : null}
 
                         {story?.publicStoryRequestRefused && (
-                            <div className="flex items-center mt-2 bg-red-50 p-2 w-36 justify-center rounded-2xl">
-                                <DoNotDisturbIcon sx={{ width: "14px", height: "14px" }} />
-                                <label className="ml-2 text-sm">Approval refused</label>
-                            </div>
+                            <>
+                                {story?.publicStoryRequest?.moderatorComment ? (
+                                    <STKTooltip text={story?.publicStoryRequest?.moderatorComment} position="right">
+                                        <div className="flex items-center mt-2 bg-red-50 p-2 w-36 justify-center rounded-2xl">
+                                            <InfoOutlinedIcon sx={{ width: "14px", height: "14px" }} />
+                                            <label className="ml-2 text-sm cursor-pointer">Publish declined</label>
+                                        </div>
+                                    </STKTooltip>
+                                ) : (
+                                    <div className="flex items-center mt-2 bg-red-50 p-2 w-32 justify-center rounded-2xl">
+                                        <label className="text-sm">Publish declined</label>
+                                    </div>
+                                )}
+                            </>
                         )}
 
                         <div className="flex justify-between">

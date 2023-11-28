@@ -14,6 +14,7 @@ import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import PublicStoryRequest from "@/models/PublicStoryRequest";
 import STKButton from "@/components/STKButton/STKButton";
 import {useAdmin} from "@/contexts/admin/useAdmin";
+import ReactMarkdown from "react-markdown";
 
 
 const APPROVE_ACTION_TYPE = "APPROVE_ACTION_TYPE"
@@ -44,9 +45,9 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
         setActionType(APPROVE_ACTION_TYPE)
         setShowConfirmationDialog(true)
         setDialogContent({
-            title: "Approve Story",
-            text: "By approving this request, the story will become immediately available on the public library to all users.",
-            confirmationButtonText: "Approve story"
+            title: "Accept Story",
+            text: "By accepting this request, the story will become immediately available on the public library to all users.",
+            confirmationButtonText: "Accept story"
         })
     }
 
@@ -55,13 +56,13 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
         setActionType(REFUSE_ACTION_TYPE)
         setShowConfirmationDialog(true)
         setDialogContent({
-            title: "Refuse Story",
-            text: "By refusing this request, the story will not become available on the public library.",
-            confirmationButtonText: "Refuse story"
+            title: "Decline Story",
+            text: "By declining this request, the story will not become available on the public library.",
+            confirmationButtonText: "Decline story"
         })
     }
 
-    const handleAction = async () => {
+    const handleAction = async (moderatorComment: string) => {
         try {
             setLoadingAction(true)
             const approved = Boolean(actionType === APPROVE_ACTION_TYPE)
@@ -69,7 +70,8 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
             await StoryHandler.updatePublicStoryRequest({
                 publicStoryRequestId: publicStoryRequest.id
             }, {
-                approved
+                approved,
+                moderatorComment
             })
             setLoadingAction(false)
             setShowConfirmationDialog(false)
@@ -163,7 +165,9 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
                     </div>
                 </div>
                 <div className="mt-4">
-                    <p>{publicStoryRequest?.story.description}</p>
+                    <ReactMarkdown>
+                        {publicStoryRequest?.story?.description}
+                    </ReactMarkdown>
                 </div>
 
                 <div className="mt-4">
@@ -171,10 +175,10 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
                 </div>
                 <div className="flex items-center justify-end mt-8">
                     <div>
-                        <STKButton variant="contained" onClick={handleApprove}>Approve</STKButton>
+                        <STKButton variant="contained" onClick={handleApprove}>Accept</STKButton>
                     </div>
                     <div className="ml-2">
-                        <STKButton variant="outlined" onClick={handleRefuse}>Refuse</STKButton>
+                        <STKButton variant="outlined" onClick={handleRefuse}>Decline</STKButton>
                     </div>
                 </div>
             </div>
@@ -182,6 +186,7 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
             active={showConfirmationDialog}
             title={dialogContent.title}
             text={dialogContent.text}
+            enableComment
             loading={loadingAction}
             confirmationButtonText={dialogContent.confirmationButtonText}
             onAction={handleAction}
