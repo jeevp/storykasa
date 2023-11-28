@@ -2,6 +2,7 @@ const supabase = require('../../service/supabase');
 const APIValidator = require("../validators/APIValidator");
 const PublicStoryRequest = require("../models/PublicStoryRequest");
 const Story = require("../models/Story")
+const {allowedAdminUsers} = require("../config");
 
 class PublicStoryRequestController {
     static async submitStoryToPublicLibrary(req, res) {
@@ -29,8 +30,7 @@ class PublicStoryRequestController {
         try {
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
-            const allowedUsers = ["felipecpfernandes@gmail.com"]
-            if (!allowedUsers.includes(user.email)) {
+            if (!allowedAdminUsers.includes(user.email)) {
                 return res.status(401).send({ message: "Not allowed" })
             }
 
