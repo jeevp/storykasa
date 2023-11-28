@@ -65,7 +65,7 @@ class EmailService {
                     secure: true,
                     auth: {
                         user: "felipecpfernandes@gmail.com",
-                        pass: "Paifer$10"
+                        pass: "123456"
                     }
                 })
 
