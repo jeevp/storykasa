@@ -117,7 +117,7 @@ export default function StoryDetails({
                 )}
                 <div className="mb-8 mt-6">
                     <div className="mt-4">
-                        <div className="overflow-y-scroll">
+                        <div className="overflow-y-scroll whitespace-pre-line">
                             <ReactMarkdown>
                                 {story?.description}
                             </ReactMarkdown>
