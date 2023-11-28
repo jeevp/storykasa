@@ -141,6 +141,7 @@ export default function StoryCard({ story }: {
         story?.publicStoryRequestRefused
         || story?.publicStoryRequestProcessing
         || story.publicStoryRequestApproved
+        || story?.isPublic
         || publicStoryRequestSent
     )
 
@@ -272,7 +273,7 @@ export default function StoryCard({ story }: {
                             </div>
                         )}
                         {story?.recordedBy && story.recordedBy === currentProfileId && (
-                            <div className={`block lg:hidden ${story?.publicStoryRequestRefused || story?.publicStoryRequestProcessing ? 'disabled' : ''}`}>
+                            <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
                                 <STKMenu
                                 options={[{
                                     label: "Submit to public library",
