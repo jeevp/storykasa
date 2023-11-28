@@ -85,7 +85,7 @@ function Discover() {
                 </div>
             </div>
             <>
-                <div className={`w-full flex flex-col lg:flex-row mb-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
+                <div className={`w-full flex flex-col lg:flex-row mb-10 mt-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
                     <div className="w-full max-w-xl">
                         <STKTextField
                             placeholder="Search our story collection."
