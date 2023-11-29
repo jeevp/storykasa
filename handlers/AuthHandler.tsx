@@ -78,6 +78,7 @@ export default class AuthHandler {
 
         localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)
         localStorage.setItem(STK_REFRESH_TOKEN, response?.data?.session?.refresh_token)
+        localStorage.setItem(STK_PROFILE_ID, response?.data?.defaultProfile?.profile_id)
 
         identifyPendoVisitor({ userId: response.data.user.id })
 

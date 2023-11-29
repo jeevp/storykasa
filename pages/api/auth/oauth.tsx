@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
 import supabaseService from "@/service/supabase";
+// @ts-ignore
+import ProfileServiceHandler from "@/service/handlers/ProfileServiceHandler";
 //
 const processOauth = async (req: NextRequest, res: NextResponse) => {
     try {
@@ -16,6 +18,11 @@ const processOauth = async (req: NextRequest, res: NextResponse) => {
             // @ts-ignore
             return res.status(400).send({ message: "Something went wrong" })
         }
+
+        const defaultProfile = await ProfileServiceHandler.getDefaultAccountProfile({
+            accessToken: data.session.access_token
+        })
+
         // @ts-ignore
         await supabaseService.auth.setSession({
             refresh_token: data.session.refresh_token,
@@ -23,8 +30,10 @@ const processOauth = async (req: NextRequest, res: NextResponse) => {
         })
 
         // @ts-ignore
-        return res.status(200).send(data)
-
+        return res.status(200).send({
+            ...data,
+            defaultProfile
+        })
     } catch (error) {
         console.error(error)
         // @ts-ignore
