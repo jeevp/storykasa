@@ -122,6 +122,7 @@ class AuthController {
 
             return res.status(201).send({ message: "Password recovery requested with success" })
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong." })
         }
     }

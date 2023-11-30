@@ -10,10 +10,10 @@ import PageWrapper from "@/composedComponents/PageWrapper";
 import {CheckCircle} from "@phosphor-icons/react";
 import {green600} from "@/assets/colorPallet/colors";
 
-interface LoginFormProps {
+interface UpdatePasswordProps {
     onPasswordRecoveryRequest?: Function
 }
-function UpdatePassword({ onPasswordRecoveryRequest = () => ({}) }: LoginFormProps) {
+function UpdatePassword({ onPasswordRecoveryRequest = () => ({}) }: UpdatePasswordProps) {
     // Hooks
     const router = useRouter()
 

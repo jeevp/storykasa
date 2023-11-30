@@ -21,3 +21,4 @@ export const green300 = "#96ea8f"
 export const red600 = "#e54d2e"
 
 export const yellow600 = "#f4dc82"
+

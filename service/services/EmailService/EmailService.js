@@ -39,9 +39,7 @@ class EmailContext {
 }
 
 class EmailService {
-    static async sendPasswordRecoverEmail({ to, subject }, content = {
-
-    }) {
+    static async sendPasswordRecoverEmail({ to, subject }, content = {}) {
         try {
             const emailContext = new EmailContext({ to, subject })
 
@@ -57,21 +55,21 @@ class EmailService {
     }
 
     static sendEmail(emailContext, emailTemplate) {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async() => {
             try {
                 const transporter = nodemailer.createTransport({
                     host: "smtp.gmail.com",
                     port: 465,
                     secure: true,
                     auth: {
-                        user: "felipecpfernandes@gmail.com",
-                        pass: "123456"
+                        user: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
+                        pass: process.env.NEXT_PUBLIC_SUPPORT_PASSWORD
                     }
                 })
 
 
                 await transporter.sendMail({
-                    from: "felipecpfernandes@gmail.com",
+                    from: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
                     to: emailContext.to,
                     subject: emailContext.subject,
                     html: emailTemplate
