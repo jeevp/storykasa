@@ -6,10 +6,9 @@ const supabase = createClient(
         auth: {
             autoRefreshToken: false,
             persistSession: false,
-            detectSessionInUrl: false,
-            flowType: "pkce"
-        },
-    },
+            detectSessionInUrl: false
+        }
+    }
 );
 
 module.exports = supabase;
