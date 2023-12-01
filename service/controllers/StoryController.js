@@ -13,7 +13,9 @@ class StoryController {
         try {
             const { storyId } = req.query
 
-            const response = await axios.delete(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+            const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+                deleted: true
+            },{
                 params: {
                     story_id: `eq.${storyId}`
                 },
