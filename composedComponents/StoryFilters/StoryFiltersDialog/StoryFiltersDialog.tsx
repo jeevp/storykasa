@@ -57,7 +57,9 @@ export default function StoryFiltersDialog({
 
     // Methods
     const handleFetchStoryFilters = async () => {
-        const { narrators, languages } = await StoryHandler.fetchStoriesFilters({ profileId: currentProfileId })
+        const { narrators, languages } = await StoryHandler.fetchStoriesFilters({
+            profileId: privateStories ? currentProfileId : null
+        })
 
         setStoryNarrators(narrators)
         setStoryLanguages(languages)

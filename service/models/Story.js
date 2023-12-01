@@ -103,11 +103,6 @@ class Story {
         let ageGroups = filters?.ageGroups
         if (ageGroups && !(ageGroups instanceof Array)) ageGroups = [filters?.ageGroups]
 
-        // Add filter for narrator if provided
-        if (!filters.private && filters?.narrator) {
-            queryParams['profiles.profile_name'] = `eq.${filters?.narrator}`;
-        }
-
         // Add filter for language if provided
         if (filters?.language) {
             queryParams[filters.private ? 'stories.language' : 'language'] = `eq.${filters?.language}`;
@@ -155,11 +150,16 @@ class Story {
             });
         }
 
-        if (filters?.private && filters.narrator) {
+        if (filters.narrator) {
             data = data.filter(story => {
                 if (!story?.profiles) return false
 
-                return (story?.profiles?.profile_name === filters.narrator || story?.narrator_name === filters.narrator)
+                if (story?.narrator_name) {
+                    return story?.narrator_name === filters.narrator
+                }
+
+
+                return story?.profiles?.profile_name === filters.narrator
             });
         }
 
