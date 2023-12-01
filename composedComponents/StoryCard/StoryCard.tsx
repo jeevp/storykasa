@@ -152,16 +152,15 @@ export default function StoryCard({ story }: {
             <div className="p-4">
                 <div className="flex">
                     <div className="flex justify-items-start">
-                        <STKAvatar src={story?.profileAvatar!} name={story?.profileName} />
+                        <STKAvatar
+                        src={story?.narratorName ? '' : story?.profileAvatar}
+                        name={story?.narratorName || story?.profileName} />
                     </div>
                     <div className="w-full cursor-pointer ml-4">
                         <div className="flex items-center justify-between w-full">
-                            {story?.profileName && (
-                                <label>
-                                    {story?.profileName}
-                                </label>
-                            )}
-
+                            <label>
+                                {story?.narratorName || story?.profileName}
+                            </label>
                             <label className="text-xs">{format(story?.lastUpdated)}</label>
                         </div>
 

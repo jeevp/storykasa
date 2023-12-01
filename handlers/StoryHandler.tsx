@@ -56,14 +56,17 @@ export default class StoryHandler {
 
     static async updateStory({ storyId }: { storyId: string }, {
         title,
-        description
-    }: { title: string, description: string }) {
+        description,
+        narratorName
+    }: { title: string, description: string, narratorName: string }) {
         const headers = generateHeaders()
         const payload = {}
         // @ts-ignore
         if (title) payload.title = title
         // @ts-ignore
         if (description) payload.description = description
+        // @ts-ignore
+        if (narratorName) payload.narratorName = narratorName
 
         await axios.put(`/api/stories/${storyId}`, payload, headers)
     }
@@ -97,7 +100,8 @@ export default class StoryHandler {
             profileAvatar: story?.profiles?.avatar_url,
             lastUpdated: story?.last_updated,
             illustrationsURL: story?.illustrationsURL,
-            publicStoryRequest: story?.publicStoryRequest || {}
+            publicStoryRequest: story?.publicStoryRequest || {},
+            narratorName: story?.narrator_name
         }))
     }
 
@@ -123,7 +127,8 @@ export default class StoryHandler {
             profileName: story?.profiles?.profile_name,
             profileAvatar: story?.profiles?.avatar_url,
             lastUpdated: story?.last_updated,
-            illustrationsURL: story?.illustrationsURL
+            illustrationsURL: story?.illustrationsURL,
+            narratorName: story?.narrator_name
         }))
     }
 

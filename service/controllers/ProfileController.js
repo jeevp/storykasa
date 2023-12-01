@@ -1,7 +1,7 @@
 const supabase = require('../../service/supabase');
 const generateSupabaseHeaders = require("../../service/utils/generateSupabaseHeaders")
 const axios = require("axios");
-const ProfileServiceHandler = require("../handlers/ProfileServiceHandler");
+const Profile = require("../models/Profile");
 const ProfileValidator = require("../validators/ProfileValidator")
 
 class ProfileController {
@@ -39,7 +39,7 @@ class ProfileController {
 
             await ProfileValidator.validateMaxProfiles(req, res)
 
-            const profile = await ProfileServiceHandler.createProfile({
+            const profile = await Profile.createProfile({
                 name, avatarUrl
             }, { accessToken: req.accessToken })
 

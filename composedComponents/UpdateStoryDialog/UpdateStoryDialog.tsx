@@ -28,12 +28,15 @@ export default function UpdateStoryDialog({
     const [showSnackbar, setShowSnackbar] = useState(false)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    const [narratorName, setNarratorName] = useState("")
 
     // Watchers
     useEffect(() => {
         if (story) {
+            console.log({ story })
             setTitle(story?.title)
             setDescription(story?.description)
+            setNarratorName(story?.narratorName)
         }
     }, [story]);
 
@@ -41,6 +44,7 @@ export default function UpdateStoryDialog({
     const handleOnChange = (key: string, value: string) => {
         if (key === "title") setTitle(value)
         if (key === "description") setDescription(value)
+        if (key === "narratorName") setNarratorName(value)
     }
 
     const handleSave = async () => {
@@ -48,7 +52,8 @@ export default function UpdateStoryDialog({
             setLoading(true)
             await StoryHandler.updateStory({ storyId: story.storyId }, {
                 title,
-                description
+                description,
+                narratorName
             })
 
             setSnackbarBus({
@@ -83,6 +88,16 @@ export default function UpdateStoryDialog({
                             value={title}
                             placeholder="Type the story title"
                             onChange={(value: string) => handleOnChange("title", value)}/>
+                        </div>
+                    </div>
+                    <div className="mt-4">
+                        <label className="font-semibold">Narrator name</label>
+                        <div className="mt-2">
+                            <STKTextField
+                                fluid
+                                value={narratorName}
+                                placeholder="Type the narrator name"
+                                onChange={(value: string) => handleOnChange("narratorName", value)}/>
                         </div>
                     </div>
                     <div className="mt-4">

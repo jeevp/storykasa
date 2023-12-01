@@ -1,13 +1,12 @@
 const supabase = require('../../service/supabase');
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
-const StoryServiceHandler = require("../handlers/StoryServiceHandler")
 const APIValidator = require("../validators/APIValidator");
 const LibraryStory = require("../models/LibraryStory")
 const PublicStoryRequest = require("../models/PublicStoryRequest");
 const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
-
+const Story = require("../models/Story")
 
 class StoryController {
     static async deleteStory(req, res) {
@@ -31,7 +30,7 @@ class StoryController {
     static async updateStory(req, res) {
         try {
             const { storyId } = req.query
-            const { title, description } = req.body
+            const { title, description, narratorName } = req.body
 
             if (!title && !description) {
                 return res.status(400).send({
@@ -39,16 +38,21 @@ class StoryController {
                 })
             }
 
-            const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
-              title, description
+            const story = await Story.getStory(storyId, req.accessToken)
+
+            if (!story) {
+                return res.status(404).send({ message: "Story not found" })
+            }
+
+            const updatedStory = await story.update({
+                title,
+                description,
+                narratorName
             }, {
-                params: {
-                    story_id: `eq.${storyId}`
-                },
-                headers: generateSupabaseHeaders(req.accessToken)
+                accessToken: req.accessToken
             })
 
-            return res.status(202).send(response.data)
+            return res.status(202).send(updatedStory)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
@@ -71,7 +75,7 @@ class StoryController {
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
-            const privateStories = await StoryServiceHandler.getStories({
+            const privateStories = await Story.getStories({
                 narrator,
                 language,
                 ageGroups,
@@ -143,7 +147,7 @@ class StoryController {
             const ageGroups = req.query["ageGroups[]"]
             const storyLengths = req.query["storyLengths[]"]
 
-            const publicStories = await StoryServiceHandler.getStories({
+            const publicStories = await Story.getStories({
                 narrator,
                 language,
                 ageGroups,
@@ -265,7 +269,7 @@ class StoryController {
                 userId = user.id
             }
 
-            let stories = await StoryServiceHandler.getStories({
+            let stories = await Story.getStories({
                 private: Boolean(req.query.profileId)
             }, {
                 accessToken: req.accessToken,
@@ -277,7 +281,7 @@ class StoryController {
             const uniqueLanguages = new Set()
 
             const narrators = stories.reduce((acc, story) => {
-                const narratorName = story?.profiles?.profile_name;
+                const narratorName = story?.narrator_name || story?.profiles?.profile_name;
                 if (!uniqueNarrators.has(narratorName)) {
                     uniqueNarrators.add(narratorName);
                     acc.push({ narratorName });

@@ -150,6 +150,7 @@ interface StoryProps {
     lastUpdated: string
     illustrationsURL: Array<string>
     publicStoryRequest: any
+    narratorName: string
 }
 
 export default class Story {
@@ -168,6 +169,7 @@ export default class Story {
     lastUpdated: string
     illustrationsURL: Array<string>
     publicStoryRequest: any
+    narratorName: string
 
     constructor({
         storyId,
@@ -184,7 +186,8 @@ export default class Story {
         profileAvatar,
         lastUpdated,
         illustrationsURL = [],
-        publicStoryRequest
+        publicStoryRequest,
+        narratorName
     }: StoryProps) {
         this.storyId = storyId
         this.isPublic = isPublic
@@ -201,6 +204,7 @@ export default class Story {
         this.lastUpdated = lastUpdated
         this.illustrationsURL = illustrationsURL
         this.publicStoryRequest = publicStoryRequest
+        this.narratorName = narratorName
     }
 
     get ageGroupsLabel() {

@@ -1,5 +1,5 @@
 const supabase = require("../supabase")
-const ProfileServiceHandler = require("../handlers/ProfileServiceHandler");
+const Profile = require("../models/Profile");
 const APIValidator = require("../validators/APIValidator")
 const TernsAndPrivacyConsent = require("../models/TermsAndPrivacyConsent")
 
@@ -51,7 +51,7 @@ class AuthController {
             })
 
             // Create default profile
-            const profile = await ProfileServiceHandler.createProfile({
+            const profile = await Profile.createProfile({
                 name: fullName
             }, { accessToken: data.session.access_token })
 
@@ -83,7 +83,7 @@ class AuthController {
                 return APIValidator.generateErrorMessage({ serverErrorMessage: error?.message }, res)
             }
 
-            const defaultProfile = await ProfileServiceHandler.getDefaultAccountProfile({
+            const defaultProfile = await Profile.getDefaultAccountProfile({
                 accessToken: data.session.access_token
             })
 

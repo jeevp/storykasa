@@ -51,10 +51,10 @@ export default function StoryDetails({
                 <h1 className="m-0 max-w-[12em] text-2xl font-semibold">{story?.title}</h1>
                 <div className="mt-4 flex items-center">
                     <STKAvatar
-                        src={story?.profileAvatar}
-                        name={story?.profileName}
+                        src={story?.narratorName ? '' : story?.profileAvatar}
+                        name={story?.narratorName || story?.profileName}
                     />
-                    <label className="ml-2 font-semibold text-base">{story?.profileName}</label>
+                    <label className="ml-2 font-semibold text-base">{story?.narratorName || story?.profileName}</label>
                 </div>
                 <div className="flex flex-col mt-4">
                     {story?.ageGroups && (
