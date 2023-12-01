@@ -1,14 +1,22 @@
 const supabase = require("../supabase")
 const ProfileServiceHandler = require("../handlers/ProfileServiceHandler");
 const APIValidator = require("../validators/APIValidator")
-
+const TernsAndPrivacyConsent = require("../models/TermsAndPrivacyConsent")
 
 class AuthController {
     static async signUp(req, res) {
         try {
-            const { email, password, fullName } = req.body
+            const {
+                email,
+                password,
+                fullName,
+                termsAgreed,
+                browserName,
+                browserVersion,
+                userIP
+            } = req.body
 
-            if (!email || !password || !fullName) {
+            if (!email || !password || !fullName || !termsAgreed || !browserName || !browserVersion || !userIP) {
                 return res.status(400).send({
                     message: "Payload is incorrect."
                 })
@@ -27,6 +35,15 @@ class AuthController {
             if (error) {
                 return APIValidator.generateErrorMessage({ serverErrorMessage: error?.message }, res)
             }
+
+            // Save terms of service
+            await TernsAndPrivacyConsent.create({
+                userId: data.user.id,
+                userIP,
+                browserVersion,
+                browserName,
+                termsAgreed
+            }, { accessToken: data.session.access_token })
 
             await supabase.auth.setSession({
                 refresh_token: data.session.refresh_token,

@@ -4,15 +4,32 @@ import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN, STK_PROFILE_ID } from "@/config"
 import identifyPendoVisitor from "@/tools/Pendo/identifyPendoVisitor";
 
 export default class AuthHandler {
-    static async signUp({ email, password, fullName }: {
+    static async signUp({
+        email,
+        password,
+        fullName,
+        termsAgreed,
+        userIP,
+        browserVersion,
+        browserName
+    }: {
         email: string,
         password: string,
-        fullName: string
+        fullName: string,
+        termsAgreed: boolean,
+        userIP: string,
+        browserVersion: string,
+        browserName: string
+
     }) {
         const response = await axios.post("/api/auth/signUp", {
             email,
             password,
-            fullName
+            fullName,
+            termsAgreed,
+            userIP,
+            browserVersion,
+            browserName
         })
 
         localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)

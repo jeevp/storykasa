@@ -1,4 +1,6 @@
 import Image from 'next/image'
+import bowser from 'bowser';
+import axios from 'axios';
 import {useState} from 'react'
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKButton from "@/components/STKButton/STKButton";
@@ -9,6 +11,7 @@ import AuthHandler from "@/handlers/AuthHandler";
 import Validator from "@/utils/Validator";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import STkCheckbox from "@/components/STKCheckbox/STKCheckbox";
 
 const supabase = createClientComponentClient<Database>()
 
@@ -26,6 +29,7 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
     const [emailError, setEmailError] = useState("")
     const [passwordError, setPasswordError] = useState("")
     const [fullNameError, setFullNameError] = useState("")
+    const [termsOfServiceAndPrivacyChecked, setTermsOfServiceAndPrivacyChecked] = useState(false)
 
     // Contexts
     const {
@@ -102,10 +106,21 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
             if (!validateSignUpFormFields()) return
 
             setProcessingAccountCreation(true)
+
+            // Fetch user's IP address
+            const IPAddressResponse = await axios.get('https://api.ipify.org?format=json')
+            const userIP = IPAddressResponse.data.ip
+
+            const browserInfo = bowser.getParser(window.navigator.userAgent);
+
             const account = await AuthHandler.signUp({
                 email,
                 password,
-                fullName
+                fullName,
+                termsAgreed: termsOfServiceAndPrivacyChecked,
+                userIP,
+                browserName: browserInfo.getBrowserName(),
+                browserVersion: browserInfo.getBrowserVersion()
             })
 
             setCurrentProfileId(account?.profile?.profileId)
@@ -161,7 +176,18 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
                     </div>
                 </div>
 
-                <div className="mt-8">
+                <div className="flex items-center mt-4">
+                    <STkCheckbox
+                        checked={termsOfServiceAndPrivacyChecked}
+                        onChange={() => setTermsOfServiceAndPrivacyChecked(!termsOfServiceAndPrivacyChecked)} />
+                    <label>
+                        I have read and agree to
+                        the <Link href="/terms-of-service-and-privacy" target="_blank">Terms of Service and
+                        Privacy Policy</Link>
+                    </label>
+                </div>
+
+                <div className={`mt-8 ${!termsOfServiceAndPrivacyChecked ? 'disabled' : ''}`}>
                     <STKButton
                     fullWidth
                     loading={processingAccountCreation}
