@@ -12,6 +12,7 @@ import Validator from "@/utils/Validator";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import STkCheckbox from "@/components/STKCheckbox/STKCheckbox";
+import {green600} from "@/assets/colorPallet/colors";
 
 const supabase = createClientComponentClient<Database>()
 
@@ -182,7 +183,7 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
                         onChange={() => setTermsOfServiceAndPrivacyChecked(!termsOfServiceAndPrivacyChecked)} />
                     <label>
                         I have read and agree to
-                        the <Link href="/terms-of-service-and-privacy" target="_blank">Terms of Service and
+                        the <Link style={{ color: green600 }} href="/terms-of-service-and-privacy" target="_blank">Terms of Service and
                         Privacy Policy</Link>
                     </label>
                 </div>
