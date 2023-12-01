@@ -6,6 +6,8 @@ import StoryHandler from "@/handlers/StoryHandler";
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
+import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useStory} from "@/contexts/story/StoryContext";
 
 
 interface DeleteStoryDialogProps {
@@ -30,10 +32,12 @@ export default function UpdateStoryDialog({
     const [description, setDescription] = useState("")
     const [narratorName, setNarratorName] = useState("")
 
+    const { currentProfileId } = useProfile()
+    const { setStoryNarrators, setStoryLanguages } = useStory()
+
     // Watchers
     useEffect(() => {
         if (story) {
-            console.log({ story })
             setTitle(story?.title)
             setDescription(story?.description)
             setNarratorName(story?.narratorName)
@@ -47,6 +51,13 @@ export default function UpdateStoryDialog({
         if (key === "narratorName") setNarratorName(value)
     }
 
+    const handleFetchStoryFilters = async () => {
+        const { narrators, languages } = await StoryHandler.fetchStoriesFilters({ profileId: currentProfileId })
+
+        setStoryNarrators(narrators)
+        setStoryLanguages(languages)
+    }
+
     const handleSave = async () => {
         try {
             setLoading(true)
@@ -55,6 +66,8 @@ export default function UpdateStoryDialog({
                 description,
                 narratorName
             })
+
+            handleFetchStoryFilters()
 
             setSnackbarBus({
                 active: true,
@@ -68,6 +81,7 @@ export default function UpdateStoryDialog({
             setLoading(false)
         }
     }
+
 
     return (
         <STKDialog
