@@ -5,11 +5,15 @@ import {useRouter} from "next/router";
 import {useAuth} from "@/contexts/auth/AuthContext";
 import STKButton from "@/components/STKButton/STKButton";
 import {Question} from "@phosphor-icons/react";
-import React from "react";
+import React, {useState} from "react";
+import HelperDialog from "@/composedComponents/HelperDialog/HelperDialog";
 
 export default function Navbar() {
     const { currentUser } = useAuth()
     const router = useRouter()
+
+    // States
+    const [showHelperDialog, setShowHelperDialog] = useState(false)
 
     const goToRoot = async () => {
        await router.push("/")
@@ -29,8 +33,12 @@ export default function Navbar() {
                         onClick={goToRoot}
                     />
                     {currentUser && (
-                        <div id="storykasa-pendo-walk-me-button" className="ml-2">
-                            <STKButton iconButton variant="outlined" color="primary">
+                        <div className="ml-2">
+                            <STKButton
+                            iconButton
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => setShowHelperDialog(true)}>
                                 <Question />
                             </STKButton>
                         </div>
@@ -41,6 +49,7 @@ export default function Navbar() {
             <div className="mt-4">
                 <Divider />
             </div>
+            <HelperDialog active={showHelperDialog} onClose={() => setShowHelperDialog(false)} />
         </div>
     )
 }
