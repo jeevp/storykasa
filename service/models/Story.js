@@ -95,6 +95,7 @@ class Story {
             queryParams.select = '*, stories (*, profiles (*))'
             queryParams.account_id = `eq.${userId}`
             queryParams.profile_id = `eq.${profileId}`
+            queryParams["stories.deleted"] = `eq.false`
         } else {
             queryParams.is_public = "eq.true"
             queryParams.order = 'last_updated.desc'
