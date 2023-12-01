@@ -15,9 +15,12 @@ export default function TermsOfServiceAndPrivacy() {
                         visitors who access StoryKasa Services similarly affirm that they are bound by this Agreement
                         even if they are not account holders.
                     </p>
+
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                     <p className="mt-4">If you're agreeing to these Terms on behalf of an organization or entity (for example, if
                         you’re an administrator agreeing to these Terms on behalf of your
                         school/organization/district), you represent and warrant that you are authorized to agree
+                        {/* eslint-disable-next-line react/no-unescaped-entities */}
                         to these Terms on that organization or entity's behalf and bind them to these Terms.
                     </p>
                 </section>
