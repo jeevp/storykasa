@@ -92,21 +92,6 @@ export default function TermsOfServiceAndPrivacy() {
                     <p>
                         Creative Commons (CC) is an international nonprofit organization dedicated to building
                         capacity, developing practical solutions, and advocating for open sharing of knowledge and
-                        culture that serves the public interest and addresses the world’s most pressing challenges.
-                        By openly releasing all content in our public library under a Creative Commons license we are
-                        able to scale impact and make this content available to individuals and organizations
-                        worldwide. Much of our content is already in the public domain or openly licensed from
-                        others like StoryWeaver and Africa Storybook under a CC BY 4.0 license which lets you
-                        distribute, remix, and build upon the story as long as you provide attribution and credit
-                        the author and narrator.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Copyright and Creative Commons</h2>
-                    <p>
-                        Creative Commons (CC) is an international nonprofit organization dedicated to building
-                        capacity, developing practical solutions, and advocating for open sharing of knowledge and
                         culture that serves the public interest and addresses the world’s most pressing
                         challenges. By openly releasing all content in our public library under a Creative
                         Commons license we are able to scale impact and make this content available to individuals
@@ -155,16 +140,6 @@ export default function TermsOfServiceAndPrivacy() {
                         them. However, you can submit a story to share with the larger StoryKasa
                         community. We will not share your story with the public via the website or social
                         networks unless you explicitly request us to do this.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Saving and Securing Stories</h2>
-                    <p>
-                        These are your stories, and we want to make sure that no matter what happens, you will
-                        always have access to them. All stories are stored in our database and all communication
-                        between your browser and StoryKasa uses the secure https:// protocol (indicated by
-                        the little padlock next to the internet address) for additional security.
                     </p>
                 </section>
 
