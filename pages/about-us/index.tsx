@@ -1,5 +1,4 @@
 import PageWrapper from "@/composedComponents/PageWrapper";
-import {green600} from "@/assets/colorPallet/colors";
 import {Divider} from "@mui/material";
 
 export default function AboutUs() {
@@ -112,6 +111,7 @@ export default function AboutUs() {
                             <p className="mt-2 text-lg">
                                 Felipe is passionate about using technology to create effective and impactful
                                 solutions. At StoryKasa, he applies his extensive experience in software
+                                {/* eslint-disable-next-line react/no-unescaped-entities */}
                                 engineering to enhance and innovate the platform's offerings.
                             </p>
                         </div>
