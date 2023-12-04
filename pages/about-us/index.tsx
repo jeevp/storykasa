@@ -114,7 +114,7 @@ export default function AboutUs() {
                                 src="https://qqgpgejvlxdizhjkswmm.supabase.co/storage/v1/object/public/storykasa-avatars/Rena_photo_highres.jpeg" />
                                 <div className="flex items-center ml-4">
                                     <label><span className="font-semibold text-xl">Rena Brar Prayaga</span>, Founder & CEO</label>
-                                    <a href="https://www.linkedin.com/in/renabrarprayaga/" target="_blank">
+                                    <a href="https://www.linkedin.com/in/renabrarprayaga/" target="_blank" className="ml-4">
                                         <STKButton iconButton>
                                             <LinkedIn />
                                         </STKButton>
