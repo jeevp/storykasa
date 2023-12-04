@@ -114,6 +114,17 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                     FAQ
                                 </STKButton>
                             </div>
+                            <div className="mt-4">
+                                <STKButton
+                                    startIcon={<Info />}
+                                    alignStart
+                                    color="info"
+                                    variant="outlined"
+                                    fullWidth
+                                    onClick={() => router.push("/about-us")}>
+                                    About us
+                                </STKButton>
+                            </div>
                         </div>
                     )}
                     {currentUserIsAdmin && (

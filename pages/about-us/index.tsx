@@ -132,7 +132,7 @@ export default function AboutUs() {
                             <p className="mt-2 text-lg">
                                 Rena has a BA in International Relations from Pomona College, a JD from USC Gould
                                 School of Law, an MA in Experimental Psychology from UC San Diego, and an Executive
-                                MSc in Social Business & Entrepreneurship from the London School of Economics. LinkedIn
+                                MSc in Social Business & Entrepreneurship from the London School of Economics.
                             </p>
                         </div>
                         <div className="py-6">

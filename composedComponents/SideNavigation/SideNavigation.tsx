@@ -83,6 +83,17 @@ export default function SideNavigation() {
                                    FAQ
                                </STKButton>
                            </div>
+                           <div>
+                               <STKButton
+                                   startIcon={<Info />}
+                                   alignStart
+                                   active={route.pathname === "/about-us"}
+                                   variant="none"
+                                   fullWidth
+                                   onClick={() => route.push("/about-us")}>
+                                   About us
+                               </STKButton>
+                           </div>
                        </div>
                     </div>
                 </div>

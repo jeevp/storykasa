@@ -5,6 +5,7 @@ import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useAuth} from "@/contexts/auth/AuthContext";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import {usePathname} from "next/navigation";
+import {useRouter} from "next/router";
 
 interface PageWrapperProps {
     children: any
@@ -19,7 +20,7 @@ export default function PageWrapper({
 }: PageWrapperProps) {
     const { currentUser } = useAuth()
     const { snackbarBus } = useSnackbar()
-    const pathname = usePathname()
+    const router = useRouter()
 
     return (
         <AnimatePresence mode="wait">
@@ -33,7 +34,7 @@ export default function PageWrapper({
                     <div className="w-full px-2" style={{ maxWidth: "1280px" }}>
                         <Navbar />
                         <div className="mt-8 flex w-full">
-                            {!admin && currentUser && pathname !== "/profiles" && (
+                            {!admin && currentUser && router.pathname !== "/profiles" && router.pathname !== "/about-us" && (
                                 <div className="hidden lg:block mr-20 w-80 absolute lg:relative">
                                     <SideNavigation />
                                 </div>
