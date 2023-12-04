@@ -1,5 +1,8 @@
 import PageWrapper from "@/composedComponents/PageWrapper";
 import {Divider} from "@mui/material";
+import STKButton from "@/components/STKButton/STKButton";
+import {LinkedIn} from "@mui/icons-material";
+import Image from "next/image";
 
 export default function AboutUs() {
     return (
@@ -13,8 +16,8 @@ export default function AboutUs() {
                 <div className="mt-20">
                     <h2 className="text-2xl font-semibold pb-4">What is StoryKasa?</h2>
                     <div className="mt-4">
-                        <p className="text-lg">
-                            StoryKasa is a CA benefit corporation with a free audio storytelling platform.
+                        <p className="text-lg font-semibold">
+                            StoryKasa is a CA benefit corporation with an audio storytelling platform.
                             The StoryKasa platform and app provide families and schools with an easy way to
                             create and listen to stories from around the world, in multiple languages, and
                             on any device.
@@ -42,16 +45,48 @@ export default function AboutUs() {
                                 stories.”
                             </p>
                         </div>
-                        <div className="mt-24">
-                            <div className="flex justify-center rounded-2xl" style={{ border: "1px solid #333" }}>
-                                <div className="p-8 rounded-2xl">
+                        <div className="lg:mt-24 mt-14 flex-wrap flex items-center">
+                            <div className="flex lg:w-96 w-full h-auto justify-center bg-[#eaf8b3] lg:max-w-lg rounded-2xl" style={{ border: "2px solid #333" }}>
+                                <div className="p-8 rounded-2xl flex justify-center items-center">
                                     <p className="font-bold text-[#092b1b] text-3xl text-center" style={{ maxWidth: "24em" }}>Our mission is to spread stories and change lives.</p>
                                 </div>
+                            </div>
+                            <div className="lg:ml-10 lg:mr-10 py-10 lg:py-0">
+                                <div className="flex flex-col">
+                                    <img
+                                        style={{ border: "2px solid #333" }}
+                                        className="lg:w-96 w-full lg:h-80 h-auto object-cover rounded-2xl"
+                                        src="https://qqgpgejvlxdizhjkswmm.supabase.co/storage/v1/object/public/storykasa-avatars/image%20(1).png?t=2023-12-04T13%3A04%3A31.234Z" />
+                                    <label className="mt-4 font-semibold">Our pilot in Ghana.</label>
+                                </div>
+                            </div>
+                            <div className="flex w-96 h-auto justify-center bg-[#eaf8b3] rounded-2xl" style={{ border: "2px solid #333" }}>
+                                <div className="p-8 rounded-2xl flex justify-center items-center">
+                                    <p className=" text-3xl font-bold text-center text-[#092b1b]" style={{ maxWidth: "26em" }}>Our vision is to create an audio storytelling ecosystem that is easy to use and accessible to all.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex lg:flex-row flex-col justify-center items-center mt-24">
+                            <div className="flex flex-col items-center lg:flex-row">
+                                <label className="lg:text-3xl text-4xl timestamp">117</label>
+                                <label className="ml-2 text-xl">Children served</label>
+                            </div>
+                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 border-l-2 border-solid border-0 border-l-[#e6e2d7]">
+                                <label className="lg:text-3xl text-4xl timestamp">5</label>
+                                <label className="ml-2 text-xl">Languages</label>
+                            </div>
+                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 border-l-2 border-solid border-0 border-l-[#e6e2d7]">
+                                <label className="lg:text-3xl text-4xl timestamp">390</label>
+                                <label className="ml-2 text-xl">Total listens</label>
+                            </div>
+                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 border-l-2 border-solid border-0 border-l-[#e6e2d7]">
+                                <label className="lg:text-3xl text-4xl timestamp">135,448</label>
+                                <label className="ml-2 text-xl">Words listened</label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="mt-24">
+                <div className="lg:mt-24 mt-14">
                     <h2 className="text-2xl font-semibold pb-4">Our Commitment to Stories for Good</h2>
                     <div>
                         <p className="text-lg">
@@ -69,18 +104,23 @@ export default function AboutUs() {
                         </p>
                     </div>
                 </div>
-                <div className="mt-24">
-                    <div className="flex justify-center rounded-2xl" style={{ border: "1px solid #333" }}>
-                        <div className="p-8 rounded-2xl">
-                            <p className=" text-3xl font-bold text-center text-[#092b1b]" style={{ maxWidth: "26em" }}>Our vision is to create an audio storytelling ecosystem that is easy to use and accessible to all.</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-16">
+                <div className="lg:mt-24 mt-14">
                     <h2 className="text-2xl font-semibold pb-4">Our team and values</h2>
                     <div>
                         <div>
-                            <label><span className="font-semibold text-xl">Rena Brar Prayaga</span>, Founder & CEO</label>
+                            <div className="flex items-center">
+                                <img
+                                className="w-20 h-20 object-cover rounded-full"
+                                src="https://qqgpgejvlxdizhjkswmm.supabase.co/storage/v1/object/public/storykasa-avatars/Rena_photo_highres.jpeg" />
+                                <div className="flex items-center ml-4">
+                                    <label><span className="font-semibold text-xl">Rena Brar Prayaga</span>, Founder & CEO</label>
+                                    <a href="https://www.linkedin.com/in/renabrarprayaga/" target="_blank">
+                                        <STKButton iconButton>
+                                            <LinkedIn />
+                                        </STKButton>
+                                    </a>
+                                </div>
+                            </div>
                             <p className="mt-2 text-lg">
                                 Rena has worked as a lawyer, a behavioral data scientist, an innovator in mobile
                                 health, and an evaluator in education. She is also a social entrepreneur and is
@@ -99,7 +139,14 @@ export default function AboutUs() {
                             <Divider />
                         </div>
                         <div>
-                            <label><span className="font-semibold text-xl">Felipe Fernandes</span>, Software Engineer</label>
+                            <div className="flex items-center">
+                                <img
+                                    className="w-20 h-20 object-cover rounded-full"
+                                    src="https://qqgpgejvlxdizhjkswmm.supabase.co/storage/v1/object/public/storykasa-avatars/1570866911501.jpeg" />
+                                <div className="flex items-center ml-4">
+                                    <label><span className="font-semibold text-xl">Felipe Fernandes</span>, Software Engineer</label>
+                                </div>
+                            </div>
                             <p className="mt-2 text-lg">
                                 Felipe is a software engineer, specializing in developing and building
                                 innovative software solutions from the ground up. His career has spanned various
@@ -110,9 +157,9 @@ export default function AboutUs() {
                             </p>
                             <p className="mt-2 text-lg">
                                 Felipe is passionate about using technology to create effective and impactful
-                                solutions. At StoryKasa, he applies his extensive experience in software
+                                solutions. At StoryKasa, he applies his extensive experience in software engineering to
                                 {/* eslint-disable-next-line react/no-unescaped-entities */}
-                                engineering to enhance and innovate the platform's offerings.
+                                enhance and innovate the platform's offerings.
                             </p>
                         </div>
                         <div className="py-6">
@@ -134,7 +181,7 @@ export default function AboutUs() {
                         </div>
                     </div>
                 </div>
-                <div className="mt-16">
+                <div className="mt-14 lg:mt-24">
                     <h2 className="text-2xl font-semibold pb-4">Our values</h2>
                     <div className="list-disc mt-4 flex flex-wrap -ml-2">
                         <div className="text-lg p-6 font-semibold bg-[#eaf8b3] rounded-2xl m-2 flex-1" style={{ border: "1px solid #333" }}>Listen to users with empathy and respect.</div>
