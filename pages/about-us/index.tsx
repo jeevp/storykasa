@@ -156,10 +156,8 @@ export default function AboutUs() {
                                 estate agency in Brazil.
                             </p>
                             <p className="mt-2 text-lg">
-                                Felipe is passionate about using technology to create effective and impactful
-                                solutions. At StoryKasa, he applies his extensive experience in software engineering to
                                 {/* eslint-disable-next-line react/no-unescaped-entities */}
-                                enhance and innovate the platform's offerings.
+                                Felipe is passionate about using technology to create effective and impactful solutions. At StoryKasa, he applies his extensive experience in software engineering to enhance and innovate the platform's offerings.
                             </p>
                         </div>
                         <div className="py-6">
