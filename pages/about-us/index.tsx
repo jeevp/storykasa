@@ -112,8 +112,8 @@ export default function AboutUs() {
                                 <img
                                 className="w-20 h-20 object-cover rounded-full"
                                 src="https://qqgpgejvlxdizhjkswmm.supabase.co/storage/v1/object/public/storykasa-avatars/Rena_photo_highres.jpeg" />
-                                <div className="flex items-center ml-4">
-                                    <label><span className="font-semibold text-xl">Rena Brar Prayaga</span>, Founder & CEO</label>
+                                <div className="flex items-baseline lg:items-center ml-4">
+                                    <label className="flex flex-col lg:items-center lg:flex-row"><span className="font-semibold text-xl">Rena Brar Prayaga</span><span className="hidden lg:inline-block mr-2 ml-1">, </span>Founder & CEO</label>
                                     <a href="https://www.linkedin.com/in/renabrarprayaga/" target="_blank" className="ml-4">
                                         <STKButton iconButton>
                                             <LinkedIn />
@@ -144,7 +144,7 @@ export default function AboutUs() {
                                     className="w-20 h-20 object-cover rounded-full"
                                     src="https://qqgpgejvlxdizhjkswmm.supabase.co/storage/v1/object/public/storykasa-avatars/1570866911501.jpeg" />
                                 <div className="flex items-center ml-4">
-                                    <label><span className="font-semibold text-xl">Felipe Fernandes</span>, Software Engineer</label>
+                                    <label className="flex flex-col lg:items-center lg:flex-row"><span className="font-semibold text-xl">Felipe Fernandes</span><span className="hidden lg:inline-block mr-2 ml-1">, </span>Software Engineer</label>
                                 </div>
                             </div>
                             <p className="mt-2 text-lg">
