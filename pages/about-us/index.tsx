@@ -71,15 +71,15 @@ export default function AboutUs() {
                                 <label className="lg:text-3xl text-4xl timestamp">117</label>
                                 <label className="ml-2 text-xl">Children served</label>
                             </div>
-                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 border-l-2 border-solid border-0 border-l-[#e6e2d7]">
+                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 lg:border-l-2 lg:border-solid lg:border-0 lg:border-l-[#e6e2d7]">
                                 <label className="lg:text-3xl text-4xl timestamp">5</label>
                                 <label className="ml-2 text-xl">Languages</label>
                             </div>
-                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 border-l-2 border-solid border-0 border-l-[#e6e2d7]">
+                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 lg:border-l-2 lg:border-solid lg:border-0 lg:border-l-[#e6e2d7]">
                                 <label className="lg:text-3xl text-4xl timestamp">390</label>
                                 <label className="ml-2 text-xl">Total listens</label>
                             </div>
-                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 border-l-2 border-solid border-0 border-l-[#e6e2d7]">
+                            <div className="lg:ml-10 lg:pl-10 flex flex-col items-center lg:flex-row mt-8 lg:mt-0 lg:border-l-2 lg:border-solid lg:border-0 lg:border-l-[#e6e2d7]">
                                 <label className="lg:text-3xl text-4xl timestamp">135,448</label>
                                 <label className="ml-2 text-xl">Words listened</label>
                             </div>
