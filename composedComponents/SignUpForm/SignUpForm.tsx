@@ -13,6 +13,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import STkCheckbox from "@/components/STKCheckbox/STKCheckbox";
 import {green600} from "@/assets/colorPallet/colors";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 const supabase = createClientComponentClient<Database>()
 
@@ -37,6 +38,8 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
         setCurrentProfileId,
         setCurrentProfile
     } = useProfile()
+
+    const { setShowHeardAboutDialog } = useAuth()
 
     // Methods
     const handleSignInWithGoogle = async () => {
@@ -126,6 +129,7 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
 
             setCurrentProfileId(account?.profile?.profileId)
             setCurrentProfile(account?.profile)
+            setShowHeardAboutDialog(true)
 
             onSuccess()
         } catch (error) {

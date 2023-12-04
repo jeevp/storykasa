@@ -3,7 +3,7 @@ import {Checkbox, ThemeProvider} from "@mui/material";
 import theme from "@/components/theme";
 
 interface STKCheckboxProps {
-    checked: boolean
+    checked?: boolean
     onChange?: (checked: boolean) => void
 }
 

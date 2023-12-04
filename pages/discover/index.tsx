@@ -18,6 +18,8 @@ import {Divider} from "@mui/material";
 import {useStory} from "@/contexts/story/StoryContext";
 import {neutral300} from "@/assets/colorPallet/colors";
 import StoryFiltersSummary from "@/composedComponents/StoryFilters/StoryFiltersSummary/StoryFiltersSummary";
+import HeardAboutDialog from "@/composedComponents/HeardAboutDialog/HeardAboutDialog";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 export const dynamic = 'force-dynamic'
 
@@ -35,6 +37,8 @@ function Discover() {
         setPublicStories,
         storyFilters
     } = useStory()
+
+    const { showHeardAboutDialog, setShowHeardAboutDialog } = useAuth()
 
     const loadStories = async () => {
         setLoading(true)
@@ -174,6 +178,7 @@ function Discover() {
                 // @ts-ignore
                 story={selectedIndex !== undefined && selectedIndex !== null ? publicStories[selectedIndex] : null}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
+            <HeardAboutDialog active={showHeardAboutDialog} onClose={() => setShowHeardAboutDialog(false)} />
         </PageWrapper>
     )
 }
