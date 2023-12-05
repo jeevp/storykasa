@@ -3,10 +3,14 @@ import {Divider} from "@mui/material";
 import STKButton from "@/components/STKButton/STKButton";
 import {LinkedIn} from "@mui/icons-material";
 import Image from "next/image";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 export default function AboutUs() {
+    const { currentUser } = useAuth()
+
+
     return (
-        <PageWrapper path="/about-us">
+        <PageWrapper hideNavigation={Boolean(!currentUser)}>
             <div className="pb-40">
                 {/* Header Section */}
                 <div className="container mx-auto">
@@ -45,24 +49,26 @@ export default function AboutUs() {
                                 stories.”
                             </p>
                         </div>
-                        <div className="lg:mt-24 mt-14 flex-wrap flex items-center">
-                            <div className="flex lg:w-96 w-full h-auto justify-center bg-[#eaf8b3] lg:max-w-lg rounded-2xl" style={{ border: "2px solid #333" }}>
-                                <div className="p-8 rounded-2xl flex justify-center items-center">
-                                    <p className="font-bold text-[#092b1b] text-3xl text-center" style={{ maxWidth: "24em" }}>Our mission is to spread stories and change lives.</p>
+                        <div className="lg:mt-24 mt-14 justify-center flex-wrap flex items-center">
+                            <div>
+                                <div className="flex lg:w-96 w-full h-auto justify-center bg-[#eaf8b3] lg:max-w-lg rounded-2xl" style={{ border: "2px solid #333" }}>
+                                    <div className="p-8 rounded-2xl flex justify-center items-center">
+                                        <p className="font-bold text-[#092b1b] text-center" style={{ maxWidth: "24em", fontSize: "22px" }}>Our mission is to spread stories and change lives.</p>
+                                    </div>
+                                </div>
+                                <div className="flex w-96 h-auto justify-center bg-[#eaf8b3] rounded-2xl mt-10" style={{ border: "2px solid #333" }}>
+                                    <div className="p-8 rounded-2xl flex justify-center items-center">
+                                        <p className=" font-bold text-center text-[#092b1b]" style={{ maxWidth: "26em", fontSize: "22px" }}>Our vision is to create an audio storytelling ecosystem that is easy to use and accessible to all.</p>
+                                    </div>
                                 </div>
                             </div>
                             <div className="lg:ml-10 lg:mr-10 py-10 lg:py-0">
                                 <div className="flex flex-col">
                                     <img
                                         style={{ border: "2px solid #333" }}
-                                        className="lg:w-96 w-full lg:h-80 h-auto object-cover rounded-2xl"
+                                        className="lg:w-full w-full lg:h-96 h-auto object-cover rounded-2xl"
                                         src="https://qqgpgejvlxdizhjkswmm.supabase.co/storage/v1/object/public/storykasa-avatars/image%20(1).png?t=2023-12-04T13%3A04%3A31.234Z" />
                                     <label className="mt-4 font-semibold">Our pilot in Ghana.</label>
-                                </div>
-                            </div>
-                            <div className="flex w-96 h-auto justify-center bg-[#eaf8b3] rounded-2xl" style={{ border: "2px solid #333" }}>
-                                <div className="p-8 rounded-2xl flex justify-center items-center">
-                                    <p className=" text-3xl font-bold text-center text-[#092b1b]" style={{ maxWidth: "26em" }}>Our vision is to create an audio storytelling ecosystem that is easy to use and accessible to all.</p>
                                 </div>
                             </div>
                         </div>

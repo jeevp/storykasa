@@ -8,6 +8,9 @@ import {Question} from "@phosphor-icons/react";
 import React, {useState} from "react";
 import HelperDialog from "@/composedComponents/HelperDialog/HelperDialog";
 
+const publicRoutes = ["/about-us", "/faq"]
+
+
 export default function Navbar() {
     const { currentUser } = useAuth()
     const router = useRouter()
@@ -32,7 +35,7 @@ export default function Navbar() {
                         alt="StoryKasa logo"
                         onClick={goToRoot}
                     />
-                    {currentUser && (
+                    {currentUser && !publicRoutes.includes(router.pathname) && (
                         <div className="ml-2">
                             <STKButton
                             iconButton

@@ -11,12 +11,14 @@ interface PageWrapperProps {
     children: any
     path?: string
     admin?: boolean
+    hideNavigation?: boolean
 }
 
 export default function PageWrapper({
     children,
     admin,
     path,
+    hideNavigation
 }: PageWrapperProps) {
     const { currentUser } = useAuth()
     const { snackbarBus } = useSnackbar()
@@ -34,7 +36,7 @@ export default function PageWrapper({
                     <div className="w-full px-2" style={{ maxWidth: "1280px" }}>
                         <Navbar />
                         <div className="mt-8 flex w-full">
-                            {!admin && currentUser && router.pathname !== "/profiles" && router.pathname !== "/about-us" && (
+                            {!admin && currentUser && router.pathname !== "/profiles" && !hideNavigation && (
                                 <div className="hidden lg:block mr-20 w-80 absolute lg:relative">
                                     <SideNavigation />
                                 </div>
