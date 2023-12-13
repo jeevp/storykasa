@@ -26,10 +26,11 @@ export const dynamic = 'force-dynamic'
 function Discover() {
     const { onMobile } = useDevice()
     const [stories, setStories] = useState<Story[]>([])
-    const [selectedIndex, setSelectedIndex] = useState<number>()
+    const [selectedStoryId, setSelectedStoryId] = useState<string>()
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
     const [loading, setLoading] = useState(true)
     const [filterQuery, setFilterQuery] = useState('')
+    const [selectedStory, setSelectedStory] = useState<Story | undefined>(undefined)
 
     // Contexts
     const {
@@ -56,8 +57,9 @@ function Discover() {
         setFilterQuery(value)
     }
 
-    const handleStoryClick = (index: number) => {
-        setSelectedIndex(index)
+    const handleStoryClick = (story: Story) => {
+        setSelectedStoryId(story?.storyId)
+        setSelectedStory(publicStories.find((_story: Story) => _story.storyId === story?.storyId))
         if (onMobile) setShowStoryDetailsDialog(true)
     }
 
@@ -74,6 +76,7 @@ function Discover() {
             story?.title?.toLowerCase().includes(filterQuery.toLowerCase())
         )
         : []
+
 
     return (
         <PageWrapper path="discover">
@@ -100,14 +103,14 @@ function Discover() {
                         />
                     </div>
                     <div className="mt-2 lg:mt-0">
-                        <StoryFilters privateStories={false} onChange={() => setSelectedIndex(undefined)} />
+                        <StoryFilters privateStories={false} onChange={() => setSelectedStoryId(undefined)} />
                     </div>
                 </div>
                 {Object.keys(storyFilters).length > 0 ? (
                     <div className="mb-4">
                         <StoryFiltersSummary
                         privateStories={false}
-                        onChange={() => setSelectedIndex(undefined)}/>
+                        onChange={() => setSelectedStoryId(undefined)}/>
                     </div>
                 ) : null}
                 <Divider />
@@ -128,11 +131,11 @@ function Discover() {
                                         <div
                                             className="mt-2 first:mt-0"
                                             key={story?.storyId}
-                                            onClick={() => handleStoryClick(index)}
+                                            onClick={() => handleStoryClick(story)}
                                         >
                                             <StoryCard
                                                 story={story}
-                                                selected={index === selectedIndex}
+                                                selected={story?.storyId === selectedStoryId}
                                             ></StoryCard>
                                         </div>
                                     ))}
@@ -164,9 +167,12 @@ function Discover() {
                     </div>
                 )}
 
-                {selectedIndex !== undefined && (
+                {selectedStoryId !== undefined && (
                     <div className="hidden lg:flex lg:w-full lg:pl-8">
-                        <StoryDetails story={publicStories[selectedIndex]} editionNotAllowed></StoryDetails>
+                        <StoryDetails
+                            // @ts-ignore
+                            story={selectedStory}
+                            editionNotAllowed />
                     </div>
                 )}
 
@@ -176,7 +182,7 @@ function Discover() {
                 open={showStoryDetailsDialog}
                 editionNotAllowed
                 // @ts-ignore
-                story={selectedIndex !== undefined && selectedIndex !== null ? publicStories[selectedIndex] : null}
+                story={selectedStoryId !== undefined && selectedStoryId !== null ? publicStories.find((story: Story) => story.storyId === selectedStoryId) : null}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
             <HeardAboutDialog active={showHeardAboutDialog} onClose={() => setShowHeardAboutDialog(false)} />
         </PageWrapper>

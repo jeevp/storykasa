@@ -25,9 +25,10 @@ import {useProfile} from "@/contexts/profile/ProfileContext";
 function Library() {
     const { onMobile } = useDevice()
     const [filterQuery, setFilterQuery] = useState('')
-    const [selectedIndex, setSelectedIndex] = useState<number>()
+    const [selectedStory, setSelectedStory] = useState<Story | undefined>()
     const [loaded, setLoaded] = useState(false)
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
+    const [stories, setStories] = useState([])
 
     // Contexts
     const { privateStories, setPrivateStories, storyFilters } = useStory()
@@ -35,6 +36,11 @@ function Library() {
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
+        const filteredStories = privateStories.filter((story: Story) => {
+            return story?.title?.toLowerCase()?.includes(value.toLowerCase())
+        })
+
+        setStories(filteredStories)
     }
 
     const loadStories = async () => {
@@ -44,18 +50,13 @@ function Library() {
 
         // @ts-ignore
         setPrivateStories(allStories)
+        // @ts-ignore
+        setStories(allStories)
         setLoaded(true)
     }
 
-    const filtered = privateStories
-        ? privateStories.filter((story) =>
-            // @ts-ignore
-            story?.title?.toLowerCase()?.includes(filterQuery.toLowerCase())
-        )
-        : []
-
-    const handleStoryClick = (index: number) => {
-        setSelectedIndex(index)
+    const handleStoryClick = (story: Story) => {
+        setSelectedStory(story)
         if (onMobile) setShowStoryDetailsDialog(true)
     }
 
@@ -123,14 +124,14 @@ function Library() {
                         <div className="mt-2 lg:mt-0">
                             <StoryFilters
                             privateStories
-                            onChange={() => setSelectedIndex(undefined)} />
+                            onChange={() => setSelectedStory(undefined)} />
                         </div>
                     </div>
                     {Object.keys(storyFilters).length > 0 ? (
                         <div className="mb-4">
                             <StoryFiltersSummary
                             privateStories
-                            onChange={() => setSelectedIndex(undefined)} />
+                            onChange={() => setSelectedStory(undefined)} />
                         </div>
                     ) : null}
                     <Divider />
@@ -138,43 +139,36 @@ function Library() {
             </div>
             {loaded ? (
                 <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">
-                    <AnimatePresence mode="wait">
-                        (
-                        <motion.div
-                            className="w-full"
-                            initial={{ x: 10, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: 10, opacity: 0 }}
-                            key={privateStories.length}
-                        >
-                            {filtered.length > 0 ? (
-                                <div className="overflow-y-scroll hide-scrollbar" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
-                                    {filtered?.map((story: Story, index: number) => (
-                                        <div
-                                            className="mt-2 first:mt-0"
-                                            key={story.storyId}
-                                            onClick={() => handleStoryClick(index)}
-                                        >
-                                            <StoryCard
-                                                story={story}
-                                                selected={selectedIndex === index}
-                                            ></StoryCard>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : filtered.length === 0 && Object.keys(storyFilters).length > 0 ? (
-                                <div className="flex flex-col items-center">
-                                    <SmileyMeh size={100} color={neutral300} />
-                                    <p className="mt-4 text-center max-w-lg">
-                                        It looks like we could not find any stories matching your filters.
-                                        Try adjusting your filter settings to see more results.
-                                    </p>
-                                </div>
-                            ) : null}
-                        </motion.div>
-                    </AnimatePresence>
+                    <div>
+                        {stories.length > 0 ? (
+                            <div className="overflow-y-scroll hide-scrollbar"
+                                 style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
+                                {stories?.map((story: Story) => (
+                                    <div
+                                        className="mt-2 first:mt-0"
+                                        key={story.storyId}
+                                        onClick={() => handleStoryClick(story)}
+                                    >
+                                        <StoryCard
+                                            story={story}
+                                            // @ts-ignore
+                                            selected={selectedStory?.storyId === story?.storyId}
+                                        ></StoryCard>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : stories.length === 0 && Object.keys(storyFilters).length > 0 ? (
+                            <div className="flex flex-col items-center">
+                                <SmileyMeh size={100} color={neutral300} />
+                                <p className="mt-4 text-center max-w-lg">
+                                    It looks like we could not find any stories matching your filters.
+                                    Try adjusting your filter settings to see more results.
+                                </p>
+                            </div>
+                        ) : null}
+                    </div>
 
-                    {selectedIndex !== undefined && (
+                    {selectedStory !== undefined && (
                         <div
                         className="hidden lg:flex lg:ml-10 w-full overflow-y-scroll"
                         style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
@@ -184,9 +178,9 @@ function Library() {
                                     initial={{ x: 10, opacity: 0, width: "100%" }}
                                     animate={{ x: 0, opacity: 1 }}
                                     exit={{ x: 10, opacity: 0 }}
-                                    key={selectedIndex}
+                                    key={selectedStory?.storyId}
                                 >
-                                    <StoryDetails story={privateStories[selectedIndex]} onLoadStories={() => loadStories()}></StoryDetails>
+                                    <StoryDetails story={selectedStory} onLoadStories={() => loadStories()}></StoryDetails>
                                 </motion.div>
                             </AnimatePresence>
                         </div>
@@ -208,7 +202,7 @@ function Library() {
             )}
             <StoryDetailsDialog
                 open={showStoryDetailsDialog}
-                story={selectedIndex !== undefined && selectedIndex !== null ? privateStories[selectedIndex] : null}
+                story={selectedStory !== undefined && selectedStory !== null ? selectedStory : null}
                 onLoadStories={() => loadStories()}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
         </PageWrapper>
