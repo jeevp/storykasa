@@ -18,7 +18,7 @@ function OauthProcess() {
 
     const authenticateOauth = async (code: string) => {
         await AuthHandler.authenticateOauth(code)
-        await router.push("/library")
+        await router.push("/discover")
     }
 
     return (
