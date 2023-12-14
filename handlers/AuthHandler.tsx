@@ -92,7 +92,6 @@ export default class AuthHandler {
 
     static async authenticateOauth(code: string) {
        const response = await axios.post("/api/auth/oauth", { code })
-        console.log(response.data)
 
         localStorage.setItem(STK_ACCESS_TOKEN, response?.data?.session?.access_token)
         localStorage.setItem(STK_REFRESH_TOKEN, response?.data?.session?.refresh_token)

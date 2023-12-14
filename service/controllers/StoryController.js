@@ -7,6 +7,7 @@ const PublicStoryRequest = require("../models/PublicStoryRequest");
 const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
 const Story = require("../models/Story")
+const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 
 class StoryController {
     static async deleteStory(req, res) {
@@ -290,7 +291,7 @@ class StoryController {
                 }
 
                 return acc;
-            }, []).filter((narrator) => narrator?.narratorName !== undefined);
+            }, []).filter((narrator) => narrator?.narratorName !== undefined)
 
             const languages = stories.reduce((acc, story) => {
                 if (!uniqueLanguages.has(story.language)) {
@@ -299,11 +300,11 @@ class StoryController {
                 }
 
                 return acc;
-            }, []);
+            }, [])
 
             return res.status(200).send({
-                narrators,
-                languages
+                narrators: applyAlphabeticalOrder(narrators, "narratorName"),
+                languages: applyAlphabeticalOrder(languages, "language")
             })
         } catch (error) {
             return res.status(400).send({ message: "Something went wrong" })
