@@ -16,6 +16,7 @@ import {Divider} from "@mui/material";
 const navigationOptions = [
     { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
     { text: "My Library", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/library" },
+    { text: "Shared Libraries", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/shared-libraries" },
 ]
 
 export default function SideNavigation() {
