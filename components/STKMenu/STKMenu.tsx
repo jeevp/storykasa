@@ -12,19 +12,22 @@ interface STKMenuProps {
     options: Array<object>
     optionLabel?: string
     onChange?: (selectedOption: Object) => void
+    onClick?: () => void
 }
 
 
 export default function STKMenu({
     options = [],
     optionLabel = "label",
-    onChange = () => ({})
+    onChange = () => ({}),
+    onClick = () => ({})
 }: STKMenuProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (e: MouseEvent<HTMLElement>) => {
         e.stopPropagation()
         setAnchorEl(e.currentTarget);
+        onClick()
     };
     const handleClose = (e: MouseEvent<HTMLElement>) => {
         e.stopPropagation()

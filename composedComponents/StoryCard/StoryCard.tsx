@@ -29,6 +29,7 @@ export default function StoryCard({ story }: {
     const [loadingRequest, setLoadingRequest] = useState(false)
     const [publicStoryRequestSent, setPublicStoryRequestSent] = useState(false)
     const [liked, setLiked] = useState(false)
+    const [showMenuTooltip, setShowMenuTooltip] = useState(true)
     const [showSubmitStoryToPublicLibraryInfoDialog, setShowSubmitStoryToPublicLibraryInfoDialog] = useState(false)
     const [infoDialogContent, setInfoDialogContent] = useState({
         title: "Thank you for sharing your story!",
@@ -138,6 +139,10 @@ export default function StoryCard({ story }: {
 
     }
 
+    const handleShowMenuTooltip = () => {
+        setShowMenuTooltip(false)
+    }
+
     const disableMenu = (
         story?.publicStoryRequestRefused
         || story?.publicStoryRequestProcessing
@@ -234,14 +239,17 @@ export default function StoryCard({ story }: {
                                     </div>
                                 )}
                                 {story?.recordedBy && story.recordedBy === currentProfileId && (
-                                    <div className={`hidden lg:block ${disableMenu ? 'disabled' : ''}`}>
-                                        <STKMenu
-                                        options={[{
-                                            label: "Submit to public library",
-                                            value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
-                                        }]}
-                                        onChange={handleMenuOnChange}/>
-                                    </div>
+                                    <STKTooltip text="Submit to public library" active={showMenuTooltip && !disableMenu}>
+                                        <div className={`hidden lg:block ${disableMenu ? 'disabled' : ''}`}>
+                                            <STKMenu
+                                                options={[{
+                                                    label: "Submit to public library",
+                                                    value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+                                                }]}
+                                                onChange={handleMenuOnChange}
+                                                onClick={handleShowMenuTooltip}/>
+                                        </div>
+                                    </STKTooltip>
                                 )}
                             </div>
                         </div>
@@ -283,14 +291,17 @@ export default function StoryCard({ story }: {
                             </div>
                         )}
                         {story?.recordedBy && story.recordedBy === currentProfileId && (
-                            <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
-                                <STKMenu
-                                options={[{
-                                    label: "Submit to public library",
-                                    value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
-                                }]}
-                                onChange={handleMenuOnChange}/>
-                            </div>
+                            <STKTooltip text="Submit to public library" active={showMenuTooltip && !disableMenu}>
+                                <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
+                                    <STKMenu
+                                    options={[{
+                                        label: "Submit to public library",
+                                        value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+                                    }]}
+                                    onChange={handleMenuOnChange}
+                                    onClick={handleShowMenuTooltip}/>
+                                </div>
+                            </STKTooltip>
                         )}
                     </div>
                 </div>

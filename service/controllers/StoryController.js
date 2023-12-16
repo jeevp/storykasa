@@ -302,6 +302,7 @@ class StoryController {
                 return acc;
             }, [])
 
+            console.log({ narrators: applyAlphabeticalOrder(narrators, "narratorName"), })
             return res.status(200).send({
                 narrators: applyAlphabeticalOrder(narrators, "narratorName"),
                 languages: applyAlphabeticalOrder(languages, "language")
