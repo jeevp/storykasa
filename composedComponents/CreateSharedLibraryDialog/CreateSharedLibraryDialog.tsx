@@ -6,6 +6,10 @@ import StoryHandler from "@/handlers/StoryHandler";
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
+import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToList"
+import LibraryHandler from "@/handlers/LibraryHandler";
+import sharedLibraries from "@/pages/shared-libraries";
+import {useLibrary} from "@/contexts/library/LibraryContext";
 
 
 interface CreateSharedLibraryDialogProps {
@@ -24,24 +28,23 @@ export default function CreateSharedLibraryDialog({
 
     const [loading, setLoading] = useState(false)
     const [showSnackbar, setShowSnackbar] = useState(false)
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [narratorName, setNarratorName] = useState("")
+    const [libraryName, setLibraryName] = useState("")
+    const [listenersEmails, setListenersEmails] = useState<string[]>([])
 
+    // Contexts
+    const { sharedLibraries, setSharedLibraries } = useLibrary()
 
     // Methods
-    const handleOnChange = () => {
-
-    }
-
     const handleSave = async () => {
         try {
             setLoading(true)
-            await StoryHandler.updateStory({ storyId: story.storyId }, {
-                title,
-                description,
-                narratorName
+
+            const library = await LibraryHandler.createSharedLibrary({
+                libraryName,
+                listenersEmails
             })
+
+            setSharedLibraries([...sharedLibraries, library])
 
             setSnackbarBus({
                 active: true,
@@ -60,32 +63,27 @@ export default function CreateSharedLibraryDialog({
     return (
         <STKDialog
         active={open}
-        maxWidth="sm"
+        maxWidth="xs"
+        title="Create shared library"
         fullScreen={onMobile}
         onClose={() => onClose()}>
             <div>
-                <h2 className="text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap" style={{ maxWidth: "87%" }}>
-                    Create shared library
-                </h2>
                 <div className="mt-6">
                     <div>
                         <label className="font-semibold">Library title</label>
                         <div className="mt-2">
                             <STKTextField
                             fluid
-                            value={title}
+                            value={libraryName}
                             placeholder="Type the story title"
-                            onChange={(value: string) => handleOnChange("title", value)}/>
+                            onChange={(value: string) => setLibraryName(value)}/>
                         </div>
                     </div>
                     <div className="mt-4">
                         <label className="font-semibold">Listeners</label>
-                        <div className="mt-2">
-                            <STKTextField
-                                fluid
-                                value={narratorName}
-                                placeholder="Type the narrator name"
-                                onChange={(value: string) => handleOnChange("narratorName", value)}/>
+                        <p className="mt-2">Bellow you can enter the email of your friends and family who you which to share this library with.</p>
+                        <div className="mt-4">
+                            <AddMemberToList onChange={(emails: string[]) => setListenersEmails(emails)} />
                         </div>
                     </div>
                 </div>

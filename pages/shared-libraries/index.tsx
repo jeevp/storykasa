@@ -25,6 +25,8 @@ import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import STKButton from "@/components/STKButton/STKButton";
 import CreateSharedLibraryDialog from "@/composedComponents/CreateSharedLibraryDialog/CreateSharedLibraryDialog";
+import STKCard from "@/components/STKCard/STKCard";
+import LibraryCard from "@/composedComponents/LibraryCard/LibraryCard";
 
 function Libraries() {
     // Contexts
@@ -57,8 +59,11 @@ function Libraries() {
                         Shared libraries
                     </h2>
                 </div>
-                <div className="mt-4 max-w-2xl">
+                <div className="mt-4 flex justify-between w-full items-center">
                     <p>Here you can create libraries to share with friends and family.</p>
+                    {sharedLibraries.length > 0 && (
+                        <STKButton onClick={() => setShowCreateSharedLibraryDialog(true)}>Create shared library</STKButton>
+                    )}
                 </div>
                 <div className="mt-10">
                     {loading ? (
@@ -74,7 +79,13 @@ function Libraries() {
                                     </div>
                                 </div>
                             ) : (
-                                <></>
+                                <div className="flex items-start flex-col lg:flex-row flex-wrap">
+                                    {sharedLibraries.map((sharedLibrary) => (
+                                        <div className="p-1 cursor-pointer">
+                                            <LibraryCard library={sharedLibrary} />
+                                        </div>
+                                    ))}
+                                </div>
                             )}
                         </>
                     )}
