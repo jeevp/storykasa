@@ -2,13 +2,11 @@ import React, {useEffect, useState} from 'react';
 import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
-import StoryHandler from "@/handlers/StoryHandler";
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToList"
 import LibraryHandler from "@/handlers/LibraryHandler";
-import sharedLibraries from "@/pages/shared-libraries";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 
 
@@ -32,7 +30,7 @@ export default function CreateSharedLibraryDialog({
     const [listenersEmails, setListenersEmails] = useState<string[]>([])
 
     // Contexts
-    const { sharedLibraries, setSharedLibraries } = useLibrary()
+    const { libraries, setLibraries } = useLibrary()
 
     // Methods
     const handleSave = async () => {
@@ -44,7 +42,7 @@ export default function CreateSharedLibraryDialog({
                 listenersEmails
             })
 
-            setSharedLibraries([...sharedLibraries, library])
+            setLibraries([...libraries, library])
 
             setSnackbarBus({
                 active: true,

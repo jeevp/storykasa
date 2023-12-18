@@ -1,10 +1,20 @@
 import { useState } from 'react';
 
 export default function useLibraryState() {
-    const [sharedLibraries, setSharedLibraries] = useState<[]>([]);
+    const [
+        libraries,
+        setLibraries
+    ] = useState<[]>([]);
+
+    const [sharedLibraries, setSharedLibraries] = useState<[]>([])
+    const [sharedLibraryInvitations, setSharedLibraryInvitations] = useState<[]>([])
 
     return {
+        libraries,
+        setLibraries,
         sharedLibraries,
-        setSharedLibraries
+        setSharedLibraries,
+        sharedLibraryInvitations,
+        setSharedLibraryInvitations
     };
 }

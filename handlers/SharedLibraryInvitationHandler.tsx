@@ -4,31 +4,25 @@ import Library from "@/models/Library";
 import SharedLibraryInvitation from "@/models/SharedLibraryInvitation";
 
 
-export default class LibraryHandler {
-    static async fetchLibraries() {
+export default class SharedLibraryInvitationHandler {
+    static async updateSharedLibraryInvitation({ sharedLibraryInvitationId }: {
+        sharedLibraryInvitationId: number
+    }, { accept }: {
+        accept: boolean
+    }) {
         const headers = generateHeaders()
-        const response = await axios.get("/api/libraries", headers)
+        const response = await axios.put(`/api/sharedLibraryInvitations/${sharedLibraryInvitationId}`, {
+            accept
+        }, headers)
 
-        return response.data.map((library: any) => new Library({
-            ...library
-        }))
+        return new SharedLibraryInvitation({
+            ...response.data
+        })
     }
 
-    static async createLibrary({ libraryName, listenersEmails }: { libraryName: string, listenersEmails: string[] }) {
-        const payload = {}
-        if (libraryName) payload.libraryName = libraryName
-        if (listenersEmails) payload.listenersEmails = listenersEmails
-
+    static async fetchSharedLibraryInvitations() {
         const headers = generateHeaders()
-
-        const response = await axios.post("/api/libraries", payload, headers)
-
-        return new Library({ ...response.data })
-    }
-
-    static async fetchSharedLibraries() {
-        const headers = generateHeaders()
-        const response = await axios.get("/api/sharedLibraries", headers)
+        const response = await axios.get("/api/sharedLibraryInvitations", headers)
 
         return response.data.map((sharedLibrary: any) => {
             return {

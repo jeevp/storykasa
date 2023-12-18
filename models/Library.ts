@@ -3,6 +3,7 @@ interface LibraryProps {
     accountId: string
     libraryName: string
     sharedAccountIds: string[]
+    listeners: []
     totalStories: number
 }
 
@@ -10,6 +11,7 @@ export default class Library {
     libraryId: string
     accountId: string
     libraryName: string
+    listeners: []
     sharedAccountIds: string[]
     totalStories: number
 
@@ -17,6 +19,7 @@ export default class Library {
         libraryId,
         accountId,
         libraryName,
+        listeners = [],
         sharedAccountIds,
         totalStories
     }: LibraryProps) {
@@ -25,5 +28,6 @@ export default class Library {
         this.libraryName = libraryName
         this.sharedAccountIds = sharedAccountIds
         this.totalStories = totalStories
+        this.listeners = listeners
     }
 }

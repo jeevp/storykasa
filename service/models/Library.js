@@ -73,4 +73,21 @@ export default class Library {
             sharedAccountIds: library.sharedAccountIds
         }))
     }
+
+    static async findOne({ libraryId }, { accessToken }) {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
+            params: {
+                select: "*",
+                library_id: `eq.${libraryId}`
+            },
+            headers: generateSupabaseHeaders(accessToken)
+        })
+
+        return new Library({
+            accountId: response.data[0].account_id,
+            libraryId: response.data[0].library_id,
+            libraryName: response.data[0].library_name,
+            sharedAccountIds: response.data[0].sharedAccountIds
+        })
+    }
 }
