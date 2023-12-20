@@ -1,19 +1,18 @@
 import Script from "next/script";
+import Head from "next/head"
 
 function GoogleAnalyticsScript() {
     const GA_TRACKING_ID = 'G-LTEVQ6F6XH';
 
     return (
-        <>
-            <Script
+        <Head>
+            <script
                 src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-                strategy="afterInteractive"
                 async
             />
 
-            <Script
+            <script
                 id="google-analytics"
-                strategy="afterInteractive"
                 dangerouslySetInnerHTML={{
                     __html: `
                         window.dataLayer = window.dataLayer || [];
@@ -23,7 +22,7 @@ function GoogleAnalyticsScript() {
                     `,
                 }}
             />
-        </>
+        </Head>
     );
 }
 
