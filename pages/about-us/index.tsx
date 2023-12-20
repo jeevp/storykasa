@@ -35,9 +35,7 @@ export default function AboutUs() {
                         </p>
                         <p className="mt-4 text-lg">
                             StoryKasa has built on this foundation and vision and invested in technology to create
-                            a sustainable social business with a groundbreaking product and platform. Together,
-                            Raquel, Jeff, Satish, and Steven provided a deep well of knowledge and expertise and
-                            they continue to champion the StoryKasa mission!
+                            a sustainable social business with a groundbreaking product and platform.
                         </p>
                         <div className="mt-8">
                             <h3 className="text-xl">The StoryKasa name</h3>
@@ -177,9 +175,6 @@ export default function AboutUs() {
                                 </div>
                                 <div>
                                     <label className="text-lg"><span className="font-semibold">Gyan Prayaga</span> –developed the initial audio program for the Ghana Anansesem Pilot</label>
-                                </div>
-                                <div>
-                                    <label className="font-semibold text-lg">Anansesem Project Team</label>
                                 </div>
                             </div>
                         </div>

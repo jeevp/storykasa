@@ -1,5 +1,6 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 import PendoScript from "@/tools/Pendo/PendoScript";
+import GoogleAnalyticsScript from "@/tools/GoogleAnalytics/GoogleAnalyticsScript";
 
 export default function Document() {
     return (
