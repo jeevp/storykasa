@@ -5,14 +5,12 @@ function GoogleAnalyticsScript() {
 
     return (
         <>
-            {/* Async load the Google Analytics script */}
             <Script
                 src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
                 strategy="afterInteractive"
                 async
             />
 
-            {/* Initialize Google Analytics */}
             <Script
                 id="google-analytics"
                 strategy="afterInteractive"
