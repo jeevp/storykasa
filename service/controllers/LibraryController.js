@@ -6,7 +6,13 @@ export default class LibraryController {
     static async getLibraries(req, res) {
         const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-        const libraries = await Library.findAll({ accountId: user.id }, { accessToken: req.accessToken })
+        const libraries = await Library.findAll({
+            accountId: user.id
+        }, {
+            accessToken: req.accessToken
+        }, {
+            serialized: true
+        })
 
         return res.status(200).send(libraries)
     }
@@ -49,7 +55,6 @@ export default class LibraryController {
                 accessToken: req.accessToken
             }, { serialized: true })
 
-            console.log({ libraries })
             return res.status(200).send(libraries)
         } catch (error) {
             console.log(error)

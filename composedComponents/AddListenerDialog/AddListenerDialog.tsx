@@ -68,7 +68,7 @@ export default function AddListenerDialog({
                 <div className="mt-6">
                     <p className="mt-2">Bellow you can enter the email of your friends and family who you which to share this library with.</p>
                     <div className="mt-4">
-                        <AddMemberToList onChange={(emails: string[]) => setListenersEmails(emails)} />
+                        <AddMemberToList members={library?.listeners} onChange={(emails: string[]) => setListenersEmails(emails)} />
                     </div>
                 </div>
                 <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">

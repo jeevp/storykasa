@@ -31,18 +31,9 @@ export default class LibraryHandler {
         const response = await axios.get("/api/sharedLibraries", headers)
 
         return response.data.map((sharedLibrary: any) => {
-            return {
-                sharedLibraryInvitation: new SharedLibraryInvitation({
-                    id: sharedLibrary.id,
-                    libraryId: sharedLibrary.libraryId,
-                    userEmail: sharedLibrary.userEmail,
-                    accept: sharedLibrary.accept,
-                    complete: sharedLibrary.complete
-                }),
-                library: new Library({
-                    ...sharedLibrary.library
-                })
-            }
+            return new Library({
+                ...sharedLibrary
+            })
         })
     }
 

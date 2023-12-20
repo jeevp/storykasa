@@ -1,5 +1,6 @@
 import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
 import axios from "axios";
+import {supabase} from "@supabase/auth-ui-shared";
 
 export default class Account {
     constructor({
@@ -7,7 +8,7 @@ export default class Account {
         createdAt,
         name,
         username,
-        avatarUrl
+        avatarUrl,
     }) {
         this.accountId = accountId
         this.createdAt = createdAt

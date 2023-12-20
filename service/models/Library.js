@@ -57,12 +57,12 @@ export default class Library {
      * @param {string} accountId
      * @param {string} sharedAccountId
      * @param {string} accessToken
-     * @param {boolean} serialized
+     * @param {{ serializer: boolean }} options
      * @returns {Promise<*>}
      */
-    static async findAll({ accountId, sharedAccountId }, { accessToken }, { serialized = false }) {
+    static async findAll({ accountId, sharedAccountId }, { accessToken }, options = { serialized: false }) {
         const queryParams = { select: "*" }
-        if (accountId) queryParams.account_id = `eq.${accountId}`
+        if (accountId) queryParams.account_id = `eq.${accountId}`;
         if (sharedAccountId) {
             queryParams.shared_account_ids = `cs.{${sharedAccountId}}`;
         }
@@ -70,24 +70,26 @@ export default class Library {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
             params: queryParams,
             headers: generateSupabaseHeaders(accessToken)
-        })
+        });
 
-        return response.data.map(async (library) => {
+        const librariesPromises = response.data.map(async (library) => {
             const _library = new Library({
                 accountId: library.account_id,
                 libraryId: library.library_id,
                 libraryName: library.library_name,
                 sharedAccountIds: library.shared_account_ids
-            })
+            });
 
-            if (serialized) {
-                const librarySerialized = await _library.serializer({ accessToken })
-                return librarySerialized
+            if (options.serialized) {
+                return await _library.serializer({ accessToken });
             }
 
-            return _library
-        })
+            return _library;
+        });
+
+        return await Promise.all(librariesPromises);
     }
+
 
     static async findOne({ libraryId }, { accessToken }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
@@ -126,15 +128,19 @@ export default class Library {
     }
 
     async serializer({ accessToken }) {
-        const listeners = []
-        await Promise.all(this.sharedAccountIds.map(async(sharedAccountId) => {
-            const account = await Account.findOne({ accountId: sharedAccountId }, { accessToken })
-            listeners.push({
-                avatarUrl: account.avatarUrl,
-                name: account.name,
-                accountId: account.accountId
-            })
-        }))
+        const listenersPromises = this.sharedAccountIds.map(async (sharedAccountId) => {
+            const account = await Account.findOne({ accountId: sharedAccountId }, { accessToken });
+            if (account) {
+                return {
+                    avatarUrl: account.avatarUrl,
+                    name: account.name,
+                    accountId: account.accountId,
+                    email: account.email
+                };
+            }
+        });
+
+        const listeners = (await Promise.all(listenersPromises)).filter(listener => !!listener);
 
         return {
             accountId: this.accountId,
@@ -142,6 +148,7 @@ export default class Library {
             libraryName: this.libraryName,
             sharedAccountIds: this.sharedAccountIds,
             listeners
-        }
+        };
     }
+
 }

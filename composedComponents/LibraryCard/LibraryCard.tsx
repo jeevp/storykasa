@@ -8,16 +8,26 @@ import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHa
 import {useEffect, useState} from "react";
 import AddListenerDialog from "@/composedComponents/AddListenerDialog/AddListenerDialog"
 import STKMenu from "@/components/STKMenu/STKMenu";
+import libraries from "@/pages/api/libraries";
+import {useLibrary} from "@/contexts/library/LibraryContext";
 
 
-export default function LibraryCard({ library, sharedLibraryInvitation }: {
+export default function LibraryCard({ library, sharedLibraryInvitation, enableAddListeners }: {
     library: Library,
-    sharedLibraryInvitation?: SharedLibraryInvitation
+    sharedLibraryInvitation?: SharedLibraryInvitation,
+    enableAddListeners?: boolean
 }) {
     const [internalSharedLibraryInvitation, setInternalSharedLibraryInvitation] = useState<SharedLibraryInvitation | null>(null)
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingReject, setLoadingReject] = useState(false)
     const [showAddListenerDialog, setShowAddListenerDialog] = useState(false)
+
+    const {
+        sharedLibraries,
+        setSharedLibraries,
+        setSharedLibraryInvitations,
+        sharedLibraryInvitations
+    } = useLibrary()
 
     useEffect(() => {
         if (sharedLibraryInvitation) {
@@ -34,6 +44,17 @@ export default function LibraryCard({ library, sharedLibraryInvitation }: {
         }, {
             accept: true
         })
+
+        // @ts-ignore
+        setSharedLibraries([ ...sharedLibraries, library])
+
+        setSharedLibraryInvitations(
+            // @ts-ignore
+            sharedLibraryInvitations.filter((invitation) => {
+                // @ts-ignore
+                return invitation.sharedLibraryInvitation.id !== internalSharedLibraryInvitation?.id
+            })
+        )
 
         // @ts-ignore
         setInternalSharedLibraryInvitation(new SharedLibraryInvitation({
@@ -65,7 +86,7 @@ export default function LibraryCard({ library, sharedLibraryInvitation }: {
     }
 
     return (
-        <div className={`${internalSharedLibraryInvitation && internalSharedLibraryInvitation.accept ? 'cursor-pointer' : ''}`}>
+        <div className={`cursor-pointer`}>
             <STKCard>
                 <div className="flex items-center justify-center flex-col p-2 w-56">
                     <div className="flex items-center flex-col p-6">
@@ -89,7 +110,7 @@ export default function LibraryCard({ library, sharedLibraryInvitation }: {
                     </div>
 
                     {internalSharedLibraryInvitation ? (
-                        <div className="flex items-center justify-betwee mt-8">
+                        <div className="flex items-center justify-betwee pb-4 mt-8">
                             <div>
                                 <STKButton
                                 variant="outlined"
@@ -99,11 +120,13 @@ export default function LibraryCard({ library, sharedLibraryInvitation }: {
                                 <STKButton onClick={handleAcceptSharedLibraryInvitation} loading={loadingAccept}>Accept</STKButton>
                             </div>
                         </div>
-                    ) : (
+                    ) : enableAddListeners ? (
                         <div className="mt-5 flex justify-end w-full items-baseline">
-                            <STKMenu options={[{ label: "Add listener", value: 0 }]} onChange={() => setShowAddListenerDialog(true)}/>
+                            <STKMenu options={[
+                                { label: "Add listener", value: 0 },
+                            ]} onChange={() => setShowAddListenerDialog(true)}/>
                         </div>
-                    )}
+                    ) : null}
                 </div>
             </STKCard>
             <AddListenerDialog

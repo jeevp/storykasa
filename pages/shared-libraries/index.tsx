@@ -99,7 +99,7 @@ function Libraries() {
                         ): !loadingSharedLibraryInvitations && sharedLibraryInvitations.length > 0 ? (
                             <div>
                                 <label className="font-semibold">You have been invited to join the following libraries</label>
-                                <div className="flex items-start flex-col lg:flex-row flex-wrap">
+                                <div className="flex items-start flex-col lg:flex-row flex-wrap mt-4">
                                     {sharedLibraryInvitations.map((sharedLibraryInvitation, index) => (
                                         <div className="p-1" key={index}>
                                             <LibraryCard
@@ -132,7 +132,7 @@ function Libraries() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-start flex-col lg:flex-row flex-wrap">
+                                    <div className="flex items-start flex-col lg:flex-row flex-wrap mt-4">
                                         {sharedLibraries.map((sharedLibrary, index) => (
                                             <div className="p-1" key={index}>
                                                 <LibraryCard library={sharedLibrary} />
@@ -162,10 +162,10 @@ function Libraries() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-start flex-col lg:flex-row flex-wrap">
+                                    <div className="flex items-start flex-col lg:flex-row flex-wrap mt-4">
                                         {libraries.map((library, index) => (
                                             <div className="p-1 cursor-pointer" key={index}>
-                                                <LibraryCard library={library} />
+                                                <LibraryCard library={library} enableAddListeners />
                                             </div>
                                         ))}
                                     </div>

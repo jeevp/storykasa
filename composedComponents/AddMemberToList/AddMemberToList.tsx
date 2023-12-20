@@ -4,11 +4,12 @@ import STKButton from "@/components/STKButton/STKButton";
 import {Plus, Trash} from "@phosphor-icons/react";
 
 interface addMemberToListProps {
+    members?: []
     onChange: (membersList: string[]) => void
 }
 
 
-const AddMemberToList = ({ onChange = () => ({}) }: addMemberToListProps) => {
+const AddMemberToList = ({ members, onChange = () => ({}) }: addMemberToListProps) => {
     const [email, setEmail] = useState<string>('');
     const [membersList, setMembersList] = useState<string[]>([]);
 
@@ -18,6 +19,10 @@ const AddMemberToList = ({ onChange = () => ({}) }: addMemberToListProps) => {
 
     const handleAddMember = (e: any) => {
         e.preventDefault()
+        if (members.includes(email)) {
+            return
+        }
+
         if (email && !membersList.includes(email)) {
             const _membersList = [...membersList, email]
             setMembersList(_membersList);

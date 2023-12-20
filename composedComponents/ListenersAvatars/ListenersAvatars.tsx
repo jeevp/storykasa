@@ -15,7 +15,7 @@ const ListenerAvatars: React.FC<ListenerAvatarsProps> = ({ avatars = [] }) => (
             ))}
         </div>
 
-        <span className="ml-4 text-sm font-medium">{avatars?.length} listeners</span>
+        <span className="ml-4 text-sm font-medium">{avatars?.length === 1 ? '1 listener' : `${avatars.length} listeners`}</span>
     </div>
 );
 
