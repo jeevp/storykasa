@@ -2,31 +2,32 @@ import React, {useState} from 'react';
 import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
-import STKTextField from "@/components/STKTextField/STKTextField";
 import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToList"
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
+import Library from "@/models/Library";
 
 
-interface CreateSharedLibraryDialogProps {
+interface AddListenerDialogProps {
     open: boolean;
+    library: Library
     onClose?: () => void;
     onSuccess?: () => void;
 }
 
-export default function CreateSharedLibraryDialog({
+export default function AddListenerDialog({
     open,
+    library,
     onClose = () => ({}),
     onSuccess = () => ({})
-}: CreateSharedLibraryDialogProps) {
+}: AddListenerDialogProps) {
     const { onMobile } = useDevice()
     const { setSnackbarBus } = useSnackbar()
 
     const [loading, setLoading] = useState(false)
     const [showSnackbar, setShowSnackbar] = useState(false)
-    const [libraryName, setLibraryName] = useState("")
     const [listenersEmails, setListenersEmails] = useState<string[]>([])
 
     // Contexts
@@ -37,12 +38,10 @@ export default function CreateSharedLibraryDialog({
         try {
             setLoading(true)
 
-            const library = await LibraryHandler.createLibrary({
-                libraryName,
-                listenersEmails
-            })
+            const _library = await LibraryHandler.addListenerToLibrary({
+                libraryId: library.libraryId,
+            }, { listenersEmails })
 
-            setLibraries([...libraries, library])
 
             setSnackbarBus({
                 active: true,
@@ -62,27 +61,14 @@ export default function CreateSharedLibraryDialog({
         <STKDialog
         active={open}
         maxWidth="xs"
-        title="Create shared library"
+        title="Add Listeners to library"
         fullScreen={onMobile}
         onClose={() => onClose()}>
             <div>
                 <div className="mt-6">
-                    <div>
-                        <label className="font-semibold">Library title</label>
-                        <div className="mt-2">
-                            <STKTextField
-                            fluid
-                            value={libraryName}
-                            placeholder="Type the story title"
-                            onChange={(value: string) => setLibraryName(value)}/>
-                        </div>
-                    </div>
+                    <p className="mt-2">Bellow you can enter the email of your friends and family who you which to share this library with.</p>
                     <div className="mt-4">
-                        <label className="font-semibold">Listeners</label>
-                        <p className="mt-2">Bellow you can enter the email of your friends and family who you which to share this library with.</p>
-                        <div className="mt-4">
-                            <AddMemberToList onChange={(emails: string[]) => setListenersEmails(emails)} />
-                        </div>
+                        <AddMemberToList onChange={(emails: string[]) => setListenersEmails(emails)} />
                     </div>
                 </div>
                 <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">

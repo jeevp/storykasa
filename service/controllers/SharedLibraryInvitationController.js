@@ -1,5 +1,7 @@
 import supabase from "../supabase";
 import SharedLibraryInvitation from "../models/SharedLibraryInvitation"
+import Library from "../models/Library"
+import APIValidator from "../validators/APIValidator"
 
 export default class SharedLibraryInvitationController {
     static async updateSharedLibraryInvitation(req, res) {
@@ -18,6 +20,16 @@ export default class SharedLibraryInvitationController {
                 accept,
                 complete: true
             }, { accessToken: req.accessToken })
+
+            // Update library to include this user
+            const library = await Library.findOne({ libraryId: sharedLibraryInvitation.libraryId }, {
+                accessToken: req.accessToken
+            })
+            if (!library) return res.status(404).send({ message: "Library not found" })
+
+            await library.update({ sharedAccountIds: [...library.sharedAccountIds, user.id] }, {
+                accessToken: req.accessToken
+            })
 
             return res.status(200).send(_sharedLibraryInvitation)
         } catch (error) {
@@ -43,6 +55,29 @@ export default class SharedLibraryInvitationController {
         } catch (error) {
             console.log(error)
             return res.status(400).send({  message: "Something went wrong." })
+        }
+    }
+
+    static async createSharedLibraryInvitations(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, { requiredParams: ["libraryId"] })
+            APIValidator.requiredPayload({ req, res }, { requiredPayload: ["listenersEmails"] })
+
+            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
+
+            const { listenersEmails } = req.body
+
+            for (const listenerEmail of listenersEmails) {
+                await SharedLibraryInvitation.create({
+                    libraryId: req.query.libraryId,
+                    userEmail: listenerEmail
+                }, { accessToken: req.accessToken })
+            }
+
+            return res.status(201).send({ message: "Invitations sent with success" })
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong." })
         }
     }
 }

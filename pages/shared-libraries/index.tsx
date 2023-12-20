@@ -49,16 +49,25 @@ function Libraries() {
     // Mounted
     useEffect(() => {
         handleFetchLibraries()
+        handleFetchSharedLibraries()
         handleFetchSharedLibraryInvitations()
     }, [])
 
     // Methods
     const handleFetchLibraries = async () => {
         setLoadingLibraries(true)
-        const _sharedLibraries = await LibraryHandler.fetchLibraries()
+        const _libraries = await LibraryHandler.fetchLibraries()
         // @ts-ignore
-        setLibraries(_sharedLibraries || [])
+        setLibraries(_libraries || [])
         setLoadingLibraries(false)
+    }
+
+    const handleFetchSharedLibraries = async () => {
+        setLoadingSharedLibraries(true)
+        const _sharedLibraries = await LibraryHandler.fetchSharedLibraries()
+
+        setSharedLibraries(_sharedLibraries)
+        setLoadingSharedLibraries(false)
     }
 
     const handleFetchSharedLibraryInvitations = async () => {
@@ -87,30 +96,22 @@ function Libraries() {
                     <div className="mt-2">
                         {loadingSharedLibraryInvitations ? (
                             <span>loading shared libraries..</span>
-                        ): (
-                            <>
+                        ): !loadingSharedLibraryInvitations && sharedLibraryInvitations.length > 0 ? (
+                            <div>
                                 <label className="font-semibold">You have been invited to join the following libraries</label>
-                                {sharedLibraryInvitations?.length === 0 ? (
-                                    <div className="flex flex-col items-center justify-center" style={{ height: "calc(100vh - 222px)" }}>
-                                        <Books size={100} color={green600} />
-                                        <p className="max-w-md text-center">You don't have any shared library available. <br />Create one and start sharing stories</p>
-                                        <div className="mt-4">
-                                            <STKButton onClick={() => setShowCreateSharedLibraryDialog(true)}>Create shared library</STKButton>
+                                <div className="flex items-start flex-col lg:flex-row flex-wrap">
+                                    {sharedLibraryInvitations.map((sharedLibraryInvitation, index) => (
+                                        <div className="p-1" key={index}>
+                                            <LibraryCard
+                                                // @ts-ignore
+                                                library={sharedLibraryInvitation?.library}
+                                                // @ts-ignore
+                                                sharedLibraryInvitation={sharedLibraryInvitation?.sharedLibraryInvitation} />
                                         </div>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-start flex-col lg:flex-row flex-wrap">
-                                        {sharedLibraryInvitations.map((sharedLibraryInvitation, index) => (
-                                            <div className="p-1" key={index}>
-                                                <LibraryCard
-                                                    library={sharedLibraryInvitation.library}
-                                                    sharedLibraryInvitation={sharedLibraryInvitation.sharedLibraryInvitation} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </>
-                        )}
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
 
@@ -118,13 +119,13 @@ function Libraries() {
                     <div className="mt-2">
                         {loadingSharedLibraries ? (
                             <span>loading shared libraries..</span>
-                        ): (
-                            <>
+                        ) : !loadingSharedLibraries && sharedLibraries?.length > 0 ? (
+                            <div>
                                 <label className="font-semibold">Listening to</label>
-
                                 {sharedLibraries?.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center" style={{ height: "calc(100vh - 222px)" }}>
                                         <Books size={100} color={green600} />
+                                        {/* eslint-disable-next-line react/no-unescaped-entities */}
                                         <p className="max-w-md text-center">You don't have any shared library available. <br />Create one and start sharing stories</p>
                                         <div className="mt-4">
                                             <STKButton onClick={() => setShowCreateSharedLibraryDialog(true)}>Create shared library</STKButton>
@@ -134,15 +135,13 @@ function Libraries() {
                                     <div className="flex items-start flex-col lg:flex-row flex-wrap">
                                         {sharedLibraries.map((sharedLibrary, index) => (
                                             <div className="p-1" key={index}>
-                                                <LibraryCard
-                                                    library={sharedLibrary.library}
-                                                    sharedLibraryInvitation={sharedLibrary.sharedLibraryInvitation} />
+                                                <LibraryCard library={sharedLibrary} />
                                             </div>
                                         ))}
                                     </div>
                                 )}
-                            </>
-                        )}
+                            </div>
+                        ) : null}
                     </div>
                 </div>
 
@@ -156,6 +155,7 @@ function Libraries() {
                                 {libraries?.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center" style={{ height: "calc(100vh - 222px)" }}>
                                         <Books size={100} color={green600} />
+                                        {/* eslint-disable-next-line react/no-unescaped-entities */}
                                         <p className="max-w-md text-center">You don't have any shared library available. <br />Create one and start sharing stories</p>
                                         <div className="mt-4">
                                             <STKButton onClick={() => setShowCreateSharedLibraryDialog(true)}>Create shared library</STKButton>

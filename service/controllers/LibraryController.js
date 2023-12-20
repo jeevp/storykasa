@@ -45,17 +45,12 @@ export default class LibraryController {
     static async getSharedLibraries(req, res) {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
-            const sharedLibrariesInvitations = await SharedLibraryInvitation.findAll({ userEmail: user.email, complete: false }, {
+            const libraries = await Library.findAll({ sharedAccountId: user.id }, {
                 accessToken: req.accessToken
-            })
+            }, { serialized: true })
 
-            const sharedLibrariesInvitationsSerialized = []
-            await Promise.all((sharedLibrariesInvitations.map(async(sharedLibraryInvitation) => {
-                const sharedLibraryInvitationSerialized = await sharedLibraryInvitation.serializer({ accessToken: req.accessToken })
-                sharedLibrariesInvitationsSerialized.push(sharedLibraryInvitationSerialized)
-            })))
-
-            return res.status(200).send(sharedLibrariesInvitationsSerialized)
+            console.log({ libraries })
+            return res.status(200).send(libraries)
         } catch (error) {
             console.log(error)
             return res.status(400).send({  message: "Something went wrong." })
