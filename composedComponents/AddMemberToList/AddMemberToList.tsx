@@ -19,6 +19,7 @@ const AddMemberToList = ({ members, onChange = () => ({}) }: addMemberToListProp
 
     const handleAddMember = (e: any) => {
         e.preventDefault()
+        // @ts-ignore
         if (members.includes(email)) {
             return
         }

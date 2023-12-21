@@ -16,16 +16,21 @@ import STKMenu from "@/components/STKMenu/STKMenu";
 import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
 import PublicIcon from '@mui/icons-material/Public';
 import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
-const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import STKTooltip from "@/components/STKTooltip/STKTooltip";
+import LibraryHandler from "@/handlers/LibraryHandler";
+import AddStoryToLibraryDialog from "@/composedComponents/AddStoryToLibraryDialog/AddStoryToLibraryDialog";
 
+
+const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
+const ADD_TO_LIBRARY_MENU_OPTION = "ADD_TO_LIBRARY_MENU_OPTION"
 
 export default function StoryCard({ story }: {
     story: Story
     selected: boolean
 }) {
     // States
+    const [showAddStoryToLibraryDialog, setShowAddStoryToLibraryDialog] = useState(false)
     const [loadingRequest, setLoadingRequest] = useState(false)
     const [publicStoryRequestSent, setPublicStoryRequestSent] = useState(false)
     const [liked, setLiked] = useState(false)
@@ -100,7 +105,7 @@ export default function StoryCard({ story }: {
         }
     }
 
-    const handleMenuOnChange = async (menu: Object) => {
+    const handleSubmitStoryToPublicLibrary = async () => {
         if (story?.publicStoryRequestProcessing || story?.publicStoryRequestRefused) {
             let title = "Request is processing"
             let text = "You have already submitted a request to add this story to the public library. "
@@ -116,25 +121,35 @@ export default function StoryCard({ story }: {
             return
         }
 
+
+        setLoadingRequest(true)
+        setShowSubmitStoryToPublicLibraryInfoDialog(true)
+
+        const response = await StoryHandler.submitToPublicLibrary({
+            storyId: story.storyId,
+            profileId: currentProfileId
+        })
+
+        if (response.status === 200) {
+            setInfoDialogContent({
+                title: "Request is processing",
+                text: "You have already submitted a request to add this story to the public library. "
+            })
+        }
+
+        setLoadingRequest(false)
+        setPublicStoryRequestSent(true)
+    }
+
+    const handleMenuOnChange = async (menu: Object) => {
         // @ts-ignore
         if (menu?.value === SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION) {
-            setLoadingRequest(true)
-            setShowSubmitStoryToPublicLibraryInfoDialog(true)
+           await handleSubmitStoryToPublicLibrary()
+        }
 
-            const response = await StoryHandler.submitToPublicLibrary({
-                storyId: story.storyId,
-                profileId: currentProfileId
-            })
-
-            if (response.status === 200) {
-                setInfoDialogContent({
-                    title: "Request is processing",
-                    text: "You have already submitted a request to add this story to the public library. "
-                })
-            }
-
-            setLoadingRequest(false)
-            setPublicStoryRequestSent(true)
+        // @ts-ignore
+        if (menu?.value === ADD_TO_LIBRARY_MENU_OPTION) {
+            setShowAddStoryToLibraryDialog(true)
         }
 
     }
@@ -242,10 +257,16 @@ export default function StoryCard({ story }: {
                                     <STKTooltip text="Submit to public library" active={showMenuTooltip && !disableMenu}>
                                         <div className={`hidden lg:block ${disableMenu ? 'disabled' : ''}`}>
                                             <STKMenu
-                                                options={[{
-                                                    label: "Submit to public library",
-                                                    value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
-                                                }]}
+                                                options={[
+                                                    {
+                                                        label: "Add to library",
+                                                        value: ADD_TO_LIBRARY_MENU_OPTION
+                                                    },
+                                                    {
+                                                        label: "Submit to public library",
+                                                        value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+                                                    }
+                                                ]}
                                                 onChange={handleMenuOnChange}
                                                 onClick={handleShowMenuTooltip}/>
                                         </div>
@@ -294,10 +315,16 @@ export default function StoryCard({ story }: {
                             <STKTooltip text="Submit to public library" active={showMenuTooltip && !disableMenu}>
                                 <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
                                     <STKMenu
-                                    options={[{
-                                        label: "Submit to public library",
-                                        value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
-                                    }]}
+                                    options={[
+                                        {
+                                            label: "Add to library",
+                                            value: ADD_TO_LIBRARY_MENU_OPTION
+                                        },
+                                        {
+                                            label: "Submit to public library",
+                                            value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+                                        }
+                                    ]}
                                     onChange={handleMenuOnChange}
                                     onClick={handleShowMenuTooltip}/>
                                 </div>
@@ -312,6 +339,10 @@ export default function StoryCard({ story }: {
             text={infoDialogContent.text}
             loadingBeforeContent={loadingRequest}
             onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
+            <AddStoryToLibraryDialog
+            open={showAddStoryToLibraryDialog}
+            story={story}
+            onClose={() => setShowAddStoryToLibraryDialog(false)}/>
         </STKCard>
     )
 }

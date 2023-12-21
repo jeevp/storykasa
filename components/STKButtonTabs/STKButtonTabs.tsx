@@ -91,7 +91,7 @@ export default function STKButtonTabs({
                             alignStart
                             fullWidth
                             disableElevation
-                            color={activeIndex === index || tab.pathname === router.pathname ? 'primary' : 'secondary'}
+                            color={activeIndex === index || router.pathname.includes(tab.pathname) ? 'primary' : 'secondary'}
                             onClick={() => handleOnClick(index, tab)}
                             variant="contained"
                             startIcon={tab?.icon}>

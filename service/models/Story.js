@@ -170,6 +170,44 @@ class Story {
         });
     }
 
+    static async findAll({ libraryId }, { accessToken }) {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+            params: {
+                select: '*, stories (*, profiles (*))',
+                library_id: `eq.${libraryId}`,
+                ["stories.deleted"]: "eq.false"
+            },
+            headers: generateSupabaseHeaders(accessToken)
+        })
+
+        const stories = response.data.map((storyLibrary) => {
+            const story = storyLibrary.stories
+
+            return new Story({
+                storyId: story?.story_id,
+                title: story?.title,
+                description: story?.description,
+                isPublic: story?.is_public,
+                transcript: story?.transcript,
+                language: story?.language,
+                region: story?.region,
+                theme: story?.theme,
+                category: story?.category,
+                imageUrl: story?.imageUrl,
+                lastUpdated: story?.last_updated,
+                createdAt: story?.created_at,
+                ageGroups: story?.ageGroups,
+                narratorName: story?.narrator_name,
+                recordedBy: story?.recorded_by,
+                recordingUrl: story?.recording_url,
+                profileName: story?.profiles?.profile_name,
+                profileAvatar: story?.profiles?.avatar_url
+            })
+        })
+
+        return stories
+    }
+
     /**
      *
      * @param {boolean} isPublic

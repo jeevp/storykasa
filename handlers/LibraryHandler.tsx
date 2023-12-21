@@ -2,21 +2,24 @@ import axios from "axios"
 import generateHeaders from "@/handlers/generateHeaders";
 import Library from "@/models/Library";
 import SharedLibraryInvitation from "@/models/SharedLibraryInvitation";
+import Story from "@/models/Story";
 
 
 export default class LibraryHandler {
-    static async fetchLibraries() {
+    static async fetchLibraries(setLibraries: any) {
         const headers = generateHeaders()
         const response = await axios.get("/api/libraries", headers)
 
-        return response.data.map((library: any) => new Library({
+        setLibraries(response.data.map((library: any) => new Library({
             ...library
-        }))
+        })))
     }
 
     static async createLibrary({ libraryName, listenersEmails }: { libraryName: string, listenersEmails: string[] }) {
         const payload = {}
+        // @ts-ignore
         if (libraryName) payload.libraryName = libraryName
+        // @ts-ignore
         if (listenersEmails) payload.listenersEmails = listenersEmails
 
         const headers = generateHeaders()
@@ -47,6 +50,28 @@ export default class LibraryHandler {
 
         return new Library({
             ...response.data
+        })
+    }
+
+    static async fetchStories({ libraryId }: { libraryId: string }) {
+        const headers = generateHeaders()
+        const response = await axios.get(`/api/libraries/${libraryId}/stories`, headers)
+
+        return response.data.map((story: any) => new Story({
+            ...story
+        }))
+    }
+
+    static async addStory({ storyId, libraryId, profileId }: { storyId: string, libraryId: string, profileId: string }) {
+        const headers = generateHeaders()
+        await axios.post(`/api/profiles/${profileId}/libraries/${libraryId}/stories`, {
+            storyId
+        }, headers)
+
+        // @ts-ignore
+        return new Story({
+            storyId,
+            profileId
         })
     }
 }

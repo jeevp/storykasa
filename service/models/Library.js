@@ -1,25 +1,28 @@
 import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
 import axios from "axios";
 import Account from "../models/Account"
-
+import Story from "../models/Story"
 export default class Library {
     /**
      *
      * @param {string} accountId
      * @param {string} libraryId
      * @param {string} libraryName
+     * @param {number} totalStories
      * @param {string[]} sharedAccountIds
      */
     constructor({
         accountId,
         libraryId,
         libraryName,
-        sharedAccountIds = []
+        sharedAccountIds = [],
+        totalStories
     }) {
         this.accountId = accountId
         this.libraryId = libraryId
         this.libraryName = libraryName
         this.sharedAccountIds = sharedAccountIds
+        this.totalStories = totalStories
     }
 
 
@@ -73,11 +76,16 @@ export default class Library {
         });
 
         const librariesPromises = response.data.map(async (library) => {
+            const libraryTotalStories = await Story.findAll({ libraryId: library.library_id }, {
+                accessToken
+            }) || []
+
             const _library = new Library({
                 accountId: library.account_id,
                 libraryId: library.library_id,
                 libraryName: library.library_name,
-                sharedAccountIds: library.shared_account_ids
+                sharedAccountIds: library.shared_account_ids,
+                totalStories: libraryTotalStories?.length
             });
 
             if (options.serialized) {
@@ -106,6 +114,22 @@ export default class Library {
             libraryName: response.data[0].library_name,
             sharedAccountIds: response.data[0].shared_account_ids
         })
+    }
+
+    static async addStory({ storyId, libraryId, accountId, profileId }, { accessToken }) {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+            library_id: libraryId,
+            story_id: storyId,
+            account_id: accountId,
+            profile_id: profileId
+        }, {
+            params: {
+                select: "*"
+            },
+            headers: generateSupabaseHeaders(accessToken)
+        })
+
+        return response.data[0]
     }
 
     async update({ sharedAccountIds }, { accessToken }) {
@@ -147,6 +171,7 @@ export default class Library {
             libraryId: this.libraryId,
             libraryName: this.libraryName,
             sharedAccountIds: this.sharedAccountIds,
+            totalStories: this.totalStories,
             listeners
         };
     }

@@ -12,10 +12,11 @@ import libraries from "@/pages/api/libraries";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 
 
-export default function LibraryCard({ library, sharedLibraryInvitation, enableAddListeners }: {
+export default function LibraryCard({ library, sharedLibraryInvitation, enableAddListeners, onClick = () => ({}) }: {
     library: Library,
     sharedLibraryInvitation?: SharedLibraryInvitation,
-    enableAddListeners?: boolean
+    enableAddListeners?: boolean,
+    onClick?: () => void
 }) {
     const [internalSharedLibraryInvitation, setInternalSharedLibraryInvitation] = useState<SharedLibraryInvitation | null>(null)
     const [loadingAccept, setLoadingAccept] = useState(false)
@@ -86,9 +87,9 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
     }
 
     return (
-        <div className={`cursor-pointer`}>
+        <div className={`cursor-pointer`} onClick={() => onClick()}>
             <STKCard>
-                <div className="flex items-center justify-center flex-col p-2 w-56">
+                <div className="flex items-center  justify-center flex-col p-2 w-42">
                     <div className="flex items-center flex-col p-6">
                         <div>
                             <Books size={50} color="#ccc" />
@@ -100,7 +101,7 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
                             <div className="mt-2">
                                 {!library.totalStories}
                                 <label>
-                                    {library.totalStories ? `${library.totalStories } stories` : "Without stories"}
+                                    {library.totalStories !== 1 ? `${library.totalStories } stories` : '1 story'}
                                 </label>
                             </div>
                         </div>

@@ -61,7 +61,7 @@ export default function StoryDetails({
                         <div className="flex items-start">
                             <Baby size={20} />
                             <label className="ml-2">
-                                {story?.ageGroupsLabel}
+                                {story?.ageGroupsLabel || story?.ageGroupsShortLabel}
                             </label>
                         </div>
                     )}

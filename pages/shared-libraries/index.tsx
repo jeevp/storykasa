@@ -1,35 +1,21 @@
-import StoryCard from '@/composedComponents/StoryCard/StoryCard'
 import { useEffect, useState} from 'react'
-import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
-import {AnimatePresence, motion} from 'framer-motion'
-import {Books, MagnifyingGlass, SmileyMeh} from '@phosphor-icons/react'
-import useDevice from "@/customHooks/useDevice";
-import StoryDetailsDialog from "@/composedComponents/StoryDetailsDialog/StoryDetailsDialog";
-import STKTooltip from "@/composedComponents/STKTooltip/STKTooltip";
-import STKTextField from "@/components/STKTextField/STKTextField";
-import Link from "next/link";
-import StoryHandler from "@/handlers/StoryHandler";
+import {Books} from '@phosphor-icons/react'
 import withAuth from "@/HOC/withAuth";
 import withProfile from "@/HOC/withProfile";
-import Story from "@/models/Story";
-import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
-import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
-import StoryFilters from "@/composedComponents/StoryFilters/StoryFilters";
-import {Divider} from "@mui/material";
-import {useStory} from "@/contexts/story/StoryContext";
-import StoryFiltersSummary from "@/composedComponents/StoryFilters/StoryFiltersSummary/StoryFiltersSummary";
-import {green600, neutral300} from "@/assets/colorPallet/colors";
-import {useProfile} from "@/contexts/profile/ProfileContext";
+import {green600} from "@/assets/colorPallet/colors";
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import STKButton from "@/components/STKButton/STKButton";
 import CreateSharedLibraryDialog from "@/composedComponents/CreateSharedLibraryDialog/CreateSharedLibraryDialog";
-import STKCard from "@/components/STKCard/STKCard";
 import LibraryCard from "@/composedComponents/LibraryCard/LibraryCard";
 import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHandler";
+import {useRouter} from "next/router";
+import Library from "@/models/Library";
 
 function Libraries() {
+    const router = useRouter()
+
     // Contexts
     const {
         libraries,
@@ -56,9 +42,7 @@ function Libraries() {
     // Methods
     const handleFetchLibraries = async () => {
         setLoadingLibraries(true)
-        const _libraries = await LibraryHandler.fetchLibraries()
-        // @ts-ignore
-        setLibraries(_libraries || [])
+        await LibraryHandler.fetchLibraries(setLibraries)
         setLoadingLibraries(false)
     }
 
@@ -76,6 +60,17 @@ function Libraries() {
         // @ts-ignore
         setSharedLibraryInvitations(sharedLibraryInvitations)
         setLoadingSharedLibraryInvitations(false)
+    }
+
+    const goToLibrary = async (library: Library) => {
+        await router.push({
+            pathname: `/shared-libraries/${library.libraryId}`,
+            query: {
+                libraryName: library.libraryName
+            }
+        }, "", {
+            shallow: true
+        })
     }
 
     return (
@@ -106,7 +101,8 @@ function Libraries() {
                                                 // @ts-ignore
                                                 library={sharedLibraryInvitation?.library}
                                                 // @ts-ignore
-                                                sharedLibraryInvitation={sharedLibraryInvitation?.sharedLibraryInvitation} />
+                                                sharedLibraryInvitation={sharedLibraryInvitation?.sharedLibraryInvitation}
+                                                />
                                         </div>
                                     ))}
                                 </div>
@@ -132,15 +128,18 @@ function Libraries() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-start flex-col lg:flex-row flex-wrap mt-4">
+                                    <div className="flex flex-wrap -mx-1 mt-4">
                                         {sharedLibraries.map((sharedLibrary, index) => (
-                                            <div className="p-1" key={index}>
-                                                <LibraryCard library={sharedLibrary} />
+                                            <div className="p-1 w-1/2 md:w-1/3 lg:w-1/4" key={index}>
+                                                <LibraryCard
+                                                    library={sharedLibrary}
+                                                    onClick={() => goToLibrary(sharedLibrary)}/>
                                             </div>
                                         ))}
                                     </div>
                                 )}
                             </div>
+
                         ) : null}
                     </div>
                 </div>
@@ -162,10 +161,14 @@ function Libraries() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-start flex-col lg:flex-row flex-wrap mt-4">
+
+                                    <div className="flex flex-wrap -mx-1 mt-4">
                                         {libraries.map((library, index) => (
-                                            <div className="p-1 cursor-pointer" key={index}>
-                                                <LibraryCard library={library} enableAddListeners />
+                                            <div className="p-1 w-1/2 md:w-1/3 lg:w-1/4" key={index}>
+                                                <LibraryCard
+                                                    library={library}
+                                                    enableAddListeners
+                                                    onClick={() => goToLibrary(library)}/>
                                             </div>
                                         ))}
                                     </div>
