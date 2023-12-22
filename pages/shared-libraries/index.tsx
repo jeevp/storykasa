@@ -12,6 +12,7 @@ import LibraryCard from "@/composedComponents/LibraryCard/LibraryCard";
 import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHandler";
 import {useRouter} from "next/router";
 import Library from "@/models/Library";
+import STKSkeleton from "@/components/STKSkeleton/STKSkeleton"
 
 function Libraries() {
     const router = useRouter()
@@ -90,7 +91,13 @@ function Libraries() {
                 <div className="mt-10">
                     <div className="mt-2">
                         {loadingSharedLibraryInvitations ? (
-                            <span>loading shared libraries..</span>
+                            <div className="flex flex-wrap -mx-1 mt-4">
+                                {[1,2,3,4,5,6].map((library, index) => (
+                                    <div className="p-1 flex-1 min-w-[280px]" key={index}>
+                                        <STKSkeleton height="222px" />
+                                    </div>
+                                ))}
+                            </div>
                         ): !loadingSharedLibraryInvitations && sharedLibraryInvitations.length > 0 ? (
                             <div>
                                 <label className="font-semibold">You have been invited to join the following libraries</label>
@@ -114,7 +121,13 @@ function Libraries() {
                 <div className="mt-10">
                     <div className="mt-2">
                         {loadingSharedLibraries ? (
-                            <span>loading shared libraries..</span>
+                            <div className="flex flex-wrap -mx-1 mt-4">
+                                {[1,2,3,4,5,6].map((library, index) => (
+                                    <div className="p-1 flex-1 min-w-[280px]" key={index}>
+                                        <STKSkeleton height="222px" />
+                                    </div>
+                                ))}
+                            </div>
                         ) : !loadingSharedLibraries && sharedLibraries?.length > 0 ? (
                             <div>
                                 <label className="font-semibold">Listening to</label>
@@ -122,7 +135,11 @@ function Libraries() {
                                     <div className="flex flex-col items-center justify-center" style={{ height: "calc(100vh - 222px)" }}>
                                         <Books size={100} color={green600} />
                                         {/* eslint-disable-next-line react/no-unescaped-entities */}
-                                        <p className="max-w-md text-center">You don't have any shared library available. <br />Create one and start sharing stories</p>
+                                        <p className="max-w-md text-center">
+                                            {/* eslint-disable-next-line react/no-unescaped-entities */}
+                                            Currently, you don't have any shared libraries. Create a new one and
+                                            begin the exciting journey of sharing stories!
+                                        </p>
                                         <div className="mt-4">
                                             <STKButton onClick={() => setShowCreateSharedLibraryDialog(true)}>Create shared library</STKButton>
                                         </div>
@@ -130,7 +147,7 @@ function Libraries() {
                                 ) : (
                                     <div className="flex flex-wrap -mx-1 mt-4">
                                         {sharedLibraries.map((sharedLibrary, index) => (
-                                            <div className="p-1 w-1/2 md:w-1/3 lg:w-1/4" key={index}>
+                                            <div className="p-1 flex-1 min-w-[280px]" key={index}>
                                                 <LibraryCard
                                                     library={sharedLibrary}
                                                     onClick={() => goToLibrary(sharedLibrary)}/>
@@ -147,7 +164,13 @@ function Libraries() {
                 <div className="mt-10">
                     <div className="mt-2">
                         {loadingLibraries ? (
-                            <span>loading libraries..</span>
+                                <div className="flex flex-wrap -mx-1 mt-4">
+                                    {[1,2,3,4,5,6].map((library, index) => (
+                                        <div className="p-1 flex-1 min-w-[280px]" key={index}>
+                                            <STKSkeleton height="222px" />
+                                        </div>
+                                    ))}
+                                </div>
                         ): (
                             <>
                                 <label className="font-semibold">Your libraries</label>
@@ -164,7 +187,7 @@ function Libraries() {
 
                                     <div className="flex flex-wrap -mx-1 mt-4">
                                         {libraries.map((library, index) => (
-                                            <div className="p-1 w-1/2 md:w-1/3 lg:w-1/4" key={index}>
+                                            <div className="p-1 flex-1 min-w-[280px]" key={index}>
                                                 <LibraryCard
                                                     library={library}
                                                     enableAddListeners

@@ -21,6 +21,8 @@ import {useStory} from "@/contexts/story/StoryContext";
 import StoryFiltersSummary from "@/composedComponents/StoryFilters/StoryFiltersSummary/StoryFiltersSummary";
 import {neutral300} from "@/assets/colorPallet/colors";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import LibraryHandler from "@/handlers/LibraryHandler";
+import {useLibrary} from "@/contexts/library/LibraryContext";
 
 function Library() {
     const { onMobile } = useDevice()
@@ -33,6 +35,18 @@ function Library() {
     // Contexts
     const { privateStories, setPrivateStories, storyFilters } = useStory()
     const { currentProfileId } = useProfile()
+    const { setLibraries } = useLibrary()
+
+
+    // Mounted
+    useEffect(() => {
+        handleFetchLibraries()
+    }, []);
+
+    // Methods
+    const handleFetchLibraries = async () => {
+        await LibraryHandler.fetchLibraries(setLibraries)
+    }
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
@@ -158,6 +172,7 @@ function Library() {
                                     >
                                         <StoryCard
                                             story={story}
+                                            enableMenuOptions
                                             // @ts-ignore
                                             selected={selectedStory?.storyId === story?.storyId}
                                         ></StoryCard>

@@ -87,9 +87,9 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
     }
 
     return (
-        <div className={`cursor-pointer`} onClick={() => onClick()}>
+        <div className={`cursor-pointer`}>
             <STKCard>
-                <div className="flex items-center  justify-center flex-col p-2 w-42">
+                <div className="flex items-center  justify-center flex-col p-2 w-42 " onClick={() => onClick()}>
                     <div className="flex items-center flex-col p-6">
                         <div>
                             <Books size={50} color="#ccc" />

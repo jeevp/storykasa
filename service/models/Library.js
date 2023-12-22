@@ -5,6 +5,7 @@ import Story from "../models/Story"
 export default class Library {
     /**
      *
+     * @param {string} createdAt
      * @param {string} accountId
      * @param {string} libraryId
      * @param {string} libraryName
@@ -12,12 +13,14 @@ export default class Library {
      * @param {string[]} sharedAccountIds
      */
     constructor({
+        createdAt,
         accountId,
         libraryId,
         libraryName,
         sharedAccountIds = [],
         totalStories
     }) {
+        this.createdAt = createdAt
         this.accountId = accountId
         this.libraryId = libraryId
         this.libraryName = libraryName
@@ -60,7 +63,7 @@ export default class Library {
      * @param {string} accountId
      * @param {string} sharedAccountId
      * @param {string} accessToken
-     * @param {{ serializer: boolean }} options
+     * @param {{serialized: boolean}} options
      * @returns {Promise<*>}
      */
     static async findAll({ accountId, sharedAccountId }, { accessToken }, options = { serialized: false }) {
@@ -76,15 +79,16 @@ export default class Library {
         });
 
         const librariesPromises = response.data.map(async (library) => {
-            const libraryTotalStories = await Story.findAll({ libraryId: library.library_id }, {
+            const libraryTotalStories = await Story.findAll({ libraryId: library?.library_id }, {
                 accessToken
             }) || []
 
             const _library = new Library({
-                accountId: library.account_id,
-                libraryId: library.library_id,
-                libraryName: library.library_name,
-                sharedAccountIds: library.shared_account_ids,
+                createdAt: library?.created_at,
+                accountId: library?.account_id,
+                libraryId: library?.library_id,
+                libraryName: library?.library_name,
+                sharedAccountIds: library?.shared_account_ids,
                 totalStories: libraryTotalStories?.length
             });
 
@@ -159,7 +163,7 @@ export default class Library {
                     avatarUrl: account.avatarUrl,
                     name: account.name,
                     accountId: account.accountId,
-                    email: account.email
+                    email: account?.email
                 };
             }
         });
@@ -172,6 +176,7 @@ export default class Library {
             libraryName: this.libraryName,
             sharedAccountIds: this.sharedAccountIds,
             totalStories: this.totalStories,
+            createdAt: this.createdAt,
             listeners
         };
     }

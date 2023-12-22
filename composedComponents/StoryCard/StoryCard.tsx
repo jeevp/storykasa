@@ -18,16 +18,16 @@ import PublicIcon from '@mui/icons-material/Public';
 import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import STKTooltip from "@/components/STKTooltip/STKTooltip";
-import LibraryHandler from "@/handlers/LibraryHandler";
 import AddStoryToLibraryDialog from "@/composedComponents/AddStoryToLibraryDialog/AddStoryToLibraryDialog";
 
 
 const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
 const ADD_TO_LIBRARY_MENU_OPTION = "ADD_TO_LIBRARY_MENU_OPTION"
 
-export default function StoryCard({ story }: {
+export default function StoryCard({ story, enableMenuOptions }: {
     story: Story
-    selected: boolean
+    selected: boolean,
+    enableMenuOptions?: boolean
 }) {
     // States
     const [showAddStoryToLibraryDialog, setShowAddStoryToLibraryDialog] = useState(false)
@@ -253,11 +253,13 @@ export default function StoryCard({ story }: {
                                         </STKButton>
                                     </div>
                                 )}
-                                {story?.recordedBy && story.recordedBy === currentProfileId && (
-                                    <STKTooltip text="Submit to public library" active={showMenuTooltip && !disableMenu}>
-                                        <div className={`hidden lg:block ${disableMenu ? 'disabled' : ''}`}>
+                                {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions && (
+                                        <div>
                                             <STKMenu
-                                                options={[
+                                                options={story.isPublic ? [{
+                                                    label: "Add to library",
+                                                    value: ADD_TO_LIBRARY_MENU_OPTION
+                                                }] : [
                                                     {
                                                         label: "Add to library",
                                                         value: ADD_TO_LIBRARY_MENU_OPTION
@@ -270,7 +272,6 @@ export default function StoryCard({ story }: {
                                                 onChange={handleMenuOnChange}
                                                 onClick={handleShowMenuTooltip}/>
                                         </div>
-                                    </STKTooltip>
                                 )}
                             </div>
                         </div>
@@ -311,11 +312,14 @@ export default function StoryCard({ story }: {
                                 </STKButton>
                             </div>
                         )}
-                        {story?.recordedBy && story.recordedBy === currentProfileId && (
+                        {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions && (
                             <STKTooltip text="Submit to public library" active={showMenuTooltip && !disableMenu}>
                                 <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
                                     <STKMenu
-                                    options={[
+                                    options={story.isPublic ? [{
+                                        label: "Add to library",
+                                        value: ADD_TO_LIBRARY_MENU_OPTION
+                                    }] : [
                                         {
                                             label: "Add to library",
                                             value: ADD_TO_LIBRARY_MENU_OPTION
@@ -339,10 +343,12 @@ export default function StoryCard({ story }: {
             text={infoDialogContent.text}
             loadingBeforeContent={loadingRequest}
             onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
-            <AddStoryToLibraryDialog
-            open={showAddStoryToLibraryDialog}
-            story={story}
-            onClose={() => setShowAddStoryToLibraryDialog(false)}/>
+            {enableMenuOptions && (
+                <AddStoryToLibraryDialog
+                    open={showAddStoryToLibraryDialog}
+                    story={story}
+                    onClose={() => setShowAddStoryToLibraryDialog(false)}/>
+            )}
         </STKCard>
     )
 }

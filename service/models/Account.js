@@ -28,12 +28,13 @@ export default class Account {
             headers: generateSupabaseHeaders(accessToken)
         })
 
+        console.log(response.data)
         return new Account({
-            accountId: response.data[0].account_id,
-            createdAt: response.data[0].created_at,
-            name: response.data[0].name,
-            username: response.data[0].username,
-            avatarUrl: response.data[0].avatar_url
+            accountId: response.data[0]?.account_id,
+            createdAt: response.data[0]?.created_at,
+            name: response.data[0]?.name,
+            username: response.data[0]?.username,
+            avatarUrl: response.data[0]?.avatar_url
         })
     }
 }

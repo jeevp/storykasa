@@ -33,18 +33,8 @@ export default function AddStoryToLibraryDialog({
     const [showSnackbar, setShowSnackbar] = useState(false)
 
     // Contexts
-    const { libraries, setLibraries } = useLibrary()
+    const { libraries} = useLibrary()
     const { currentProfileId } = useProfile()
-
-    // Mounted
-    useEffect(() => {
-        handleFetchLibraries()
-    }, []);
-
-    // Methods
-    const handleFetchLibraries = async () => {
-        await LibraryHandler.fetchLibraries(setLibraries)
-    }
 
     const handleSave = async () => {
         try {
@@ -87,6 +77,7 @@ export default function AddStoryToLibraryDialog({
                         options={libraries}
                         optionLabel="libraryName"
                         optionValue="libraryName"
+                        placeholder="Select a library"
                         // @ts-ignore
                         value={libraries.find(library => library?.libraryId === selectedLibraryId)}
                         onChange={handleLibraryOnChange} />

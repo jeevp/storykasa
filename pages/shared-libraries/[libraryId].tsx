@@ -25,6 +25,7 @@ import {useRouter} from "next/router";
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import STKButton from "@/components/STKButton/STKButton";
+import {ArrowBack} from "@mui/icons-material";
 
 function Library() {
     const router = useRouter()
@@ -87,14 +88,13 @@ function Library() {
         })
     }
 
-    console.log({ currentLibraryStories })
 
     return (
         <PageWrapper path="library">
             <div>
                 <div className="flex items-center">
-                    <STKButton onClick={gotToLibrariesPage}>voltar</STKButton>
-                    <h2 className="m-0 text-2xl">
+                    <STKButton iconButton onClick={gotToLibrariesPage}><ArrowBack /></STKButton>
+                    <h2 className="m-0 text-2xl ml-2">
                         {router.query.libraryName}
                         <span>
                         <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles.">
@@ -138,11 +138,6 @@ function Library() {
                                 startAdornment={<MagnifyingGlass size="20" />}
                                 onChange={handleFilterQueryChange}
                             />
-                        </div>
-                        <div className="mt-2 lg:mt-0">
-                            <StoryFilters
-                                privateStories
-                                onChange={() => setSelectedStory(undefined)} />
                         </div>
                     </div>
                     {Object.keys(storyFilters).length > 0 ? (

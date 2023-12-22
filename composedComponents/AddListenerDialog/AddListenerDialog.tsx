@@ -30,9 +30,6 @@ export default function AddListenerDialog({
     const [showSnackbar, setShowSnackbar] = useState(false)
     const [listenersEmails, setListenersEmails] = useState<string[]>([])
 
-    // Contexts
-    const { libraries, setLibraries } = useLibrary()
-
     // Methods
     const handleSave = async () => {
         try {
@@ -45,7 +42,7 @@ export default function AddListenerDialog({
 
             setSnackbarBus({
                 active: true,
-                message: "Story updated with success",
+                message: "Listener added to library with success",
                 type: "success"
             })
 
@@ -66,7 +63,11 @@ export default function AddListenerDialog({
         onClose={() => onClose()}>
             <div>
                 <div className="mt-6">
-                    <p className="mt-2">Bellow you can enter the email of your friends and family who you which to share this library with.</p>
+                    <p className="mt-2 text-sm">
+                       You have the option to invite friends and family to join your library. Simply enter
+                        their email addresses to send them an invitation. Upon accepting, they will be added as
+                        listeners to your library, granting them access to enjoy the stories alongside you.
+                    </p>
                     <div className="mt-4">
                         <AddMemberToList members={library?.listeners} onChange={(emails: string[]) => setListenersEmails(emails)} />
                     </div>
@@ -81,6 +82,7 @@ export default function AddListenerDialog({
                         <STKButton
                         fullWidth={onMobile}
                         color="primary"
+                        disabled={listenersEmails.length === 0}
                         loading={loading}
                         onClick={handleSave}>
                             Save

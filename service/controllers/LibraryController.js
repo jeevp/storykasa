@@ -17,7 +17,14 @@ export default class LibraryController {
                 serialized: true
             })
 
-            return res.status(200).send(libraries)
+            let _libraries = libraries.sort((a, b) => {
+                if (a.createdAt > b.createdAt) return 1
+                if (a.createdAt < b.createdAt) return -1
+            })
+
+            if (_libraries.length > 0) libraries.shift()
+
+            return res.status(200).send(_libraries)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong." })

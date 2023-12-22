@@ -41,6 +41,7 @@ interface STKButtonProps {
     height?: string
     width?: string
     alignStart?: boolean
+    disabled?: boolean
 }
 
 export default function STKButton({
@@ -59,6 +60,7 @@ export default function STKButton({
     type = "button",
     iconButton,
     alignStart,
+    disabled,
     onClick = () => ({})
 }: STKButtonProps) {
     const isThemeColor = color.includes('.');
@@ -110,6 +112,7 @@ export default function STKButton({
                     color={!isThemeColor ? color : undefined}
                     type={type as 'button' | 'submit' | 'reset'}
                     rounded={rounded}
+                    disabled={disabled}
                     alignStart={alignStart}
                     disableElevation
                     variant={variant as 'text' | 'outlined' | 'contained'}
