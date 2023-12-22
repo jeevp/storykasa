@@ -42,6 +42,7 @@ export default function CreateSharedLibraryDialog({
                 listenersEmails
             })
 
+            // @ts-ignore
             setLibraries([...libraries, library])
 
             setSnackbarBus({
