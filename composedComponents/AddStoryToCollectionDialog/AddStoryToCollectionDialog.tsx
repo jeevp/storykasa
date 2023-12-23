@@ -69,7 +69,7 @@ export default function AddStoryToCollectionDialog({
         <STKDialog
         active={open}
         maxWidth="xs"
-        title="Add story to library"
+        title="Add story to collection"
         fullScreen={onMobile}
         onClose={handleOnClose}>
             <div>
@@ -80,7 +80,7 @@ export default function AddStoryToCollectionDialog({
                         options={libraries}
                         optionLabel="libraryName"
                         optionValue="libraryName"
-                        placeholder="Select a library"
+                        placeholder="Select a collection"
                         // @ts-ignore
                         value={libraries.find(library => library?.libraryId === selectedLibraryId)}
                         onChange={handleLibraryOnChange} />
