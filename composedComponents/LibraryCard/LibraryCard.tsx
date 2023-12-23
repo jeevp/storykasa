@@ -5,21 +5,19 @@ import STKButton from "@/components/STKButton/STKButton";
 import SharedLibraryInvitation from "@/models/SharedLibraryInvitation";
 import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHandler"
 import {useEffect, useState} from "react";
-import AddListenerDialog from "@/composedComponents/AddListenerDialog/AddListenerDialog"
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import {green600} from "@/assets/colorPallet/colors";
 
-export default function LibraryCard({ library, sharedLibraryInvitation, enableAddListeners, onClick = () => ({}) }: {
+export default function LibraryCard({ library, sharedLibraryInvitation, showListeners, onClick = () => ({}) }: {
     library: Library,
     sharedLibraryInvitation?: SharedLibraryInvitation,
-    enableAddListeners?: boolean,
+    showListeners?: boolean,
     onClick?: () => void
 }) {
     const [internalSharedLibraryInvitation, setInternalSharedLibraryInvitation] = useState<SharedLibraryInvitation | null>(null)
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingReject, setLoadingReject] = useState(false)
-    const [showAddListenerDialog, setShowAddListenerDialog] = useState(false)
 
     const {
         sharedLibraries,
@@ -87,13 +85,13 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
     return (
         <div className={`cursor-pointer`}>
             <STKCard>
-                <div className="flex px-4 py-6 justify-center flex-col w-42 " onClick={() => onClick()}>
+                <div className={`${internalSharedLibraryInvitation ? 'p-4' : 'px-4 py-6'} flex justify-center flex-col w-42`} onClick={() => onClick()}>
                     <div className="flex items-center h-full">
                         <div>
                             <Books size={30} color="#ccc" />
                         </div>
                         <div className="flex flex-col ml-4">
-                            <div className="overflow-hidden max-w-[160px] text-ellipsis">
+                            <div className="overflow-hidden max-w-[180px] text-ellipsis">
                                 <label className="font-semibold whitespace-nowrap">{library.libraryName}</label>
                             </div>
                             <div className="mt-1 flex items-center">
@@ -109,7 +107,7 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
                                     </label>
                                 </div>
                             </div>
-                            {library?.listeners?.length > 0 && (
+                            {library?.listeners?.length > 0 && showListeners && (
                                 <div className="mt-2 flex items-center">
                                     <PeopleAltOutlinedIcon sx={{ color: green600, width: "16px", height: "16px"  }}/>
                                     <label className="ml-2 text-sm text-[#3d996d]">Shared with {library?.listeners?.length} listeners</label>
@@ -119,7 +117,7 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
                     </div>
 
                     {internalSharedLibraryInvitation ? (
-                        <div className="flex items-center justify-betwee pb-4 mt-8">
+                        <div className="flex items-center justify-betwee mt-8">
                             <div>
                                 <STKButton
                                 variant="outlined"
@@ -132,10 +130,6 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
                     ) : null}
                 </div>
             </STKCard>
-            <AddListenerDialog
-            library={library}
-            open={showAddListenerDialog}
-            onClose={() => setShowAddListenerDialog(false)} />
         </div>
     )
 }

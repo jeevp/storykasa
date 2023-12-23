@@ -6,7 +6,6 @@ import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToList"
 import LibraryHandler from "@/handlers/LibraryHandler";
-import {useLibrary} from "@/contexts/library/LibraryContext";
 import Library from "@/models/Library";
 
 
@@ -42,7 +41,7 @@ export default function AddListenerDialog({
 
             setSnackbarBus({
                 active: true,
-                message: "Listener added to library with success",
+                message: "Listener added to collection with success",
                 type: "success"
             })
 
@@ -58,15 +57,15 @@ export default function AddListenerDialog({
         <STKDialog
         active={open}
         maxWidth="xs"
-        title="Add Listeners to library"
+        title="Add Listeners to collection"
         fullScreen={onMobile}
         onClose={() => onClose()}>
             <div>
                 <div className="mt-6">
                     <p className="mt-2 text-sm">
-                       You have the option to invite friends and family to join your library. Simply enter
+                       You have the option to invite friends and family to join your collection. Simply enter
                         their email addresses to send them an invitation. Upon accepting, they will be added as
-                        listeners to your library, granting them access to enjoy the stories alongside you.
+                        listeners, granting them access to enjoy the stories alongside you.
                     </p>
                     <div className="mt-4">
                         <AddMemberToList members={library?.listeners} onChange={(emails: string[]) => setListenersEmails(emails)} />

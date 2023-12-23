@@ -9,6 +9,7 @@ export default function useLibraryState() {
     const [sharedLibraries, setSharedLibraries] = useState<[]>([])
     const [sharedLibraryInvitations, setSharedLibraryInvitations] = useState<[]>([])
     const [currentLibraryStories, setCurrentLibraryStories] = useState<[]>([])
+    const [currentLibrary, setCurrentLibrary] = useState(null)
 
     return {
         libraries,
@@ -18,6 +19,8 @@ export default function useLibraryState() {
         sharedLibraryInvitations,
         setSharedLibraryInvitations,
         currentLibraryStories,
-        setCurrentLibraryStories
+        setCurrentLibraryStories,
+        currentLibrary,
+        setCurrentLibrary
     };
 }

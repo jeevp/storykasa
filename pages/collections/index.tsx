@@ -24,13 +24,20 @@ function Collections() {
         sharedLibraries,
         setSharedLibraries,
         sharedLibraryInvitations,
-        setSharedLibraryInvitations
+        setSharedLibraryInvitations,
+        setCurrentLibrary
     } = useLibrary()
 
+    const startLoading = (
+        libraries.length === 0
+        && sharedLibraries.length === 0
+        && sharedLibraryInvitations.length === 0
+    )
+
     // States
-    const [loadingSharedLibraries, setLoadingSharedLibraries] = useState(true)
-    const [loadingLibraries, setLoadingLibraries] = useState(true)
-    const [loadingSharedLibraryInvitations, setLoadingSharedLibraryInvitations] = useState(true)
+    const [loadingSharedLibraries, setLoadingSharedLibraries] = useState(startLoading)
+    const [loadingLibraries, setLoadingLibraries] = useState(startLoading)
+    const [loadingSharedLibraryInvitations, setLoadingSharedLibraryInvitations] = useState(startLoading)
     const [showCreateSharedLibraryDialog, setShowCreateSharedLibraryDialog] = useState(false)
 
     // Mounted
@@ -42,13 +49,13 @@ function Collections() {
 
     // Methods
     const handleFetchLibraries = async () => {
-        setLoadingLibraries(true)
+        setLoadingLibraries(startLoading)
         await LibraryHandler.fetchLibraries(setLibraries)
         setLoadingLibraries(false)
     }
 
     const handleFetchSharedLibraries = async () => {
-        setLoadingSharedLibraries(true)
+        setLoadingSharedLibraries(startLoading)
         const _sharedLibraries = await LibraryHandler.fetchSharedLibraries()
 
         setSharedLibraries(_sharedLibraries)
@@ -56,7 +63,7 @@ function Collections() {
     }
 
     const handleFetchSharedLibraryInvitations = async () => {
-        setLoadingSharedLibraryInvitations(true)
+        setLoadingSharedLibraryInvitations(startLoading)
         const sharedLibraryInvitations = await SharedLibraryInvitationHandler.fetchSharedLibraryInvitations()
         // @ts-ignore
         setSharedLibraryInvitations(sharedLibraryInvitations)
@@ -64,6 +71,8 @@ function Collections() {
     }
 
     const goToLibrary = async (library: Library) => {
+        // @ts-ignore
+        setCurrentLibrary(library)
         await router.push({
             pathname: `/collections/${library.libraryId}`,
             query: {
@@ -138,7 +147,9 @@ function Collections() {
                                     <div className="flex flex-col mt-4">
                                         {/* eslint-disable-next-line react/no-unescaped-entities */}
                                         <p className="max-w-lg">
+                                            {/* eslint-disable-next-line react/no-unescaped-entities */}
                                             At the moment, you don't have any collection set up. Why not
+                                            {/* eslint-disable-next-line react/no-unescaped-entities */}
                                             create one? It's a great way to start sharing stories and experiences!"
                                         </p>
                                         <div className="mt-6">
@@ -151,8 +162,8 @@ function Collections() {
                                         {libraries.map((library, index) => (
                                             <div className="p-3 lg:w-[320px] w-full" key={index}>
                                                 <LibraryCard
+                                                    showListeners
                                                     library={library}
-                                                    enableAddListeners
                                                     onClick={() => goToLibrary(library)}/>
                                             </div>
                                         ))}

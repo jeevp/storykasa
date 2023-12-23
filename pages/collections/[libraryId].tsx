@@ -26,6 +26,7 @@ import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import STKButton from "@/components/STKButton/STKButton";
 import {ArrowBack} from "@mui/icons-material";
+import AddListenerDialog from "@/composedComponents/AddListenerDialog/AddListenerDialog";
 
 function Library() {
     const router = useRouter()
@@ -36,10 +37,12 @@ function Library() {
     const [loaded, setLoaded] = useState(false)
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
     const [stories, setStories] = useState([])
+    const [showAddListenerDialog, setShowAddListenerDialog] = useState(false)
+
 
     // Contexts
     const { storyFilters } = useStory()
-    const { currentLibraryStories, setCurrentLibraryStories } = useLibrary()
+    const { currentLibraryStories, setCurrentLibraryStories, currentLibrary } = useLibrary()
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
@@ -101,7 +104,7 @@ function Library() {
                     </span>
                     </h2>
                 </div>
-                <div className="mt-4 max-w-2xl">
+                <div className="mt-4 w-full">
                     {!loaded ? (
                         <div className="mb-10">
                             <STKSkeleton width={onMobile ? '300px' : '500px'} height="20px" />
@@ -110,18 +113,23 @@ function Library() {
                             </div>
                         </div>
                     ) : (
-                        <>
-                            {currentLibraryStories.length || (currentLibraryStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
-                                <p>
-                                    This is the home for the stories you save or record.
-                                </p>
-                            ) : currentLibraryStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
-                                <p>
-                                    Your collection is empty! You can add stories
-                                    from <span className="font-semibold"><Link href="/library"> your library</Link></span> to this collection
-                                </p>
-                            ) : null}
-                        </>
+                        <div className="flex w-full items-center justify-between">
+                            <div>
+                                {currentLibraryStories.length || (currentLibraryStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
+                                    <p>
+                                        This is the home for the stories you save or record.
+                                    </p>
+                                ) : currentLibraryStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
+                                    <p>
+                                        Your collection is empty! You can add stories
+                                        from <span className="font-semibold"><Link href="/library"> your library</Link></span> to this collection
+                                    </p>
+                                ) : null}
+                            </div>
+                            <div>
+                                <STKButton onClick={() => setShowAddListenerDialog(true)}>Add listener</STKButton>
+                            </div>
+                        </div>
                     )}
                 </div>
                 <>
@@ -222,6 +230,11 @@ function Library() {
                 story={selectedStory !== undefined && selectedStory !== null ? selectedStory : null}
                 onLoadStories={() => loadStories()}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
+            <AddListenerDialog
+                // @ts-ignore
+                library={currentLibrary}
+                open={showAddListenerDialog}
+                onClose={() => setShowAddListenerDialog(false)} />
         </PageWrapper>
     )
 }
