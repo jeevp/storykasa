@@ -7,7 +7,7 @@ import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHa
 import {useEffect, useState} from "react";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import {green600} from "@/assets/colorPallet/colors";
+import {beige400, green600, neutral800} from "@/assets/colorPallet/colors";
 
 export default function LibraryCard({ library, sharedLibraryInvitation, showListeners, onClick = () => ({}) }: {
     library: Library,
@@ -107,11 +107,20 @@ export default function LibraryCard({ library, sharedLibraryInvitation, showList
                                     </label>
                                 </div>
                             </div>
-                            {library?.listeners?.length > 0 && showListeners && (
-                                <div className="mt-2 flex items-center">
-                                    <PeopleAltOutlinedIcon sx={{ color: green600, width: "16px", height: "16px"  }}/>
-                                    <label className="ml-2 text-sm text-[#3d996d]">Shared with {library?.listeners?.length} listeners</label>
-                                </div>
+                            {showListeners && (
+                                <>
+                                    {library?.listeners?.length > 0 ? (
+                                        <div className="mt-2 flex items-center">
+                                            <PeopleAltOutlinedIcon sx={{ color: green600, width: "16px", height: "16px"  }}/>
+                                            <label className="ml-2 text-sm text-[#3d996d]">Shared with {library?.listeners?.length} listeners</label>
+                                        </div>
+                                    ) : (
+                                        <div className="mt-2 flex items-center">
+                                            <PeopleAltOutlinedIcon sx={{ color: neutral800, width: "16px", height: "16px"  }}/>
+                                            <label className="ml-2 text-sm text-[#292524]">Private</label>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>

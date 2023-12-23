@@ -20,6 +20,8 @@ import {neutral300} from "@/assets/colorPallet/colors";
 import StoryFiltersSummary from "@/composedComponents/StoryFilters/StoryFiltersSummary/StoryFiltersSummary";
 import HeardAboutDialog from "@/composedComponents/HeardAboutDialog/HeardAboutDialog";
 import {useAuth} from "@/contexts/auth/AuthContext";
+import LibraryHandler from "@/handlers/LibraryHandler";
+import {useLibrary} from "@/contexts/library/LibraryContext";
 
 export const dynamic = 'force-dynamic'
 
@@ -39,7 +41,19 @@ function Discover() {
         storyFilters
     } = useStory()
 
+    const { setLibraries } = useLibrary()
+
     const { showHeardAboutDialog, setShowHeardAboutDialog } = useAuth()
+
+    // Mounted
+    useEffect(() => {
+        handleFetchLibraries()
+    }, []);
+
+    // Methods
+    const handleFetchLibraries = async () => {
+        await LibraryHandler.fetchLibraries(setLibraries)
+    }
 
     const loadStories = async () => {
         setLoading(true)
@@ -136,6 +150,7 @@ function Discover() {
                                             <StoryCard
                                                 story={story}
                                                 selected={story?.storyId === selectedStoryId}
+                                                enableMenuOptions
                                             ></StoryCard>
                                         </div>
                                     ))}

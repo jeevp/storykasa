@@ -47,7 +47,7 @@ export default function AddStoryToLibraryDialog({
 
             setSnackbarBus({
                 active: true,
-                message: "Story added to library with success",
+                message: "Story added to collection with success",
                 type: "success"
             })
 
@@ -62,13 +62,18 @@ export default function AddStoryToLibraryDialog({
         setSelectedLibraryId(library.libraryId)
     }
 
+    const handleOnClose = (e: any) => {
+        e.stopPropagation()
+        onClose()
+    }
+
     return (
         <STKDialog
         active={open}
         maxWidth="xs"
         title="Add story to library"
         fullScreen={onMobile}
-        onClose={() => onClose()}>
+        onClose={handleOnClose}>
             <div>
                 <div className="mt-6">
                     <p className="mt-2">Choose the library you wish to add this story to</p>

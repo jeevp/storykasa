@@ -58,6 +58,7 @@ function STKSelect({
     }, [value, multiple, optionValue]);
 
     const handleChange = (e: Event) => {
+        e.stopPropagation()
         // @ts-ignore
         const { value } = e.target
         if (value === null) return
