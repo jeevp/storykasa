@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
-import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
@@ -12,25 +11,24 @@ import {useProfile} from "@/contexts/profile/ProfileContext";
 import Library from "@/models/Library";
 
 
-interface AddStoryToLibraryDialogProps {
+interface AddStoryToCollectionDialogProps {
     open: boolean;
     story: Story
     onClose?: () => void;
     onSuccess?: () => void;
 }
 
-export default function AddStoryToLibraryDialog({
+export default function AddStoryToCollectionDialog({
     open,
     story,
     onClose = () => ({}),
     onSuccess = () => ({})
-}: AddStoryToLibraryDialogProps) {
+}: AddStoryToCollectionDialogProps) {
     const { onMobile } = useDevice()
     const { setSnackbarBus } = useSnackbar()
 
     const [selectedLibraryId, setSelectedLibraryId] = useState("")
     const [loading, setLoading] = useState(false)
-    const [showSnackbar, setShowSnackbar] = useState(false)
 
     // Contexts
     const { libraries} = useLibrary()
@@ -76,7 +74,7 @@ export default function AddStoryToLibraryDialog({
         onClose={handleOnClose}>
             <div>
                 <div className="mt-6">
-                    <p className="mt-2">Choose the library you wish to add this story to</p>
+                    <p className="mt-2">Choose the collection you wish to add this story to</p>
                     <div className="mt-4">
                         <STKSelect
                         options={libraries}
@@ -105,10 +103,6 @@ export default function AddStoryToLibraryDialog({
                     </div>
                 </div>
             </div>
-            <STKSnackbar
-            open={showSnackbar}
-            message="Story updated with success"
-            onClose={() => setShowSnackbar(false)} />
         </STKDialog>
     )
 }

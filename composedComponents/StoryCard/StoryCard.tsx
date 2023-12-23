@@ -18,7 +18,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import STKTooltip from "@/components/STKTooltip/STKTooltip";
-import AddStoryToLibraryDialog from "@/composedComponents/AddStoryToLibraryDialog/AddStoryToLibraryDialog";
+import AddStoryToCollectionDialog from "@/composedComponents/AddStoryToCollectionDialog/AddStoryToCollectionDialog";
 
 
 const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
@@ -257,11 +257,11 @@ export default function StoryCard({ story, enableMenuOptions }: {
                                         <div>
                                             <STKMenu
                                                 options={story.isPublic ? [{
-                                                    label: "Add to library",
+                                                    label: "Add to collection",
                                                     value: ADD_TO_LIBRARY_MENU_OPTION
                                                 }] : [
                                                     {
-                                                        label: "Add to library",
+                                                        label: "Add to collection",
                                                         value: ADD_TO_LIBRARY_MENU_OPTION
                                                     },
                                                     {
@@ -277,7 +277,7 @@ export default function StoryCard({ story, enableMenuOptions }: {
                                         <STKMenu
                                             options={[
                                                 {
-                                                    label: "Add to library",
+                                                    label: "Add to collection",
                                                     value: ADD_TO_LIBRARY_MENU_OPTION
                                                 }
                                             ]}
@@ -329,11 +329,11 @@ export default function StoryCard({ story, enableMenuOptions }: {
                                 <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
                                     <STKMenu
                                     options={story.isPublic ? [{
-                                        label: "Add to library",
+                                        label: "Add to collection",
                                         value: ADD_TO_LIBRARY_MENU_OPTION
                                     }] : [
                                         {
-                                            label: "Add to library",
+                                            label: "Add to collection",
                                             value: ADD_TO_LIBRARY_MENU_OPTION
                                         },
                                         {
@@ -356,7 +356,7 @@ export default function StoryCard({ story, enableMenuOptions }: {
             loadingBeforeContent={loadingRequest}
             onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
             {enableMenuOptions && (
-                <AddStoryToLibraryDialog
+                <AddStoryToCollectionDialog
                     open={showAddStoryToLibraryDialog}
                     story={story}
                     onClose={() => setShowAddStoryToLibraryDialog(false)}/>
