@@ -8,6 +8,7 @@ const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
 const Story = require("../models/Story")
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
+const Library = require("../models/Library").default
 
 class StoryController {
     static async deleteStory(req, res) {
@@ -78,6 +79,10 @@ class StoryController {
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
+            const library = await Library.findDefaultLibrary({
+                accountId: user.id
+            }, { accessToken: req.accessToken })
+
             const privateStories = await Story.getStories({
                 narrator,
                 language,
@@ -87,7 +92,8 @@ class StoryController {
             }, {
                 accessToken: req.accessToken,
                 userId: user.id,
-                profileId
+                profileId,
+                libraryId: library?.libraryId
             })
 
             if (privateStories.length === 0) return res.status(200).send([])
@@ -272,12 +278,17 @@ class StoryController {
                 userId = user.id
             }
 
+            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
+
+            const library = await Library.findDefaultLibrary({ accountId: user.id }, { accessToken: req.accessToken })
+
             let stories = await Story.getStories({
                 private: Boolean(req.query.profileId)
             }, {
                 accessToken: req.accessToken,
                 userId,
-                profileId: req.query.profileId
+                profileId: req.query.profileId,
+                libraryId: library?.libraryId
             })
 
             const uniqueNarrators = new Set();
@@ -307,6 +318,7 @@ class StoryController {
                 languages: applyAlphabeticalOrder(languages, "language")
             })
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

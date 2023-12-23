@@ -253,7 +253,7 @@ export default function StoryCard({ story, enableMenuOptions }: {
                                         </STKButton>
                                     </div>
                                 )}
-                                {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions && (
+                                {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
                                         <div>
                                             <STKMenu
                                                 options={story.isPublic ? [{
@@ -272,6 +272,18 @@ export default function StoryCard({ story, enableMenuOptions }: {
                                                 onChange={handleMenuOnChange}
                                                 onClick={handleShowMenuTooltip}/>
                                         </div>
+                                ) : (
+                                    <div>
+                                        <STKMenu
+                                            options={[
+                                                {
+                                                    label: "Add to library",
+                                                    value: ADD_TO_LIBRARY_MENU_OPTION
+                                                }
+                                            ]}
+                                            onChange={handleMenuOnChange}
+                                            onClick={handleShowMenuTooltip}/>
+                                    </div>
                                 )}
                             </div>
                         </div>

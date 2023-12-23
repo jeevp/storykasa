@@ -9,7 +9,7 @@ interface addMemberToListProps {
 }
 
 
-const AddMemberToList = ({ members, onChange = () => ({}) }: addMemberToListProps) => {
+const AddMemberToList = ({ members = [], onChange = () => ({}) }: addMemberToListProps) => {
     const [email, setEmail] = useState<string>('');
     const [membersList, setMembersList] = useState<string[]>([]);
 

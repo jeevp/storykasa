@@ -16,7 +16,7 @@ interface CreateSharedLibraryDialogProps {
     onSuccess?: () => void;
 }
 
-export default function CreateSharedLibraryDialog({
+export default function CreateCollectionDialog({
     open,
     onClose = () => ({}),
     onSuccess = () => ({})
@@ -63,13 +63,13 @@ export default function CreateSharedLibraryDialog({
         <STKDialog
         active={open}
         maxWidth="xs"
-        title="Create shared library"
+        title="Create collection"
         fullScreen={onMobile}
         onClose={() => onClose()}>
             <div>
                 <div className="mt-6">
                     <div>
-                        <label className="font-semibold">Library title</label>
+                        <label className="font-semibold">Collection title</label>
                         <div className="mt-2">
                             <STKTextField
                             fluid
@@ -79,8 +79,8 @@ export default function CreateSharedLibraryDialog({
                         </div>
                     </div>
                     <div className="mt-4">
-                        <label className="font-semibold">Listeners</label>
-                        <p className="mt-2">Bellow you can enter the email of your friends and family who you which to share this library with.</p>
+                        <label className="font-semibold">Listeners <span className="font-normal">(optional)</span></label>
+                        <p className="mt-2">Bellow you can enter the email of your friends and family who you which to share this collection.</p>
                         <div className="mt-4">
                             <AddMemberToList onChange={(emails: string[]) => setListenersEmails(emails)} />
                         </div>
@@ -97,6 +97,7 @@ export default function CreateSharedLibraryDialog({
                         fullWidth={onMobile}
                         color="primary"
                         loading={loading}
+                        disabled={!libraryName}
                         onClick={handleSave}>
                             Save
                         </STKButton>

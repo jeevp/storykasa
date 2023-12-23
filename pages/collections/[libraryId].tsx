@@ -55,8 +55,6 @@ function Library() {
             libraryId: String(router.query.libraryId)
         })
 
-        console.log({ libraryStories })
-
         // @ts-ignore
         setCurrentLibraryStories(libraryStories)
         // @ts-ignore
@@ -83,7 +81,7 @@ function Library() {
     }, [router])
 
     const gotToLibrariesPage = async () => {
-        await router.push("/shared-libraries", "", {
+        await router.push("/collections", "", {
             shallow: true
         })
     }
@@ -119,10 +117,8 @@ function Library() {
                                 </p>
                             ) : currentLibraryStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
                                 <p>
-                                    Your library is empty, but you can change that! It’s easy to
-                                    <span className="font-semibold underline-offset-0">
-                                <Link href="/record"> create your own story</Link>
-                            </span>.
+                                    Your collection is empty! You can add stories
+                                    from <span className="font-semibold"><Link href="/library"> your library</Link></span> to this collection
                                 </p>
                             ) : null}
                         </>

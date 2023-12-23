@@ -82,8 +82,8 @@ class Story {
         language: "",
         ageGroups: [],
         storyLengths: [],
-        private: false
-    }, { accessToken, userId, profileId}) {
+        private: false,
+    }, { accessToken, userId, profileId, libraryId}) {
         // Prepare query parameters for filtering
         const queryParams = {
             select: '*,profiles!inner(*)',
@@ -96,6 +96,7 @@ class Story {
             queryParams.account_id = `eq.${userId}`
             queryParams.profile_id = `eq.${profileId}`
             queryParams["stories.deleted"] = `eq.false`
+            queryParams.library_id = `eq.${libraryId}`
         } else {
             queryParams.is_public = "eq.true"
             queryParams.order = 'last_updated.desc'
@@ -198,6 +199,7 @@ class Story {
                 createdAt: story?.created_at,
                 ageGroups: story?.ageGroups,
                 narratorName: story?.narrator_name,
+                duration: story?.duration,
                 recordedBy: story?.recorded_by,
                 recordingUrl: story?.recording_url,
                 profileName: story?.profiles?.profile_name,

@@ -2,6 +2,7 @@ import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
 import axios from "axios";
 import Account from "../models/Account"
 import Story from "../models/Story"
+
 export default class Library {
     /**
      *
@@ -10,6 +11,7 @@ export default class Library {
      * @param {string} libraryId
      * @param {string} libraryName
      * @param {number} totalStories
+     * @param {number} totalDuration
      * @param {string[]} sharedAccountIds
      */
     constructor({
@@ -18,7 +20,8 @@ export default class Library {
         libraryId,
         libraryName,
         sharedAccountIds = [],
-        totalStories
+        totalStories= 0,
+        totalDuration = 0
     }) {
         this.createdAt = createdAt
         this.accountId = accountId
@@ -26,6 +29,7 @@ export default class Library {
         this.libraryName = libraryName
         this.sharedAccountIds = sharedAccountIds
         this.totalStories = totalStories
+        this.totalDuration = totalDuration
     }
 
 
@@ -54,7 +58,9 @@ export default class Library {
         return new Library({
             libraryId: response.data[0].library_id,
             accountId: response.data[0].account_id,
-            libraryName: response.data[0].library_name
+            libraryName: response.data[0].library_name,
+            totalDuration: 0,
+            totalStories: 0
         })
     }
 
@@ -79,9 +85,13 @@ export default class Library {
         });
 
         const librariesPromises = response.data.map(async (library) => {
-            const libraryTotalStories = await Story.findAll({ libraryId: library?.library_id }, {
+            const libraryStories = await Story.findAll({ libraryId: library?.library_id }, {
                 accessToken
             }) || []
+
+            const totalDuration = libraryStories.length > 0 ? libraryStories.reduce((acc, current) => {
+                return acc + current.duration
+            }, 0) : 0
 
             const _library = new Library({
                 createdAt: library?.created_at,
@@ -89,7 +99,8 @@ export default class Library {
                 libraryId: library?.library_id,
                 libraryName: library?.library_name,
                 sharedAccountIds: library?.shared_account_ids,
-                totalStories: libraryTotalStories?.length
+                totalStories: libraryStories?.length,
+                totalDuration: totalDuration
             });
 
             if (options.serialized) {
@@ -100,6 +111,17 @@ export default class Library {
         });
 
         return await Promise.all(librariesPromises);
+    }
+
+    static async findDefaultLibrary({ accountId }, { accessToken }) {
+        const libraries = await Library.findAll({ accountId }, { accessToken })
+
+        const orderedLibraries = libraries.sort((a, b) => {
+            if (a.createdAt < b.createdAt) return -1
+            if (a.createdAt > b.createdAt) return 1
+        })
+
+        return orderedLibraries.shift()
     }
 
 
@@ -176,6 +198,7 @@ export default class Library {
             libraryName: this.libraryName,
             sharedAccountIds: this.sharedAccountIds,
             totalStories: this.totalStories,
+            totalDuration: this.totalDuration,
             createdAt: this.createdAt,
             listeners
         };

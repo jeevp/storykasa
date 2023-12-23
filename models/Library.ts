@@ -5,6 +5,7 @@ interface LibraryProps {
     sharedAccountIds: string[]
     listeners: []
     totalStories: number
+    totalDuration: number
 }
 
 export default class Library {
@@ -14,6 +15,7 @@ export default class Library {
     listeners: []
     sharedAccountIds: string[]
     totalStories: number
+    totalDuration: number
 
     constructor({
         libraryId,
@@ -21,7 +23,8 @@ export default class Library {
         libraryName,
         listeners = [],
         sharedAccountIds,
-        totalStories
+        totalStories,
+        totalDuration
     }: LibraryProps) {
         this.libraryId = libraryId
         this.accountId = accountId
@@ -29,5 +32,6 @@ export default class Library {
         this.sharedAccountIds = sharedAccountIds
         this.totalStories = totalStories
         this.listeners = listeners
+        this.totalDuration = totalDuration
     }
 }

@@ -1,16 +1,14 @@
 import STKCard from "@/components/STKCard/STKCard";
 import {Books} from "@phosphor-icons/react";
 import Library from "@/models/Library";
-import ListenerAvatars from "@/composedComponents/ListenersAvatars/ListenersAvatars";
 import STKButton from "@/components/STKButton/STKButton";
 import SharedLibraryInvitation from "@/models/SharedLibraryInvitation";
 import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHandler"
 import {useEffect, useState} from "react";
 import AddListenerDialog from "@/composedComponents/AddListenerDialog/AddListenerDialog"
-import STKMenu from "@/components/STKMenu/STKMenu";
-import libraries from "@/pages/api/libraries";
 import {useLibrary} from "@/contexts/library/LibraryContext";
-
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import {green600} from "@/assets/colorPallet/colors";
 
 export default function LibraryCard({ library, sharedLibraryInvitation, enableAddListeners, onClick = () => ({}) }: {
     library: Library,
@@ -89,24 +87,34 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
     return (
         <div className={`cursor-pointer`}>
             <STKCard>
-                <div className="flex items-center  justify-center flex-col p-2 w-42 " onClick={() => onClick()}>
-                    <div className="flex items-center flex-col p-6">
+                <div className="flex px-4 py-6 justify-center flex-col w-42 " onClick={() => onClick()}>
+                    <div className="flex items-center h-full">
                         <div>
-                            <Books size={50} color="#ccc" />
+                            <Books size={30} color="#ccc" />
                         </div>
-                        <div className="flex items-center flex-col">
+                        <div className="flex flex-col ml-4">
                             <div className="overflow-hidden max-w-[160px] text-ellipsis">
-                                <label className="font-semibold text-center whitespace-nowrap">{library.libraryName}</label>
+                                <label className="font-semibold whitespace-nowrap">{library.libraryName}</label>
                             </div>
-                            <div className="mt-2">
-                                {!library.totalStories}
-                                <label>
-                                    {library.totalStories !== 1 ? `${library.totalStories } stories` : '1 story'}
-                                </label>
+                            <div className="mt-1 flex items-center">
+                                <div>
+                                    {!library.totalStories}
+                                    <label>
+                                        {library.totalStories !== 1 ? `${library.totalStories || 0 } stories` : '1 story'}
+                                    </label>
+                                </div>
+                                <div className="ml-4">
+                                    <label>
+                                        {Math.ceil(library?.totalDuration / 60)} min
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                        <div className="mt-6">
-                            <ListenerAvatars avatars={library?.listeners} />
+                            {library?.listeners?.length > 0 && (
+                                <div className="mt-2 flex items-center">
+                                    <PeopleAltOutlinedIcon sx={{ color: green600, width: "16px", height: "16px"  }}/>
+                                    <label className="ml-2 text-sm text-[#3d996d]">Shared with {library?.listeners?.length} listeners</label>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -120,12 +128,6 @@ export default function LibraryCard({ library, sharedLibraryInvitation, enableAd
                             <div className="ml-2">
                                 <STKButton onClick={handleAcceptSharedLibraryInvitation} loading={loadingAccept}>Accept</STKButton>
                             </div>
-                        </div>
-                    ) : enableAddListeners ? (
-                        <div className="mt-5 flex justify-end w-full items-baseline">
-                            <STKMenu options={[
-                                { label: "Add listener", value: 0 },
-                            ]} onChange={() => setShowAddListenerDialog(true)}/>
                         </div>
                     ) : null}
                 </div>
