@@ -210,7 +210,12 @@ export default class Library {
         });
 
         const listeners = (await Promise.all(listenersPromises)).filter(listener => !!listener);
-        const profile = this.profileId ? await Profile.getProfile(this.profileId, accessToken) : {}
+        let profile = {}
+        if (this.profileId) {
+            profile = await Profile.getProfile(this.profileId, accessToken)
+        } else {
+            profile = await Account.getDefaultProfile({ accountId: this.accountId }, { accessToken })
+        }
 
         return {
             accountId: this.accountId,
