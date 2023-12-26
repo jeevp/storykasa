@@ -8,6 +8,7 @@ import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToList"
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 
 interface CreateSharedLibraryDialogProps {
@@ -31,6 +32,7 @@ export default function CreateCollectionDialog({
 
     // Contexts
     const { libraries, setLibraries } = useLibrary()
+    const { currentProfileId } = useProfile()
 
     // Methods
     const handleSave = async () => {
@@ -39,7 +41,8 @@ export default function CreateCollectionDialog({
 
             const library = await LibraryHandler.createLibrary({
                 libraryName,
-                listenersEmails
+                listenersEmails,
+                profileId: currentProfileId
             })
 
             // @ts-ignore
@@ -47,7 +50,7 @@ export default function CreateCollectionDialog({
 
             setSnackbarBus({
                 active: true,
-                message: "Story updated with success",
+                message: "Collection created with success",
                 type: "success"
             })
 
@@ -99,7 +102,7 @@ export default function CreateCollectionDialog({
                         loading={loading}
                         disabled={!libraryName}
                         onClick={handleSave}>
-                            Save
+                            Create collection
                         </STKButton>
                     </div>
                 </div>

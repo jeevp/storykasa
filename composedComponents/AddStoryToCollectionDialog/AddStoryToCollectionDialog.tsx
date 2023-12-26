@@ -27,6 +27,7 @@ export default function AddStoryToCollectionDialog({
     const { onMobile } = useDevice()
     const { setSnackbarBus } = useSnackbar()
 
+    const [error, setError] = useState("")
     const [selectedLibraryId, setSelectedLibraryId] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -51,12 +52,18 @@ export default function AddStoryToCollectionDialog({
 
             onSuccess()
             onClose()
+        } catch (error) {
+            // @ts-ignore
+            if (error?.request?.status === 409) {
+                setError("Story already added to this collection")
+            }
         } finally {
             setLoading(false)
         }
     }
 
     const handleLibraryOnChange = (library: Library) => {
+        setError("")
         setSelectedLibraryId(library.libraryId)
     }
 
@@ -86,6 +93,11 @@ export default function AddStoryToCollectionDialog({
                         onChange={handleLibraryOnChange} />
                     </div>
                 </div>
+                {error && (
+                    <div className="mt-2">
+                        <label className="text-red-600 text-sm">{error}</label>
+                    </div>
+                )}
                 <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">
                     <div className="w-full lg:w-auto">
                         <STKButton fullWidth={onMobile} variant="outlined" onClick={() => onClose()}>
@@ -95,10 +107,11 @@ export default function AddStoryToCollectionDialog({
                     <div className="lg:ml-2 ml-0 mt-2 lg:mt-0 w-full lg:w-auto">
                         <STKButton
                         fullWidth={onMobile}
+                        disabled={Boolean(error)}
                         color="primary"
                         loading={loading}
                         onClick={handleSave}>
-                            Save
+                            Add story
                         </STKButton>
                     </div>
                 </div>

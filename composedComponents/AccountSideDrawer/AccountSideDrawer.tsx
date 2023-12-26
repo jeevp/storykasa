@@ -14,6 +14,7 @@ import {useState} from "react";
 import {useStory} from "@/contexts/story/StoryContext";
 import {Divider} from "@mui/material";
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
 
 interface AccountSideDrawerProps {
     open: boolean
@@ -23,7 +24,7 @@ interface AccountSideDrawerProps {
 const navigationOptions = [
     { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
     { text: "My Library", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/library" },
-    { text: "Collections", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/collections" }
+    { text: "Collections", icon: <CollectionsBookmarkOutlinedIcon sx={{ width: "20px", height: "20px", color: neutral800 }} />, pathname: "/collections" },
 ]
 
 

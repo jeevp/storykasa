@@ -3,20 +3,12 @@ import {Divider} from "@mui/material";
 import AccountDetails from "@/composedComponents/AccountDetails/AccountDetails";
 import {useRouter} from "next/router";
 import {useAuth} from "@/contexts/auth/AuthContext";
-import STKButton from "@/components/STKButton/STKButton";
-import {Question} from "@phosphor-icons/react";
-import React, {useState} from "react";
-import HelperDialog from "@/composedComponents/HelperDialog/HelperDialog";
-
-const publicRoutes = ["/about-us", "/faq"]
+import React from "react";
 
 
 export default function Navbar() {
     const { currentUser } = useAuth()
     const router = useRouter()
-
-    // States
-    const [showHelperDialog, setShowHelperDialog] = useState(false)
 
     const goToRoot = async () => {
        await router.push("/")
@@ -35,24 +27,12 @@ export default function Navbar() {
                         alt="StoryKasa logo"
                         onClick={goToRoot}
                     />
-                    {currentUser && !publicRoutes.includes(router.pathname) && (
-                        <div className="ml-2">
-                            <STKButton
-                            iconButton
-                            variant="outlined"
-                            color="primary"
-                            onClick={() => setShowHelperDialog(true)}>
-                                <Question />
-                            </STKButton>
-                        </div>
-                    )}
                 </div>
                 {currentUser && <AccountDetails />}
             </div>
             <div className="mt-4">
                 <Divider />
             </div>
-            <HelperDialog active={showHelperDialog} onClose={() => setShowHelperDialog(false)} />
         </div>
     )
 }

@@ -53,7 +53,6 @@ export default class SharedLibraryInvitationController {
 
             return res.status(200).send(sharedLibrariesInvitationsSerialized)
         } catch (error) {
-            console.log(error)
             return res.status(400).send({  message: "Something went wrong." })
         }
     }
@@ -67,14 +66,20 @@ export default class SharedLibraryInvitationController {
 
             const { listenersEmails } = req.body
 
+            const invitationsSummary = []
             for (const listenerEmail of listenersEmails) {
-                await SharedLibraryInvitation.create({
+                const sharedLibraryInvitation = await SharedLibraryInvitation.create({
                     libraryId: req.query.libraryId,
                     userEmail: listenerEmail
                 }, { accessToken: req.accessToken })
+
+                invitationsSummary.push({
+                    listenerEmail,
+                    invited: Boolean(sharedLibraryInvitation)
+                })
             }
 
-            return res.status(201).send({ message: "Invitations sent with success" })
+            return res.status(201).send(invitationsSummary)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong." })

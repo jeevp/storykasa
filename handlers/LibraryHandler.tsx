@@ -15,12 +15,14 @@ export default class LibraryHandler {
         })))
     }
 
-    static async createLibrary({ libraryName, listenersEmails }: { libraryName: string, listenersEmails: string[] }) {
+    static async createLibrary({ libraryName, listenersEmails, profileId }: { libraryName: string, listenersEmails: string[], profileId: string }) {
         const payload = {}
         // @ts-ignore
         if (libraryName) payload.libraryName = libraryName
         // @ts-ignore
         if (listenersEmails) payload.listenersEmails = listenersEmails
+        // @ts-ignore
+        if (profileId) payload.profileId = profileId
 
         const headers = generateHeaders()
 
@@ -48,9 +50,7 @@ export default class LibraryHandler {
             listenersEmails
         }, headers)
 
-        return new Library({
-            ...response.data
-        })
+        return response.data
     }
 
     static async fetchStories({ libraryId }: { libraryId: string }) {

@@ -33,14 +33,15 @@ export default class LibraryController {
 
     static async createLibrary(req, res) {
         try {
-            const { libraryName } = req.body
+            const { libraryName, profileId } = req.body
             if (!libraryName) return res.status(400).send({ message: "Payload is incorrect" })
 
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
             const library = await Library.create({
                 libraryName,
-                accountId: user.id
+                accountId: user.id,
+                profileId
             }, { accessToken: req.accessToken })
 
             const { listenersEmails } = req.body
@@ -71,7 +72,6 @@ export default class LibraryController {
 
             return res.status(200).send(libraries)
         } catch (error) {
-            console.log(error)
             return res.status(400).send({  message: "Something went wrong." })
         }
     }
@@ -118,8 +118,7 @@ export default class LibraryController {
 
             return res.status(201).send({ message: "Story added to library with success." })
         } catch (error) {
-            console.error(error)
-            return res.status(400).send({ message: "Something went wrong." })
+            return res.status(error.statusCode || 400).send({ message: error.message || "Something went wrong"})
         }
     }
 }

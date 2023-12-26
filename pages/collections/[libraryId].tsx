@@ -104,6 +104,20 @@ function Library() {
                     </span>
                     </h2>
                 </div>
+                {
+                    // @ts-ignore
+                    currentLibrary?.profile?.profileName && (
+                        <div className="mt-2 mb-4">
+                            <label
+                            className="text-sm">
+                                Collection created by {
+                                // @ts-ignore
+                                currentLibrary?.profile?.profileName
+                                }
+                            </label>
+                        </div>
+                    )
+                }
                 <div className="mt-4 w-full">
                     {!loaded ? (
                         <div className="mb-10">
@@ -113,7 +127,7 @@ function Library() {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex w-full items-center justify-between">
+                        <div className="flex w-full flex-col lg:flex-row justify-between">
                             <div>
                                 {currentLibraryStories.length || (currentLibraryStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
                                     <p>
@@ -126,8 +140,12 @@ function Library() {
                                     </p>
                                 ) : null}
                             </div>
-                            <div>
-                                <STKButton onClick={() => setShowAddListenerDialog(true)}>Add listener</STKButton>
+                            <div className="w-full lg:w-auto mt-4 lg:mt-0">
+                                <STKButton
+                                fullWidth={onMobile}
+                                onClick={() => setShowAddListenerDialog(true)}>
+                                    Add listener
+                                </STKButton>
                             </div>
                         </div>
                     )}

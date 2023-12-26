@@ -2,6 +2,9 @@ import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
 import axios from "axios";
 import Account from "../models/Account"
 import Story from "../models/Story"
+import LibraryStory from "../models/LibraryStory"
+import Profile from "../models/Profile"
+import {ApiError} from "next/dist/server/api-utils";
 
 export default class Library {
     /**
@@ -12,6 +15,7 @@ export default class Library {
      * @param {string} libraryName
      * @param {number} totalStories
      * @param {number} totalDuration
+     * @param {string} profileId
      * @param {string[]} sharedAccountIds
      */
     constructor({
@@ -21,7 +25,8 @@ export default class Library {
         libraryName,
         sharedAccountIds = [],
         totalStories= 0,
-        totalDuration = 0
+        totalDuration = 0,
+        profileId
     }) {
         this.createdAt = createdAt
         this.accountId = accountId
@@ -30,6 +35,7 @@ export default class Library {
         this.sharedAccountIds = sharedAccountIds
         this.totalStories = totalStories
         this.totalDuration = totalDuration
+        this.profileId = profileId
     }
 
 
@@ -37,15 +43,18 @@ export default class Library {
      *
      * @param {string} libraryName
      * @param {string} accountId
+     * @param {string} profileId
      * @param {string} accessToken
      * @returns {Promise<Library>}
      */
     static async create({
         libraryName,
-        accountId
+        accountId,
+        profileId
     }, { accessToken }) {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
             account_id: accountId,
+            profile_id: profileId,
             library_name: libraryName
         }, {
             params: {
@@ -58,6 +67,7 @@ export default class Library {
         return new Library({
             libraryId: response.data[0].library_id,
             accountId: response.data[0].account_id,
+            profileId: response.data[0].profile_id,
             libraryName: response.data[0].library_name,
             totalDuration: 0,
             totalStories: 0
@@ -96,6 +106,7 @@ export default class Library {
             const _library = new Library({
                 createdAt: library?.created_at,
                 accountId: library?.account_id,
+                profileId: library?.profile_id,
                 libraryId: library?.library_id,
                 libraryName: library?.library_name,
                 sharedAccountIds: library?.shared_account_ids,
@@ -136,6 +147,7 @@ export default class Library {
 
         return new Library({
             accountId: response.data[0].account_id,
+            profileId: response.data[0].profile_id,
             libraryId: response.data[0].library_id,
             libraryName: response.data[0].library_name,
             sharedAccountIds: response.data[0].shared_account_ids
@@ -143,6 +155,12 @@ export default class Library {
     }
 
     static async addStory({ storyId, libraryId, accountId, profileId }, { accessToken }) {
+        const storyAlreadyAddedToLibrary = await LibraryStory.findOne({ libraryId, storyId }, { accessToken })
+
+        if (storyAlreadyAddedToLibrary) {
+            throw new ApiError(409, "Story already added to this library.")
+        }
+
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
             library_id: libraryId,
             story_id: storyId,
@@ -172,6 +190,7 @@ export default class Library {
         return new Library({
             accountId: response.data[0].account_id,
             libraryId: response.data[0].library_id,
+            profileId: response.data[0].profile_id,
             libraryName: response.data[0].library_name,
             sharedAccountIds: response.data[0].shared_account_ids
         })
@@ -191,16 +210,19 @@ export default class Library {
         });
 
         const listeners = (await Promise.all(listenersPromises)).filter(listener => !!listener);
+        const profile = this.profileId ? await Profile.getProfile(this.profileId, accessToken) : {}
 
         return {
             accountId: this.accountId,
             libraryId: this.libraryId,
+            profileId: this.profileId,
             libraryName: this.libraryName,
             sharedAccountIds: this.sharedAccountIds,
             totalStories: this.totalStories,
             totalDuration: this.totalDuration,
             createdAt: this.createdAt,
-            listeners
+            listeners,
+            profile
         };
     }
 

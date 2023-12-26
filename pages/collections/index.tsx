@@ -148,9 +148,7 @@ function Collections() {
                                         {/* eslint-disable-next-line react/no-unescaped-entities */}
                                         <p className="max-w-lg">
                                             {/* eslint-disable-next-line react/no-unescaped-entities */}
-                                            At the moment, you don't have any collection set up. Why not
-                                            {/* eslint-disable-next-line react/no-unescaped-entities */}
-                                            create one? It's a great way to start sharing stories and experiences!"
+                                            At the moment, you don't have any collection set up. Why not create one? It's a great way to start sharing stories and experiences!
                                         </p>
                                         <div className="mt-6">
                                             <STKButton onClick={() => setShowCreateSharedLibraryDialog(true)}>Create collection</STKButton>

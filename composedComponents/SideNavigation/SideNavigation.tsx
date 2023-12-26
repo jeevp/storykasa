@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Profile } from '@/lib/database-helpers.types'
 import { usePathname } from 'next/navigation'
-import {BookOpenText, Books, Info} from '@phosphor-icons/react'
+import {BookOpenText, Books, Info, Question} from '@phosphor-icons/react'
 import useDevice from "@/customHooks/useDevice";
 import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {useRouter} from "next/router";
@@ -12,11 +12,13 @@ import {useProfile} from "@/contexts/profile/ProfileContext";
 import {useStory} from "@/contexts/story/StoryContext";
 import STKButton from "@/components/STKButton/STKButton"
 import {Divider} from "@mui/material";
+import CollectionsBookmarkOutlinedIcon from '@mui/icons-material/CollectionsBookmarkOutlined';
+import HelperDialog from "@/composedComponents/HelperDialog/HelperDialog";
 
 const navigationOptions = [
     { text: "Discover", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/discover"  },
     { text: "My Library", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/library" },
-    { text: "Collections", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/collections" },
+    { text: "Collections", icon: <CollectionsBookmarkOutlinedIcon sx={{ width: "20px", height: "20px", color: neutral800 }} />, pathname: "/collections" },
 ]
 
 export default function SideNavigation() {
@@ -30,6 +32,7 @@ export default function SideNavigation() {
     const { setStoryFilters } = useStory()
 
     // States
+    const [showHelperDialog, setShowHelperDialog] = useState(false)
     const [profileOptions, setProfileOptions] = useState<Profile[]>([])
     const [selectedNavigationOption, setSelectedNavigationOption] = useState<Object>({})
 
@@ -74,32 +77,22 @@ export default function SideNavigation() {
                            <div className="pt-10 pb-6">
                                <Divider />
                            </div>
+
                            <div>
                                <STKButton
-                               startIcon={<Info />}
-                               alignStart
-                               active={route.pathname === "/faq"}
-                               variant="none"
-                               fullWidth
-                               onClick={() => route.push("/faq")}>
-                                   FAQ
-                               </STKButton>
-                           </div>
-                           <div>
-                               <STKButton
-                                   startIcon={<Info />}
+                                   startIcon={<Question />}
                                    alignStart
-                                   active={route.pathname === "/about-us"}
                                    variant="none"
-                                   fullWidth
-                                   onClick={() => route.push("/about-us")}>
-                                   About us
+                                   active={route.pathname === "/faq"}
+                                   onClick={() => setShowHelperDialog(true)}>
+                                   Help
                                </STKButton>
                            </div>
                        </div>
                     </div>
                 </div>
             </div>
+            <HelperDialog active={showHelperDialog} onClose={() => setShowHelperDialog(false)} />
         </nav>
     )
 }

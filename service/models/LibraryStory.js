@@ -7,12 +7,14 @@ class LibraryStory {
         id,
         createdAt,
         storyId,
-        profileId
+        profileId,
+        libraryId
     }) {
         this.id = id
         this.createdAt = createdAt
         this.storyId = storyId
         this.profileId = profileId
+        this.libraryId = libraryId
     }
 
     static async create({ storyId, profileId, accountId }, { accessToken }) {
@@ -65,6 +67,33 @@ class LibraryStory {
         })
 
         return response.data
+    }
+
+    static async findOne({ libraryId, storyId }, { accessToken }) {
+        if (!libraryId || !storyId) {
+            throw new Error("libraryId and storyId cannot be null")
+        }
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+            params: {
+                select: "*",
+                library_id: `eq.${libraryId}`,
+                story_id: `eq.${storyId}`
+            },
+            headers: generateSupabaseHeaders(accessToken)
+        })
+
+        const libraryStory =  response.data[0]
+
+        if (!libraryStory) return null
+
+        return new LibraryStory({
+            id: libraryStory?.id,
+            createdAt: libraryStory?.created_at,
+            storyId: libraryStory?.story_id,
+            profileId: libraryStory?.profile_id,
+            libraryId: libraryStory?.library_id
+        })
     }
 }
 

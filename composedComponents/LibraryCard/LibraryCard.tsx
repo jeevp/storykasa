@@ -7,7 +7,9 @@ import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHa
 import {useEffect, useState} from "react";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import {beige400, green600, neutral800} from "@/assets/colorPallet/colors";
+import {green600, neutral800} from "@/assets/colorPallet/colors";
+import CollectionsBookmarkOutlinedIcon from '@mui/icons-material/CollectionsBookmarkOutlined';
+
 
 export default function LibraryCard({ library, sharedLibraryInvitation, showListeners, onClick = () => ({}) }: {
     library: Library,
@@ -88,7 +90,7 @@ export default function LibraryCard({ library, sharedLibraryInvitation, showList
                 <div className={`${internalSharedLibraryInvitation ? 'p-4' : 'px-4 py-6'} flex justify-center flex-col w-42`} onClick={() => onClick()}>
                     <div className="flex items-center h-full">
                         <div>
-                            <Books size={30} color="#ccc" />
+                            <CollectionsBookmarkOutlinedIcon sx={{ color: "#ccc", width: "32px", height: "32px" }} />
                         </div>
                         <div className="flex flex-col ml-4">
                             <div className="overflow-hidden max-w-[180px] text-ellipsis">

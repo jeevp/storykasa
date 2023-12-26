@@ -1,6 +1,7 @@
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
 const axios = require("axios");
 import Library from "../models/Library"
+import ApiError from "../utils/ApiError"
 
 class SharedLibraryInvitation {
     constructor({
@@ -21,6 +22,14 @@ class SharedLibraryInvitation {
         libraryId,
         userEmail
     }, { accessToken }) {
+        const sharedLibraryInvitationAlreadySent = await SharedLibraryInvitation.findOne({
+            userEmail
+        }, { accessToken })
+
+        if (sharedLibraryInvitationAlreadySent) {
+            return null
+        }
+
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             library_id: libraryId,
             user_email: userEmail
@@ -57,21 +66,26 @@ class SharedLibraryInvitation {
         }))
     }
 
-    static async findOne({ id }, { accessToken }) {
+    static async findOne({ id, userEmail }, { accessToken }) {
+        const queryParams = { select: "*" }
+        if (id) queryParams.id = `eq.${id}`
+        if (userEmail) queryParams.user_email = `eq.${userEmail}`
+
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
-            params: {
-                select: "*",
-                id: `eq.${id}`
-            },
+            params: queryParams,
             headers: generateSupabaseHeaders(accessToken)
         })
 
+        if (!response.data[0]) {
+            return null
+        }
+
         return new SharedLibraryInvitation({
-            id: response.data[0].id,
-            libraryId: response.data[0].library_id,
-            userEmail: response.data[0].user_email,
-            accept: response.data[0].accept,
-            complete: response.data[0].complete
+            id: response.data[0]?.id,
+            libraryId: response.data[0]?.library_id,
+            userEmail: response.data[0]?.user_email,
+            accept: response.data[0]?.accept,
+            complete: response.data[0]?.complete
         })
     }
 
