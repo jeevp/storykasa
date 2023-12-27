@@ -23,7 +23,8 @@ class SharedLibraryInvitation {
         userEmail
     }, { accessToken }) {
         const sharedLibraryInvitationAlreadySent = await SharedLibraryInvitation.findOne({
-            userEmail
+            userEmail,
+            libraryId
         }, { accessToken })
 
         if (sharedLibraryInvitationAlreadySent) {
@@ -66,10 +67,11 @@ class SharedLibraryInvitation {
         }))
     }
 
-    static async findOne({ id, userEmail }, { accessToken }) {
+    static async findOne({ id, userEmail, libraryId }, { accessToken }) {
         const queryParams = { select: "*" }
         if (id) queryParams.id = `eq.${id}`
         if (userEmail) queryParams.user_email = `eq.${userEmail}`
+        if (libraryId) queryParams.library_id = `eq.${libraryId}`
 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             params: queryParams,
@@ -110,7 +112,7 @@ class SharedLibraryInvitation {
     }
 
     async serializer({ accessToken }) {
-        const library = await Library.findOne({ libraryId: this.libraryId }, { accessToken })
+        const library = await Library.findOne({ libraryId: this.libraryId }, { accessToken }, { serialized: true })
 
         return {
             id: this.id,

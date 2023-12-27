@@ -13,8 +13,6 @@ export default class Library {
      * @param {string} accountId
      * @param {string} libraryId
      * @param {string} libraryName
-     * @param {number} totalStories
-     * @param {number} totalDuration
      * @param {string} profileId
      * @param {string[]} sharedAccountIds
      */
@@ -24,8 +22,6 @@ export default class Library {
         libraryId,
         libraryName,
         sharedAccountIds = [],
-        totalStories= 0,
-        totalDuration = 0,
         profileId
     }) {
         this.createdAt = createdAt
@@ -33,8 +29,6 @@ export default class Library {
         this.libraryId = libraryId
         this.libraryName = libraryName
         this.sharedAccountIds = sharedAccountIds
-        this.totalStories = totalStories
-        this.totalDuration = totalDuration
         this.profileId = profileId
     }
 
@@ -136,7 +130,7 @@ export default class Library {
     }
 
 
-    static async findOne({ libraryId }, { accessToken }) {
+    static async findOne({ libraryId }, { accessToken }, options = { serialized: false }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
             params: {
                 select: "*",
@@ -145,13 +139,19 @@ export default class Library {
             headers: generateSupabaseHeaders(accessToken)
         })
 
-        return new Library({
+        const library = new Library({
             accountId: response.data[0].account_id,
             profileId: response.data[0].profile_id,
             libraryId: response.data[0].library_id,
             libraryName: response.data[0].library_name,
             sharedAccountIds: response.data[0].shared_account_ids
         })
+
+        if (!options.serialized) {
+            return library
+        }
+
+        return await library.serializer({accessToken})
     }
 
     static async addStory({ storyId, libraryId, accountId, profileId }, { accessToken }) {
@@ -217,18 +217,39 @@ export default class Library {
             profile = await Account.getDefaultProfile({ accountId: this.accountId }, { accessToken })
         }
 
+        const totalStories = await this.getTotalStories({ accessToken })
+        const totalDuration = await this.getTotalDuration({ accessToken })
+
         return {
             accountId: this.accountId,
             libraryId: this.libraryId,
             profileId: this.profileId,
             libraryName: this.libraryName,
             sharedAccountIds: this.sharedAccountIds,
-            totalStories: this.totalStories,
-            totalDuration: this.totalDuration,
+            totalStories,
+            totalDuration,
             createdAt: this.createdAt,
             listeners,
             profile
         };
     }
 
+    async getStories({ accessToken }) {
+        return await Story.findAll({libraryId: this.libraryId}, {
+            accessToken
+        }) || []
+    }
+
+    async getTotalStories({ accessToken }) {
+        const stories = await this.getStories({ accessToken })
+
+        return stories.length
+    }
+
+    async getTotalDuration({ accessToken }) {
+        const libraryStories = await this.getStories({ accessToken })
+        return libraryStories.length > 0 ? libraryStories.reduce((acc, current) => {
+            return acc + current.duration
+        }, 0) : 0
+    }
 }

@@ -88,7 +88,7 @@ const AddMemberToList = ({ members = [], collectionInvitations = [], onChange = 
                                             </div>
                                             <div className="mt-1 flex items-center">
                                                 <ErrorOutlineOutlinedIcon sx={{ color: red600, width: "20px", height: "20px" }} />
-                                                <label className="text-sm ml-2 text-red-600">An invitation has already been sent this email</label>
+                                                <label className="text-sm ml-2 text-red-600">An invitation has already been sent to this email</label>
                                             </div>
                                         </div>
                                     )}

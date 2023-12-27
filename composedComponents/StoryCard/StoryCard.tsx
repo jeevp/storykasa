@@ -24,10 +24,11 @@ import AddStoryToCollectionDialog from "@/composedComponents/AddStoryToCollectio
 const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
 const ADD_TO_LIBRARY_MENU_OPTION = "ADD_TO_LIBRARY_MENU_OPTION"
 
-export default function StoryCard({ story, enableMenuOptions }: {
+export default function StoryCard({ story, enableMenuOptions, onClick = () => ({}) }: {
     story: Story
     selected: boolean,
     enableMenuOptions?: boolean
+    onClick?: () => void
 }) {
     // States
     const [showAddStoryToLibraryDialog, setShowAddStoryToLibraryDialog] = useState(false)
@@ -166,201 +167,224 @@ export default function StoryCard({ story, enableMenuOptions }: {
         || publicStoryRequestSent
     )
 
+    const handleClick = (e: MouseEvent) => {
+        e.stopPropagation()
+        onClick()
+    }
+
 
     return (
-        <STKCard>
-            <div className="p-4">
-                <div className="flex">
-                    <div className="flex justify-items-start">
-                        <STKAvatar
-                        src={story?.narratorName ? '' : story?.profileAvatar}
-                        name={story?.narratorName || story?.profileName} />
-                    </div>
-                    <div className="w-full cursor-pointer ml-4">
-                        <div className="flex items-center justify-between w-full">
-                            <label>
-                                {story?.narratorName || story?.profileName}
-                            </label>
-                            <label className="text-xs">{format(story?.lastUpdated)}</label>
-                        </div>
-
-                        <label className="font-semibold text-lg">
-                            {story?.title}
-                        </label>
-                        {story?.publicStoryRequestApproved && (
-                            <div className="flex items-center mt-2 bg-green-50 p-2 w-28 justify-center rounded-2xl">
-                                <PublicIcon sx={{ fill: green600, width: "14px", height: "14px" }} />
-                                <label className="ml-2 text-sm">Public story</label>
-                            </div>
-                        )}
-
-                        {story?.publicStoryRequestProcessing || publicStoryRequestSent ? (
-                            <div className="flex items-center mt-2 bg-orange-50 p-2 w-36 justify-center rounded-2xl">
-                                <PendingOutlinedIcon sx={{ width: "14px", height: "14px" }} />
-                                <label className="ml-2 text-sm">Pending approval</label>
-                            </div>
-                        ) : null}
-
-                        {story?.publicStoryRequestRefused && (
-                            <>
-                                {story?.publicStoryRequest?.moderatorComment ? (
-                                    <STKTooltip text={story?.publicStoryRequest?.moderatorComment} position="right">
-                                        <div className="flex items-center mt-2 bg-red-50 p-2 w-36 justify-center rounded-2xl">
-                                            <InfoOutlinedIcon sx={{ width: "14px", height: "14px" }} />
-                                            <label className="ml-2 text-sm cursor-pointer">Publish declined</label>
-                                        </div>
-                                    </STKTooltip>
-                                ) : (
-                                    <div className="flex items-center mt-2 bg-red-50 p-2 w-32 justify-center rounded-2xl">
-                                        <label className="text-sm">Publish declined</label>
-                                    </div>
-                                )}
-                            </>
-                        )}
-
-                        <div className="flex justify-between">
-                            <div className="lg:flex hidden items-center flex-wrap opacity-60 mt-4 pr-14">
-                                {story?.duration && (
-                                    <div className="flex items-center mr-4 mb-1 lg:mb-0">
-                                        <Timer size={14} weight="bold" />
-                                        <label className="ml-1">
-                                            {Math.ceil(story?.duration / 60)} min
-                                        </label>
-                                    </div>
-                                )}
-                                {story?.ageGroups && (
-                                    <div className="flex items-center mr-4 mb-1 lg:mb-0">
-                                        <Baby size={14} weight="bold" />
-                                        <label className="ml-1">
-                                            {story?.ageGroupsShortLabel}
-                                        </label>
-                                    </div>
-                                )}
-                                {story?.language && (
-                                    <div className="flex items-center">
-                                        <GlobeSimple size={14} weight="bold" />
-                                        <label className="ml-1">
-                                            {story?.language}
-                                        </label>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="flex items-center">
-                                {story?.recordedBy && story.recordedBy !== currentProfileId && (
-                                    <div className="hidden lg:block">
-                                        <STKButton iconButton onClick={handleLikedStories}>
-                                            {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
-                                        </STKButton>
-                                    </div>
-                                )}
-                                {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
-                                        <div>
-                                            <STKMenu
-                                                options={story.isPublic ? [{
-                                                    label: "Add to collection",
-                                                    value: ADD_TO_LIBRARY_MENU_OPTION
-                                                }] : [
-                                                    {
-                                                        label: "Add to collection",
-                                                        value: ADD_TO_LIBRARY_MENU_OPTION
-                                                    },
-                                                    {
-                                                        label: "Submit to public library",
-                                                        value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
-                                                    }
-                                                ]}
-                                                onChange={handleMenuOnChange}
-                                                onClick={handleShowMenuTooltip}/>
-                                        </div>
-                                ) : (
-                                    <div>
-                                        <STKMenu
-                                            options={[
-                                                {
-                                                    label: "Add to collection",
-                                                    value: ADD_TO_LIBRARY_MENU_OPTION
-                                                }
-                                            ]}
-                                            onChange={handleMenuOnChange}
-                                            onClick={handleShowMenuTooltip}/>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="lg:hidden flex items-end justify-between mt-4">
-                    <div className="flex items-center flex-wrap opacity-60 pr-14">
-                        {story?.duration && (
-                            <div className="flex items-center mr-4 mb-1 lg:mb-0">
-                                <Timer size={14} weight="bold" />
-                                <label className="ml-1">
-                                    {Math.ceil(story?.duration / 60)} min
-                                </label>
-                            </div>
-                        )}
-                        {story?.ageGroups && (
-                            <div className="flex items-center mr-4 mb-1 lg:mb-0">
-                                <Baby size={14} weight="bold" />
-                                <label className="ml-1">
-                                    {story?.ageGroupsShortLabel}
-                                </label>
-                            </div>
-                        )}
-                        {story?.language && (
-                            <div className="flex items-center">
-                                <GlobeSimple size={14} weight="bold" />
-                                <label className="ml-1">
-                                    {story?.language}
-                                </label>
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex items-center">
-                        {story?.recordedBy && story.recordedBy !== currentProfileId && (
-                            <div className="block lg:hidden">
-                                <STKButton iconButton onClick={handleLikedStories}>
-                                    {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
-                                </STKButton>
-                            </div>
-                        )}
-                        {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions && (
-                            <STKTooltip text="Submit to public library" active={showMenuTooltip && !disableMenu}>
-                                <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
-                                    <STKMenu
-                                    options={story.isPublic ? [{
-                                        label: "Add to collection",
-                                        value: ADD_TO_LIBRARY_MENU_OPTION
-                                    }] : [
-                                        {
-                                            label: "Add to collection",
-                                            value: ADD_TO_LIBRARY_MENU_OPTION
-                                        },
-                                        {
-                                            label: "Submit to public library",
-                                            value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
-                                        }
-                                    ]}
-                                    onChange={handleMenuOnChange}
-                                    onClick={handleShowMenuTooltip}/>
-                                </div>
-                            </STKTooltip>
-                        )}
-                    </div>
-                </div>
-            </div>
+        <>
             <InfoDialog
-            active={showSubmitStoryToPublicLibraryInfoDialog}
-            title={infoDialogContent.title}
-            text={infoDialogContent.text}
-            loadingBeforeContent={loadingRequest}
-            onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
+                active={showSubmitStoryToPublicLibraryInfoDialog}
+                title={infoDialogContent.title}
+                text={infoDialogContent.text}
+                loadingBeforeContent={loadingRequest}
+                onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
             {enableMenuOptions && (
                 <AddStoryToCollectionDialog
                     open={showAddStoryToLibraryDialog}
                     story={story}
                     onClose={() => setShowAddStoryToLibraryDialog(false)}/>
             )}
-        </STKCard>
+            <div
+            // @ts-ignore
+            onClick={handleClick}>
+                <STKCard>
+                <div className="p-4">
+                    <div className="flex">
+                        <div className="flex justify-items-start">
+                            <STKAvatar
+                                src={story?.narratorName ? '' : story?.profileAvatar}
+                                name={story?.narratorName || story?.profileName} />
+                        </div>
+                        <div className="w-full cursor-pointer ml-4">
+                            <div className="flex items-center justify-between w-full">
+                                <label>
+                                    {story?.narratorName || story?.profileName}
+                                </label>
+                                <label className="text-xs">{format(story?.lastUpdated)}</label>
+                            </div>
+
+                            <label className="font-semibold text-lg">
+                                {story?.title}
+                            </label>
+                            {story?.publicStoryRequestApproved && (
+                                <div className="flex items-center mt-2 bg-green-50 p-2 w-28 justify-center rounded-2xl">
+                                    <PublicIcon sx={{ fill: green600, width: "14px", height: "14px" }} />
+                                    <label className="ml-2 text-sm">Public story</label>
+                                </div>
+                            )}
+
+                            {story?.publicStoryRequestProcessing || publicStoryRequestSent ? (
+                                <div className="flex items-center mt-2 bg-orange-50 p-2 w-36 justify-center rounded-2xl">
+                                    <PendingOutlinedIcon sx={{ width: "14px", height: "14px" }} />
+                                    <label className="ml-2 text-sm">Pending approval</label>
+                                </div>
+                            ) : null}
+
+                            {story?.publicStoryRequestRefused && (
+                                <>
+                                    {story?.publicStoryRequest?.moderatorComment ? (
+                                        <STKTooltip text={story?.publicStoryRequest?.moderatorComment} position="right">
+                                            <div className="flex items-center mt-2 bg-red-50 p-2 w-36 justify-center rounded-2xl">
+                                                <InfoOutlinedIcon sx={{ width: "14px", height: "14px" }} />
+                                                <label className="ml-2 text-sm cursor-pointer">Publish declined</label>
+                                            </div>
+                                        </STKTooltip>
+                                    ) : (
+                                        <div className="flex items-center mt-2 bg-red-50 p-2 w-32 justify-center rounded-2xl">
+                                            <label className="text-sm">Publish declined</label>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
+                            <div className="flex justify-between">
+                                <div className="lg:flex hidden items-center flex-wrap opacity-60 mt-4 pr-14">
+                                    {story?.duration && (
+                                        <div className="flex items-center mr-4 mb-1 lg:mb-0">
+                                            <Timer size={14} weight="bold" />
+                                            <label className="ml-1">
+                                                {Math.ceil(story?.duration / 60)} min
+                                            </label>
+                                        </div>
+                                    )}
+                                    {story?.ageGroups && (
+                                        <div className="flex items-center mr-4 mb-1 lg:mb-0">
+                                            <Baby size={14} weight="bold" />
+                                            <label className="ml-1">
+                                                {story?.ageGroupsShortLabel}
+                                            </label>
+                                        </div>
+                                    )}
+                                    {story?.language && (
+                                        <div className="flex items-center">
+                                            <GlobeSimple size={14} weight="bold" />
+                                            <label className="ml-1">
+                                                {story?.language}
+                                            </label>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex items-center">
+                                    {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                                        <div className="hidden lg:block">
+                                            <STKButton iconButton onClick={handleLikedStories}>
+                                                {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                                            </STKButton>
+                                        </div>
+                                    )}
+                                    <div className="hidden lg:block">
+                                        {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
+                                            <div>
+                                                <STKMenu
+                                                    options={story.isPublic ? [{
+                                                        label: "Add to collection",
+                                                        value: ADD_TO_LIBRARY_MENU_OPTION
+                                                    }] : [
+                                                        {
+                                                            label: "Add t   o collection",
+                                                            value: ADD_TO_LIBRARY_MENU_OPTION
+                                                        },
+                                                        {
+                                                            label: "Submit to public library",
+                                                            value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+                                                        }
+                                                    ]}
+                                                    onChange={handleMenuOnChange}
+                                                    onClick={handleShowMenuTooltip}/>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <STKMenu
+                                                    options={[
+                                                        {
+                                                            label: "Add to collection",
+                                                            value: ADD_TO_LIBRARY_MENU_OPTION
+                                                        }
+                                                    ]}
+                                                    onChange={handleMenuOnChange}
+                                                    onClick={handleShowMenuTooltip}/>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="lg:hidden flex items-end justify-between mt-4">
+                        <div className="flex items-center flex-wrap opacity-60 pr-14">
+                            {story?.duration && (
+                                <div className="flex items-center mr-4 mb-1 lg:mb-0">
+                                    <Timer size={14} weight="bold" />
+                                    <label className="ml-1">
+                                        {Math.ceil(story?.duration / 60)} min
+                                    </label>
+                                </div>
+                            )}
+                            {story?.ageGroups && (
+                                <div className="flex items-center mr-4 mb-1 lg:mb-0">
+                                    <Baby size={14} weight="bold" />
+                                    <label className="ml-1">
+                                        {story?.ageGroupsShortLabel}
+                                    </label>
+                                </div>
+                            )}
+                            {story?.language && (
+                                <div className="flex items-center">
+                                    <GlobeSimple size={14} weight="bold" />
+                                    <label className="ml-1">
+                                        {story?.language}
+                                    </label>
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex items-center">
+                            {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                                <div className="block lg:hidden">
+                                    <STKButton iconButton onClick={handleLikedStories}>
+                                        {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                                    </STKButton>
+                                </div>
+                            )}
+                            {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
+                                <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
+                                    <STKMenu
+                                        options={story.isPublic ? [{
+                                            label: "Add to collection",
+                                            value: ADD_TO_LIBRARY_MENU_OPTION
+                                        }] : [
+                                            {
+                                                label: "Add to collection",
+                                                value: ADD_TO_LIBRARY_MENU_OPTION
+                                            },
+                                            {
+                                                label: "Submit to public library",
+                                                value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+                                            }
+                                        ]}
+                                        onChange={handleMenuOnChange}
+                                        onClick={handleShowMenuTooltip}/>
+                                </div>
+                            ): (
+                                <div>
+                                    <STKMenu
+                                        options={[
+                                            {
+                                                label: "Add to collection",
+                                                value: ADD_TO_LIBRARY_MENU_OPTION
+                                            }
+                                        ]}
+                                        onChange={handleMenuOnChange}
+                                        onClick={handleShowMenuTooltip}/>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </STKCard>
+            </div>
+        </>
     )
 }

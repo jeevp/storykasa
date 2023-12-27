@@ -13,9 +13,12 @@ import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHa
 import {useRouter} from "next/router";
 import Library from "@/models/Library";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton"
+import useDevice from "@/customHooks/useDevice";
 
 function Collections() {
     const router = useRouter()
+
+    const { onMobile } = useDevice()
 
     // Contexts
     const {
@@ -83,6 +86,7 @@ function Collections() {
         })
     }
 
+
     return (
         <PageWrapper path="library">
             <div>
@@ -91,13 +95,15 @@ function Collections() {
                         Collections
                     </h2>
                 </div>
-                <div className="mt-4 flex justify-between w-full items-center">
+                <div className="mt-4 flex flex-col lg:flex-row justify-between w-full items-center">
                     <p className="max-w-xl">
                        Collections are groups of stories. Organize stories in your own collections, or create shared
                         collections to collaborate with friends and family
                     </p>
                     {libraries.length > 0 && (
-                        <STKButton onClick={() => setShowCreateSharedLibraryDialog(true)}>Create collection</STKButton>
+                        <div className="mt-4 lg:mt-0 w-full lg:w-auto">
+                            <STKButton fullWidth={onMobile} onClick={() => setShowCreateSharedLibraryDialog(true)}>Create collection</STKButton>
+                        </div>
                     )}
                 </div>
                 <div className="mt-10">

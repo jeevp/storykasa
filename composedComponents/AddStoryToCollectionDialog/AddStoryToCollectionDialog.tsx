@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
@@ -34,6 +34,14 @@ export default function AddStoryToCollectionDialog({
     // Contexts
     const { libraries} = useLibrary()
     const { currentProfileId } = useProfile()
+
+    // Mounted
+    useEffect(() => {
+        setSelectedLibraryId("")
+        setError("")
+        setLoading(false)
+    }, [])
+
 
     const handleSave = async () => {
         try {
@@ -88,8 +96,8 @@ export default function AddStoryToCollectionDialog({
                         optionLabel="libraryName"
                         optionValue="libraryName"
                         placeholder="Select a collection"
+                        fluid={onMobile}
                         // @ts-ignore
-                        value={libraries.find(library => library?.libraryId === selectedLibraryId)}
                         onChange={handleLibraryOnChange} />
                     </div>
                 </div>

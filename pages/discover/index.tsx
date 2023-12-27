@@ -1,5 +1,5 @@
 import StoryCard from '@/composedComponents/StoryCard/StoryCard'
-import { useEffect, useState } from 'react'
+import {ReactEventHandler, useEffect, useState} from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -145,12 +145,12 @@ function Discover() {
                                         <div
                                             className="mt-2 first:mt-0"
                                             key={story?.storyId}
-                                            onClick={() => handleStoryClick(story)}
                                         >
                                             <StoryCard
                                                 story={story}
                                                 selected={story?.storyId === selectedStoryId}
                                                 enableMenuOptions
+                                                onClick={() => handleStoryClick(story)}
                                             ></StoryCard>
                                         </div>
                                     ))}
