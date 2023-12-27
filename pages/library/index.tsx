@@ -85,6 +85,7 @@ function Library() {
         loadStories()
     }, [])
 
+    console.log({ selectedStory })
 
     return (
         <PageWrapper path="library">
@@ -152,28 +153,20 @@ function Library() {
                 </>
             </div>
             {loaded ? (
-                <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">
-                    <AnimatePresence mode="wait">
-                        (
-                        <motion.div
-                            initial={{ x: 10, opacity: 0, width: "100%" }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: 10, opacity: 0 }}
-                            key={stories.length}
-                        >
+                <div className="flex w-full mt-6 pb-32 lg:pb-0">
                         {stories.length > 0 ? (
-                            <div className="overflow-y-scroll hide-scrollbar"
+                            <div className="overflow-y-scroll hide-scrollbar w-full"
                                  style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
                                 {stories?.map((story: Story) => (
                                     <div
                                         className="mt-2 first:mt-0"
                                         key={story.storyId}
-                                        onClick={() => handleStoryClick(story)}
                                     >
                                         <StoryCard
                                             story={story}
                                             enableMenuOptions
                                             // @ts-ignore
+                                            onClick={() => handleStoryClick(story)}
                                             selected={selectedStory?.storyId === story?.storyId}
                                         ></StoryCard>
                                     </div>
@@ -188,8 +181,6 @@ function Library() {
                                 </p>
                             </div>
                         ) : null}
-                        </motion.div>
-                    </AnimatePresence>
 
                     {selectedStory !== undefined && (
                         <div
