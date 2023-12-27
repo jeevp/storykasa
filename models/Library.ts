@@ -28,8 +28,8 @@ export default class Library {
         libraryName,
         listeners = [],
         sharedAccountIds,
-        totalStories,
-        totalDuration,
+        totalStories = 0,
+        totalDuration = 0,
         profile
     }: LibraryProps) {
         this.libraryId = libraryId

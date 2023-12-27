@@ -5,7 +5,6 @@ import useDevice from "@/customHooks/useDevice";
 import STKTextField from "@/components/STKTextField/STKTextField";
 import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
-import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToList"
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import {useProfile} from "@/contexts/profile/ProfileContext";
@@ -28,7 +27,6 @@ export default function CreateCollectionDialog({
     const [loading, setLoading] = useState(false)
     const [showSnackbar, setShowSnackbar] = useState(false)
     const [libraryName, setLibraryName] = useState("")
-    const [listenersEmails, setListenersEmails] = useState<string[]>([])
 
     // Contexts
     const { libraries, setLibraries } = useLibrary()
@@ -41,7 +39,7 @@ export default function CreateCollectionDialog({
 
             const library = await LibraryHandler.createLibrary({
                 libraryName,
-                listenersEmails,
+                listenersEmails: [],
                 profileId: currentProfileId
             })
 
@@ -79,13 +77,6 @@ export default function CreateCollectionDialog({
                             value={libraryName}
                             placeholder="Type the story title"
                             onChange={(value: string) => setLibraryName(value)}/>
-                        </div>
-                    </div>
-                    <div className="mt-4">
-                        <label className="font-semibold">Listeners <span className="font-normal">(optional)</span></label>
-                        <p className="mt-2">Bellow you can enter the email of your friends and family who you which to share this collection.</p>
-                        <div className="mt-4">
-                            <AddMemberToList onChange={(emails: string[]) => setListenersEmails(emails)} />
                         </div>
                     </div>
                 </div>
