@@ -7,6 +7,7 @@ import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToList"
 import LibraryHandler from "@/handlers/LibraryHandler";
 import Library from "@/models/Library";
+import ListenersInvitationSummary from "@/composedComponents/ListenersInvitationSummary/ListenersInvitationSummary";
 
 
 interface AddListenerDialogProps {
@@ -31,8 +32,7 @@ export default function AddListenerDialog({
     const [collectionInvitations, setCollectionInvitations] = useState([])
 
     useEffect(() => {
-        setCollectionInvitations([])
-        setListenersEmails([])
+        resetState()
     }, []);
 
     // Methods
@@ -59,26 +59,48 @@ export default function AddListenerDialog({
         setCollectionInvitations(collectionInvitations.filter((invitation) => emails.includes(invitation.listenerEmail)))
     }
 
+    const handleClose = () => {
+        onClose()
+        resetState()
+    }
+
+    const resetState = () => {
+        setCollectionInvitations([])
+        setListenersEmails([])
+    }
+
     return (
         <STKDialog
         active={open}
         maxWidth="xs"
         title="Add Listeners to collection"
         fullScreen={onMobile}
-        onClose={() => onClose()}>
+        onClose={handleClose}>
             <div>
                 <div className="mt-6">
-                    <p className="mt-2 text-sm">
-                       You have the option to invite friends and family to join your collection. Simply enter
-                        their email addresses to send them an invitation. Upon accepting, they will be added as
-                        listeners, granting them access to enjoy the stories alongside you.
+                    <p className="mt-2 text-md">
+                        {collectionInvitations?.length === 0 ? (
+                            <>
+                                Enter the email addresses of your family and friends to send them an invitation. Upon accepting, they will be added as
+                                listeners, granting them access to enjoy the stories alongside you.
+                            </>
+                        ) : (
+                            <>
+                                {/* eslint-disable-next-line react/no-unescaped-entities */}
+                                Thank you for inviting your friends and family to join your story collection. Here’s a summary of the invitations you've sent:
+                            </>
+                        )}
                     </p>
                     <div className="mt-4">
-                        <AddMemberToList
-                        // @ts-ignore
-                        collectionInvitations={collectionInvitations}
-                        members={library?.listeners}
-                        onChange={handleOnChange} />
+                        {collectionInvitations.length === 0 ? (
+                            <AddMemberToList
+                            // @ts-ignore
+                            collectionInvitations={collectionInvitations}
+                            members={library?.listeners}
+                            onChange={handleOnChange} />
+                        ) : (
+                            <ListenersInvitationSummary listenersInvitations={collectionInvitations} />
+                        )}
                     </div>
                 </div>
                 <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">

@@ -97,8 +97,8 @@ function Collections() {
                 </div>
                 <div className="mt-4 flex flex-col lg:flex-row justify-between w-full items-center">
                     <p className="max-w-xl">
-                       Collections are groups of stories. Organize stories in your own collections, or create shared
-                        collections to collaborate with friends and family
+                        Collections are groups of stories. Organize stories in your own collections, or create
+                        shared collections by inviting friends and family.
                     </p>
                     {libraries.length > 0 && (
                         <div className="mt-4 lg:mt-0 w-full lg:w-auto">
