@@ -189,12 +189,12 @@ function Library() {
                                         <div
                                             className="mt-2 first:mt-0"
                                             key={story.storyId}
-                                            onClick={() => handleStoryClick(story)}
                                         >
                                             <StoryCard
                                                 story={story}
                                                 // @ts-ignore
                                                 selected={selectedStory?.storyId === story?.storyId}
+                                                onClick={() => handleStoryClick(story)}
                                             ></StoryCard>
                                         </div>
                                     ))}
