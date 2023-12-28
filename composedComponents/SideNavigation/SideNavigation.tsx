@@ -74,20 +74,23 @@ export default function SideNavigation() {
                            <div className="lg:mt-6 ml-4 lg:ml-0 lg:w-full">
                                <RecordButton onClick={() => route.push("/record")} />
                            </div>
-                           <div className="pt-10 pb-6">
-                               <Divider />
-                           </div>
 
-                           <div>
-                               <STKButton
-                                   startIcon={<Question />}
-                                   alignStart
-                                   variant="none"
-                                   active={route.pathname === "/faq"}
-                                   onClick={() => setShowHelperDialog(true)}>
-                                   Help
-                               </STKButton>
-                           </div>
+                           {["/discover", "/library", "/collections", "/record"].includes(route.pathname) && (
+                               <>
+                                   <div className="pt-10 pb-6">
+                                       <Divider />
+                                   </div>
+                                   <div>
+                                       <STKButton
+                                           startIcon={<Question />}
+                                           alignStart
+                                           variant="none"
+                                           onClick={() => setShowHelperDialog(true)}>
+                                           Help
+                                       </STKButton>
+                                   </div>
+                               </>
+                           )}
                        </div>
                     </div>
                 </div>

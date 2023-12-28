@@ -20,7 +20,7 @@ export default function HelperDialog({ active, onClose = () => ({}) }: HelperDia
         active={active}
         onClose={() => onClose()}>
             <h2 className="uppercase text-xs text-neutral-600 m-0">Helper Tooltip</h2>
-            <div>
+            <div className="mt-4">
                 {router.pathname === "/discover" && (
                     <>
                         <h3 className="text-2xl m-0">Discover</h3>
@@ -107,6 +107,34 @@ export default function HelperDialog({ active, onClose = () => ({}) }: HelperDia
                         <p className="mt-4">
                             If you have any other questions, please email us at support@storykasa.com and we
                             will get back to you as soon as we can.
+                        </p>
+                    </>
+                )}
+
+                {router.pathname === "/collections" && (
+                    <>
+                        <h3 className="text-2xl m-0">Collections</h3>
+                        <p className="mt-4">
+                            Collections are an easy way to organize stories that you listen to often. A collection
+                            can consist of a single story or several stories and you can choose how to organize them.
+                        </p>
+                        <p className="mt-4">
+                            Your collections are private unless you want to share stories in your collections
+                            with friends or family members. For example, you could create a collection
+                            called “My original stories” and share it with a friend who might want to
+                            listen to them as well. Or you might put together a “Bedtime stories” collection with
+                            your child’s favorite stories to listen to at bedtime.
+                        </p>
+                        <p className="mt-4">
+                            To share collections, simply click on “Add a listener,” enter the email of the person
+                            you would like to invite to listen, and then click on “Invite.” If they have a StoryKasa
+                            account they will receive a message asking them if they would like to accept your
+                            invitation. If they are not on StoryKasa, they will need to set up an account to listen
+                            to the stories in your shared collection.
+                        </p>
+                        <p className="mt-4">
+                            If you have any other questions, please email us at support@storykasa.com and we will
+                            get back to you as soon as we can.
                         </p>
                     </>
                 )}
