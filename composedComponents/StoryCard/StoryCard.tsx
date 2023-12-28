@@ -349,7 +349,7 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
                                 </div>
                             )}
                             {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
-                                <div className={`block lg:hidden ${disableMenu ? 'disabled' : ''}`}>
+                                <div className="block lg:hidden">
                                     <STKMenu
                                         options={story.isPublic ? [{
                                             label: "Add to collection",
