@@ -91,7 +91,7 @@ export default class SharedLibraryInvitationController {
                     invited: Boolean(sharedLibraryInvitation)
                 })
 
-                EmailService.sendListenerInvitationEmail({
+                await EmailService.sendListenerInvitationEmail({
                     to: listenerEmail,
                     subject: "You are invited to join a collection"
                 }, {
@@ -103,7 +103,7 @@ export default class SharedLibraryInvitationController {
             return res.status(201).send(invitationsSummary)
         } catch (error) {
             console.error(error)
-            return res.status(400).send({ message: "Something went wrong." })
+            return res.status(400).send(error)
         }
     }
 }
