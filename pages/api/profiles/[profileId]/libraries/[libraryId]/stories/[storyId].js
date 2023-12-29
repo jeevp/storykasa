@@ -1,11 +1,11 @@
-import authMiddleware from "../../../../../../middlewares/authMiddleware";
-import LibraryController from "../../../../../../service/controllers/LibraryController"
+import authMiddleware from "../../../../../../../middlewares/authMiddleware";
+import LibraryController from "../../../../../../../service/controllers/LibraryController"
 
 const stories = async (req, res) => {
     try {
         switch(req.method) {
-            case "POST":
-                return LibraryController.addStoryToLibrary(req, res)
+            case "DELETE":
+                return LibraryController.removeStoryFromLibrary(req, res)
 
             default:
                 return res.status(404).send({ message: "API route not found." })

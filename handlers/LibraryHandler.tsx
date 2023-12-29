@@ -74,4 +74,16 @@ export default class LibraryHandler {
             profileId
         })
     }
+
+    static async removeStory({ storyId, libraryId, profileId }: { storyId: string, libraryId: string, profileId: string }) {
+        const headers = generateHeaders()
+
+        await axios.delete(`/api/profiles/${profileId}/libraries/${libraryId}/stories/${storyId}`, headers)
+
+        // @ts-ignore
+        return new Story({
+            storyId,
+            profileId
+        })
+    }
 }

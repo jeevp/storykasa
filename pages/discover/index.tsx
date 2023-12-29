@@ -1,4 +1,4 @@
-import StoryCard from '@/composedComponents/StoryCard/StoryCard'
+import StoryCard, {ADD_TO_LIBRARY_MENU_OPTION} from '@/composedComponents/StoryCard/StoryCard'
 import {ReactEventHandler, useEffect, useState} from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
@@ -150,6 +150,10 @@ function Discover() {
                                                 story={story}
                                                 selected={story?.storyId === selectedStoryId}
                                                 enableMenuOptions
+                                                menuOptions={[{
+                                                    label: "Add to collection",
+                                                    value: ADD_TO_LIBRARY_MENU_OPTION
+                                                }]}
                                                 onClick={() => handleStoryClick(story)}
                                             ></StoryCard>
                                         </div>

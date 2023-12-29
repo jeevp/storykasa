@@ -1,4 +1,4 @@
-import StoryCard from '@/composedComponents/StoryCard/StoryCard'
+import StoryCard, {REMOVE_FROM_COLLECTION_MENU_OPTION} from '@/composedComponents/StoryCard/StoryCard'
 import { useEffect, useState} from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
@@ -39,10 +39,16 @@ function Library() {
     const [stories, setStories] = useState([])
     const [showAddListenerDialog, setShowAddListenerDialog] = useState(false)
 
-
     // Contexts
     const { storyFilters } = useStory()
     const { currentLibraryStories, setCurrentLibraryStories, currentLibrary } = useLibrary()
+
+    // Watchers
+    useEffect(() => {
+        if (currentLibraryStories) {
+            setStories([...currentLibraryStories])
+        }
+    }, [currentLibraryStories]);
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
@@ -131,11 +137,11 @@ function Library() {
                             <div>
                                 {currentLibraryStories.length || (currentLibraryStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
                                     <p>
-                                        This is the home for the stories you save or record.
+                                        This is the home for the index you save or record.
                                     </p>
                                 ) : currentLibraryStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
                                     <p>
-                                        Your collection is empty! You can add stories
+                                        Your collection is empty! You can add index
                                         from <span className="font-semibold"><Link href="/library"> your library</Link></span> to this collection
                                     </p>
                                 ) : null}
@@ -194,6 +200,7 @@ function Library() {
                                                 story={story}
                                                 // @ts-ignore
                                                 selected={selectedStory?.storyId === story?.storyId}
+                                                menuOptions={[{ label: "Remove from collection", value: REMOVE_FROM_COLLECTION_MENU_OPTION }]}
                                                 onClick={() => handleStoryClick(story)}
                                             ></StoryCard>
                                         </div>
@@ -203,7 +210,7 @@ function Library() {
                                 <div className="flex flex-col items-center">
                                     <SmileyMeh size={100} color={neutral300} />
                                     <p className="mt-4 text-center max-w-lg">
-                                        It looks like we could not find any stories matching your filters.
+                                        It looks like we could not find any index matching your filters.
                                         Try adjusting your filter settings to see more results.
                                     </p>
                                 </div>

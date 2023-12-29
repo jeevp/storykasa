@@ -19,21 +19,30 @@ import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import STKTooltip from "@/components/STKTooltip/STKTooltip";
 import AddStoryToCollectionDialog from "@/composedComponents/AddStoryToCollectionDialog/AddStoryToCollectionDialog";
+import LibraryHandler from "@/handlers/LibraryHandler";
+import {useRouter} from "next/router";
+import {useLibrary} from "@/contexts/library/LibraryContext";
 
 
-const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
-const ADD_TO_LIBRARY_MENU_OPTION = "ADD_TO_LIBRARY_MENU_OPTION"
+export const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
+export const ADD_TO_LIBRARY_MENU_OPTION = "ADD_TO_LIBRARY_MENU_OPTION"
+export const REMOVE_FROM_COLLECTION_MENU_OPTION = "REMOVE_FROM_COLLECTION_MENU_OPTION"
 
-export default function StoryCard({ story, enableMenuOptions, onClick = () => ({}) }: {
+export default function StoryCard({ story, enableMenuOptions, menuOptions = [], onClick = () => ({}) }: {
     story: Story
     selected: boolean,
     enableMenuOptions?: boolean
+    menuOptions?: any[]
     onClick?: () => void
 }) {
+    const router = useRouter()
+
     // States
+    const [removeStoryLoading, setRemoveStoryLoading] = useState(false)
     const [showAddStoryToLibraryDialog, setShowAddStoryToLibraryDialog] = useState(false)
     const [loadingRequest, setLoadingRequest] = useState(false)
     const [publicStoryRequestSent, setPublicStoryRequestSent] = useState(false)
+    const [showRemoveFromCollectionDialog, setShowRemoveFromCollectionDialog] = useState(false)
     const [liked, setLiked] = useState(false)
     const [showMenuTooltip, setShowMenuTooltip] = useState(true)
     const [showSubmitStoryToPublicLibraryInfoDialog, setShowSubmitStoryToPublicLibraryInfoDialog] = useState(false)
@@ -47,6 +56,7 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
     const { currentProfileId } = useProfile()
     const { privateStories, setPrivateStories } = useStory()
     const { setSnackbarBus } = useSnackbar()
+    const { currentLibraryStories, setCurrentLibraryStories } = useLibrary()
 
     useEffect(() => {
         if (story?.recordedBy) {
@@ -69,6 +79,7 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
             if (_liked) {
                 // @ts-ignore
                 _privateStories.push(story)
+
                 // @ts-ignore
                 setPrivateStories(_privateStories)
 
@@ -82,9 +93,9 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
                     return _story.storyId !== story.storyId
                 })
 
+                console.log({ _privateStories })
                 // @ts-ignore
                 setPrivateStories(_privateStories)
-
 
                 await StoryHandler.removeStoryFromLibrary({
                     storyId: story.storyId,
@@ -144,15 +155,22 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
 
     const handleMenuOnChange = async (menu: Object) => {
         // @ts-ignore
-        if (menu?.value === SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION) {
-           await handleSubmitStoryToPublicLibrary()
-        }
+        switch(menu?.value) {
+            case SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION:
+                await handleSubmitStoryToPublicLibrary()
+                break
 
-        // @ts-ignore
-        if (menu?.value === ADD_TO_LIBRARY_MENU_OPTION) {
-            setShowAddStoryToLibraryDialog(true)
-        }
+            case ADD_TO_LIBRARY_MENU_OPTION:
+                setShowAddStoryToLibraryDialog(true)
+                break
 
+            case REMOVE_FROM_COLLECTION_MENU_OPTION:
+                setShowRemoveFromCollectionDialog(true)
+                break
+
+            default:
+                break
+        }
     }
 
     const handleShowMenuTooltip = () => {
@@ -170,6 +188,26 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
     const handleClick = (e: MouseEvent) => {
         e.stopPropagation()
         onClick()
+    }
+
+    const handleRemoveStoryFromCollection = async () => {
+        setRemoveStoryLoading(true)
+        await LibraryHandler.removeStory({
+            storyId: story.storyId,
+            libraryId: String(router.query.libraryId),
+            profileId: currentProfileId
+        })
+
+
+        const _currentLibraryStories = currentLibraryStories.filter((_story) => {
+            // @ts-ignore
+            return _story?.storyId !== story.storyId
+        })
+
+        // @ts-ignore
+        setCurrentLibraryStories(_currentLibraryStories)
+        setRemoveStoryLoading(false)
+        setShowRemoveFromCollectionDialog(false)
     }
 
 
@@ -279,31 +317,14 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
                                         {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
                                             <div>
                                                 <STKMenu
-                                                    options={story.isPublic ? [{
-                                                        label: "Add to collection",
-                                                        value: ADD_TO_LIBRARY_MENU_OPTION
-                                                    }] : [
-                                                        {
-                                                            label: "Add t   o collection",
-                                                            value: ADD_TO_LIBRARY_MENU_OPTION
-                                                        },
-                                                        {
-                                                            label: "Submit to public library",
-                                                            value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
-                                                        }
-                                                    ]}
+                                                    options={menuOptions}
                                                     onChange={handleMenuOnChange}
                                                     onClick={handleShowMenuTooltip}/>
                                             </div>
                                         ) : (
                                             <div>
                                                 <STKMenu
-                                                    options={[
-                                                        {
-                                                            label: "Add to collection",
-                                                            value: ADD_TO_LIBRARY_MENU_OPTION
-                                                        }
-                                                    ]}
+                                                    options={menuOptions}
                                                     onChange={handleMenuOnChange}
                                                     onClick={handleShowMenuTooltip}/>
                                             </div>
@@ -351,19 +372,7 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
                             {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
                                 <div className="block lg:hidden">
                                     <STKMenu
-                                        options={story.isPublic ? [{
-                                            label: "Add to collection",
-                                            value: ADD_TO_LIBRARY_MENU_OPTION
-                                        }] : [
-                                            {
-                                                label: "Add to collection",
-                                                value: ADD_TO_LIBRARY_MENU_OPTION
-                                            },
-                                            {
-                                                label: "Submit to public library",
-                                                value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
-                                            }
-                                        ]}
+                                        options={menuOptions}
                                         onChange={handleMenuOnChange}
                                         onClick={handleShowMenuTooltip}/>
                                 </div>
@@ -385,6 +394,14 @@ export default function StoryCard({ story, enableMenuOptions, onClick = () => ({
                 </div>
             </STKCard>
             </div>
+            <InfoDialog
+            active={showRemoveFromCollectionDialog}
+            text={`Confirm the action bellow to remove ${story.title} story from this collection`}
+            title="Remove story from collection"
+            loading={removeStoryLoading}
+            onAction={handleRemoveStoryFromCollection}
+            confirmationButtonText="Remove story"
+            onClose={() => setShowRemoveFromCollectionDialog(false)}/>
         </>
     )
 }

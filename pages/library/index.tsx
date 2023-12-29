@@ -1,4 +1,7 @@
-import StoryCard from '@/composedComponents/StoryCard/StoryCard'
+import StoryCard, {
+    ADD_TO_LIBRARY_MENU_OPTION,
+    SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+} from '@/composedComponents/StoryCard/StoryCard'
 import { useEffect, useState} from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
@@ -30,13 +33,12 @@ function Library() {
     const [selectedStory, setSelectedStory] = useState<Story | undefined>()
     const [loaded, setLoaded] = useState(false)
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
-    const [stories, setStories] = useState([])
+    const [index, setStories] = useState([])
 
     // Contexts
     const { privateStories, setPrivateStories, storyFilters } = useStory()
     const { currentProfileId } = useProfile()
     const { setLibraries } = useLibrary()
-
 
     // Mounted
     useEffect(() => {
@@ -112,7 +114,7 @@ function Library() {
                      <>
                          {privateStories.length || (privateStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
                              <p>
-                                 This is the home for the stories you save or record.
+                                 This is the home for the index you save or record.
                              </p>
                          ) : privateStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
                              <p>
@@ -154,10 +156,10 @@ function Library() {
             </div>
             {loaded ? (
                 <div className="flex w-full mt-6 pb-32 lg:pb-0">
-                        {stories.length > 0 ? (
+                        {index.length > 0 ? (
                             <div className="overflow-y-scroll hide-scrollbar w-full"
                                  style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
-                                {stories?.map((story: Story) => (
+                                {index?.map((story: Story) => (
                                     <div
                                         className="mt-2 first:mt-0"
                                         key={story.storyId}
@@ -167,16 +169,23 @@ function Library() {
                                             enableMenuOptions
                                             // @ts-ignore
                                             onClick={() => handleStoryClick(story)}
+                                            menuOptions={story.isPublic ? [{
+                                                label: "Add to collection",
+                                                value: ADD_TO_LIBRARY_MENU_OPTION
+                                            }] : [
+                                                { label: "Add to collection", value: ADD_TO_LIBRARY_MENU_OPTION },
+                                                { label: "Submit to public library", value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION }
+                                            ]}
                                             selected={selectedStory?.storyId === story?.storyId}
                                         ></StoryCard>
                                     </div>
                                 ))}
                             </div>
-                        ) : stories.length === 0 && Object.keys(storyFilters).length > 0 ? (
+                        ) : index.length === 0 && Object.keys(storyFilters).length > 0 ? (
                             <div className="flex flex-col items-center">
                                 <SmileyMeh size={100} color={neutral300} />
                                 <p className="mt-4 text-center max-w-lg">
-                                    It looks like we could not find any stories matching your filters.
+                                    It looks like we could not find any index matching your filters.
                                     Try adjusting your filter settings to see more results.
                                 </p>
                             </div>

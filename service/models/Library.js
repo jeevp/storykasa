@@ -176,6 +176,20 @@ export default class Library {
         return response.data[0]
     }
 
+    static async removeStory({ storyId, libraryId, profileId }, { accessToken }) {
+        const response = await axios.delete(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+            params: {
+                select: "*",
+                library_id: `eq.${libraryId}`,
+                story_id: `eq.${storyId}`,
+                profile_id: `eq.${profileId}`
+            },
+            headers: generateSupabaseHeaders(accessToken)
+        })
+
+        return response.data[0]
+    }
+
     async update({ sharedAccountIds }, { accessToken }) {
         const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
             shared_account_ids: sharedAccountIds

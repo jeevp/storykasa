@@ -121,4 +121,25 @@ export default class LibraryController {
             return res.status(error.statusCode || 400).send({ message: error.message || "Something went wrong"})
         }
     }
+
+    static async removeStoryFromLibrary(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["profileId", "libraryId", "storyId"]
+            })
+
+            const { profileId, libraryId, storyId } = req.query
+
+            await Library.removeStory({
+                storyId,
+                libraryId,
+                profileId
+            }, { accessToken: req.accessToken })
+
+            return res.status(204).send({})
+        } catch (error) {
+            console.error(error)
+            return res.status(error.statusCode || 400).send({ message: error.message || "Something went wrong" })
+        }
+    }
 }
