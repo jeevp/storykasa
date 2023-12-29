@@ -93,7 +93,6 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                     return _story.storyId !== story.storyId
                 })
 
-                console.log({ _privateStories })
                 // @ts-ignore
                 setPrivateStories(_privateStories)
 

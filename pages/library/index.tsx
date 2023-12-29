@@ -87,7 +87,6 @@ function Library() {
         loadStories()
     }, [])
 
-    console.log({ selectedStory })
 
     return (
         <PageWrapper path="library">

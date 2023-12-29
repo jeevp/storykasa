@@ -8,6 +8,7 @@ import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToLis
 import LibraryHandler from "@/handlers/LibraryHandler";
 import Library from "@/models/Library";
 import ListenersInvitationSummary from "@/composedComponents/ListenersInvitationSummary/ListenersInvitationSummary";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 
 interface AddListenerDialogProps {
@@ -24,7 +25,9 @@ export default function AddListenerDialog({
     onSuccess = () => ({})
 }: AddListenerDialogProps) {
     const { onMobile } = useDevice()
-    const { setSnackbarBus } = useSnackbar()
+
+    // Contexts
+    const { currentProfileId } = useProfile()
 
     const [loading, setLoading] = useState(false)
     const [showSnackbar, setShowSnackbar] = useState(false)
@@ -42,7 +45,7 @@ export default function AddListenerDialog({
 
             const _invitations = await LibraryHandler.addListenerToLibrary({
                 libraryId: library?.libraryId,
-            }, { listenersEmails })
+            }, { listenersEmails, profileId: currentProfileId })
 
             // @ts-ignore
             setCollectionInvitations(_invitations)

@@ -2,9 +2,13 @@
 const nodemailer = require("nodemailer")
 
 // EMAIL TEMPLATES
-const { recoverPasswordEmailTemplate } = require("./templates")
+const {
+    recoverPasswordEmailTemplate,
+    listenerInvitationEmailTemplate
+} = require("./templates")
 
 const RECOVER_PASSWORD_EMAIL = "RECOVER_PASSWORD_EMAIL"
+const LISTENER_INVITATION_EMAIL = "LISTENER_INVITATION_EMAIL"
 
 class EmailTemplate {
     constructor({ emailType }) {
@@ -18,6 +22,10 @@ class EmailTemplate {
             switch (this.emailType) {
                 case RECOVER_PASSWORD_EMAIL:
                     htmlTemplate = recoverPasswordEmailTemplate(params)
+                    return htmlTemplate
+
+                case LISTENER_INVITATION_EMAIL:
+                    htmlTemplate = listenerInvitationEmailTemplate(params)
                     return htmlTemplate
 
                 default:
@@ -54,32 +62,38 @@ class EmailService {
         }
     }
 
-    static sendEmail(emailContext, emailTemplate) {
-        return new Promise(async() => {
-            try {
-                const transporter = nodemailer.createTransport({
-                    host: "smtp.gmail.com",
-                    port: 465,
-                    secure: true,
-                    auth: {
-                        user: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
-                        pass: process.env.NEXT_PUBLIC_SUPPORT_PASSWORD
-                    }
-                })
+    static async sendListenerInvitationEmail({ to, subject }, { collectionTitle, collectionOwnerName }) {
+        const emailContext = new EmailContext({ to, subject })
 
+        const emailTemplate = await new EmailTemplate({
+            emailType: LISTENER_INVITATION_EMAIL
+        }).getHtml({
+            collectionTitle,
+            collectionOwnerName
+        })
 
-                await transporter.sendMail({
-                    from: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
-                    to: emailContext.to,
-                    subject: emailContext.subject,
-                    html: emailTemplate
-                })
+        await this.sendEmail(emailContext, emailTemplate)
+    }
 
-            }
-            catch(error) {
-                throw error
+    static async sendEmail(emailContext, emailTemplate) {
+        const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
+                pass: process.env.NEXT_PUBLIC_SUPPORT_PASSWORD
             }
         })
+
+
+        await transporter.sendMail({
+            from: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
+            to: emailContext.to,
+            subject: emailContext.subject,
+            html: emailTemplate
+        })
+
     }
 }
 

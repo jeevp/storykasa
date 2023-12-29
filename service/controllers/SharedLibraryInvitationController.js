@@ -1,7 +1,9 @@
 import supabase from "../supabase";
 import SharedLibraryInvitation from "../models/SharedLibraryInvitation"
 import Library from "../models/Library"
+import Profile from "../models/Profile"
 import APIValidator from "../validators/APIValidator"
+const EmailService = require("../services/EmailService/EmailService").default
 
 export default class SharedLibraryInvitationController {
     static async updateSharedLibraryInvitation(req, res) {
@@ -64,18 +66,37 @@ export default class SharedLibraryInvitationController {
 
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const { listenersEmails } = req.body
+            const { listenersEmails, profileId} = req.body
+            const { libraryId } = req.query
+
+            const library = await Library.findOne({ libraryId }, {
+                accessToken: req.accessToken
+            })
+
+            const profile = await Profile.getProfile(profileId, req.accessToken)
+
+            if (!library) {
+                return res.status(404).send({ message: "Library not found" })
+            }
 
             const invitationsSummary = []
             for (const listenerEmail of listenersEmails) {
                 const sharedLibraryInvitation = await SharedLibraryInvitation.create({
-                    libraryId: req.query.libraryId,
+                    libraryId,
                     userEmail: listenerEmail
                 }, { accessToken: req.accessToken })
 
                 invitationsSummary.push({
                     listenerEmail,
                     invited: Boolean(sharedLibraryInvitation)
+                })
+
+                EmailService.sendListenerInvitationEmail({
+                    to: listenerEmail,
+                    subject: "You are invited to join a collection"
+                }, {
+                    collectionTitle: library?.libraryName,
+                    collectionOwnerName: profile?.profileName
                 })
             }
 

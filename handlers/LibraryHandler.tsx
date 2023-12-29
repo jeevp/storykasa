@@ -43,11 +43,13 @@ export default class LibraryHandler {
     }
 
     static async addListenerToLibrary({ libraryId }: { libraryId: string }, {
-        listenersEmails
-    }: { listenersEmails: string[] }) {
+        listenersEmails,
+        profileId
+    }: { listenersEmails: string[], profileId: string }) {
         const headers = generateHeaders()
         const response = await axios.post(`/api/libraries/${libraryId}/listeners`, {
-            listenersEmails
+            listenersEmails,
+            profileId
         }, headers)
 
         return response.data
