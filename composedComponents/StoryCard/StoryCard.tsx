@@ -208,6 +208,11 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
         setCurrentLibraryStories(_currentLibraryStories)
         setRemoveStoryLoading(false)
         setShowRemoveFromCollectionDialog(false)
+        setSnackbarBus({
+            type: "success",
+            message: "Story removed from collection with success",
+            active: true
+        })
     }
 
 
