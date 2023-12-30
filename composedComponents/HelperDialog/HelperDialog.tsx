@@ -19,8 +19,7 @@ export default function HelperDialog({ active, onClose = () => ({}) }: HelperDia
         maxWidth="xs"
         active={active}
         onClose={() => onClose()}>
-            <h2 className="uppercase text-xs text-neutral-600 m-0">Helper Tooltip</h2>
-            <div className="mt-4">
+            <div>
                 {router.pathname === "/discover" && (
                     <>
                         <h3 className="text-2xl m-0">Discover</h3>
