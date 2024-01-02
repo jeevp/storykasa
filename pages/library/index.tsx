@@ -51,6 +51,14 @@ function Library() {
     useEffect(() => {
         if (privateStories) {
             setStories([...privateStories])
+
+            if (selectedStory) {
+                const _selectedStory = privateStories.find((privateStory: Story) => {
+                    return privateStory.storyId === selectedStory?.storyId
+                })
+
+                setSelectedStory(_selectedStory)
+            }
         }
     }, [privateStories]);
 

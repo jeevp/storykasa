@@ -8,6 +8,7 @@ import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import {useStory} from "@/contexts/story/StoryContext";
+import Story from "@/models/Story";
 
 
 interface DeleteStoryDialogProps {
@@ -32,6 +33,7 @@ export default function UpdateStoryDialog({
     const [description, setDescription] = useState("")
     const [narratorName, setNarratorName] = useState("")
 
+    const { privateStories, setPrivateStories } = useStory()
     const { currentProfileId } = useProfile()
     const { setStoryNarrators, setStoryLanguages } = useStory()
 
@@ -70,6 +72,22 @@ export default function UpdateStoryDialog({
             })
 
             handleFetchStoryFilters()
+
+            const _privateStories = privateStories.map((privateStory: Story) => {
+                if (privateStory.storyId === story.storyId) {
+                    return new Story({
+                        ...privateStory,
+                        title: title || privateStory.title,
+                        description: description || privateStory.description,
+                        narratorName: narratorName || privateStory.narratorName
+                    })
+                }
+
+                return privateStory
+            })
+
+            // @ts-ignore
+            setPrivateStories([..._privateStories])
 
             setSnackbarBus({
                 active: true,
