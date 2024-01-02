@@ -1,11 +1,9 @@
 import {useState} from 'react'
 import { Baby, GlobeSimple, Trash, Pencil } from '@phosphor-icons/react'
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
-import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKSlide from "@/components/STKSlide/STKSlide";
-import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStoryDialog";
 import Story from "@/models/Story";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import ReactMarkdown from 'react-markdown';
@@ -13,16 +11,12 @@ import ReactMarkdown from 'react-markdown';
 interface StoryDetailsProps {
     story: Story | null;
     editionNotAllowed?: boolean;
-    onLoadStories?: () => void;
 }
 export default function StoryDetails({
     story,
     editionNotAllowed,
-    onLoadStories = () => ({})
 }: StoryDetailsProps) {
     // States
-    const [showUpdateStoryDialog, setShowUpdateStoryDialog] = useState(false)
-    const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
     const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false)
     const [storyHasEnded, setStoryHasEnded] = useState(false)
     const [storyCurrentTime, setStoryCurrentTime] = useState(0)
@@ -124,31 +118,8 @@ export default function StoryDetails({
                         </div>
                     </div>
                 </div>
-                {currentProfileId === story?.profileId && !editionNotAllowed ? (
-                    <div className="flex items-center">
-                        <div className="mr-2">
-                            <STKButton startIcon={<Pencil size={18} />} onClick={() => setShowUpdateStoryDialog(true)}>
-                                Edit story
-                            </STKButton>
-                        </div>
-                        <div>
-                            <STKButton variant="outlined" startIcon={<Trash size={18} />} onClick={() => setShowDeleteStoryDialog(true)}>
-                                Delete story
-                            </STKButton>
-                        </div>
-                    </div>
-                ) : null}
             </div>
-            <UpdateStoryDialog
-            open={showUpdateStoryDialog}
-            story={story}
-            onSuccess={() => onLoadStories()}
-            onClose={() => setShowUpdateStoryDialog(false)} />
-            <DeleteStoryDialog
-            open={showDeleteStoryDialog}
-            story={story}
-            onSuccess={() => onLoadStories()}
-            onClose={() => setShowDeleteStoryDialog(false)} />
+
         </div>
     )
 }

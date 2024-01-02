@@ -9,7 +9,6 @@ interface StoryDetailsDialogProps {
     story: Story | null;
     editionNotAllowed?: boolean;
     onClose?: () => void;
-    onLoadStories?: () => void;
 }
 
 export default function StoryDetailsDialog({
@@ -17,7 +16,6 @@ export default function StoryDetailsDialog({
     editionNotAllowed,
     story,
     onClose = () => ({}),
-    onLoadStories = () => ({})
 }: StoryDetailsDialogProps) {
     return (
         <STKDialog
@@ -26,8 +24,7 @@ export default function StoryDetailsDialog({
         onClose={() => onClose()}>
             <StoryDetails
             editionNotAllowed={editionNotAllowed}
-            story={story}
-            onLoadStories={() => onLoadStories()} />
+            story={story} />
         </STKDialog>
     )
 }

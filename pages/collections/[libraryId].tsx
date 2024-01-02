@@ -230,7 +230,7 @@ function Library() {
                                     exit={{ x: 10, opacity: 0 }}
                                     key={selectedStory?.storyId}
                                 >
-                                    <StoryDetails story={selectedStory} onLoadStories={() => loadStories()}></StoryDetails>
+                                    <StoryDetails story={selectedStory} />
                                 </motion.div>
                             </AnimatePresence>
                         </div>
@@ -253,7 +253,6 @@ function Library() {
             <StoryDetailsDialog
                 open={showStoryDetailsDialog}
                 story={selectedStory !== undefined && selectedStory !== null ? selectedStory : null}
-                onLoadStories={() => loadStories()}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
             <AddListenerDialog
                 // @ts-ignore

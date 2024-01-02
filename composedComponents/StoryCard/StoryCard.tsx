@@ -22,11 +22,15 @@ import AddStoryToCollectionDialog from "@/composedComponents/AddStoryToCollectio
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useRouter} from "next/router";
 import {useLibrary} from "@/contexts/library/LibraryContext";
+import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStoryDialog";
+import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
 
 
 export const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
 export const ADD_TO_LIBRARY_MENU_OPTION = "ADD_TO_LIBRARY_MENU_OPTION"
 export const REMOVE_FROM_COLLECTION_MENU_OPTION = "REMOVE_FROM_COLLECTION_MENU_OPTION"
+export const EDIT_STORY_MENU_OPTION = "EDIT_STORY_MENU_OPTION"
+export const DELETE_STORY_MENU_OPTION = "DELETE_STORY_MENU_OPTION"
 
 export default function StoryCard({ story, enableMenuOptions, menuOptions = [], onClick = () => ({}) }: {
     story: Story
@@ -38,6 +42,8 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
     const router = useRouter()
 
     // States
+    const [showUpdateStoryDialog, setShowUpdateStoryDialog] = useState(false)
+    const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
     const [removeStoryLoading, setRemoveStoryLoading] = useState(false)
     const [showAddStoryToLibraryDialog, setShowAddStoryToLibraryDialog] = useState(false)
     const [loadingRequest, setLoadingRequest] = useState(false)
@@ -163,6 +169,14 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
 
             case REMOVE_FROM_COLLECTION_MENU_OPTION:
                 setShowRemoveFromCollectionDialog(true)
+                break
+
+            case EDIT_STORY_MENU_OPTION:
+                setShowUpdateStoryDialog(true)
+                break
+
+            case DELETE_STORY_MENU_OPTION:
+                setShowDeleteStoryDialog(true)
                 break
 
             default:
@@ -390,6 +404,14 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
             onAction={handleRemoveStoryFromCollection}
             confirmationButtonText="Remove story"
             onClose={() => setShowRemoveFromCollectionDialog(false)}/>
+            <UpdateStoryDialog
+            open={showUpdateStoryDialog}
+            story={story}
+            onClose={() => setShowUpdateStoryDialog(false)} />
+            <DeleteStoryDialog
+            open={showDeleteStoryDialog}
+            story={story}
+            onClose={() => setShowDeleteStoryDialog(false)} />
         </>
     )
 }

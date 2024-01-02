@@ -89,12 +89,10 @@ export default function UpdateStoryDialog({
         <STKDialog
         active={open}
         maxWidth="sm"
+        title="Edit story"
         fullScreen={onMobile}
         onClose={() => onClose()}>
             <div>
-                <h2 className="text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap" style={{ maxWidth: "87%" }}>
-                    {story?.title}
-                </h2>
                 <div className="mt-6">
                     <div>
                         <label className="font-semibold">Title</label>

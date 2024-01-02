@@ -1,6 +1,8 @@
 import StoryCard, {
     ADD_TO_LIBRARY_MENU_OPTION,
-    SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION
+    SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION,
+    DELETE_STORY_MENU_OPTION,
+    EDIT_STORY_MENU_OPTION
 } from '@/composedComponents/StoryCard/StoryCard'
 import { useEffect, useState} from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
@@ -179,7 +181,9 @@ function Library() {
                                                 value: ADD_TO_LIBRARY_MENU_OPTION
                                             }] : [
                                                 { label: "Add to collection", value: ADD_TO_LIBRARY_MENU_OPTION },
-                                                { label: "Submit to public library", value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION }
+                                                { label: "Submit to public library", value: SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION },
+                                                { label: "Edit story", value: EDIT_STORY_MENU_OPTION },
+                                                { label: "Delete story", value: DELETE_STORY_MENU_OPTION }
                                             ]}
                                             selected={selectedStory?.storyId === story?.storyId}
                                         ></StoryCard>
@@ -208,7 +212,7 @@ function Library() {
                                     exit={{ x: 10, opacity: 0 }}
                                     key={selectedStory?.storyId}
                                 >
-                                    <StoryDetails story={selectedStory} onLoadStories={() => loadStories()}></StoryDetails>
+                                    <StoryDetails story={selectedStory}/>
                                 </motion.div>
                             </AnimatePresence>
                         </div>
@@ -231,7 +235,6 @@ function Library() {
             <StoryDetailsDialog
                 open={showStoryDetailsDialog}
                 story={selectedStory !== undefined && selectedStory !== null ? selectedStory : null}
-                onLoadStories={() => loadStories()}
                 onClose={() => setShowStoryDetailsDialog(false)}/>
         </PageWrapper>
     )

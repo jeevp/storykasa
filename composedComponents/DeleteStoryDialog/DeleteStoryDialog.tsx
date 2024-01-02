@@ -5,6 +5,7 @@ import {Trash} from "@phosphor-icons/react";
 import useDevice from "@/customHooks/useDevice";
 import StoryHandler from "@/handlers/StoryHandler";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
+import {useStory} from "@/contexts/story/StoryContext";
 
 
 interface DeleteStoryDialogProps {
@@ -25,6 +26,9 @@ export default function DeleteStoryDialog({
 
     const [loading, setLoading] = useState(false)
 
+    // Contexts
+    const { privateStories, setPrivateStories } = useStory()
+
     // Methods
     const handleDeleteStory = async () => {
         if (story) {
@@ -37,6 +41,14 @@ export default function DeleteStoryDialog({
                     type: "success"
                 })
 
+                const _privateStories = privateStories.filter((_story) => {
+                    // @ts-ignore
+                    return _story?.storyId !== story?.storyId
+                })
+
+                // @ts-ignore
+                setPrivateStories(_privateStories)
+
                 onSuccess()
                 onClose()
             } finally {
@@ -47,13 +59,10 @@ export default function DeleteStoryDialog({
 
 
     return (
-        <STKDialog active={open} onClose={() => onClose()}>
+        <STKDialog title="Delete story" active={open} onClose={() => onClose()}>
             <div>
-                <h2 className="text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap" style={{ maxWidth: "87%" }}>
-                    Delete &ldquo;{story?.title}&rdquo;?
-                </h2>
                 <p className="mt-4">
-                    Are you sure you want to delete this story? Deleting a story is
+                    Are you sure you want to delete <span className="font-semibold">&ldquo;{story?.title}&rdquo;?</span> ? Deleting a story is
                     permanent and cannot be undone.
                 </p>
                 <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">
