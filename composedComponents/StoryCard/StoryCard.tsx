@@ -44,12 +44,11 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
     const [publicStoryRequestSent, setPublicStoryRequestSent] = useState(false)
     const [showRemoveFromCollectionDialog, setShowRemoveFromCollectionDialog] = useState(false)
     const [liked, setLiked] = useState(false)
-    const [showMenuTooltip, setShowMenuTooltip] = useState(true)
     const [showSubmitStoryToPublicLibraryInfoDialog, setShowSubmitStoryToPublicLibraryInfoDialog] = useState(false)
     const [infoDialogContent, setInfoDialogContent] = useState({
-        title: "Thank you for sharing your story!",
-        text: `We will review it and get back to you within 24 hours. Please note that 
-        only a small number of user submitted stories are included in the public library`
+        title: "Submit your story to our public library!",
+        text: `We're thrilled that you're considering sharing your story with our community. Your unique voice and 
+        narrative are what make our library a vibrant and diverse place.`
     })
 
     // Contexts
@@ -127,24 +126,23 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
             }
 
             setInfoDialogContent({ title, text})
-            setShowSubmitStoryToPublicLibraryInfoDialog(true)
 
             return
         }
 
 
         setLoadingRequest(true)
-        setShowSubmitStoryToPublicLibraryInfoDialog(true)
 
         const response = await StoryHandler.submitToPublicLibrary({
             storyId: story.storyId,
             profileId: currentProfileId
         })
 
-        if (response.status === 200) {
+        if (response.status === 201) {
             setInfoDialogContent({
-                title: "Request is processing",
-                text: "You have already submitted a request to add this story to the public library. "
+                title: "Thank you for sharing your story!",
+                text: `We will review it and get back to you within 24 hours. Please note that 
+                only a small number of user submitted stories are included in the public library`
             })
         }
 
@@ -152,11 +150,11 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
         setPublicStoryRequestSent(true)
     }
 
-    const handleMenuOnChange = async (menu: Object) => {
+    const handleMenuOnChange = (menu: Object) => {
         // @ts-ignore
         switch(menu?.value) {
             case SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION:
-                await handleSubmitStoryToPublicLibrary()
+                setShowSubmitStoryToPublicLibraryInfoDialog(true)
                 break
 
             case ADD_TO_LIBRARY_MENU_OPTION:
@@ -171,18 +169,6 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                 break
         }
     }
-
-    const handleShowMenuTooltip = () => {
-        setShowMenuTooltip(false)
-    }
-
-    const disableMenu = (
-        story?.publicStoryRequestRefused
-        || story?.publicStoryRequestProcessing
-        || story.publicStoryRequestApproved
-        || story?.isPublic
-        || publicStoryRequestSent
-    )
 
     const handleClick = (e: MouseEvent) => {
         e.stopPropagation()
@@ -221,7 +207,9 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                 active={showSubmitStoryToPublicLibraryInfoDialog}
                 title={infoDialogContent.title}
                 text={infoDialogContent.text}
-                loadingBeforeContent={loadingRequest}
+                loading={loadingRequest}
+                onAction={handleSubmitStoryToPublicLibrary}
+                confirmationButtonText={publicStoryRequestSent ? "" : "Submit to public library"}
                 onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
             {enableMenuOptions && (
                 <AddStoryToCollectionDialog
@@ -322,15 +310,13 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                                             <div>
                                                 <STKMenu
                                                     options={menuOptions}
-                                                    onChange={handleMenuOnChange}
-                                                    onClick={handleShowMenuTooltip}/>
+                                                    onChange={handleMenuOnChange}/>
                                             </div>
                                         ) : (
                                             <div>
                                                 <STKMenu
                                                     options={menuOptions}
-                                                    onChange={handleMenuOnChange}
-                                                    onClick={handleShowMenuTooltip}/>
+                                                    onChange={handleMenuOnChange}/>
                                             </div>
                                         )}
                                     </div>
@@ -377,8 +363,7 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                                 <div className="block lg:hidden">
                                     <STKMenu
                                         options={menuOptions}
-                                        onChange={handleMenuOnChange}
-                                        onClick={handleShowMenuTooltip}/>
+                                        onChange={handleMenuOnChange}/>
                                 </div>
                             ): (
                                 <div>
@@ -389,8 +374,7 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                                                 value: ADD_TO_LIBRARY_MENU_OPTION
                                             }
                                         ]}
-                                        onChange={handleMenuOnChange}
-                                        onClick={handleShowMenuTooltip}/>
+                                        onChange={handleMenuOnChange}/>
                                 </div>
                             )}
                         </div>

@@ -22,7 +22,6 @@ interface InfoDialogProps {
 
 export default function InfoDialog({
     active,
-    icon,
     loadingBeforeContent,
     title,
     text,
