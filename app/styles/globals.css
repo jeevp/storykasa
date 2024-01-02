@@ -33,3 +33,7 @@ p {
   margin: 0;
   padding: 0;
 }
+
+.theme {
+  font-family: "DM Sans",sans-serif !important;
+}

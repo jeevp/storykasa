@@ -155,8 +155,7 @@ export default function StoryFiltersDialog({
     }
 
     return (
-        <STKDialog maxWidth="xs" active={active} fullScreen={onMobile} onClose={handleClose}>
-            <h2 className="">Filters</h2>
+        <STKDialog title="Filters" maxWidth="xs" active={active} fullScreen={onMobile} onClose={handleClose}>
             <div className="mt-4">
                 <div>
                     <label className="font-semibold">Narrator</label>

@@ -83,24 +83,24 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                 <div className="flex items-center justify-between">
                     {recording ? (
                         paused ? (
-                            <button onClick={pauseResumeRecording} className="bg-neutral-50 text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center">
+                            <button onClick={pauseResumeRecording} className="bg-neutral-50 theme text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center">
                                 <Record fill={neutral800} />
                                 <span className="ml-2">Resume</span>
                             </button>
                         ) : (
-                            <button onClick={pauseResumeRecording} className="bg-neutral-50 text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center">
+                            <button onClick={pauseResumeRecording} className="bg-neutral-50 theme text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center">
                                 <PauseSolid fill={neutral800} />
                                 <span className="ml-2">Pause</span>
                             </button>
                         )
                     ) : (
-                        <button onClick={startRecording} className="bg-red-50 text-red-800 rounded-3xl border border-red-300 px-4 h-10 flex items-center">
+                        <button onClick={startRecording} className="bg-red-50 text-red-800 theme rounded-3xl border border-red-300 px-4 h-10 flex items-center">
                             <Record fill={red800} />
                             <span className="ml-2">Start recording</span>
                         </button>
                     )}
                     {recording && !processing && (
-                        <button onClick={stopRecording} className="bg-red-50 text-red-800 lg:rounded-3xl rounded-full w-10 lg:w-auto border border-red-300 justify-center lg:px-4 h-10 flex items-center">
+                        <button onClick={stopRecording} className="bg-red-50 theme text-red-800 lg:rounded-3xl rounded-full w-10 lg:w-auto border border-red-300 justify-center lg:px-4 h-10 flex items-center">
                             <Stop fill={red800} />
                             <span className="ml-2 lg:block hidden">Stop Recording</span>
                         </button>

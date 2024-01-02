@@ -315,7 +315,7 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                                     {story?.recordedBy && story.recordedBy !== currentProfileId && (
                                         <div className="hidden lg:block">
                                             <STKButton iconButton onClick={handleLikedStories}>
-                                                {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                                                {liked ? <FavoriteIcon sx={{ fill: green600, width: "22px", height: "22px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "22px", height: "22px" }} />}
                                             </STKButton>
                                         </div>
                                     )}
@@ -369,7 +369,7 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                             {story?.recordedBy && story.recordedBy !== currentProfileId && (
                                 <div className="block lg:hidden">
                                     <STKButton iconButton onClick={handleLikedStories}>
-                                        {liked ? <FavoriteIcon sx={{ fill: green600, width: "18px", height: "18px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "18px", height: "18px" }} />}
+                                        {liked ? <FavoriteIcon sx={{ fill: green600, width: "22px", height: "22px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "22px", height: "22px" }} />}
                                     </STKButton>
                                 </div>
                             )}

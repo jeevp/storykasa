@@ -140,7 +140,7 @@ function Discover() {
                             key={stories.length}
                         >
                             {filtered.length > 0  ? (
-                                <div className="overflow-y-scroll hide-scrollbar" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "62vh" }}>
+                                <div className="overflow-y-scroll hide-scrollbar" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
                                     {filtered?.map((story: Story, index: number) => (
                                         <div
                                             className="mt-2 first:mt-0"
@@ -187,7 +187,7 @@ function Discover() {
                 )}
 
                 {selectedStoryId !== undefined && (
-                    <div className="hidden lg:flex lg:w-full lg:pl-8">
+                    <div className="hidden lg:flex lg:w-full lg:pl-8 overflow-auto hide-scrollbar lg:ml-8" style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh", borderLeft: "1px solid #0000001f" }}>
                         <StoryDetails
                             // @ts-ignore
                             story={selectedStory}

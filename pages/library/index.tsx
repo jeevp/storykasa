@@ -28,6 +28,7 @@ import {neutral300} from "@/assets/colorPallet/colors";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useLibrary} from "@/contexts/library/LibraryContext";
+import STKButton from "@/components/STKButton/STKButton";
 
 function Library() {
     const { onMobile } = useDevice()
@@ -124,41 +125,59 @@ function Library() {
                                  This is the home for the index you save or record.
                              </p>
                          ) : privateStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
-                             <p>
-                                 Your library is empty, but you can change that! It’s easy to
-                                 <span className="font-semibold underline-offset-0">
-                                <Link href="/record"> create your own story</Link>
-                            </span>.
-                             </p>
+                             <div className="bg-[#f5efdc] box-border flex flex-col items-center p-5 rounded-lg text-center w-full">
+                                 <p className="text-lg text-gray-800 font-semibold text-center max-w-[240px] lg:max-w-lg">
+                                     {/* eslint-disable-next-line react/no-unescaped-entities */}
+                                     Your library is empty, but it doesn't have to be!
+                                 </p>
+                                 <p className="text-md text-gray-600 my-3 max-w-[240px] lg:max-w-lg">
+                                     Discover the joy of storytelling in two exciting ways:
+                                 </p>
+                                 <div className="mt-8 flex flex-col lg:flex-row">
+                                     <Link href="/record">
+                                         <STKButton fullWidth>Create your own story</STKButton>
+                                     </Link>
+                                     <span className="text-md text-gray-600 py-2 lg:py-0 lg:px-4">or</span>
+                                     <Link href="/discover">
+                                         <STKButton fullWidth>Add Stories from the Public Library</STKButton>
+                                     </Link>
+                                 </div>
+                             </div>
                          ) : null}
                      </>
                     )}
                 </div>
                 <>
-                    <div className={`w-full flex flex-col lg:flex-row mb-10 mt-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
-                        <div className="w-full max-w-xl">
-                            <STKTextField
-                                placeholder="Search in my library..."
-                                value={filterQuery}
-                                fluid
-                                startAdornment={<MagnifyingGlass size="20" />}
-                                onChange={handleFilterQueryChange}
-                            />
-                        </div>
-                        <div className="mt-2 lg:mt-0">
-                            <StoryFilters
-                            privateStories
-                            onChange={() => setSelectedStory(undefined)} />
-                        </div>
-                    </div>
-                    {Object.keys(storyFilters).length > 0 ? (
-                        <div className="mb-4">
-                            <StoryFiltersSummary
-                            privateStories
-                            onChange={() => setSelectedStory(undefined)} />
-                        </div>
-                    ) : null}
-                    <Divider />
+                    {privateStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
+                        <></>
+                    ) : (
+                        <>
+                            <div className={`w-full flex flex-col lg:flex-row mb-10 mt-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
+                                <div className="w-full max-w-xl">
+                                    <STKTextField
+                                        placeholder="Search in my library..."
+                                        value={filterQuery}
+                                        fluid
+                                        startAdornment={<MagnifyingGlass size="20" />}
+                                        onChange={handleFilterQueryChange}
+                                    />
+                                </div>
+                                <div className="mt-2 lg:mt-0">
+                                    <StoryFilters
+                                        privateStories
+                                        onChange={() => setSelectedStory(undefined)} />
+                                </div>
+                            </div>
+                            {Object.keys(storyFilters).length > 0 ? (
+                                <div className="mb-4">
+                                    <StoryFiltersSummary
+                                        privateStories
+                                        onChange={() => setSelectedStory(undefined)} />
+                                </div>
+                            ) : null}
+                            <Divider />
+                        </>
+                    )}
                 </>
             </div>
             {loaded ? (

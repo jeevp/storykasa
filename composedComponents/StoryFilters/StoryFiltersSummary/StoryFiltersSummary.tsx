@@ -5,6 +5,7 @@ import Story,{storyLengths} from "@/models/Story";
 import {XCircle} from "@phosphor-icons/react";
 import StoryHandler from "@/handlers/StoryHandler";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import STKChip from "@/components/STKChip/STKChip";
 
 interface StoryFiltersSummaryProps {
     privateStories?: boolean
@@ -98,7 +99,7 @@ export default function StoryFiltersSummary({ privateStories, onChange = () => (
         <div className="flex items-center overflow-x-auto hide-scrollbar">
             {filterChips.map((filterChip, index) => (
                 <div key={index} className="mr-1">
-                    <Chip
+                    <STKChip
                     // @ts-ignore
                     label={filterChip.label}
                     deleteIcon={<XCircle />}

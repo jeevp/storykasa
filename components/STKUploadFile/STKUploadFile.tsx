@@ -157,11 +157,11 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                         <input {...getInputProps()} />
                         {(props.multiple || !uploadProgress) && (files.length < (props.maxFiles || MAX_FILES_DEFAULT)) ? (
                             <div>
-                                <Typography variant="subtitle1">
+                                <label className="theme">
                                     {props.placeholder || "Drag & drop files here, or click to select them"}
-                                </Typography>
-                                <div>
-                                    <label className="text-sm font-semibold">
+                                </label>
+                                <div className="mt-2">
+                                    <label className="text-sm font-semibold theme">
                                         {props.helperText ? props.helperText : (
                                             <>
                                                 {props.maxSize || 5}MB max size
