@@ -358,8 +358,11 @@ class StoryController {
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
+            const defaultLibrary = await Library.findDefaultLibrary({ accountId: user.id }, { accessToken: req.accessToken })
+
             await LibraryStory.delete({
                 storyId,
+                libraryId: defaultLibrary.libraryId,
                 profileId,
                 accountId: user.id
             }, {

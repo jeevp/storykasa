@@ -45,7 +45,7 @@ class LibraryStory {
         return response.data
     }
 
-    static async delete({ storyId, profileId, accountId }, { accessToken }) {
+    static async delete({ storyId, profileId, libraryId, accountId }, { accessToken }) {
         if (!storyId || !profileId || !accountId) {
             throw new Error("storyId and profileId cannot be null")
         }
@@ -53,6 +53,7 @@ class LibraryStory {
         const response = await axios.delete(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
             params: {
                 story_id: `eq.${storyId}`,
+                library_id: `eq.${libraryId}`,
                 profile_id: `eq.${profileId}`,
                 account_id: `eq.${accountId}`
             },
