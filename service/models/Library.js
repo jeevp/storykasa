@@ -6,7 +6,7 @@ import LibraryStory from "../models/LibraryStory"
 import Profile from "../models/Profile"
 import {ApiError} from "next/dist/server/api-utils";
 
-export default class Library {
+class Library {
     /**
      *
      * @param {string} createdAt
@@ -267,3 +267,6 @@ export default class Library {
         }, 0) : 0
     }
 }
+
+
+module.exports = Library

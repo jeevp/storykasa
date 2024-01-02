@@ -8,7 +8,7 @@ const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
 const Story = require("../models/Story")
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
-const Library = require("../models/Library").default
+const Library = require("../models/Library")
 
 class StoryController {
     static async deleteStory(req, res) {

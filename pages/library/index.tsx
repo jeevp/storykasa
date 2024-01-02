@@ -33,7 +33,7 @@ function Library() {
     const [selectedStory, setSelectedStory] = useState<Story | undefined>()
     const [loaded, setLoaded] = useState(false)
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
-    const [index, setStories] = useState([])
+    const [stories, setStories] = useState([])
 
     // Contexts
     const { privateStories, setPrivateStories, storyFilters } = useStory()
@@ -44,6 +44,12 @@ function Library() {
     useEffect(() => {
         handleFetchLibraries()
     }, []);
+
+    useEffect(() => {
+        if (privateStories) {
+            setStories([...privateStories])
+        }
+    }, [privateStories]);
 
     // Methods
     const handleFetchLibraries = async () => {
@@ -155,10 +161,10 @@ function Library() {
             </div>
             {loaded ? (
                 <div className="flex w-full mt-6 pb-32 lg:pb-0">
-                        {index.length > 0 ? (
+                        {stories.length > 0 ? (
                             <div className="overflow-y-scroll hide-scrollbar w-full"
                                  style={onMobile ? { maxHeight: "auto" } : { maxHeight: "58vh" }}>
-                                {index?.map((story: Story) => (
+                                {stories?.map((story: Story) => (
                                     <div
                                         className="mt-2 first:mt-0"
                                         key={story.storyId}
@@ -180,7 +186,7 @@ function Library() {
                                     </div>
                                 ))}
                             </div>
-                        ) : index.length === 0 && Object.keys(storyFilters).length > 0 ? (
+                        ) : stories.length === 0 && Object.keys(storyFilters).length > 0 ? (
                             <div className="flex flex-col items-center">
                                 <SmileyMeh size={100} color={neutral300} />
                                 <p className="mt-4 text-center max-w-lg">
