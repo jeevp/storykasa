@@ -99,16 +99,25 @@ function Library() {
     return (
         <PageWrapper path="library">
             <div>
-                <div className="flex items-center">
-                    <STKButton iconButton onClick={gotToLibrariesPage}><ArrowBack /></STKButton>
-                    <h2 className="m-0 text-2xl ml-2">
-                        {router.query.libraryName}
-                        <span>
+                <div className="flex justify-between">
+                    <div className=" flex items-center w-full lg:w-auto mt-4 lg:mt-0">
+                        <STKButton iconButton onClick={gotToLibrariesPage}><ArrowBack /></STKButton>
+                        <h2 className="m-0 text-2xl ml-2">
+                            {router.query.libraryName}
+                            <span>
                         <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles.">
 
                         </STKTooltip>
                     </span>
-                    </h2>
+                        </h2>
+                    </div>
+                    <div className="hidden lg:block">
+                        <STKButton
+                            fullWidth={onMobile}
+                            onClick={() => setShowAddListenerDialog(true)}>
+                            Add listener
+                        </STKButton>
+                    </div>
                 </div>
                 {
                     // @ts-ignore
@@ -134,49 +143,63 @@ function Library() {
                         </div>
                     ) : (
                         <div className="flex w-full flex-col lg:flex-row justify-between">
-                            <div>
+                            <div className="w-full">
                                 {currentLibraryStories.length || (currentLibraryStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
                                     <p>
                                         This is the home for the index you save or record.
                                     </p>
                                 ) : currentLibraryStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
-                                    <p>
-                                        Your collection is empty! You can add index
-                                        from <span className="font-semibold"><Link href="/library"> your library</Link></span> to this collection
-                                    </p>
+                                    <div className="bg-[#f5efdc] box-border flex flex-col items-center p-5 rounded-lg text-center w-full">
+                                        <p className="text-lg text-gray-800 font-semibold text-center max-w-[240px] lg:max-w-lg">
+                                            {/* eslint-disable-next-line react/no-unescaped-entities */}
+                                            Your collection is empty!
+                                        </p>
+                                        <p className="text-md text-gray-600 my-3 max-w-[240px] lg:max-w-lg">
+                                            You can add stories from your library to this collection.
+                                        </p>
+                                        <div className="mt-8 flex flex-col lg:flex-row">
+                                            <Link href="/discover">
+                                                <STKButton variant="outlined" fullWidth>Add story from my library</STKButton>
+                                            </Link>
+                                        </div>
+                                    </div>
                                 ) : null}
-                            </div>
-                            <div className="w-full lg:w-auto mt-4 lg:mt-0">
-                                <STKButton
-                                fullWidth={onMobile}
-                                onClick={() => setShowAddListenerDialog(true)}>
-                                    Add listener
-                                </STKButton>
                             </div>
                         </div>
                     )}
-                </div>
-                <>
-                    <div className={`w-full flex flex-col lg:flex-row mb-10 mt-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
-                        <div className="w-full max-w-xl">
-                            <STKTextField
-                                placeholder="Search in my library..."
-                                value={filterQuery}
-                                fluid
-                                startAdornment={<MagnifyingGlass size="20" />}
-                                onChange={handleFilterQueryChange}
-                            />
-                        </div>
+                    <div className="block lg:hidden mt-4">
+                        <STKButton
+                            fullWidth={onMobile}
+                            onClick={() => setShowAddListenerDialog(true)}>
+                            Add listener
+                        </STKButton>
                     </div>
-                    {Object.keys(storyFilters).length > 0 ? (
-                        <div className="mb-4">
-                            <StoryFiltersSummary
-                                privateStories
-                                onChange={() => setSelectedStory(undefined)} />
+                </div>
+                {currentLibraryStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
+                    <></>
+                ) : (
+                    <>
+                        <div className={`w-full flex flex-col lg:flex-row mb-10 mt-10 justify-between ${disableSearchAndFilters() ? 'disabled' : ''}`}>
+                            <div className="w-full max-w-xl">
+                                <STKTextField
+                                    placeholder="Search in my library..."
+                                    value={filterQuery}
+                                    fluid
+                                    startAdornment={<MagnifyingGlass size="20" />}
+                                    onChange={handleFilterQueryChange}
+                                />
+                            </div>
                         </div>
-                    ) : null}
-                    <Divider />
-                </>
+                        {Object.keys(storyFilters).length > 0 ? (
+                            <div className="mb-4">
+                                <StoryFiltersSummary
+                                    privateStories
+                                    onChange={() => setSelectedStory(undefined)} />
+                            </div>
+                        ) : null}
+                        <Divider />
+                    </>
+                )}
             </div>
             {loaded ? (
                 <div className="flex sm:w-full mt-6 pb-32 lg:pb-0">

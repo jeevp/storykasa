@@ -110,7 +110,7 @@ function Library() {
                     </span>
                     </h2>
                 </div>
-                <div className="mt-4 max-w-2xl">
+                <div className="mt-4 w-full">
                     {!loaded ? (
                         <div className="mb-10">
                             <STKSkeleton width={onMobile ? '300px' : '500px'} height="20px" />
@@ -133,13 +133,13 @@ function Library() {
                                  <p className="text-md text-gray-600 my-3 max-w-[240px] lg:max-w-lg">
                                      Discover the joy of storytelling in two exciting ways:
                                  </p>
-                                 <div className="mt-8 flex flex-col lg:flex-row">
-                                     <Link href="/record">
-                                         <STKButton fullWidth>Create your own story</STKButton>
+                                 <div className="mt-8 flex flex-col lg:flex-row items-center">
+                                     <Link href="/record" className="w-full lg:w-auto">
+                                         <STKButton fullWidth={onMobile}>Create your own story</STKButton>
                                      </Link>
                                      <span className="text-md text-gray-600 py-2 lg:py-0 lg:px-4">or</span>
-                                     <Link href="/discover">
-                                         <STKButton fullWidth>Add Stories from the Public Library</STKButton>
+                                     <Link href="/discover" className="w-full lg:w-auto">
+                                         <STKButton variant="outlined" fullWidth={onMobile}>Add Stories from the Public Library</STKButton>
                                      </Link>
                                  </div>
                              </div>
