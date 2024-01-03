@@ -232,9 +232,9 @@ export default function StoryForm() {
                                     <STKUploadFile
                                     // @ts-ignore
                                         maxSize={50}
-                                        placeholder="Drag & drop an MP3 file here, or click to select one"
-                                        acceptedTypes={["audio/mp3", "audio/mpeg"]}
-                                        errorMessage="Please upload a valid MP3 file."
+                                        placeholder="Drag & drop a MP3 or MP4 file here, or click to select one"
+                                        acceptedTypes={["audio/mp3", "audio/mpeg", "audio/mp4"]}
+                                        errorMessage="Please upload a valid MP3 or MP4 file."
                                     onFileUpload={handleStoryAudioFileOnUpload} />
                                 </div>
                             )}
