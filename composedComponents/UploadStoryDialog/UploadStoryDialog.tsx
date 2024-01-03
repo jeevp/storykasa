@@ -27,9 +27,7 @@ export default function UploadStoryDialog({ open, onClose = () => ({}) }: Upload
             <div>
                 <p className="mt-4">
                     {/* eslint-disable-next-line react/no-unescaped-entities */}
-                    Congratulations on crafting your brand new story! If you’d like to share your story with friends
-                    and family, simply <Link href="/collections" className="font-semibold no-underline text-green-600">create a collection here</Link>. Feel free
-                    {/* eslint-disable-next-line react/no-unescaped-entities */} to explore this option whenever you're ready!
+                    Congratulations on crafting your brand new story! If you’d like to share your story with friends and family, simply <Link href="/collections" className="font-semibold no-underline text-green-600">create a collection here</Link>. Feel free to explore this option whenever you're ready!
                 </p>
 
                 <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">
