@@ -1,8 +1,9 @@
 import supabase from "../supabase";
-import Library from "../models/Library"
-import SharedLibraryInvitation from "../models/SharedLibraryInvitation"
 import APIValidator from "../validators/APIValidator"
-import Story from "../models/Story"
+const Library = require("../models/Library")
+const SharedLibraryInvitation = require("../models/SharedLibraryInvitation")
+const Story = require("../models/Story")
+
 
 export default class LibraryController {
     static async getLibraries(req, res) {
