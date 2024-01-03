@@ -23,11 +23,8 @@ export default function CancelRecordingDialog({
     }
 
     return (
-        <STKDialog active={open} onClose={() => onClose()}>
+        <STKDialog title="Delete recording" active={open} onClose={() => onClose()}>
             <div>
-                <h2 className="text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap" style={{ maxWidth: "87%" }}>
-                    Delete recording
-                </h2>
                 <p className="mt-4">
                     Are you sure you want to delete this recording and start over?
                 </p>

@@ -217,22 +217,16 @@ class StoryController {
 
             // simulate the story "saving" process by adding it to the library_stories table
             if (newStoryID && user) {
-                const libraryResponse = await axios.get(
-                    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
-                        params: {
-                            select: "*",
-                            "account_id": `eq.${user?.id}`
-                        },
-                        headers: generateSupabaseHeaders(req.accessToken)
-                    }
-                )
+                const defaultLibrary = await Library.findDefaultLibrary({ accountId: user?.id }, {
+                    accessToken: req.accessToken
+                })
 
                 const storyResponse = await axios.post(
                     `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`,
                     {
                         account_id: user.id,
                         story_id: newStoryID,
-                        library_id: libraryResponse?.data[0]?.library_id,
+                        library_id: defaultLibrary.libraryId,
                         profile_id: profileId
                     },
                     {

@@ -233,7 +233,7 @@ export default function StoryForm() {
                                     // @ts-ignore
                                         maxSize={50}
                                         placeholder="Drag & drop a MP3 or MP4 file here, or click to select one"
-                                        acceptedTypes={["audio/mp3", "audio/mpeg", "audio/mp4"]}
+                                        acceptedTypes={["audio/mp3", "audio/mpeg", "audio/mp4", "audio/x-m4a"]}
                                         errorMessage="Please upload a valid MP3 or MP4 file."
                                     onFileUpload={handleStoryAudioFileOnUpload} />
                                 </div>

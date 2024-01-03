@@ -30,11 +30,8 @@ export default function FeedbackDialog({
 
 
     return (
-        <STKDialog active={open} onClose={() => onClose()}>
+        <STKDialog title={title} active={open} onClose={() => onClose()}>
             <div>
-                <h2 className="text-xl font-bold">
-                    {title}
-                </h2>
                 <p className="mt-4">
                     {text}
                 </p>

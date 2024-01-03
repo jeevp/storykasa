@@ -21,11 +21,8 @@ export default function UploadStoryDialog({ open, onClose = () => ({}) }: Upload
     }
 
     return (
-        <STKDialog active={open} onClose={() => onClose()}>
+        <STKDialog title="Added to your library!" active={open} onClose={() => onClose()}>
             <div>
-                <h2 className="text-xl font-bold">
-                    Added to your library!
-                </h2>
                 <p className="mt-4">
                     Congratulations on your brand new story. Go to your library
                     to listen to it.
