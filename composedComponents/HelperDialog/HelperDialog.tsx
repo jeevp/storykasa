@@ -13,16 +13,40 @@ export default function HelperDialog({ active, onClose = () => ({}) }: HelperDia
 
     const { onMobile} = useDevice()
 
+
+    // Methods
+    const generateDialogTitle = () => {
+        switch(router.pathname) {
+            case "/discover":
+                return "Discover"
+
+            case "/library":
+                return "My Library"
+
+            case "/record":
+                return "Create a story"
+
+            case "/profiles":
+                return "Profiles"
+
+            case "/collections":
+                return "Collections"
+
+            default:
+                return ""
+        }
+    }
+
     return (
         <STKDialog
         fullScreen={onMobile}
         maxWidth="xs"
         active={active}
+        title={generateDialogTitle()}
         onClose={() => onClose()}>
             <div>
                 {router.pathname === "/discover" && (
                     <>
-                        <h3 className="text-2xl m-0">Discover</h3>
                         <p className="mt-4">
                             This is the place where you can find new stories.  Each story card displays the story length
                             in minutes, age group for the story, and the language. When you click on a story you get
@@ -43,7 +67,6 @@ export default function HelperDialog({ active, onClose = () => ({}) }: HelperDia
 
                 {router.pathname === "/library" && (
                     <>
-                        <h3 className="text-2xl m-0">My Library</h3>
                         <p className="mt-4">
                             Each user has a private library or story collection. Your library will be empty when you
                             first visit StoryKasa. You can save your favorite stories from Discover and they will be
@@ -63,7 +86,6 @@ export default function HelperDialog({ active, onClose = () => ({}) }: HelperDia
 
                 {router.pathname === "/record" && (
                     <>
-                        <h3 className="text-2xl m-0">Create a story</h3>
                         <p className="mt-4">
                             A few pointers before you record your story. It might be helpful to write it out or create
                             an outline of the main points. We recommend that you keep it short, and try to limit it
@@ -95,7 +117,6 @@ export default function HelperDialog({ active, onClose = () => ({}) }: HelperDia
 
                 {router.pathname === "/profiles" && (
                     <>
-                        <h3 className="text-2xl m-0">Profiles</h3>
                         <p className="mt-4">
                             We used your account name for your primary profile but you can edit this if you would
                             like a different profile name. You can add other family or household members to the
@@ -112,7 +133,6 @@ export default function HelperDialog({ active, onClose = () => ({}) }: HelperDia
 
                 {router.pathname === "/collections" && (
                     <>
-                        <h3 className="text-2xl m-0">Collections</h3>
                         <p className="mt-4">
                             Collections are an easy way to organize stories that you listen to often. A collection
                             can consist of a single story or several stories and you can choose how to organize them.
