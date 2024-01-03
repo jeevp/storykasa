@@ -2,7 +2,6 @@ import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
 import axios from "axios";
 import Profile from "../models/Profile"
 
-
 export default class Account {
     constructor({
         accountId,
