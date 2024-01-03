@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Profile } from '@/lib/database-helpers.types'
 import { usePathname } from 'next/navigation'
-import {BookOpenText, Books, Info, Question} from '@phosphor-icons/react'
+import {BookOpenText, Books, Question} from '@phosphor-icons/react'
 import useDevice from "@/customHooks/useDevice";
 import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {useRouter} from "next/router";
@@ -33,7 +32,6 @@ export default function SideNavigation() {
 
     // States
     const [showHelperDialog, setShowHelperDialog] = useState(false)
-    const [profileOptions, setProfileOptions] = useState<Profile[]>([])
     const [selectedNavigationOption, setSelectedNavigationOption] = useState<Object>({})
 
     // Mount

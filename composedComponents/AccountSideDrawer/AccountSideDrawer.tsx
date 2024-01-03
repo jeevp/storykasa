@@ -1,7 +1,7 @@
 import STKDrawer from "@/components/STKDrawer/STKDrawer";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKButton from "@/components/STKButton/STKButton";
-import {UserSwitch, SignOut, BookOpenText, Books, Info} from '@phosphor-icons/react'
+import {UserSwitch, SignOut, BookOpenText, Books, Info, Question} from '@phosphor-icons/react'
 import { STK_PROFILE_ID, STK_ACCESS_TOKEN, STK_REFRESH_TOKEN } from "@/config"
 import AuthHandler from "@/handlers/AuthHandler";
 import {useRouter} from "next/router";
@@ -10,11 +10,12 @@ import {useAuth} from "@/contexts/auth/AuthContext";
 import RecordButton from "@/composedComponents/RecordButton/RecordButton";
 import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {neutral800} from "@/assets/colorPallet/colors";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useStory} from "@/contexts/story/StoryContext";
 import {Divider} from "@mui/material";
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
+import HelperDialog from "@/composedComponents/HelperDialog/HelperDialog";
 
 interface AccountSideDrawerProps {
     open: boolean
@@ -31,6 +32,7 @@ const navigationOptions = [
 export default function AccountSideDrawer({ open, onClose = () => ({}) }: AccountSideDrawerProps) {
     const router = useRouter()
 
+    const [showHelperDialog, setShowHelperDialog] = useState(false)
     const { setCurrentUser, currentUserIsAdmin, currentUser } = useAuth()
     const { setCurrentProfileId, currentProfile, setCurrentProfile } = useProfile()
     const [selectedNavigationOption, setSelectedNavigationOption] = useState<Object>({})
@@ -127,6 +129,17 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                     About us
                                 </STKButton>
                             </div>
+                            <div className="mt-4">
+                                <STKButton
+                                    startIcon={<Question />}
+                                    alignStart
+                                    color="info"
+                                    variant="outlined"
+                                    fullWidth
+                                    onClick={() => setShowHelperDialog(true)}>
+                                    Help
+                                </STKButton>
+                            </div>
                         </div>
                     )}
                     {currentUserIsAdmin && (
@@ -162,6 +175,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                     </div>
                 </div>
             </div>
+            <HelperDialog active={showHelperDialog} onClose={() => setShowHelperDialog(false)} />
         </STKDrawer>
     )
 }
