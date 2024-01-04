@@ -1,10 +1,11 @@
 import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
 import axios from "axios";
-import Account from "../models/Account"
-import Story from "../models/Story"
-import LibraryStory from "../models/LibraryStory"
-import Profile from "../models/Profile"
 import {ApiError} from "next/dist/server/api-utils";
+
+const LibraryStory = require("./LibraryStory")
+const Profile = require("./Profile")
+const Story = require("./Story")
+const Account = require("./Account").default
 
 class Library {
     /**

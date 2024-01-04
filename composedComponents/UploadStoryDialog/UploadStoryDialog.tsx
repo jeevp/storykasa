@@ -1,9 +1,11 @@
 import React from 'react';
+import Link from "next/link"
 import STKDialog from "@/components/STKDialog/STKDialog";
 import {Books} from "@phosphor-icons/react";
 import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
 import {useRouter} from "next/navigation";
+import {green600} from "@/assets/colorPallet/colors";
 
 
 interface UploadStoryDialogProps {
@@ -24,16 +26,12 @@ export default function UploadStoryDialog({ open, onClose = () => ({}) }: Upload
         <STKDialog title="Added to your library!" active={open} onClose={() => onClose()}>
             <div>
                 <p className="mt-4">
-                    Congratulations on your brand new story. Go to your library
-                    to listen to it.
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    Congratulations on crafting your brand new story! If you’d like to share your story with friends and family, simply <Link href="/collections" className="font-semibold no-underline text-green-600">create a collection here</Link>. Feel free to explore this option whenever you're ready!
                 </p>
-                <div className="mt-8 flex items-center flex-col lg:flex-row">
-                    <div className="w-full lg:w-auto">
-                        <STKButton fullWidth={onMobile} variant="outlined" onClick={() => onClose()}>
-                            Cancel
-                        </STKButton>
-                    </div>
-                    <div className="lg:ml-2 ml-0 mt-2 lg:mt-0 w-full lg:w-auto">
+
+                <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">
+                    <div className="mt-2 lg:mt-0 w-full lg:w-auto">
                         <STKButton
                             fullWidth={onMobile}
                             color="primary"
