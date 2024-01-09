@@ -4,10 +4,6 @@ const APIValidator = require("../validators/APIValidator")
 const TernsAndPrivacyConsent = require("../models/TermsAndPrivacyConsent")
 const StripeService = require("../services/StripeService/StripeService")
 
-const stripeService = new StripeService({
-    secretKey: process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY
-})
-
 
 class AuthController {
     static async signUp(req, res) {
@@ -63,10 +59,11 @@ class AuthController {
 
 
             // Let's create a free account as default
-            const stripeCustomer = await stripeService.customers.create({ email })
-            await stripeService.subscriptions.create({
+            const stripeCustomer = await StripeService.customers.create({ email })
+
+            await StripeService.subscriptions.create({
                 customerId: stripeCustomer?.id,
-                planId: ""
+                planId: process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID
             })
 
             return res.status(200).send({
@@ -74,6 +71,7 @@ class AuthController {
                 profile
             })
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

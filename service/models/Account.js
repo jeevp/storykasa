@@ -17,8 +17,6 @@ export default class Account {
         this.avatarUrl = avatarUrl
     }
 
-
-
     static async findOne({ accountId }, { accessToken }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/accounts`, {
             params: {
