@@ -3,7 +3,6 @@ import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
 import STKSnackbar from "@/components/STKSnackbar/STKSnackbar";
-import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import AddMemberToList from "@/composedComponents/AddMemberToList/AddMemberToList"
 import LibraryHandler from "@/handlers/LibraryHandler";
 import Library from "@/models/Library";

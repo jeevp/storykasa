@@ -53,56 +53,52 @@ export default function ProfileCreationForm({
     }
 
     const handleProfileCreation = async () => {
-        try {
-            setLoading(true)
-            const payload = {}
-            if (profileName && profileName!.length > 0) {
-                // @ts-ignore
-                payload["profileName"] = profileName
-            } else {
-                alert('profile name cannot be empty')
-            }
-
-            // if there is a new avatar file, we need to upload to the bucket
-            if (images.length && images[0].file) {
-                const avatarFormData = new FormData()
-                const file: Blob = await resizeImage(images[0].file, 200)
-                avatarFormData.set('file', file)
-
-                // @ts-ignore
-                avatarFormData.set('uploadDetails', JSON.stringify({
-                    bucketName: AVATAR_BUCKET_NAME,
-                    extension: AVATAR_FILE_EXTENSION
-                }))
-
-                // @ts-ignore
-                payload.avatarUrl = await StorageHandler.uploadFile(avatarFormData)
-            }
-
-            if (profile?.profileId) {
-                await ProfileHandler.updateProfile({ profileId: profile.profileId }, {
-                    // @ts-ignore
-                    name: payload.profileName,
-                    // @ts-ignore
-                    avatarUrl: payload.avatarUrl
-                })
-            } else {
-                const createdProfile = await ProfileHandler.updateProfile({
-                    profileId: currentProfileId
-                }, {
-                    // @ts-ignore
-                    name: payload.profileName,
-                    // @ts-ignore
-                    avatarUrl: payload.avatarUrl
-                })
-
-                setCurrentProfile(createdProfile)
-            }
-
-            onSuccess()
-        } finally {
-            setLoading(false)
+        setLoading(true)
+        const payload = {}
+        if (profileName && profileName!.length > 0) {
+            // @ts-ignore
+            payload["profileName"] = profileName
+        } else {
+            alert('profile name cannot be empty')
         }
+
+        // if there is a new avatar file, we need to upload to the bucket
+        if (images.length && images[0].file) {
+            const avatarFormData = new FormData()
+            const file: Blob = await resizeImage(images[0].file, 200)
+            avatarFormData.set('file', file)
+
+            // @ts-ignore
+            avatarFormData.set('uploadDetails', JSON.stringify({
+                bucketName: AVATAR_BUCKET_NAME,
+                extension: AVATAR_FILE_EXTENSION
+            }))
+
+            // @ts-ignore
+            payload.avatarUrl = await StorageHandler.uploadFile(avatarFormData)
+        }
+
+        if (profile?.profileId) {
+            await ProfileHandler.updateProfile({ profileId: profile.profileId }, {
+                // @ts-ignore
+                name: payload.profileName,
+                // @ts-ignore
+                avatarUrl: payload.avatarUrl
+            })
+        } else {
+            const createdProfile = await ProfileHandler.updateProfile({
+                profileId: currentProfileId
+            }, {
+                // @ts-ignore
+                name: payload.profileName,
+                // @ts-ignore
+                avatarUrl: payload.avatarUrl
+            })
+
+            setCurrentProfile(createdProfile)
+        }
+
+        onSuccess()
     }
 
     const onChange = (imageList: ImageListType) => {

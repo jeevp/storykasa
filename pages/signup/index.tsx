@@ -6,6 +6,7 @@ import {useRouter} from "next/router";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import AccountPlanCard from '@/composedComponents/AccountPlanCard/AccountPlanCard';
 import STKButton from "@/components/STKButton/STKButton";
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import {
     FREE_SUBSCRIPTION_PLAN, PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
     PREMIUM_SUBSCRIPTION_PLAN,
@@ -13,6 +14,7 @@ import {
 } from "@/models/Subscription";
 import StripeCheckout from "@/composedComponents/StripeCheckout/StripeCheckout";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
+import {green600} from "@/assets/colorPallet/colors";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 
 const USER_DETAILS_STEP = "USER_DETAILS_STEP"
@@ -40,6 +42,7 @@ export default function Signup() {
     const handleChoosePlan = async () => {
         if (selectedPlan.value === FREE_SUBSCRIPTION_PLAN) {
             setCurrentStep(PROFILE_CREATION_STEP)
+            return
         }
 
         setLoadingPaymentIntent(true)
@@ -54,6 +57,7 @@ export default function Signup() {
     const plans = [
         {
             name: 'Free',
+            extensionName: "",
             price: '$0',
             features: [
                 'Unlimited listening time to select stories',
@@ -66,6 +70,7 @@ export default function Signup() {
         },
         {
             name: 'Premium',
+            extensionName: "",
             price: '$10',
             features: [
                 'Unlimited listening time to all stories',
@@ -77,7 +82,8 @@ export default function Signup() {
             value: PREMIUM_SUBSCRIPTION_PLAN
         },
         {
-            name: 'Premium Unlimited',
+            name: 'Premium',
+            extensionName: "Unlimited",
             price: '$20',
             features: [
                 'Unlimited listening time to all stories',
@@ -92,7 +98,8 @@ export default function Signup() {
             value: PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN
         },
         {
-            name: 'Premium Organizational',
+            name: 'Premium',
+            extensionName: "Organizational",
             price: '$300',
             features: [
                 'Unlimited listening time to all stories',
@@ -115,6 +122,12 @@ export default function Signup() {
         })
 
         setCurrentStep(PROFILE_CREATION_STEP)
+
+        setSnackbarBus({
+            active: true,
+            message: "Welcome to StoryKasa! Unleash your creativity and enjoy our world of stories.",
+            type: "success"
+        })
     }
 
 
@@ -131,11 +144,21 @@ export default function Signup() {
                     </>
                 ) : currentStep === CHOOSE_PLAN_STEP ? (
                     <>
-                        <h1 className="text-2xl font-bold">Choose your plan</h1>
-                        <p className="mt-2 text-md text-gray-600 text-center max-w-2xl">Select the plan that best fits your needs. Compare the features below to make an informed decision. You can always change your plan later in your account settings.</p>
+                        <div className="flex items-center">
+                            <WorkspacePremiumIcon sx={{ width: "32px", height: "32px", color: green600 }} />
+                            <h1 className="text-2xl ml-2 font-bold">Choose your plan</h1>
+                        </div>
+                        <p className="mt-2 text-md text-gray-600 text-center text-lg max-w-3xl">Select the plan that best fits your needs. Compare the features below to make an informed decision. You can always change your plan later in your account settings.</p>
 
                         <div className="mt-8">
-                            <div className="flex flex-col items-center lg:items-stretch box-border sm:flex-row justify-center mt-5 gap-4">
+                            <div className="mt-8 hidden lg:flex px-4 justify-end items-center">
+                                <STKButton
+                                    onClick={handleChoosePlan}
+                                    loading={loadingPaymentIntent}>
+                                    Continue
+                                </STKButton>
+                            </div>
+                            <div className="flex flex-col items-center lg:items-stretch box-border sm:flex-row justify-center mt-5">
                                 {plans.map(plan => (
                                     <AccountPlanCard
                                         key={plan.name}
@@ -144,7 +167,7 @@ export default function Signup() {
                                     />
                                 ))}
                             </div>
-                            <div className="mt-8 flex justify-end items-center">
+                            <div className="mt-8 flex lg:hidden px-4 justify-end items-center">
                                 <STKButton
                                     onClick={handleChoosePlan}
                                     loading={loadingPaymentIntent}>
@@ -163,10 +186,21 @@ export default function Signup() {
                 ) : currentStep === PROFILE_CREATION_STEP ? (
                     <>
                         <h1 className="text-2xl font-bold">Create your profile</h1>
-                        <div className="lg:w-3/6 mt-5 w-full">
-                            <p>
-                                An account can have up to five profiles. Get started by creating a profile for
-                                yourself. Later, you can create profiles for other members of your family or group.
+                        <div className="lg:w-4/6 mt-5 w-full">
+                            <p className="text-lg">
+                                {selectedPlan?.value === FREE_SUBSCRIPTION_PLAN ? (
+                                    ` An account can have up to three profiles. Get started by creating a profile for
+                                yourself. Later, you can create profiles for other members of your family or group.`
+                                ) : selectedPlan?.value === PREMIUM_SUBSCRIPTION_PLAN ? (
+                                    ` An account can have up to five profiles. Get started by creating a profile for
+                                yourself. Later, you can create profiles for other members of your family or group.`
+                                ) : (
+                                    selectedPlan?.value === PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN
+                                    || selectedPlan?.value === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN
+                                )  ? (
+                                    ` An account can have unlimited profiles. Get started by creating a profile for
+                                yourself. Later, you can create profiles for other members of your family or group.`
+                                ): null}
                             </p>
                             <div className="mt-10">
                                 <ProfileCreationForm
