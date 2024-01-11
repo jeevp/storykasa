@@ -53,6 +53,10 @@ const StripeCheckout = ({
                                 <label>{subscriptionPlan?.price}</label>
                             </div>
                         </div>
+                        <div className="mt-6 bg-[#eaf8b2] p-4 text-sm rounded-2xl">
+                            <p>This is a recurring charge. {subscriptionPlan?.price} will be automatically
+                                billed to your credit card every month. </p>
+                        </div>
                     </div>
                 </STKCard>
             </div>
