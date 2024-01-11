@@ -44,7 +44,7 @@ const StripeCheckout = ({
                         <div>
                             <label className="font-semibold">Subscription plan</label>
                             <div>
-                                <label>{subscriptionPlan?.name}</label>
+                                <label>{subscriptionPlan?.name} {subscriptionPlan?.extensionName}</label>
                             </div>
                         </div>
                         <div className="mt-4">
