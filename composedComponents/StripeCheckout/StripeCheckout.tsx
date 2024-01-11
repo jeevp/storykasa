@@ -4,6 +4,7 @@ import CheckoutForm from "@/composedComponents/StripeCheckout/CheckoutForm/Check
 import STKCard from "@/components/STKCard/STKCard";
 import STKButton from "@/components/STKButton/STKButton";
 import {ArrowBack} from "@mui/icons-material";
+import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
 
 // @ts-ignore
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -11,13 +12,16 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 const StripeCheckout = ({
     clientSecret,
     subscriptionPlan,
-    onCancel = () => ({})
+    onCancel = () => ({}),
+    onSuccess = () => ({})
 }: {
     clientSecret: any,
     subscriptionPlan: any,
-    onCancel: () => void
+    onCancel: () => void,
+    onSuccess: () => void
 }) => {
     const options = { clientSecret }
+
 
     return (
         <div>
@@ -47,7 +51,10 @@ const StripeCheckout = ({
                 <STKCard>
                     <div className="p-6">
                         <Elements stripe={stripePromise} options={options}>
-                            <CheckoutForm clientSecret={clientSecret}  />
+                            <CheckoutForm
+                            // @ts-ignore
+                            clientSecret={clientSecret}
+                            onSuccess={() => onSuccess()}  />
                         </Elements>
                     </div>
                 </STKCard>

@@ -9,6 +9,18 @@ class Customer {
 
         return customer
     }
+
+    static async attachPaymentMethod({ customerId }, { paymentMethodId }) {
+        await stripe.paymentMethods.attach(paymentMethodId, {
+            customer: customerId,
+        })
+
+        await stripe.customers.update(customerId, {
+            invoice_settings: {
+                default_payment_method: paymentMethodId,
+            },
+        });
+    }
 }
 
 module.exports = Customer

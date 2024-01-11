@@ -15,6 +15,23 @@ class Subscription {
 
         return subscription
     }
+
+    static async findOne({ subscriptionId }) {
+        return await stripe.subscriptions.retrieve(subscriptionId)
+    }
+
+    static async update({ subscriptionId }, { priceId }) {
+        const subscription = await Subscription.findOne({ subscriptionId })
+
+        return await stripe.subscriptions.update(subscriptionId, {
+            items: [{id: subscription.items.data[0].id, price: priceId}]
+        })
+    }
+
+
+
+
+
 }
 
 module.exports = Subscription

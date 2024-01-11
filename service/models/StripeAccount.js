@@ -22,9 +22,9 @@ class StripeAccount {
         stripeCustomerId,
     }, { accessToken }) {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stripe_accounts`, {
-            accountId,
-            stripeSubscriptionId,
-            stripeCustomerId
+            account_id: accountId,
+            stripe_subscription_id: stripeSubscriptionId,
+            stripe_customer_id: stripeCustomerId
         }, {
             headers: generateSupabaseHeaders(accessToken)
         })

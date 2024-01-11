@@ -13,6 +13,7 @@ import {
 } from "@/models/Subscription";
 import StripeCheckout from "@/composedComponents/StripeCheckout/StripeCheckout";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
+import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 
 const USER_DETAILS_STEP = "USER_DETAILS_STEP"
 const PROFILE_CREATION_STEP = "PROFILE_CREATION_STEP"
@@ -24,11 +25,12 @@ export default function Signup() {
     const [selectedPlan, setSelectedPlan] = useState({
         value: FREE_SUBSCRIPTION_PLAN
     });
-    const [paymentIntentClientSecret, setPaymentIntentClientSecret] = useState(null)
+    const [setupIntentClientSecret, setSetupIntentClientSecret] = useState(null)
     const [loadingPaymentIntent, setLoadingPaymentIntent] = useState(false)
 
     const router = useRouter()
     const { currentProfile } = useProfile()
+    const { setSnackbarBus } = useSnackbar()
 
     // Methods
     const goToDiscoverPage = async () => {
@@ -41,12 +43,11 @@ export default function Signup() {
         }
 
         setLoadingPaymentIntent(true)
-        const clientSecret = await SubscriptionPlanHandler.updateSubscriptionPlan({
-            subscriptionPlan: selectedPlan.value
-        })
+        const _setupIntentClientSecret = await SubscriptionPlanHandler.createSetupIntent()
+        // @ts-ignore
+        setSetupIntentClientSecret(_setupIntentClientSecret)
         setLoadingPaymentIntent(false)
 
-        setPaymentIntentClientSecret(clientSecret)
         setCurrentStep(STRIPE_CHECKOUT_STEP)
     }
 
@@ -108,6 +109,14 @@ export default function Signup() {
         }
     ];
 
+    const handleUpdateSubscriptionPlan = async () => {
+        await SubscriptionPlanHandler.updateSubscriptionPlan({
+            subscriptionPlan: selectedPlan?.value
+        })
+
+        setCurrentStep(PROFILE_CREATION_STEP)
+    }
+
 
 
     return (
@@ -126,7 +135,7 @@ export default function Signup() {
                         <p className="mt-2 text-md text-gray-600 text-center max-w-2xl">Select the plan that best fits your needs. Compare the features below to make an informed decision. You can always change your plan later in your account settings.</p>
 
                         <div className="mt-8">
-                            <div className="flex flex-row justify-center mt-5">
+                            <div className="flex flex-col items-center lg:items-stretch box-border sm:flex-row justify-center mt-5 gap-4">
                                 {plans.map(plan => (
                                     <AccountPlanCard
                                         key={plan.name}
@@ -137,8 +146,8 @@ export default function Signup() {
                             </div>
                             <div className="mt-8 flex justify-end items-center">
                                 <STKButton
-                                onClick={handleChoosePlan}
-                                loading={loadingPaymentIntent}>
+                                    onClick={handleChoosePlan}
+                                    loading={loadingPaymentIntent}>
                                     Continue
                                 </STKButton>
                             </div>
@@ -147,8 +156,9 @@ export default function Signup() {
                     </>
                 ) : currentStep === STRIPE_CHECKOUT_STEP ? (
                     <StripeCheckout
-                        clientSecret={paymentIntentClientSecret}
+                        clientSecret={setupIntentClientSecret}
                         subscriptionPlan={selectedPlan}
+                        onSuccess={handleUpdateSubscriptionPlan}
                         onCancel={() => setCurrentStep(CHOOSE_PLAN_STEP)}/>
                 ) : currentStep === PROFILE_CREATION_STEP ? (
                     <>

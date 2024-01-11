@@ -19,7 +19,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, onSelect }) => {
 
     return (
         <div
-            className={`max-w-sm w-72 rounded overflow-hidden border-solid border m-4 transition duration-300 ease-in-out transform bg-white hover:scale-105 cursor-pointer ${isSelected ? `ring-2 ring-green-500 ring-offset-2 border-neutral-800` : 'border-neutral-300'}`}
+            className={`max-w-sm lg:w-72 w-full rounded overflow-hidden border-solid border m-4 transition duration-300 ease-in-out transform bg-white hover:scale-105 cursor-pointer ${isSelected ? `ring-2 ring-green-500 ring-offset-2 border-neutral-800` : 'border-neutral-300'}`}
             onClick={onSelect}
         >
             <div className="px-6 py-4 flex items-center">

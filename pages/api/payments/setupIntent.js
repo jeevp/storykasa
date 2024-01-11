@@ -1,10 +1,11 @@
 import SubscriptionsController from "../../../service/controllers/SubscriptionsController"
+import authMiddleware from "../../../middlewares/authMiddleware";
 
 const payments = async (req, res) => {
     try {
         switch(req.method) {
-            case "PUT":
-                return SubscriptionsController.updateSubscription(req, res)
+            case "POST":
+                return SubscriptionsController.updateSubscriptionPlan(req, res)
 
             default:
                 return res.status(404).send({ message: "API route not found." })
@@ -16,4 +17,4 @@ const payments = async (req, res) => {
 }
 
 
-export default payments
+export default authMiddleware(payments)

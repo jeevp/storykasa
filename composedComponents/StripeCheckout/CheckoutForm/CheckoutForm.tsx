@@ -1,44 +1,52 @@
+import React, {useState} from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import STKButton from "@/components/STKButton/STKButton";
+import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
 
-const CheckoutForm = ({ clientSecret }: { clientSecret: string }) => {
+interface  CheckoutFormProps {
+    onSuccess: () => void
+}
+
+
+const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
     const stripe = useStripe();
     const elements = useElements();
 
-    // Methods
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
+    const [loading, setLoading] = useState(false)
+
+    const handleSubmit = async (event: any) => {
+        event.preventDefault();
 
         if (!stripe || !elements) {
-            // Stripe.js has not loaded yet. Make sure to disable form submission until Stripe.js has loaded.
-            return;
+            return; // Stripe.js has not yet loaded.
         }
-
-        const result = await stripe.confirmPayment({
+        setLoading(true)
+        const result = await stripe.confirmSetup({
             elements,
             redirect: 'if_required',
-            confirmParams: {
-                // Additional confirmation parameters can be specified here if needed
-            },
+            confirmParams: {},
         });
 
         if (result.error) {
-            // Show error to your customer
             console.log(result.error.message);
+            // Handle error here, such as displaying a message to the user
         } else {
-            if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-                console.log(">>>> PAYMENT SUCCEEDED >>>>")
-                // Handle post-payment actions here
+            if (result.setupIntent && result.setupIntent.status === 'succeeded') {
+                await SubscriptionPlanHandler.attachPaymentMethodToCustomer({
+                    // @ts-ignore
+                    paymentMethodId: result?.setupIntent.payment_method
+                })
+
+                onSuccess()
             }
         }
     };
 
-
     return (
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit}>
             <PaymentElement />
             <div className="mt-8 flex justify-end">
-                <STKButton type="submit">Submit</STKButton>
+                <STKButton type="submit" loading={loading}>Add Card</STKButton>
             </div>
         </form>
     );

@@ -3,7 +3,7 @@ const Profile = require("../models/Profile");
 const APIValidator = require("../validators/APIValidator")
 const TernsAndPrivacyConsent = require("../models/TermsAndPrivacyConsent")
 const StripeService = require("../services/StripeService/StripeService")
-
+const StripeAccount = require("../models/StripeAccount")
 
 class AuthController {
     static async signUp(req, res) {
@@ -61,10 +61,16 @@ class AuthController {
             // Let's create a free account as default
             const stripeCustomer = await StripeService.customers.create({ email })
 
-            await StripeService.subscriptions.create({
+            const subscription = await StripeService.subscriptions.create({
                 customerId: stripeCustomer?.id,
                 planId: process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID
             })
+
+            await StripeAccount.create({
+                accountId: data.user.id,
+                stripeSubscriptionId: subscription.id,
+                stripeCustomerId: stripeCustomer.id
+            }, { accessToken: data.session.access_token })
 
             return res.status(200).send({
                 ...data,
