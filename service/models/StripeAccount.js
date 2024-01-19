@@ -40,16 +40,20 @@ class StripeAccount {
         })
     }
 
-    static async findOne({ accountId }, { accessToken }) {
+    static async findOne({ accountId, stripeCustomerId }, { accessToken }) {
+        const params = { select: "*" }
+        if (accountId) params.account_id = `eq.${accountId}`
+        if (stripeCustomerId) params.stripe_customer_id = `eq.${stripeCustomerId}`
+
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stripe_accounts`, {
-            params: {
-                select: "*",
-                account_id: `eq.${accountId}`
-            },
+            params,
             headers: generateSupabaseHeaders(accessToken)
         })
 
         const _stripeAccount = response.data[0]
+
+        console.log({ _stripeAccount })
+        if (!_stripeAccount) return null
 
         return new StripeAccount({
             id: _stripeAccount.id,

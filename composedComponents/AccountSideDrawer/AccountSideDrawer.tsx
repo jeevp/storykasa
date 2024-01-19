@@ -15,6 +15,8 @@ import {useStory} from "@/contexts/story/StoryContext";
 import {Divider} from "@mui/material";
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
+import SettingsIcon from "@mui/icons-material/SettingsOutlined";
+
 import HelperDialog from "@/composedComponents/HelperDialog/HelperDialog";
 
 interface AccountSideDrawerProps {
@@ -53,6 +55,10 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
 
     const goToProfilesPage = async () => {
         await router.push("/profiles")
+    }
+
+    const goToAccountSettingsPage = async () => {
+        await router.push("/account-settings")
     }
 
     const handleTabOnChange = async (selectedTab: any) => {
@@ -102,9 +108,20 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                     startIcon={<UserSwitch size={20} />}
                                     fullWidth
                                     color="info"
-                                    variant="outlined"
+                                    variant=""
                                     onClick={goToProfilesPage}>
                                     Change profile
+                                </STKButton>
+                            </div>
+                            <div className="mt-4">
+                                <STKButton
+                                    alignStart
+                                    startIcon={<SettingsIcon size={20} />}
+                                    fullWidth
+                                    color="info"
+                                    variant=""
+                                    onClick={goToAccountSettingsPage}>
+                                    Account settings
                                 </STKButton>
                             </div>
                             <div className="mt-4">
@@ -112,7 +129,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                     startIcon={<Info />}
                                     alignStart
                                     color="info"
-                                    variant="outlined"
+                                    variant=""
                                     fullWidth
                                     onClick={() => router.push("/faq")}>
                                     FAQ
@@ -123,7 +140,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                     startIcon={<Info />}
                                     alignStart
                                     color="info"
-                                    variant="outlined"
+                                    variant=""
                                     fullWidth
                                     onClick={() => router.push("/about-us")}>
                                     About us
@@ -134,7 +151,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                     startIcon={<Question />}
                                     alignStart
                                     color="info"
-                                    variant="outlined"
+                                    variant=""
                                     fullWidth
                                     onClick={() => setShowHelperDialog(true)}>
                                     Help
@@ -151,7 +168,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                 startIcon={<AdminPanelSettingsOutlinedIcon />}
                                 alignStart
                                 color="info"
-                                variant="outlined"
+                                variant=""
                                 fullWidth
                                 onClick={() => router.push("/admin/public-story-requests")}>
                                 Admin
@@ -168,7 +185,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                         color="info"
                         startIcon={<SignOut size={20} />}
                         fullWidth
-                        variant="outlined"
+                        variant=""
                         onClick={handleLogout}>
                             Logout
                         </STKButton>

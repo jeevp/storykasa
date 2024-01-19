@@ -26,7 +26,7 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
             redirect: 'if_required',
             confirmParams: {},
         });
-
+        
         if (result.error) {
             console.log(result.error.message);
             // Handle error here, such as displaying a message to the user
@@ -46,7 +46,7 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
         <form onSubmit={handleSubmit}>
             <PaymentElement />
             <div className="mt-8 flex justify-end">
-                <STKButton type="submit" loading={loading}>Add Card</STKButton>
+                <STKButton type="submit" loading={loading}>Confirm payment</STKButton>
             </div>
         </form>
     );

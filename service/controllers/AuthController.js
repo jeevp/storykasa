@@ -4,6 +4,7 @@ const APIValidator = require("../validators/APIValidator")
 const TernsAndPrivacyConsent = require("../models/TermsAndPrivacyConsent")
 const StripeService = require("../services/StripeService/StripeService")
 const StripeAccount = require("../models/StripeAccount")
+const Subscription = require("../models/Subscription")
 
 class AuthController {
     static async signUp(req, res) {
@@ -66,10 +67,16 @@ class AuthController {
                 planId: process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID
             })
 
-            await StripeAccount.create({
+            const stripeAccount = await StripeAccount.create({
                 accountId: data.user.id,
                 stripeSubscriptionId: subscription.id,
                 stripeCustomerId: stripeCustomer.id
+            }, { accessToken: data.session.access_token })
+
+            await Subscription.create({
+                accountId: data.user.id,
+                stripeAccountId: stripeAccount.id,
+                subscriptionPlan: Subscription.getAllowedSubscriptionPlanNames().FREE_SUBSCRIPTION_PLAN
             }, { accessToken: data.session.access_token })
 
             return res.status(200).send({
