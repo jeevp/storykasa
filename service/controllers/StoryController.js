@@ -327,10 +327,13 @@ class StoryController {
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
+            const defaultLibrary = await Library.findDefaultLibrary({ accountId: user.id }, { accessToken: req.accessToken })
+
             await LibraryStory.create({
                 storyId,
                 profileId,
-                accountId: user.id
+                accountId: user.id,
+                libraryId: defaultLibrary?.libraryId
             }, {
                 accessToken: req.accessToken
             })

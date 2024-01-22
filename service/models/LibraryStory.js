@@ -1,7 +1,5 @@
 const axios = require("axios")
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
-const Library = require("../models/Library")
-const supabase = require("../supabase");
 
 class LibraryStory {
     constructor({
@@ -18,21 +16,16 @@ class LibraryStory {
         this.libraryId = libraryId
     }
 
-    static async create({ storyId, profileId, accountId }, { accessToken }) {
+    static async create({ storyId, profileId, accountId, libraryId }, { accessToken }) {
         if (!storyId || !profileId || !accountId) {
             throw new Error("storyId and profileId cannot be null")
         }
-
-        const {data: { user }} = await supabase.auth.getUser(accessToken)
-
-
-        const defaultLibrary = await Library.findDefaultLibrary({ accountId: user.id }, { accessToken })
 
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
             story_id: storyId,
             profile_id: profileId,
             account_id: accountId,
-            library_id: defaultLibrary?.libraryId
+            library_id: libraryId
         },
         {
             params: {

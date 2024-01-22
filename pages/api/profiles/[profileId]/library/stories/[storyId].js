@@ -1,5 +1,5 @@
 import authMiddleware from "../../../../../../middlewares/authMiddleware";
-import StoryController from "../../../../../../service/controllers/StoryController"
+const StoryController = require( "../../../../../../service/controllers/StoryController")
 
 const profilesLibraryStory = async (req, res) => {
     try {
