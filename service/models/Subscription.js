@@ -1,6 +1,5 @@
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
-const {STK_ACCESS_TOKEN} = require("../../config");
 
 class Subscription {
     constructor({

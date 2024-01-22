@@ -27,8 +27,6 @@ export default class SubscriptionsController {
                 customerId: stripeAccount.stripeCustomerId
             })
 
-            console.log(">>>>>>>>>>>>>> updateSubscriptionPlan")
-
             const subscription = await Subscription.findOne({ accountId: user.id }, { accessToken: req.accessToken })
             await subscription.update({ subscriptionPlan }, { accessToken: req.accessToken })
 
@@ -43,7 +41,7 @@ export default class SubscriptionsController {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const stripeAccount = await StripeAccount.findOne({ accountId: user.id }, {
+            const stripeAccount = await Subscription.findOne({ accountId: user.id }, {
                 accessToken: req.accessToken
             })
 
