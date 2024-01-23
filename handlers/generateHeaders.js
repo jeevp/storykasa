@@ -1,4 +1,4 @@
-import {STK_ACCESS_TOKEN} from "../config";
+import {STK_ACCESS_TOKEN} from "@/config";
 
 export default function generateHeaders() {
     return {

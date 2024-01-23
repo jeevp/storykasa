@@ -6,6 +6,7 @@ import SubscriptionValidation from "@/composedComponents/SubscriptionValidation/
 
 export default function App({ Component, pageProps }: AppProps) {
 
+
     return (
         <ContextWrapper>
             <SubscriptionValidation />

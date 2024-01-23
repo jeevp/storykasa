@@ -1,14 +1,18 @@
 import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
 import {useEffect} from "react";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 export default function SubscriptionValidation() {
     const { setCurrentSubscription, currentSubscription } = useSubscription()
+    const { currentUser } = useAuth()
 
     // Mounted
     useEffect(() => {
-        handleFetchCurrentSubscriptionPlan()
-    }, [])
+        if(currentUser) {
+            handleFetchCurrentSubscriptionPlan()
+        }
+    }, [currentUser])
 
     // Methods
     const handleFetchCurrentSubscriptionPlan = async () => {
