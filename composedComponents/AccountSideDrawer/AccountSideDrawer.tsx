@@ -116,6 +116,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                             <div className="mt-4">
                                 <STKButton
                                     alignStart
+                                    // @ts-ignore
                                     startIcon={<SettingsIcon size={20} />}
                                     fullWidth
                                     color="info"

@@ -7,14 +7,12 @@ export default class WebhooksController {
             if (req.body.type !== "invoice.payment_failed") {
                 return res.status(401).send({ message: "Event type not allowed" })
             }
-            console.log(">>>>>>>>>>>>>> OK 2")
 
             const stripeAccount = await StripeAccount.findOne({
                 stripeCustomerId: req.body.data.object.customer
             }, { accessToken: process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY })
 
             if (!stripeAccount) {
-                console.log(">>>>>>>>> RETURN NULL")
                 return res.status(404).send({ message: "Account not found" })
             }
 

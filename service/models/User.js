@@ -37,7 +37,6 @@ class User {
 
                 const _users = users.users
 
-                console.log(_users)
                 if (error) {
                     console.error('Error fetching users:', error);
                     break;
@@ -53,9 +52,6 @@ class User {
                 break
             }
         }
-
-        console.log({ allUsers })
-
 
         return allUsers.map((user) => new User({
             id: user.id,

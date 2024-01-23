@@ -38,8 +38,6 @@ async function createStripeAccountAndDefaultSubscription() {
         if (user) {
             const stripeCustomer = await StripeService.customers.create({ email: user.email })
 
-            console.log({ user: user?.email, stripeCustomer: stripeCustomer?.id })
-
             const subscription = await StripeService.subscriptions.create({
                 customerId: stripeCustomer?.id,
                 planId: process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID

@@ -127,6 +127,7 @@ export default function ChooseSubscriptionPlan({ onNext = () => ({}) }) {
                 <div className="mt-8 flex lg:hidden px-4 justify-end items-center">
                     <STKButton
                         onClick={handleChoosePlan}
+                        fullWidth
                         disabled={selectedPlan?.value === currentSubscription?.subscriptionPlan}
                         loading={loadingPaymentIntent}>
                         Continue

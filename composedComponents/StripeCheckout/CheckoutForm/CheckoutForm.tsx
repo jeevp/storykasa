@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import STKButton from "@/components/STKButton/STKButton";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
+import useDevice from "@/customHooks/useDevice";
 
 interface  CheckoutFormProps {
     onSuccess: () => void
@@ -11,6 +12,7 @@ interface  CheckoutFormProps {
 const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
     const stripe = useStripe();
     const elements = useElements();
+    const { onMobile } = useDevice()
 
     const [loading, setLoading] = useState(false)
 
@@ -46,7 +48,7 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
         <form onSubmit={handleSubmit}>
             <PaymentElement />
             <div className="mt-8 flex justify-end">
-                <STKButton type="submit" loading={loading}>Confirm payment</STKButton>
+                <STKButton fullWidth={onMobile} type="submit" loading={loading}>Confirm payment</STKButton>
             </div>
         </form>
     );

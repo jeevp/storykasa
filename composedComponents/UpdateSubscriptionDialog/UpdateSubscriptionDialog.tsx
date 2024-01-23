@@ -100,7 +100,7 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
         active={active}
         title=""
         onClose={() => onClose()}>
-            <div>
+            <div className="pb-8">
                 {generateView()}
             </div>
         </STKDialog>

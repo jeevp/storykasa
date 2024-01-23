@@ -7,6 +7,7 @@ import STKTabs from "@/components/STKTabs/STKTabs";
 import UpdateSubscriptionDialog from "@/composedComponents/UpdateSubscriptionDialog/UpdateSubscriptionDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
+import useDevice from "@/customHooks/useDevice";
 
 function AccountSettings() {
     // States
@@ -15,6 +16,7 @@ function AccountSettings() {
     // Contexts
     const { currentSubscription } = useSubscription()
 
+    const { onMobile } = useDevice()
 
     return (
         <PageWrapper path="library">
@@ -36,23 +38,23 @@ function AccountSettings() {
                     value={0}
                     />
 
-                    <div className="mt-6 flex items-center justify-between">
-                        <div className="flex items-center">
+                    <div className="mt-6 flex flex-col lg:flex-row lg:items-center justify-between">
+                        <div className="flex lg:items-center flex-col lg:flex-row">
                             <div>
                                 <label className="font-semibold">Subscription plan</label>
                                 <div className="mt-2">
                                     <label>{currentSubscription?.subscriptionPlanName}</label>
                                 </div>
                             </div>
-                            <div className="ml-8">
+                            <div className="lg:ml-8 mt-4 lg:mt-0">
                                 <label className="font-semibold">Monthly price</label>
                                 <div className="mt-2">
                                     <label>${currentSubscription?.monthlyPrice}</label>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <STKButton onClick={() => setShowUpdateSubscriptionDialog(true)}>Update subscription</STKButton>
+                        <div className="mt-8 lg:mt-0">
+                            <STKButton fullWidth={onMobile} onClick={() => setShowUpdateSubscriptionDialog(true)}>Update subscription</STKButton>
                         </div>
                     </div>
                 </div>
