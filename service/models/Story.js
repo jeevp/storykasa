@@ -171,14 +171,14 @@ class Story {
         });
     }
 
-    static async findAll({ libraryId }, { accessToken }) {
+    static async findAll({ libraryId }, options = { accessToken: "" }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
             params: {
                 select: '*, stories (*, profiles (*))',
                 library_id: `eq.${libraryId}`,
                 ["stories.deleted"]: "eq.false"
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders(options.accessToken || process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY)
         })
 
         const stories = response.data.map((storyLibrary) => {

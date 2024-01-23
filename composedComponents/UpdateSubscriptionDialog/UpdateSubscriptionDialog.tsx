@@ -1,12 +1,12 @@
 import STKDialog from "@/components/STKDialog/STKDialog";
-import {useRouter} from "next/router";
-import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
 import {useEffect, useState} from "react";
 import ChooseSubscriptionPlan from "@/composedComponents/ChooseSubscriptionPlan/ChooseSubscriptionPlan";
 import StripeCheckout from "@/composedComponents/StripeCheckout/StripeCheckout";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
+import Subscription from "@/models/Subscription";
+import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
 
 interface HelperDialogProps {
     active: boolean
@@ -21,20 +21,27 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
     const [clientSecret, setClientSecret] = useState("")
     const [selectedSubscriptionPlan, setSelectedSubscriptionPlan] = useState("")
 
+    // Contexts
+    const { setCurrentSubscription } = useSubscription()
     const { setSnackbarBus } = useSnackbar()
-    const { onMobile } = useDevice()
 
     useEffect(() => {
-        setSelectedSubscriptionPlan("")
-        setCurrentStep(CHOOSE_SUBSCRIPTION_PLAN_STEP)
-        setClientSecret("")
-    }, []);
+        if (active) {
+            setSelectedSubscriptionPlan("")
+            setCurrentStep(CHOOSE_SUBSCRIPTION_PLAN_STEP)
+            setClientSecret("")
+        }
+    }, [active]);
 
     // Methods
     const generateView = () => {
         switch(currentStep) {
             case CHOOSE_SUBSCRIPTION_PLAN_STEP:
-                return <ChooseSubscriptionPlan onNext={handleNext} />
+                return (
+                    <ChooseSubscriptionPlan
+                    // @ts-ignore
+                    onNext={handleNext} />
+                )
 
             case ADD_PAYMENT_DETAILS_STEP:
                 return (
@@ -44,6 +51,7 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
                                 clientSecret={clientSecret}
                                 subscriptionPlan={selectedSubscriptionPlan}
                                 onCancel={() => setCurrentStep(CHOOSE_SUBSCRIPTION_PLAN_STEP)}
+                                // @ts-ignore
                                 onSuccess={handleSuccess}
                             />
                         </div>
@@ -55,16 +63,25 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
         }
     }
 
-    const handleNext = (subscriptionPlan, _clientSecret) => {
+    const handleNext = async (subscriptionPlan: any, _clientSecret: any) => {
+        setSelectedSubscriptionPlan(subscriptionPlan)
+
+        if (subscriptionPlan.value === Subscription.getAllowedSubscriptionPlanNames().FREE_SUBSCRIPTION_PLAN) {
+            await handleSuccess(subscriptionPlan.value)
+            return
+        }
+
         setCurrentStep(ADD_PAYMENT_DETAILS_STEP)
         setClientSecret(_clientSecret)
-        setSelectedSubscriptionPlan(subscriptionPlan)
     }
 
-    const handleSuccess = async () => {
-        await SubscriptionPlanHandler.updateSubscriptionPlan({
-            subscriptionPlan: selectedSubscriptionPlan?.value
+    const handleSuccess = async (subscriptionPlan: string) => {
+        const updatedSubscriptionPlan = await SubscriptionPlanHandler.updateSubscriptionPlan({
+            // @ts-ignore
+            subscriptionPlan: subscriptionPlan || selectedSubscriptionPlan?.value
         })
+
+        setCurrentSubscription(updatedSubscriptionPlan)
 
         setSnackbarBus({
             active: true,
@@ -74,6 +91,8 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
 
         onClose()
     }
+
+
 
     return (
         <STKDialog

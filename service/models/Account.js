@@ -1,8 +1,8 @@
-import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
-import axios from "axios";
-import Profile from "../models/Profile"
+const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
+const axios = require("axios")
+const Profile = require("../models/Profile")
 
-export default class Account {
+class Account {
     constructor({
         accountId,
         createdAt,
@@ -15,6 +15,23 @@ export default class Account {
         this.name = name
         this.username = username
         this.avatarUrl = avatarUrl
+    }
+
+    static async findAll({ accessToken }) {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/accounts`, {
+            params: {
+                select: "*"
+            },
+            headers: generateSupabaseHeaders(accessToken)
+        })
+
+        return response.data.map((account) => new Account({
+            accountId: account?.account_id,
+            createdAt: account?.created_at,
+            name: account?.name,
+            username: account?.username,
+            avatarUrl: account?.avatar_url
+        }))
     }
 
     static async findOne({ accountId }, { accessToken }) {
@@ -35,7 +52,7 @@ export default class Account {
         })
     }
 
-    static async getDefaultProfile({ accountId }, { accessToken }) {
+    static async getDefaultProfile({ accountId }, options = { accessToken: "" }) {
         const response = await axios.get(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
             {
@@ -43,7 +60,7 @@ export default class Account {
                     select: "*",
                     account_id: `eq.${accountId}`
                 },
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders(options.accessToken || process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY)
             }
         )
 
@@ -65,3 +82,6 @@ export default class Account {
         })
     }
 }
+
+
+module.exports = Account

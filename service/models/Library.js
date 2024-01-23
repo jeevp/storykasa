@@ -1,11 +1,11 @@
-import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
-import axios from "axios";
-import {ApiError} from "next/dist/server/api-utils";
+const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
+const axios = require("axios")
+const {ApiError} = require("next/dist/server/api-utils")
 
 const LibraryStory = require("./LibraryStory")
 const Profile = require("./Profile")
 const Story = require("./Story")
-const Account = require("./Account").default
+const Account = require("./Account")
 
 class Library {
     /**

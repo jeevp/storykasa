@@ -9,6 +9,8 @@ const {allowedAdminUsers} = require("../config");
 const Story = require("../models/Story")
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 const Library = require("../models/Library")
+const SubscriptionValidator = require("../validators/SubscriptionValidator")
+
 
 class StoryController {
     static async deleteStory(req, res) {
@@ -176,6 +178,16 @@ class StoryController {
                 requiredParams: ["profileId"]
             })
 
+            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
+
+            const allowActionToProceed = await SubscriptionValidator.validateMaxStoriesRecordingTime({
+                accountId: user.id
+            })
+
+            if (!allowActionToProceed) {
+                return res.status(400).send({ message: "This account has reached the max stories duration allowed" })
+            }
+
             const {
                 title,
                 description,
@@ -212,8 +224,6 @@ class StoryController {
             )
 
             let newStoryID = response.data[0].story_id
-
-            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
             // simulate the story "saving" process by adding it to the library_stories table
             if (newStoryID && user) {

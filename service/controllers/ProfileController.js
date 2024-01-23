@@ -2,7 +2,7 @@ const supabase = require('../../service/supabase');
 const generateSupabaseHeaders = require("../../service/utils/generateSupabaseHeaders")
 const axios = require("axios");
 const Profile = require("../models/Profile");
-const ProfileValidator = require("../validators/ProfileValidator")
+const SubscriptionValidator = require("../validators/SubscriptionValidator")
 
 class ProfileController {
     static async getProfiles(req, res) {
@@ -37,9 +37,12 @@ class ProfileController {
                 })
             }
 
-            await ProfileValidator.validateMaxProfiles(req, res)
+            const allowActionToProceed = await SubscriptionValidator.validateMaxProfiles(req.accessToken)
+            if (!allowActionToProceed) {
+                return res.status(400).send({ message: "This account has reached the max amount of profiles allowed" })
+            }
 
-            const profile = await Profile.createProfile({
+             const profile = await Profile.createProfile({
                 name, avatarUrl
             }, { accessToken: req.accessToken })
 

@@ -5,7 +5,7 @@ import {SyntheticEvent, useState, useEffect} from "react";
 interface STKTabsProps {
     tabs: any[],
     value: number,
-    onChange: (value: object) => ({})
+    onChange?: (value: object) => ({})
 }
 export default function STKTabs({ tabs = [], value, onChange = () => ({}) }: STKTabsProps) {
     const [selectedTab, setSelectedTab] = useState<number | null>(null)

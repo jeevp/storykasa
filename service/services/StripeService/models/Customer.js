@@ -1,8 +1,9 @@
-const stripe = require("stripe")(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY)
 
 
 class Customer {
     static async create({ email }) {
+        const stripe = require("stripe")(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY)
+
         const customer = await stripe.customers.create({
             email
         })
@@ -11,6 +12,8 @@ class Customer {
     }
 
     static async attachPaymentMethod({ customerId }, { paymentMethodId }) {
+        const stripe = require("stripe")(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY)
+
         await stripe.paymentMethods.attach(paymentMethodId, {
             customer: customerId,
         })

@@ -1,5 +1,5 @@
-import axios from "axios"
-import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
+const axios = require("axios")
+const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
 
 class StripeAccount {
     constructor({
@@ -52,7 +52,6 @@ class StripeAccount {
 
         const _stripeAccount = response.data[0]
 
-        console.log({ _stripeAccount })
         if (!_stripeAccount) return null
 
         return new StripeAccount({
@@ -62,6 +61,21 @@ class StripeAccount {
             stripeSubscriptionId: _stripeAccount.stripe_subscription_id,
             stripeCustomerId: _stripeAccount.stripe_customer_id
         })
+    }
+
+    static async findAll({ accessToken }) {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stripe_accounts`, {
+            params: { select: "*" },
+            headers: generateSupabaseHeaders(accessToken)
+        })
+
+        return response.data.map((stripeAccount) => new StripeAccount({
+            id: stripeAccount.id,
+            createdAt: stripeAccount.created_at,
+            accountId: stripeAccount.account_id,
+            stripeSubscriptionId: stripeAccount.stripe_subscription_id,
+            stripeCustomerId: stripeAccount.stripe_customer_id
+        }))
     }
 }
 

@@ -5,7 +5,7 @@ const payments = async (req, res) => {
     try {
         switch(req.method) {
             case "POST":
-                return SubscriptionsController.updateSubscriptionPlan(req, res)
+                return SubscriptionsController.createSetupIntent(req, res)
 
             default:
                 return res.status(404).send({ message: "API route not found." })

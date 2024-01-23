@@ -8,12 +8,13 @@ import {STK_PROFILE_ID} from "@/config";
 import ProfileCard from "@/composedComponents/ProfileCard/ProfileCard";
 import STKCard from "@/components/STKCard/STKCard";
 import useDevice from "@/customHooks/useDevice";
-import {MAX_PROFILES_ALLOWED} from "@/models/Profile";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
 
 export default function ProfileSwitcher({ profiles, managing }: { profiles: Profile[], managing: boolean }) {
     // Context
     const { setCurrentProfileId, setCurrentProfile } = useProfile()
+    const { currentSubscription } = useSubscription()
 
     // Hooks
     const router = useRouter()
@@ -56,7 +57,6 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
         setEditing(true)
     }
 
-
     return (
         <div className="mt-5 flex-col pb-10 lg:pb-0">
             <div className="flex items-start flex-col lg:flex-row flex-wrap">
@@ -71,7 +71,12 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
                     </div>
                 ))}
 
-                {managing && !editing && profiles?.length < MAX_PROFILES_ALLOWED ? (
+                {managing && !editing && !currentSubscription?.maxProfilesAllowed || (
+                    managing
+                    && !editing
+                    // @ts-ignore
+                    && (profiles?.length < currentSubscription?.maxProfilesAllowed)
+                ) ? (
                     <div className="mr-0 lg:mr-4 mb-4 lg:mb-0 w-full lg:w-auto">
                         <STKCard color="transparent">
                             <div

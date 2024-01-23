@@ -10,7 +10,13 @@ export default class SubscriptionPlanHandler {
             subscriptionPlan
         }, headers)
 
-        return response?.data?.clientSecret
+        return new Subscription({
+            accountId: response.data.accountId,
+            createdAt: response.data.createdAt,
+            subscriptionPlan: response.data.subscriptionPlan,
+            monthlyPrice: response.data.monthlyPrice,
+            maxProfilesAllowed: response.data.maxProfilesAllowed
+        })
     }
 
     static async createSetupIntent() {
@@ -36,9 +42,9 @@ export default class SubscriptionPlanHandler {
         return new Subscription({
             accountId: response.data.accountId,
             createdAt: response.data.createdAt,
-            name: response.data.name,
-            active: response.data.active,
-            amount: response.data.amount
+            subscriptionPlan: response.data.subscriptionPlan,
+            monthlyPrice: response.data.monthlyPrice,
+            maxProfilesAllowed: response.data.maxProfilesAllowed
         })
     }
 }

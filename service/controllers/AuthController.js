@@ -73,10 +73,11 @@ class AuthController {
                 stripeCustomerId: stripeCustomer.id
             }, { accessToken: data.session.access_token })
 
+            const { FREE_SUBSCRIPTION_PLAN } = Subscription.getAllowedSubscriptionPlanNames()
             await Subscription.create({
                 accountId: data.user.id,
                 stripeAccountId: stripeAccount.id,
-                subscriptionPlan: Subscription.getAllowedSubscriptionPlanNames().FREE_SUBSCRIPTION_PLAN
+                subscriptionPlan: FREE_SUBSCRIPTION_PLAN,
             }, { accessToken: data.session.access_token })
 
             return res.status(200).send({

@@ -7,6 +7,7 @@ import {SnackbarProvider} from "@/contexts/snackbar/SnackbarContext";
 import {ToolsProvider} from "@/contexts/tools/ToolsContext";
 import {AdminProvider} from "@/contexts/admin/useAdmin";
 import {LibraryProvider} from "@/contexts/library/LibraryContext";
+import {SubscriptionProvider} from "@/contexts/subscription/SubscriptionContext"
 
 interface ContextWrapperProps {
     children: React.ReactNode;
@@ -20,7 +21,9 @@ export default function ContextWrapper({ children }: ContextWrapperProps){
                        <SnackbarProvider>
                            <ToolsProvider>
                                <AdminProvider>
-                                   {children}
+                                   <SubscriptionProvider>
+                                       {children}
+                                   </SubscriptionProvider>
                                </AdminProvider>
                            </ToolsProvider>
                        </SnackbarProvider>

@@ -1,28 +1,19 @@
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import PageWrapper from '@/composedComponents/PageWrapper'
 import withAuth from "@/HOC/withAuth";
 import withProfile from "@/HOC/withProfile";
 import STKTabs from "@/components/STKTabs/STKTabs";
 import UpdateSubscriptionDialog from "@/composedComponents/UpdateSubscriptionDialog/UpdateSubscriptionDialog";
 import STKButton from "@/components/STKButton/STKButton";
-import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
+import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
 
 function AccountSettings() {
     // States
     const [showUpdateSubscriptionDialog, setShowUpdateSubscriptionDialog] = useState(false)
-    const [loading, setLoading] = useState(false)
 
-    // Mounted
-    useEffect(() => {
-        handleFetchCurrentSubscriptionPlan()
-    }, [])
-
-    // Methods
-    const handleFetchCurrentSubscriptionPlan = async () => {
-        setLoading(true)
-        await SubscriptionPlanHandler.fetchSubscriptionPlan()
-    }
+    // Contexts
+    const { currentSubscription } = useSubscription()
 
 
     return (
@@ -50,13 +41,13 @@ function AccountSettings() {
                             <div>
                                 <label className="font-semibold">Subscription plan</label>
                                 <div className="mt-2">
-                                    <label>Premium</label>
+                                    <label>{currentSubscription?.subscriptionPlanName}</label>
                                 </div>
                             </div>
                             <div className="ml-8">
                                 <label className="font-semibold">Monthly price</label>
                                 <div className="mt-2">
-                                    <label>$99</label>
+                                    <label>${currentSubscription?.monthlyPrice}</label>
                                 </div>
                             </div>
                         </div>
