@@ -1,5 +1,5 @@
-import axios from "axios";
-import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
+const axios = require("axios")
+const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
 
 class Story {
     constructor({
@@ -46,7 +46,7 @@ class Story {
 
     static async getStory(storyId) {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`,
+            `${process.env.SUPABASE_URL}/rest/v1/stories`,
             {
                 params: {
                     select: "*",
@@ -92,9 +92,9 @@ class Story {
             select: '*,profiles!inner(*)',
         };
 
-        let endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`
+        let endpoint = `${process.env.SUPABASE_URL}/rest/v1/stories`
         if (filters?.private && params?.userId) {
-            endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`
+            endpoint = `${process.env.SUPABASE_URL}/rest/v1/library_stories`
             queryParams.select = '*, stories (*, profiles (*))'
             queryParams.account_id = `eq.${params.userId}`
             queryParams.profile_id = `eq.${params.profileId}`
@@ -177,17 +177,16 @@ class Story {
     static async findAll(params = { accountId: "" }) {
         const searchParams = {
             select: "*",
-            ["stories.deleted"]: "eq.false"
+            deleted: "eq.false"
         }
-        if (params.accountId) searchParams["account_id"] = params.accountId
+        if (params.accountId) searchParams["account_id"] = `eq.${params.accountId}`
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+        const response = await axios.get(`https://api.storykasa.com/rest/v1/stories`, {
             params: searchParams,
-            headers: generateSupabaseHeaders(process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY)
+            headers: generateSupabaseHeaders()
         })
 
-        return response.data.map((storyLibrary) => {
-            const story = storyLibrary.stories
+        return response.data.map((story) => {
 
             return new Story({
                 storyId: story?.story_id,
@@ -219,24 +218,27 @@ class Story {
      * @param {string} title
      * @param {string} description
      * @param {string} narratorName
+     * @param {string} accountId
      * @returns {Promise<any>}
      */
     async update({
         isPublic,
         title,
         description,
-        narratorName
+        narratorName,
+        accountId
     }) {
         const payload = {}
         if (isPublic === false || isPublic === true) payload.is_public = isPublic
         if (title) payload.title = title
         if (description) payload.description = description
         if (narratorName) payload.narrator_name = narratorName
+        if (accountId) payload.account_id = accountId
 
         if (Object.keys(payload).length === 0) throw new Error("Payload is missing")
 
         const response  = await axios.patch(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`,
+            `${process.env.SUPABASE_URL}/rest/v1/stories`,
             payload, {
                 params: {
                   story_id: `eq.${this.storyId}`
@@ -267,4 +269,4 @@ class Story {
     }
 }
 
-export default Story
+module.exports = Story

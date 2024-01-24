@@ -57,7 +57,7 @@ export default class StorageHandler {
            const { bucketName, extension } = JSON.parse(formData.get("uploadDetails") as string);
 
            // The URL to which you will send the file upload request
-           const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${bucketName}/${uuid}.${extension}`;
+           const url = `${process.env.SUPABASE_URL}/storage/v1/object/${bucketName}/${uuid}.${extension}`;
 
            // Now formData already contains the file, so no need to create a new FormData object or Blob
 
@@ -70,7 +70,7 @@ export default class StorageHandler {
                throw new Error("File upload failed");
            }
 
-           return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucketName}/${uuid}.${extension}`;
+           return `${process.env.SUPABASE_URL}/storage/v1/object/public/${bucketName}/${uuid}.${extension}`;
        } catch (error) {
            throw new Error("Something went wrong")
        }

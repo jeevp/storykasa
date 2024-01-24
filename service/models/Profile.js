@@ -19,7 +19,7 @@ class Profile {
 
     static async getProfile(profileId) {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
+            `${process.env.SUPABASE_URL}/rest/v1/profiles`,
             {
                 params: {
                     select: "*",
@@ -57,7 +57,7 @@ class Profile {
         if (avatarUrl) attributes.avatar_url = avatarUrl
 
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
+            `${process.env.SUPABASE_URL}/rest/v1/profiles`,
             attributes,
             {
                 params: {
@@ -76,7 +76,7 @@ class Profile {
         const userId = user.id
 
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
+            `${process.env.SUPABASE_URL}/rest/v1/profiles`,
             {
                 params: {
                     select: "*",
@@ -100,6 +100,23 @@ class Profile {
         if (!ascendantProfileAccounts || ascendantProfileAccounts?.length === 0) return null
 
         return ascendantProfileAccounts[0]
+    }
+
+    static async findAll() {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/profiles`, {
+            params: {
+                select: "*"
+            },
+            headers: generateSupabaseHeaders()
+        })
+
+        return response.data.map((profile) => new Profile({
+            profileId: profile.profile_id,
+            createdAt: profile.created_at,
+            accountId: profile.account_id,
+            profileName: profile.profile_name,
+            avatarUrl: profile.avatar_url
+        }))
     }
 }
 

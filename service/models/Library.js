@@ -47,7 +47,7 @@ class Library {
         accountId,
         profileId
     }) {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
+        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/libraries`, {
             account_id: accountId,
             profile_id: profileId,
             library_name: libraryName
@@ -84,7 +84,7 @@ class Library {
             queryParams.shared_account_ids = `cs.{${sharedAccountId}}`;
         }
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/libraries`, {
             params: queryParams,
             headers: generateSupabaseHeaders()
         });
@@ -132,7 +132,7 @@ class Library {
 
 
     static async findOne({ libraryId }, options = { serialized: false }) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/libraries`, {
             params: {
                 select: "*",
                 library_id: `eq.${libraryId}`
@@ -162,7 +162,7 @@ class Library {
             throw new ApiError(409, "Story already added to this library.")
         }
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/library_stories`, {
             library_id: libraryId,
             story_id: storyId,
             account_id: accountId,
@@ -178,7 +178,7 @@ class Library {
     }
 
     static async removeStory({ storyId, libraryId, profileId }) {
-        const response = await axios.delete(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+        const response = await axios.delete(`${process.env.SUPABASE_URL}/rest/v1/library_stories`, {
             params: {
                 select: "*",
                 library_id: `eq.${libraryId}`,
@@ -192,11 +192,7 @@ class Library {
     }
 
     static async getTotalRecordingTime({ accountId }) {
-        const defaultLibrary = await Library.findDefaultLibrary({ accountId })
-
-        const stories = await LibraryStory.findAll({
-            libraryId: defaultLibrary.libraryId
-        })
+        const stories = await Story.findAll({ accountId })
 
         return stories.reduce((accumulator, currentStory) => {
             return accumulator + (currentStory?.duration || 0)
@@ -204,7 +200,7 @@ class Library {
     }
 
     async update({ sharedAccountIds }) {
-        const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
+        const response = await axios.patch(`${process.env.SUPABASE_URL}/rest/v1/libraries`, {
             shared_account_ids: sharedAccountIds
         }, {
             params: {

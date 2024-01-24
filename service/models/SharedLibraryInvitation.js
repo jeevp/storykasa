@@ -31,7 +31,7 @@ class SharedLibraryInvitation {
             return null
         }
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
+        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             library_id: libraryId,
             user_email: userEmail
         }, {
@@ -49,7 +49,7 @@ class SharedLibraryInvitation {
     }
 
     static async findAll({ userEmail, complete }) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             params: {
                 select: "*",
                 user_email: `eq.${userEmail}`,
@@ -73,7 +73,7 @@ class SharedLibraryInvitation {
         if (userEmail) queryParams.user_email = `eq.${userEmail}`
         if (libraryId) queryParams.library_id = `eq.${libraryId}`
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             params: queryParams,
             headers: generateSupabaseHeaders()
         })
@@ -92,7 +92,7 @@ class SharedLibraryInvitation {
     }
 
     async update({ accept, complete }) {
-        const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
+        const response = await axios.patch(`${process.env.SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             accept,
             complete
         }, {

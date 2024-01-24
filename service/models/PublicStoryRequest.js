@@ -32,7 +32,7 @@ class PublicStoryRequest {
             }
         }
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
+        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/public_story_requests`, {
             story_id: storyId,
             profile_id: profileId
         }, {
@@ -51,7 +51,7 @@ class PublicStoryRequest {
     static async update({ publicStoryRequestId }, { approved, completed, moderatorComment }) {
 
         const response = await axios.patch(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
+            `${process.env.SUPABASE_URL}/rest/v1/public_story_requests`, {
                 approved,
                 completed,
                 moderator_comment: moderatorComment
@@ -78,7 +78,7 @@ class PublicStoryRequest {
     static async findAll({ storyIds = [] }) {
         if (storyIds.length === 0) throw new Error("storyIds must not be empty")
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/public_story_requests`, {
             params: {
                 select: "*",
                 story_id: `in.(${storyIds})`
@@ -98,7 +98,7 @@ class PublicStoryRequest {
     }
 
     static async validateRequestExistence({ storyId, profileId }) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/public_story_requests`, {
             params: {
                 story_id: `eq.${storyId}`,
                 profile_id: `eq.${profileId}`,
@@ -118,7 +118,7 @@ class PublicStoryRequest {
 
     static async getPublicStoryRequests(filters = {}) {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`,
+            `${process.env.SUPABASE_URL}/rest/v1/public_story_requests`,
             {
                 params: {
                     select: "*",

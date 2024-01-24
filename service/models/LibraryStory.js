@@ -22,7 +22,7 @@ class LibraryStory {
             throw new Error("storyId and profileId cannot be null")
         }
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/library_stories`, {
             story_id: storyId,
             profile_id: profileId,
             account_id: accountId,
@@ -44,7 +44,7 @@ class LibraryStory {
             throw new Error("storyId and profileId cannot be null")
         }
 
-        const response = await axios.delete(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+        const response = await axios.delete(`${process.env.SUPABASE_URL}/rest/v1/library_stories`, {
             params: {
                 story_id: `eq.${storyId}`,
                 library_id: `eq.${libraryId}`,
@@ -62,7 +62,7 @@ class LibraryStory {
             throw new Error("libraryId and storyId cannot be null")
         }
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/library_stories`, {
             params: {
                 select: "*",
                 library_id: `eq.${libraryId}`,
@@ -85,7 +85,7 @@ class LibraryStory {
     }
 
     static async findAll({ libraryId }) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/library_stories`, {
             params: {
                 select: '*, stories (*, profiles (*))',
                 library_id: `eq.${libraryId}`,

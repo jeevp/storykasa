@@ -25,7 +25,7 @@ class TermsAndPrivacyConsent {
         browserVersion,
         termsAgreed
     }){
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/terms_and_privacy_consents`, {
+        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/terms_and_privacy_consents`, {
             user_id: userId,
             user_ip: userIP,
             browser_name: browserName,

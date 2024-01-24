@@ -101,7 +101,7 @@ class Subscription {
     static async create({ accountId, stripeAccountId, subscriptionPlan }) {
         const monthlyPrice = Subscription.getSubscriptionPlanPrice(subscriptionPlan)
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/subscriptions`, {
+        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/subscriptions`, {
             account_id: accountId,
             stripe_account_id: stripeAccountId,
             subscription_plan: subscriptionPlan,
@@ -114,7 +114,7 @@ class Subscription {
     }
 
     static async findOne({ accountId }) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/subscriptions`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/subscriptions`, {
             params: {
                 select: "*",
                 account_id: `eq.${accountId}`
@@ -136,7 +136,7 @@ class Subscription {
 
     async update({ subscriptionPlan }) {
         const monthlyPrice = Subscription.getSubscriptionPlanPrice(subscriptionPlan)
-        const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/subscriptions`, {
+        const response = await axios.patch(`${process.env.SUPABASE_URL}/rest/v1/subscriptions`, {
             subscription_plan: subscriptionPlan,
             monthly_price: monthlyPrice
         }, {

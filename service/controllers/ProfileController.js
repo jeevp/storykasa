@@ -12,7 +12,7 @@ class ProfileController {
             const userId = user.id
 
             const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
+                `${process.env.SUPABASE_URL}/rest/v1/profiles`,
                 {
                     params: {
                         select: "*",
@@ -67,7 +67,7 @@ class ProfileController {
             if (avatarUrl) attributesToBeUpdated.avatar_url = avatarUrl
 
             const response = await axios.patch(
-                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`, attributesToBeUpdated, {
+                `${process.env.SUPABASE_URL}/rest/v1/profiles`, attributesToBeUpdated, {
                     params: {
                         profile_id: `eq.${profileId}`,
                         select: '*'

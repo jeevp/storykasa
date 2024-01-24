@@ -23,7 +23,7 @@ class HeardAboutResearch {
         if (otherSource) payload.other_source = otherSource
 
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/heard_about_research`,
+            `${process.env.SUPABASE_URL}/rest/v1/heard_about_research`,
             payload,
             {
                 headers: generateSupabaseHeaders()

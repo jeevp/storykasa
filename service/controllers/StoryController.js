@@ -17,7 +17,7 @@ class StoryController {
         try {
             const { storyId } = req.query
 
-            const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+            const response = await axios.patch(`${process.env.SUPABASE_URL}/rest/v1/stories`, {
                 deleted: true
             },{
                 params: {
@@ -108,7 +108,7 @@ class StoryController {
             if (storiesIds.length > 0) illustrationParams["story_id"] =`in.(${storiesIds})`
 
             // Stories Illustrations
-            const illustrationsResponse = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories_images`, {
+            const illustrationsResponse = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/stories_images`, {
                 params: illustrationParams,
                 headers: generateSupabaseHeaders()
             });
@@ -210,7 +210,7 @@ class StoryController {
             }
 
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`,
+                `${process.env.SUPABASE_URL}/rest/v1/stories`,
                 newStory,
                 {
                     params: {
@@ -227,7 +227,7 @@ class StoryController {
                 const defaultLibrary = await Library.findDefaultLibrary({ accountId: user?.id })
 
                 const storyResponse = await axios.post(
-                    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`,
+                    `${process.env.SUPABASE_URL}/rest/v1/library_stories`,
                     {
                         account_id: user.id,
                         story_id: newStoryID,
@@ -247,7 +247,7 @@ class StoryController {
                 // Let's add the illustrations
                 illustrationsURL.map(async(illustrationURL) => {
                     await axios.post(
-                        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories_images`,
+                        `${process.env.SUPABASE_URL}/rest/v1/stories_images`,
                         {
                             image_url: illustrationURL,
                             story_id: createdStory?.story_id

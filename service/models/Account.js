@@ -18,7 +18,7 @@ class Account {
     }
 
     static async findAll() {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/accounts`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/accounts`, {
             params: {
                 select: "*"
             },
@@ -35,7 +35,7 @@ class Account {
     }
 
     static async findOne({ accountId }) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/accounts`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/accounts`, {
             params: {
                 select: "*",
                 account_id: `eq.${accountId}`
@@ -54,7 +54,7 @@ class Account {
 
     static async getDefaultProfile({ accountId }) {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
+            `${process.env.SUPABASE_URL}/rest/v1/profiles`,
             {
                 params: {
                     select: "*",
