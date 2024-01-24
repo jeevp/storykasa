@@ -1,59 +1,31 @@
 async function setAccountIdToStories() {
     require('dotenv').config({ path: '../../.env' });
+
     const convertArrayToHash = require("../../utils/convertArrayToHash")
 
-    console.log(">>> Start script - create stripe accounts and subscription")
-    const Account = require("../models/Account")
-    const StripeAccount = require("../models/StripeAccount")
-    const User = require("../models/User")
-    const StripeService = require("../services/StripeService/StripeService")
-    const Subscription = require("../models/Subscription")
+    console.log(">>> Start script - set account_id to stories")
     const Story = require("../models/Story")
+    const Profile = require("../models/Profile")
 
+    const stories = await Story.findAll()
+    const profiles = await Profile.findAll()
 
-    const stripeAccounts = await StripeAccount.findAll()
+    const storiesWithoutAccountId = stories.filter((story) => !story.accountId)
 
-    const accountsWithoutStripeAccountsAndSubscriptions = []
+    const profilesHash = convertArrayToHash(profiles, "profileId")
+    console.log(`>>> Updating ${storiesWithoutAccountId.length} stories`)
 
-    await Promise.all((accounts.map(async(account) => {
-        const stripeAccount = await stripeAccounts.find((_stripeAccount) => _stripeAccount.accountId === account.accountId)
-
-        if (!stripeAccount) {
-            accountsWithoutStripeAccountsAndSubscriptions.push(account.accountId)
-        }
-    })))
-
-    const users = await User.findAll()
-    const usersHash = convertArrayToHash(users, "id")
-    console.log(`>>> Creating ${accountsWithoutStripeAccountsAndSubscriptions.length} stripe accounts and subscriptions`)
-
-    for (let account = 0; account < accountsWithoutStripeAccountsAndSubscriptions.length; account += 1) {
-        const accountId = accountsWithoutStripeAccountsAndSubscriptions[account]
-        const user = usersHash[accountId]
-
-        if (user) {
-            const stripeCustomer = await StripeService.customers.create({ email: user.email })
-
-            const subscription = await StripeService.subscriptions.create({
-                customerId: stripeCustomer?.id,
-                planId: process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID
-            })
-
-            const stripeAccount = await StripeAccount.create({
-                accountId: accountId,
-                stripeSubscriptionId: subscription.id,
-                stripeCustomerId: stripeCustomer.id
-            })
-
-            await Subscription.create({
-                accountId: accountId,
-                stripeAccountId: stripeAccount.id,
-                subscriptionPlan: Subscription.getAllowedSubscriptionPlanNames().FREE_SUBSCRIPTION_PLAN
-            })
+    for (let storyIndex = 0; storyIndex < storiesWithoutAccountId.length; storyIndex += 1) {
+        const story = storiesWithoutAccountId[storyIndex]
+        console.log({ story })
+        const profile = profilesHash[story.recordedBy]
+        console.log({ profile })
+        if (profile) {
+            await story.update({ accountId: profile.accountId })
         }
     }
 
-    console.log(">>> End script - create stripe accounts and subscription")
+    console.log(">>> End script - set account_id to stories")
 }
 
-createStripeAccountAndDefaultSubscription()
+setAccountIdToStories()
