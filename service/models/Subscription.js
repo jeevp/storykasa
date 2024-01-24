@@ -38,7 +38,7 @@ class Subscription {
         }
     }
 
-    get maxStoriesDurationTimeAllowed() {
+    get maxRecordingTimeAllowed() {
         const {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
@@ -98,7 +98,7 @@ class Subscription {
         }
     }
 
-    static async create({ accountId, stripeAccountId, subscriptionPlan }, { accessToken }) {
+    static async create({ accountId, stripeAccountId, subscriptionPlan }) {
         const monthlyPrice = Subscription.getSubscriptionPlanPrice(subscriptionPlan)
 
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/subscriptions`, {
@@ -107,19 +107,19 @@ class Subscription {
             subscription_plan: subscriptionPlan,
             monthly_price: monthlyPrice
         }, {
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return response.data[0]
     }
 
-    static async findOne({ accountId }, options = { accessToken: "" }) {
+    static async findOne({ accountId }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/subscriptions`, {
             params: {
                 select: "*",
                 account_id: `eq.${accountId}`
             },
-            headers: generateSupabaseHeaders(options.accessToken || process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY)
+            headers: generateSupabaseHeaders()
         })
 
         const subscription = response.data[0]
@@ -134,7 +134,7 @@ class Subscription {
         })
     }
 
-    async update({ subscriptionPlan }, options = { accessToken: "" }) {
+    async update({ subscriptionPlan }) {
         const monthlyPrice = Subscription.getSubscriptionPlanPrice(subscriptionPlan)
         const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/subscriptions`, {
             subscription_plan: subscriptionPlan,
@@ -144,10 +144,11 @@ class Subscription {
                 select: "*",
                 account_id: `eq.${this.accountId}`
             },
-            headers: generateSupabaseHeaders(options.accessToken || process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY)
+            headers: generateSupabaseHeaders()
         })
 
         const subscription = response.data[0]
+
 
         if (!subscription) return null
 
@@ -165,7 +166,8 @@ class Subscription {
             stripeAccountId: this.stripeAccountId,
             subscriptionPlan: this.subscriptionPlan,
             monthlyPrice: this.monthlyPrice,
-            maxProfilesAllowed: this.maxProfilesAllowed
+            maxProfilesAllowed: this.maxProfilesAllowed,
+            maxRecordingTimeAllowed: this.maxRecordingTimeAllowed
         }
     }
 }

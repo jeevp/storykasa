@@ -17,12 +17,12 @@ class Account {
         this.avatarUrl = avatarUrl
     }
 
-    static async findAll({ accessToken }) {
+    static async findAll() {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/accounts`, {
             params: {
                 select: "*"
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return response.data.map((account) => new Account({
@@ -34,13 +34,13 @@ class Account {
         }))
     }
 
-    static async findOne({ accountId }, { accessToken }) {
+    static async findOne({ accountId }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/accounts`, {
             params: {
                 select: "*",
                 account_id: `eq.${accountId}`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return new Account({
@@ -52,7 +52,7 @@ class Account {
         })
     }
 
-    static async getDefaultProfile({ accountId }, options = { accessToken: "" }) {
+    static async getDefaultProfile({ accountId }) {
         const response = await axios.get(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
             {
@@ -60,7 +60,7 @@ class Account {
                     select: "*",
                     account_id: `eq.${accountId}`
                 },
-                headers: generateSupabaseHeaders(options.accessToken || process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY)
+                headers: generateSupabaseHeaders()
             }
         )
 

@@ -13,9 +13,7 @@ export default class SubscriptionsController {
 
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const stripeAccount = await StripeAccount.findOne({ accountId: user.id }, {
-                accessToken: req.accessToken
-            })
+            const stripeAccount = await StripeAccount.findOne({ accountId: user.id })
 
             await StripeService.subscriptions.update({
                 subscriptionId: stripeAccount.stripeSubscriptionId
@@ -39,9 +37,7 @@ export default class SubscriptionsController {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const subscription = await Subscription.findOne({ accountId: user.id }, {
-                accessToken: req.accessToken
-            })
+            const subscription = await Subscription.findOne({ accountId: user.id })
 
             const subscriptionSerialized = subscription.serializer()
             return res.status(200).send(subscriptionSerialized)
@@ -55,9 +51,7 @@ export default class SubscriptionsController {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const stripeAccount = await StripeAccount.findOne({ accountId: user.id }, {
-                accessToken: req.accessToken
-            })
+            const stripeAccount = await StripeAccount.findOne({ accountId: user.id })
 
             const setupIntent = await StripeService.setupIntents.create({
                 customerId: stripeAccount.stripeCustomerId

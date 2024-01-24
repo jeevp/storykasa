@@ -1,5 +1,6 @@
 const axios = require("axios")
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
+import Story from "../models/Story"
 
 class LibraryStory {
     constructor({
@@ -16,7 +17,7 @@ class LibraryStory {
         this.libraryId = libraryId
     }
 
-    static async create({ storyId, profileId, accountId, libraryId }, { accessToken }) {
+    static async create({ storyId, profileId, accountId, libraryId }) {
         if (!storyId || !profileId || !accountId) {
             throw new Error("storyId and profileId cannot be null")
         }
@@ -31,14 +32,14 @@ class LibraryStory {
             params: {
                 select: '*'
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
 
         return response.data
     }
 
-    static async delete({ storyId, profileId, libraryId, accountId }, { accessToken }) {
+    static async delete({ storyId, profileId, libraryId, accountId }) {
         if (!storyId || !profileId || !accountId) {
             throw new Error("storyId and profileId cannot be null")
         }
@@ -50,13 +51,13 @@ class LibraryStory {
                 profile_id: `eq.${profileId}`,
                 account_id: `eq.${accountId}`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return response.data
     }
 
-    static async findOne({ libraryId, storyId }, { accessToken }) {
+    static async findOne({ libraryId, storyId }) {
         if (!libraryId || !storyId) {
             throw new Error("libraryId and storyId cannot be null")
         }
@@ -67,7 +68,7 @@ class LibraryStory {
                 library_id: `eq.${libraryId}`,
                 story_id: `eq.${storyId}`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         const libraryStory =  response.data[0]
@@ -80,6 +81,43 @@ class LibraryStory {
             storyId: libraryStory?.story_id,
             profileId: libraryStory?.profile_id,
             libraryId: libraryStory?.library_id
+        })
+    }
+
+    static async findAll({ libraryId }) {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
+            params: {
+                select: '*, stories (*, profiles (*))',
+                library_id: `eq.${libraryId}`,
+                ["stories.deleted"]: "eq.false"
+            },
+            headers: generateSupabaseHeaders()
+        })
+
+        return response.data.map((storyLibrary) => {
+            const story = storyLibrary.stories
+
+            return new Story({
+                storyId: story?.story_id,
+                title: story?.title,
+                description: story?.description,
+                isPublic: story?.is_public,
+                transcript: story?.transcript,
+                language: story?.language,
+                region: story?.region,
+                theme: story?.theme,
+                category: story?.category,
+                imageUrl: story?.imageUrl,
+                lastUpdated: story?.last_updated,
+                createdAt: story?.created_at,
+                ageGroups: story?.ageGroups,
+                narratorName: story?.narrator_name,
+                duration: story?.duration,
+                recordedBy: story?.recorded_by,
+                recordingUrl: story?.recording_url,
+                profileName: story?.profiles?.profile_name,
+                profileAvatar: story?.profiles?.avatar_url
+            })
         })
     }
 }

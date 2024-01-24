@@ -13,9 +13,7 @@ class PublicStoryRequestController {
 
             const { storyId, profileId } = req.query
 
-            const { publicStoryRequest, error } = await PublicStoryRequest.create({ storyId, profileId }, {
-                accessToken: req.accessToken
-            })
+            const { publicStoryRequest, error } = await PublicStoryRequest.create({ storyId, profileId })
 
             if (error) return res.status(200).send({ message: error })
 
@@ -34,13 +32,11 @@ class PublicStoryRequestController {
                 return res.status(401).send({ message: "Not allowed" })
             }
 
-            const publicStoryRequests = await PublicStoryRequest.getPublicStoryRequests({},
-                { accessToken: req.accessToken }
-            )
+            const publicStoryRequests = await PublicStoryRequest.getPublicStoryRequests({})
 
             const publicStoryRequestsSerialized = []
             await Promise.all(publicStoryRequests.map(async(publicStoryRequest) => {
-                const publicStoryRequestSerialized = await publicStoryRequest.serializer(req.accessToken)
+                const publicStoryRequestSerialized = await publicStoryRequest.serializer()
 
                 publicStoryRequestsSerialized.push(publicStoryRequestSerialized)
             }))
@@ -70,15 +66,15 @@ class PublicStoryRequestController {
                 approved,
                 completed: true,
                 moderatorComment
-            }, { accessToken: req.accessToken })
+            })
 
             if (approved) {
-                const story = await Story.getStory(publicStoryRequest.storyId, req.accessToken)
+                const story = await Story.getStory(publicStoryRequest.storyId)
                 if (!story) {
                     return res.status(404).send({ message: "Story does not exist" })
                 }
 
-                await story.update({ isPublic: true }, { accessToken: req.accessToken })
+                await story.update({ isPublic: true })
             }
 
             return res.status(202).send({ message: "Public story request updated with success" })

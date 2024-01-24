@@ -18,7 +18,7 @@ class ProfileController {
                         select: "*",
                         account_id: `eq.${userId}`
                     },
-                    headers: generateSupabaseHeaders(req.accessToken)
+                    headers: generateSupabaseHeaders()
                 }
             )
 
@@ -44,7 +44,7 @@ class ProfileController {
 
              const profile = await Profile.createProfile({
                 name, avatarUrl
-            }, { accessToken: req.accessToken })
+            })
 
             return res.status(201).send(profile)
         } catch (error) {
@@ -72,7 +72,7 @@ class ProfileController {
                         profile_id: `eq.${profileId}`,
                         select: '*'
                     },
-                    headers: generateSupabaseHeaders(req.accessToken)
+                    headers: generateSupabaseHeaders()
                 }
             )
 

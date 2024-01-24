@@ -20,13 +20,13 @@ class StripeAccount {
         accountId,
         stripeSubscriptionId,
         stripeCustomerId,
-    }, { accessToken }) {
+    }) {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stripe_accounts`, {
             account_id: accountId,
             stripe_subscription_id: stripeSubscriptionId,
             stripe_customer_id: stripeCustomerId
         }, {
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         const _stripeAccount = response.data[0]
@@ -40,14 +40,14 @@ class StripeAccount {
         })
     }
 
-    static async findOne({ accountId, stripeCustomerId }, { accessToken }) {
+    static async findOne({ accountId, stripeCustomerId }) {
         const params = { select: "*" }
         if (accountId) params.account_id = `eq.${accountId}`
         if (stripeCustomerId) params.stripe_customer_id = `eq.${stripeCustomerId}`
 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stripe_accounts`, {
             params,
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         const _stripeAccount = response.data[0]
@@ -63,10 +63,10 @@ class StripeAccount {
         })
     }
 
-    static async findAll({ accessToken }) {
+    static async findAll() {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stripe_accounts`, {
             params: { select: "*" },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return response.data.map((stripeAccount) => new StripeAccount({

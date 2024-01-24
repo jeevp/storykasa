@@ -10,7 +10,7 @@ export default class WebhooksController {
 
             const stripeAccount = await StripeAccount.findOne({
                 stripeCustomerId: req.body.data.object.customer
-            }, { accessToken: process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY })
+            })
 
             if (!stripeAccount) {
                 return res.status(404).send({ message: "Account not found" })
@@ -18,7 +18,7 @@ export default class WebhooksController {
 
             const subscription = await Subscription.findOne({
                 accountId: stripeAccount.accountId
-            }, { accessToken: process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY })
+            })
 
             if (!subscription) {
                 return res.status(404).send({ message: "Subscription not found" })
@@ -26,7 +26,7 @@ export default class WebhooksController {
 
             await subscription.update({
                 subscriptionPlan: Subscription.getAllowedSubscriptionPlanNames().FREE_SUBSCRIPTION_PLAN
-            }, { accessToken: process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY })
+            })
 
             return res.status(201).send({ message: "Subscription downgraded with success" })
         } catch (error) {

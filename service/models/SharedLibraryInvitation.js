@@ -21,11 +21,11 @@ class SharedLibraryInvitation {
     static async create({
         libraryId,
         userEmail
-    }, { accessToken }) {
+    }) {
         const sharedLibraryInvitationAlreadySent = await SharedLibraryInvitation.findOne({
             userEmail,
             libraryId
-        }, { accessToken })
+        })
 
         if (sharedLibraryInvitationAlreadySent) {
             return null
@@ -38,7 +38,7 @@ class SharedLibraryInvitation {
             params: {
                 select: "*"
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
 
@@ -48,14 +48,14 @@ class SharedLibraryInvitation {
         })
     }
 
-    static async findAll({ userEmail, complete }, { accessToken }) {
+    static async findAll({ userEmail, complete }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             params: {
                 select: "*",
                 user_email: `eq.${userEmail}`,
                 complete: `eq.${complete}`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return response.data.map((sharedLibraryInvitation) => new SharedLibraryInvitation({
@@ -67,7 +67,7 @@ class SharedLibraryInvitation {
         }))
     }
 
-    static async findOne({ id, userEmail, libraryId }, { accessToken }) {
+    static async findOne({ id, userEmail, libraryId }) {
         const queryParams = { select: "*" }
         if (id) queryParams.id = `eq.${id}`
         if (userEmail) queryParams.user_email = `eq.${userEmail}`
@@ -75,7 +75,7 @@ class SharedLibraryInvitation {
 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             params: queryParams,
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         if (!response.data[0]) {
@@ -91,7 +91,7 @@ class SharedLibraryInvitation {
         })
     }
 
-    async update({ accept, complete }, { accessToken }) {
+    async update({ accept, complete }) {
         const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/shared_library_invitations`, {
             accept,
             complete
@@ -100,7 +100,7 @@ class SharedLibraryInvitation {
                 select: "*",
                 id: `eq.${this.id}`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return new SharedLibraryInvitation({
@@ -111,8 +111,8 @@ class SharedLibraryInvitation {
         })
     }
 
-    async serializer({ accessToken }) {
-        const library = await Library.findOne({ libraryId: this.libraryId }, { accessToken }, { serialized: true })
+    async serializer() {
+        const library = await Library.findOne({ libraryId: this.libraryId }, { serialized: true })
 
         return {
             id: this.id,

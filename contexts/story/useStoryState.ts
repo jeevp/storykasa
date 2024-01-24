@@ -6,6 +6,7 @@ export default function useStoryState() {
     const [privateStories, setPrivateStories] = useState<[]>([])
     const [publicStories, setPublicStories] = useState<[]>([])
     const [storyFilters, setStoryFilters] = useState<Object>({})
+    const [totalRecordingTime, setTotalRecordingTime] = useState<number>(0)
 
     return {
         storyLanguages,
@@ -17,6 +18,8 @@ export default function useStoryState() {
         publicStories,
         setPublicStories,
         storyFilters,
-        setStoryFilters
+        setStoryFilters,
+        totalRecordingTime,
+        setTotalRecordingTime
     };
 }

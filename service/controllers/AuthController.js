@@ -46,7 +46,7 @@ class AuthController {
                 browserVersion,
                 browserName,
                 termsAgreed
-            }, { accessToken: data.session.access_token })
+            })
 
             await supabase.auth.setSession({
                 refresh_token: data.session.refresh_token,
@@ -56,7 +56,7 @@ class AuthController {
             // Create default profile
             const profile = await Profile.createProfile({
                 name: fullName
-            }, { accessToken: data.session.access_token })
+            })
 
 
             // Let's create a free account as default
@@ -71,14 +71,14 @@ class AuthController {
                 accountId: data.user.id,
                 stripeSubscriptionId: subscription.id,
                 stripeCustomerId: stripeCustomer.id
-            }, { accessToken: data.session.access_token })
+            })
 
             const { FREE_SUBSCRIPTION_PLAN } = Subscription.getAllowedSubscriptionPlanNames()
             await Subscription.create({
                 accountId: data.user.id,
                 stripeAccountId: stripeAccount.id,
                 subscriptionPlan: FREE_SUBSCRIPTION_PLAN,
-            }, { accessToken: data.session.access_token })
+            })
 
             return res.status(200).send({
                 ...data,

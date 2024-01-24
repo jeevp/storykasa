@@ -17,7 +17,7 @@ class Profile {
         this.avatarUrl = avatarUrl
     }
 
-    static async getProfile(profileId, accessToken) {
+    static async getProfile(profileId) {
         const response = await axios.get(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles`,
             {
@@ -25,7 +25,7 @@ class Profile {
                     select: "*",
                     profile_id: `eq.${profileId}`,
                 },
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders()
             }
         )
 
@@ -40,7 +40,7 @@ class Profile {
         })
     }
 
-    static async createProfile({ name, avatarUrl }, { accessToken }) {
+    static async createProfile({ name, avatarUrl }) {
         if (!name) {
             throw new Error("Cannot add a profile without a name.")
         }
@@ -63,7 +63,7 @@ class Profile {
                 params: {
                     select: "*"
                 },
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders()
             }
         )
 
@@ -82,7 +82,7 @@ class Profile {
                     select: "*",
                     account_id: `eq.${userId}`
                 },
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders()
             }
         )
 

@@ -2,7 +2,7 @@ import supabase from "../supabase";
 import APIValidator from "../validators/APIValidator"
 const Library = require("../models/Library")
 const SharedLibraryInvitation = require("../models/SharedLibraryInvitation")
-const Story = require("../models/Story")
+import LibraryStory from "../models/LibraryStory"
 
 
 export default class LibraryController {
@@ -12,8 +12,6 @@ export default class LibraryController {
 
             const libraries = await Library.findAll({
                 accountId: user.id
-            }, {
-                accessToken: req.accessToken
             }, {
                 serialized: true
             })
@@ -43,7 +41,7 @@ export default class LibraryController {
                 libraryName,
                 accountId: user.id,
                 profileId
-            }, { accessToken: req.accessToken })
+            })
 
             const { listenersEmails } = req.body
             if (listenersEmails?.length > 0) {
@@ -52,7 +50,7 @@ export default class LibraryController {
                     await SharedLibraryInvitation.create({
                         libraryId: library.libraryId,
                         userEmail: listenerEmail
-                    }, { accessToken: req.accessToken })
+                    })
                 }
             }
 
@@ -67,9 +65,7 @@ export default class LibraryController {
     static async getSharedLibraries(req, res) {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
-            const libraries = await Library.findAll({ sharedAccountId: user.id }, {
-                accessToken: req.accessToken
-            }, { serialized: true })
+            const libraries = await Library.findAll({ sharedAccountId: user.id }, { serialized: true })
 
             return res.status(200).send(libraries)
         } catch (error) {
@@ -85,7 +81,7 @@ export default class LibraryController {
 
             const { libraryId } = req.query
 
-            const stories = await Story.findAll({ libraryId }, { accessToken: req.accessToken })
+            const stories = await LibraryStory.findAll({ libraryId })
 
             return res.status(200).send(stories)
         } catch (error) {
@@ -114,7 +110,7 @@ export default class LibraryController {
                 libraryId,
                 profileId,
                 accountId: user.id
-            }, { accessToken: req.accessToken })
+            })
 
 
             return res.status(201).send({ message: "Story added to library with success." })
@@ -135,7 +131,7 @@ export default class LibraryController {
                 storyId,
                 libraryId,
                 profileId
-            }, { accessToken: req.accessToken })
+            })
 
             return res.status(204).send({})
         } catch (error) {

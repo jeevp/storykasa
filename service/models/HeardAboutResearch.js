@@ -16,7 +16,7 @@ class HeardAboutResearch {
         this.otherSource = otherSource
     }
 
-    static async create({ sources, userId, otherSource }, { accessToken }) {
+    static async create({ sources, userId, otherSource }) {
         const payload = {}
         if (sources) payload.sources = sources
         if (userId) payload.user_id = userId
@@ -26,7 +26,7 @@ class HeardAboutResearch {
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/heard_about_research`,
             payload,
             {
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders()
             }
         )
 

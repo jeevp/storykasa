@@ -24,7 +24,7 @@ class TermsAndPrivacyConsent {
         browserName,
         browserVersion,
         termsAgreed
-    }, { accessToken }){
+    }){
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/terms_and_privacy_consents`, {
             user_id: userId,
             user_ip: userIP,
@@ -32,7 +32,7 @@ class TermsAndPrivacyConsent {
             browser_version: browserVersion,
             terms_agreed: termsAgreed
         }, {
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return response.data

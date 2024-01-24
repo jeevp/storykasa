@@ -193,4 +193,12 @@ export default class StoryHandler {
             moderatorComment
         }, headers)
     }
+
+    static async fetchTotalRecordingTime() {
+        const headers = generateHeaders()
+
+        const response = await axios.get("/api/stories/totalRecordingTime", headers)
+
+        return response.data.totalRecordingTime
+    }
 }

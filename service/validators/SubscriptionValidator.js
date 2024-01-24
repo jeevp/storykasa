@@ -1,17 +1,15 @@
 const Profile = require( "../models/Profile")
 const supabase =  require("../supabase")
 const Subscription = require("../models/Subscription")
-const Story = require("../models/Story")
-const Account = require("../models/Account")
+import Library from "../models/Library"
+
 
 class SubscriptionValidator {
     static async validateMaxProfiles(accessToken) {
         const profiles = await Profile.getAccountProfiles({ accessToken })
         const { data: { user }} = await supabase.auth.getUser(accessToken)
 
-        const subscription = await Subscription.findOne({ accountId: user.id }, {
-            accessToken
-        })
+        const subscription = await Subscription.findOne({ accountId: user.id }    )
 
         const { maxProfilesAllowed} = subscription
 
@@ -24,17 +22,11 @@ class SubscriptionValidator {
         const subscription = await Subscription.findOne({ accountId })
         if (!subscription) return false
 
-        const defaultLibrary = Account.getDefaultProfile({ accountId })
+        const totalStoriesDuration = await Library.getTotalRecordingTime({ accountId })
 
-        const stories = await Story.findAll({ libraryId: defaultLibrary.libraryId })
+        const { maxRecordingTimeAllowed } = subscription
 
-        const totalStoriesDuration = stories.reduce((accumulator, currentStory) => {
-            return accumulator + currentStory.duration
-        }, 0)
-
-        const { maxStoriesDurationTimeAllowed } = subscription
-
-        return totalStoriesDuration < maxStoriesDurationTimeAllowed
+        return totalStoriesDuration < maxRecordingTimeAllowed
     }
 }
 

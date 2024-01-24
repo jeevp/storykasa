@@ -20,7 +20,8 @@ class Story {
         ageGroups,
         profileName,
         profileAvatar,
-        narratorName
+        narratorName,
+        accountId
     }) {
         this.storyId = storyId
         this.title = title
@@ -40,9 +41,10 @@ class Story {
         this.profileName = profileName
         this.profileAvatar = profileAvatar
         this.narratorName = narratorName
+        this.accountId = accountId
     }
 
-    static async getStory(storyId, accessToken) {
+    static async getStory(storyId) {
         const response = await axios.get(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`,
             {
@@ -50,7 +52,7 @@ class Story {
                     select: "*",
                     story_id: `eq.${storyId}`,
                 },
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders()
             }
         )
 
@@ -73,7 +75,8 @@ class Story {
             recordedBy: story.recorded_by,
             duration: story.duration,
             ageGroups: story.age_groups,
-            narratorName: story.narrator_name
+            narratorName: story.narrator_name,
+            accountId: story.account_id
         })
     }
 
@@ -83,20 +86,20 @@ class Story {
         ageGroups: [],
         storyLengths: [],
         private: false,
-    }, { accessToken, userId, profileId, libraryId}) {
+    }, params = { userId: "", profileId: "", libraryId: ""}) {
         // Prepare query parameters for filtering
         const queryParams = {
             select: '*,profiles!inner(*)',
         };
 
         let endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`
-        if (filters?.private && userId) {
+        if (filters?.private && params?.userId) {
             endpoint = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`
             queryParams.select = '*, stories (*, profiles (*))'
-            queryParams.account_id = `eq.${userId}`
-            queryParams.profile_id = `eq.${profileId}`
+            queryParams.account_id = `eq.${params.userId}`
+            queryParams.profile_id = `eq.${params.profileId}`
             queryParams["stories.deleted"] = `eq.false`
-            queryParams.library_id = `eq.${libraryId}`
+            queryParams.library_id = `eq.${params.libraryId}`
         } else {
             queryParams.is_public = "eq.true"
             queryParams.order = 'last_updated.desc'
@@ -118,7 +121,7 @@ class Story {
         // Make the request to Supabase
         const response = await axios.get(endpoint, {
             params: queryParams,
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         });
 
         let data = response.data;
@@ -171,17 +174,19 @@ class Story {
         });
     }
 
-    static async findAll({ libraryId }, options = { accessToken: "" }) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
-            params: {
-                select: '*, stories (*, profiles (*))',
-                library_id: `eq.${libraryId}`,
-                ["stories.deleted"]: "eq.false"
-            },
-            headers: generateSupabaseHeaders(options.accessToken || process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY)
+    static async findAll(params = { accountId: "" }) {
+        const searchParams = {
+            select: "*",
+            ["stories.deleted"]: "eq.false"
+        }
+        if (params.accountId) searchParams["account_id"] = params.accountId
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories`, {
+            params: searchParams,
+            headers: generateSupabaseHeaders(process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY)
         })
 
-        const stories = response.data.map((storyLibrary) => {
+        return response.data.map((storyLibrary) => {
             const story = storyLibrary.stories
 
             return new Story({
@@ -206,8 +211,6 @@ class Story {
                 profileAvatar: story?.profiles?.avatar_url
             })
         })
-
-        return stories
     }
 
     /**
@@ -216,7 +219,6 @@ class Story {
      * @param {string} title
      * @param {string} description
      * @param {string} narratorName
-     * @param {string} accessToken
      * @returns {Promise<any>}
      */
     async update({
@@ -224,7 +226,7 @@ class Story {
         title,
         description,
         narratorName
-    }, { accessToken }) {
+    }) {
         const payload = {}
         if (isPublic === false || isPublic === true) payload.is_public = isPublic
         if (title) payload.title = title
@@ -239,7 +241,7 @@ class Story {
                 params: {
                   story_id: `eq.${this.storyId}`
                 },
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders()
             }
         )
 
@@ -265,4 +267,4 @@ class Story {
     }
 }
 
-module.exports = Story
+export default Story

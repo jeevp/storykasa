@@ -8,9 +8,7 @@ export default class PaymentsController {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const stripeAccount = await StripeAccount.findOne({ accountId: user.id }, {
-                accessToken: req.accessToken
-            })
+            const stripeAccount = await StripeAccount.findOne({ accountId: user.id })
 
             const setupIntent = await StripeService.setupIntents.create({
                 customerId: stripeAccount.stripeCustomerId
@@ -28,9 +26,7 @@ export default class PaymentsController {
             const { paymentMethodId } = req.body
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const stripeAccount = await StripeAccount.findOne({ accountId: user.id }, {
-                accessToken: req.accessToken
-            })
+            const stripeAccount = await StripeAccount.findOne({ accountId: user.id })
 
             await StripeService.customers.attachPaymentMethod({
                 customerId: stripeAccount.stripeCustomerId

@@ -225,10 +225,11 @@ export default function StoryForm() {
                     ) : (
                         <>
                             {storyCreationMethod === RECORD_STORY_CREATION_METHOD ? (
-                                <STKRecordAudio onComplete={updateAudioBlob} onDuration={(duration: number) => setAudioDuration(duration)} />
+                                <STKRecordAudio
+                                onComplete={updateAudioBlob}
+                                onDuration={(duration: number) => setAudioDuration(duration)} />
                             ) : (
                                 <div>
-
                                     <STKUploadFile
                                     // @ts-ignore
                                         maxSize={50}

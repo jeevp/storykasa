@@ -63,7 +63,7 @@ export default class StorageHandler {
 
            // Sending the upload request using axios
            const response = await axios.post(url, formData, {
-               headers: generateSupabaseHeaders(localStorage.getItem(STK_ACCESS_TOKEN), "multipart/form-data")
+               headers: generateSupabaseHeaders({ contentType: "multipart/form-data" })
            });
 
            if (response.status !== 200) {

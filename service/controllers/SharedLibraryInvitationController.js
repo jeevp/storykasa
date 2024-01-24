@@ -10,7 +10,7 @@ export default class SharedLibraryInvitationController {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const sharedLibraryInvitation = await SharedLibraryInvitation.findOne({ id: req.query.sharedLibraryInvitationId }, { accessToken: req.accessToken })
+            const sharedLibraryInvitation = await SharedLibraryInvitation.findOne({ id: req.query.sharedLibraryInvitationId })
 
             if (!sharedLibraryInvitation) {
                 return res.status(404).send({ message: "Shared library invitation not found." })
@@ -21,17 +21,13 @@ export default class SharedLibraryInvitationController {
             const _sharedLibraryInvitation = await sharedLibraryInvitation.update({
                 accept,
                 complete: true
-            }, { accessToken: req.accessToken })
+            })
 
             // Update library to include this user
-            const library = await Library.findOne({ libraryId: sharedLibraryInvitation.libraryId }, {
-                accessToken: req.accessToken
-            })
+            const library = await Library.findOne({ libraryId: sharedLibraryInvitation.libraryId })
             if (!library) return res.status(404).send({ message: "Library not found" })
 
-            await library.update({ sharedAccountIds: [...library.sharedAccountIds, user.id] }, {
-                accessToken: req.accessToken
-            })
+            await library.update({ sharedAccountIds: [...library.sharedAccountIds, user.id] })
 
             return res.status(200).send(_sharedLibraryInvitation)
         } catch (error) {
@@ -43,13 +39,11 @@ export default class SharedLibraryInvitationController {
     static async getSharedLibraryInvitations(req, res) {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
-            const sharedLibrariesInvitations = await SharedLibraryInvitation.findAll({ userEmail: user.email, complete: false }, {
-                accessToken: req.accessToken
-            })
+            const sharedLibrariesInvitations = await SharedLibraryInvitation.findAll({ userEmail: user.email, complete: false })
 
             const sharedLibrariesInvitationsSerialized = []
             await Promise.all((sharedLibrariesInvitations.map(async(sharedLibraryInvitation) => {
-                const sharedLibraryInvitationSerialized = await sharedLibraryInvitation.serializer({ accessToken: req.accessToken })
+                const sharedLibraryInvitationSerialized = await sharedLibraryInvitation.serializer()
                 sharedLibrariesInvitationsSerialized.push(sharedLibraryInvitationSerialized)
             })))
 
@@ -69,11 +63,9 @@ export default class SharedLibraryInvitationController {
             const { listenersEmails, profileId} = req.body
             const { libraryId } = req.query
 
-            const library = await Library.findOne({ libraryId }, {
-                accessToken: req.accessToken
-            })
+            const library = await Library.findOne({ libraryId })
 
-            const profile = await Profile.getProfile(profileId, req.accessToken)
+            const profile = await Profile.getProfile(profileId)
 
             if (!library) {
                 return res.status(404).send({ message: "Library not found" })
@@ -84,7 +76,7 @@ export default class SharedLibraryInvitationController {
                 const sharedLibraryInvitation = await SharedLibraryInvitation.create({
                     libraryId,
                     userEmail: listenerEmail
-                }, { accessToken: req.accessToken })
+                })
 
                 invitationsSummary.push({
                     listenerEmail,

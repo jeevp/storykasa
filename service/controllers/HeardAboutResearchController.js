@@ -21,7 +21,7 @@ class HeardAboutResearchController {
                 userId: user.id,
                 sources,
                 otherSource
-            }, { accessToken: req.accessToken })
+            })
 
 
             return res.status(200).send({ message: "Heard about research created" })

@@ -1,5 +1,5 @@
 import StoryCard, {ADD_TO_LIBRARY_MENU_OPTION} from '@/composedComponents/StoryCard/StoryCard'
-import {ReactEventHandler, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import StoryDetails from '@/composedComponents/StoryDetails/StoryDetails'
 import PageWrapper from '@/composedComponents/PageWrapper'
 import { AnimatePresence, motion } from 'framer-motion'

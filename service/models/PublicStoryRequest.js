@@ -21,11 +21,10 @@ class PublicStoryRequest {
         this.createdAt = createdAt
     }
 
-    static async create({ storyId, profileId }, { accessToken }) {
+    static async create({ storyId, profileId }) {
         if (!storyId) throw new Error("StoryId cannot be null")
-        if (!accessToken) throw new Error("Missing access token")
 
-        const validation = await this.validateRequestExistence({ storyId, profileId }, { accessToken })
+        const validation = await this.validateRequestExistence({ storyId, profileId })
         if (validation.error) {
             return {
                 publicStoryRequest: null,
@@ -40,7 +39,7 @@ class PublicStoryRequest {
             params: {
                 select: '*'
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return {
@@ -49,7 +48,7 @@ class PublicStoryRequest {
         }
     }
 
-    static async update({ publicStoryRequestId }, { approved, completed, moderatorComment }, { accessToken }) {
+    static async update({ publicStoryRequestId }, { approved, completed, moderatorComment }) {
 
         const response = await axios.patch(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
@@ -61,7 +60,7 @@ class PublicStoryRequest {
                     select: "*",
                     id: `eq.${publicStoryRequestId}`
                 },
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders()
             }
         )
 
@@ -76,7 +75,7 @@ class PublicStoryRequest {
             createdAt: publicStoryRequest.created_at
         })
     }
-    static async findAll({ storyIds = [] }, { accessToken }) {
+    static async findAll({ storyIds = [] }) {
         if (storyIds.length === 0) throw new Error("storyIds must not be empty")
 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
@@ -84,7 +83,7 @@ class PublicStoryRequest {
                 select: "*",
                 story_id: `in.(${storyIds})`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
 
@@ -98,13 +97,13 @@ class PublicStoryRequest {
         }))
     }
 
-    static async validateRequestExistence({ storyId, profileId }, { accessToken }) {
+    static async validateRequestExistence({ storyId, profileId }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`, {
             params: {
                 story_id: `eq.${storyId}`,
                 profile_id: `eq.${profileId}`,
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         if (response.data.length > 0) {
@@ -117,7 +116,7 @@ class PublicStoryRequest {
         return true
     }
 
-    static async getPublicStoryRequests(filters = {}, { accessToken }) {
+    static async getPublicStoryRequests(filters = {}) {
         const response = await axios.get(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_story_requests`,
             {
@@ -125,7 +124,7 @@ class PublicStoryRequest {
                     select: "*",
                     completed: `eq.false`
                 },
-                headers: generateSupabaseHeaders(accessToken)
+                headers: generateSupabaseHeaders()
             }
         )
 
@@ -143,9 +142,9 @@ class PublicStoryRequest {
         return publicStoryRequests
     }
 
-    async serializer(accessToken) {
-        const story = await Story.getStory(this.storyId, accessToken)
-        const profile = await Profile.getProfile(this.profileId, accessToken)
+    async serializer() {
+        const story = await Story.getStory(this.storyId)
+        const profile = await Profile.getProfile(this.profileId)
 
         return {
             ...this,

@@ -4,7 +4,7 @@ const {ApiError} = require("next/dist/server/api-utils")
 
 const LibraryStory = require("./LibraryStory")
 const Profile = require("./Profile")
-const Story = require("./Story")
+import Story from "../models/Story"
 const Account = require("./Account")
 
 class Library {
@@ -46,7 +46,7 @@ class Library {
         libraryName,
         accountId,
         profileId
-    }, { accessToken }) {
+    }) {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
             account_id: accountId,
             profile_id: profileId,
@@ -55,7 +55,7 @@ class Library {
             params: {
                select: "*"
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
 
@@ -77,7 +77,7 @@ class Library {
      * @param {{serialized: boolean}} options
      * @returns {Promise<*>}
      */
-    static async findAll({ accountId, sharedAccountId }, { accessToken }, options = { serialized: false }) {
+    static async findAll({ accountId, sharedAccountId }, options = { serialized: false }) {
         const queryParams = { select: "*" }
         if (accountId) queryParams.account_id = `eq.${accountId}`;
         if (sharedAccountId) {
@@ -86,13 +86,11 @@ class Library {
 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
             params: queryParams,
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         });
 
         const librariesPromises = response.data.map(async (library) => {
-            const libraryStories = await Story.findAll({ libraryId: library?.library_id }, {
-                accessToken
-            }) || []
+            const libraryStories = await LibraryStory.findAll({ libraryId: library?.library_id })
 
             const totalDuration = libraryStories.length > 0 ? libraryStories.reduce((acc, current) => {
                 return acc + current.duration
@@ -110,7 +108,7 @@ class Library {
             });
 
             if (options.serialized) {
-                return await _library.serializer({ accessToken });
+                return await _library.serializer();
             }
 
             return _library;
@@ -119,8 +117,10 @@ class Library {
         return await Promise.all(librariesPromises);
     }
 
-    static async findDefaultLibrary({ accountId }, { accessToken }) {
-        const libraries = await Library.findAll({ accountId }, { accessToken })
+    static async findDefaultLibrary({ accountId }) {
+        const libraries = await Library.findAll({
+            accountId
+        })
 
         const orderedLibraries = libraries.sort((a, b) => {
             if (a.createdAt < b.createdAt) return -1
@@ -131,13 +131,13 @@ class Library {
     }
 
 
-    static async findOne({ libraryId }, { accessToken }, options = { serialized: false }) {
+    static async findOne({ libraryId }, options = { serialized: false }) {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
             params: {
                 select: "*",
                 library_id: `eq.${libraryId}`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         const library = new Library({
@@ -152,11 +152,11 @@ class Library {
             return library
         }
 
-        return await library.serializer({accessToken})
+        return await library.serializer()
     }
 
-    static async addStory({ storyId, libraryId, accountId, profileId }, { accessToken }) {
-        const storyAlreadyAddedToLibrary = await LibraryStory.findOne({ libraryId, storyId }, { accessToken })
+    static async addStory({ storyId, libraryId, accountId, profileId }) {
+        const storyAlreadyAddedToLibrary = await LibraryStory.findOne({ libraryId, storyId })
 
         if (storyAlreadyAddedToLibrary) {
             throw new ApiError(409, "Story already added to this library.")
@@ -171,13 +171,13 @@ class Library {
             params: {
                 select: "*"
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return response.data[0]
     }
 
-    static async removeStory({ storyId, libraryId, profileId }, { accessToken }) {
+    static async removeStory({ storyId, libraryId, profileId }) {
         const response = await axios.delete(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`, {
             params: {
                 select: "*",
@@ -185,13 +185,25 @@ class Library {
                 story_id: `eq.${storyId}`,
                 profile_id: `eq.${profileId}`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return response.data[0]
     }
 
-    async update({ sharedAccountIds }, { accessToken }) {
+    static async getTotalRecordingTime({ accountId }) {
+        const defaultLibrary = await Library.findDefaultLibrary({ accountId })
+
+        const stories = await LibraryStory.findAll({
+            libraryId: defaultLibrary.libraryId
+        })
+
+        return stories.reduce((accumulator, currentStory) => {
+            return accumulator + (currentStory?.duration || 0)
+        }, 0) / 60
+    }
+
+    async update({ sharedAccountIds }) {
         const response = await axios.patch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/libraries`, {
             shared_account_ids: sharedAccountIds
         }, {
@@ -199,7 +211,7 @@ class Library {
                 select: "*",
                 library_id: `eq.${this.libraryId}`
             },
-            headers: generateSupabaseHeaders(accessToken)
+            headers: generateSupabaseHeaders()
         })
 
         return new Library({
@@ -211,9 +223,9 @@ class Library {
         })
     }
 
-    async serializer({ accessToken }) {
+    async serializer() {
         const listenersPromises = this.sharedAccountIds.map(async (sharedAccountId) => {
-            const account = await Account.findOne({ accountId: sharedAccountId }, { accessToken });
+            const account = await Account.findOne({ accountId: sharedAccountId });
             if (account) {
                 return {
                     avatarUrl: account.avatarUrl,
@@ -227,13 +239,13 @@ class Library {
         const listeners = (await Promise.all(listenersPromises)).filter(listener => !!listener);
         let profile = {}
         if (this.profileId) {
-            profile = await Profile.getProfile(this.profileId, accessToken)
+            profile = await Profile.getProfile(this.profileId)
         } else {
-            profile = await Account.getDefaultProfile({ accountId: this.accountId }, { accessToken })
+            profile = await Account.getDefaultProfile({ accountId: this.accountId })
         }
 
-        const totalStories = await this.getTotalStories({ accessToken })
-        const totalDuration = await this.getTotalDuration({ accessToken })
+        const totalStories = await this.getTotalStories()
+        const totalDuration = await this.getTotalDuration()
 
         return {
             accountId: this.accountId,
@@ -249,20 +261,18 @@ class Library {
         };
     }
 
-    async getStories({ accessToken }) {
-        return await Story.findAll({libraryId: this.libraryId}, {
-            accessToken
-        }) || []
+    async getStories() {
+        return await LibraryStory.findAll({libraryId: this.libraryId}) || []
     }
 
-    async getTotalStories({ accessToken }) {
-        const stories = await this.getStories({ accessToken })
+    async getTotalStories() {
+        const stories = await this.getStories()
 
         return stories.length
     }
 
-    async getTotalDuration({ accessToken }) {
-        const libraryStories = await this.getStories({ accessToken })
+    async getTotalDuration() {
+        const libraryStories = await this.getStories()
         return libraryStories.length > 0 ? libraryStories.reduce((acc, current) => {
             return acc + current.duration
         }, 0) : 0

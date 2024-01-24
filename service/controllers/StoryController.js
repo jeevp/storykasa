@@ -6,7 +6,7 @@ const LibraryStory = require("../models/LibraryStory")
 const PublicStoryRequest = require("../models/PublicStoryRequest");
 const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
-const Story = require("../models/Story")
+import Story from "../models/Story"
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 const Library = require("../models/Library")
 const SubscriptionValidator = require("../validators/SubscriptionValidator")
@@ -23,7 +23,7 @@ class StoryController {
                 params: {
                     story_id: `eq.${storyId}`
                 },
-                headers: generateSupabaseHeaders(req.accessToken)
+                headers: generateSupabaseHeaders()
             })
 
             return res.status(204).send(response.data)
@@ -44,7 +44,7 @@ class StoryController {
                 })
             }
 
-            const story = await Story.getStory(storyId, req.accessToken)
+            const story = await Story.getStory(storyId)
 
             if (!story) {
                 return res.status(404).send({ message: "Story not found" })
@@ -54,8 +54,6 @@ class StoryController {
                 title,
                 description,
                 narratorName
-            }, {
-                accessToken: req.accessToken
             })
 
             return res.status(202).send(updatedStory)
@@ -83,7 +81,7 @@ class StoryController {
 
             const library = await Library.findDefaultLibrary({
                 accountId: user.id
-            }, { accessToken: req.accessToken })
+            })
 
             const privateStories = await Story.getStories({
                 narrator,
@@ -92,7 +90,6 @@ class StoryController {
                 storyLengths,
                 private: true
             }, {
-                accessToken: req.accessToken,
                 userId: user.id,
                 profileId,
                 libraryId: library?.libraryId
@@ -113,7 +110,7 @@ class StoryController {
             // Stories Illustrations
             const illustrationsResponse = await axios.get(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/stories_images`, {
                 params: illustrationParams,
-                headers: generateSupabaseHeaders(req.accessToken)
+                headers: generateSupabaseHeaders()
             });
 
             const illustrations = illustrationsResponse.data
@@ -121,7 +118,7 @@ class StoryController {
             // Public story request
             const publicStoriesRequests = await PublicStoryRequest.findAll({
                 storyIds: storiesIds
-            }, { accessToken: req.accessToken })
+            })
 
             const publicStoriesRequestHash = convertArrayToHash(publicStoriesRequests, "storyId")
 
@@ -164,7 +161,7 @@ class StoryController {
                 ageGroups,
                 storyLengths,
                 private: false
-            }, { accessToken: req.accessToken })
+            })
             return res.status(200).send(publicStories)
         } catch (error) {
             console.error(error)
@@ -219,7 +216,7 @@ class StoryController {
                     params: {
                         select: '*'
                     },
-                    headers: generateSupabaseHeaders(req.accessToken)
+                    headers: generateSupabaseHeaders()
                 }
             )
 
@@ -227,9 +224,7 @@ class StoryController {
 
             // simulate the story "saving" process by adding it to the library_stories table
             if (newStoryID && user) {
-                const defaultLibrary = await Library.findDefaultLibrary({ accountId: user?.id }, {
-                    accessToken: req.accessToken
-                })
+                const defaultLibrary = await Library.findDefaultLibrary({ accountId: user?.id })
 
                 const storyResponse = await axios.post(
                     `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/library_stories`,
@@ -243,7 +238,7 @@ class StoryController {
                         params: {
                             select: '*'
                         },
-                        headers: generateSupabaseHeaders(req.accessToken)
+                        headers: generateSupabaseHeaders()
                     }
                 )
 
@@ -261,7 +256,7 @@ class StoryController {
                             params: {
                                 select: '*'
                             },
-                            headers: generateSupabaseHeaders(req.accessToken)
+                            headers: generateSupabaseHeaders()
                         }
                     )
                 })
@@ -284,12 +279,11 @@ class StoryController {
 
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const library = await Library.findDefaultLibrary({ accountId: user.id }, { accessToken: req.accessToken })
+            const library = await Library.findDefaultLibrary({ accountId: user.id })
 
             let stories = await Story.getStories({
                 private: Boolean(req.query.profileId)
             }, {
-                accessToken: req.accessToken,
                 userId,
                 profileId: req.query.profileId,
                 libraryId: library?.libraryId
@@ -337,15 +331,13 @@ class StoryController {
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
-            const defaultLibrary = await Library.findDefaultLibrary({ accountId: user.id }, { accessToken: req.accessToken })
+            const defaultLibrary = await Library.findDefaultLibrary({ accountId: user.id })
 
             await LibraryStory.create({
                 storyId,
                 profileId,
                 accountId: user.id,
                 libraryId: defaultLibrary?.libraryId
-            }, {
-                accessToken: req.accessToken
             })
 
             return res.status(201).send({ message: "Story added to library with success" })
@@ -365,15 +357,13 @@ class StoryController {
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
-            const defaultLibrary = await Library.findDefaultLibrary({ accountId: user.id }, { accessToken: req.accessToken })
+            const defaultLibrary = await Library.findDefaultLibrary({ accountId: user.id })
 
             await LibraryStory.delete({
                 storyId,
                 libraryId: defaultLibrary.libraryId,
                 profileId,
                 accountId: user.id
-            }, {
-                accessToken: req.accessToken
             })
 
             return res.status(204).send({ message: "Story removed from library with success" })
@@ -391,9 +381,7 @@ class StoryController {
 
             const { storyId, profileId } = req.query
 
-            const { publicStoryRequest, error } = await PublicStoryRequest.create({ storyId, profileId }, {
-                accessToken: req.accessToken
-            })
+            const { publicStoryRequest, error } = await PublicStoryRequest.create({ storyId, profileId })
 
             if (error) return res.status(200).send({ message: error })
 
@@ -412,18 +400,29 @@ class StoryController {
                 return res.status(401).send({ message: "Not allowed" })
             }
 
-            const publicStoryRequests = await PublicStoryRequest.getPublicStoryRequests({},
-                { accessToken: req.accessToken }
-            )
+            const publicStoryRequests = await PublicStoryRequest.getPublicStoryRequests({})
 
             const publicStoryRequestsSerialized = []
             await Promise.all(publicStoryRequests.map(async(publicStoryRequest) => {
-                const publicStoryRequestSerialized = await publicStoryRequest.serializer(req.accessToken)
+                const publicStoryRequestSerialized = await publicStoryRequest.serializer()
 
                 publicStoryRequestsSerialized.push(publicStoryRequestSerialized)
             }))
 
             return res.status(200).send(publicStoryRequestsSerialized)
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async getTotalRecordingTime(req, res) {
+        try {
+            const { data: { user } } = await supabase.auth.getUser(req.accessToken)
+
+            const totalRecordingTime = await Library.getTotalRecordingTime({ accountId: user?.id })
+
+            return res.status(200).send({ totalRecordingTime })
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })

@@ -1,4 +1,4 @@
-async function createStripeAccountAndDefaultSubscription() {
+async function setAccountIdToStories() {
     require('dotenv').config({ path: '../../.env' });
     const convertArrayToHash = require("../../utils/convertArrayToHash")
 
@@ -8,8 +8,8 @@ async function createStripeAccountAndDefaultSubscription() {
     const User = require("../models/User")
     const StripeService = require("../services/StripeService/StripeService")
     const Subscription = require("../models/Subscription")
+    const Story = require("../models/Story")
 
-    const accounts = await Account.findAll()
 
     const stripeAccounts = await StripeAccount.findAll()
 
