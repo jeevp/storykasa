@@ -1,5 +1,5 @@
 function generateSupabaseHeaders(options = { contentType: "application/json" }) {
-    require('dotenv').config({ path: '../../../.env' });
+    require('dotenv').config({ path: '.env' });
 
     return {
         'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,

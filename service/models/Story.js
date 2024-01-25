@@ -175,7 +175,7 @@ class Story {
     }
 
     static async findAll(params = { accountId: "" }) {
-        require('dotenv').config({ path: '../../.env' });
+        require('dotenv').config({ path: '.env' });
 
         const searchParams = {
             select: "*",
@@ -230,7 +230,7 @@ class Story {
         narratorName,
         accountId
     }) {
-        require('dotenv').config({ path: '../../.env' });
+        require('dotenv').config({ path: '.env' });
 
         const payload = {}
         if (isPublic === false || isPublic === true) payload.is_public = isPublic

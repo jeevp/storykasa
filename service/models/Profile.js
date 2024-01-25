@@ -103,7 +103,7 @@ class Profile {
     }
 
     static async findAll() {
-        require('dotenv').config({ path: '../../.env' });
+        require('dotenv').config({ path: '.env' });
 
         const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/profiles`, {
             params: {
