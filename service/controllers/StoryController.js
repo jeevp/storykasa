@@ -206,7 +206,8 @@ class StoryController {
                 description: description,
                 language: language,
                 age_groups: ageGroups,
-                duration: duration
+                duration: duration,
+                account_id: user?.id
             }
 
             const response = await axios.post(
@@ -226,7 +227,7 @@ class StoryController {
             if (newStoryID && user) {
                 const defaultLibrary = await Library.findDefaultLibrary({ accountId: user?.id })
 
-                const storyResponse = await axios.post(
+                await axios.post(
                     `${process.env.SUPABASE_URL}/rest/v1/library_stories`,
                     {
                         account_id: user.id,

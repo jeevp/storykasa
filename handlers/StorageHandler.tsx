@@ -57,21 +57,25 @@ export default class StorageHandler {
            const { bucketName, extension } = JSON.parse(formData.get("uploadDetails") as string);
 
            // The URL to which you will send the file upload request
-           const url = `${process.env.SUPABASE_URL}/storage/v1/object/${bucketName}/${uuid}.${extension}`;
-
-           // Now formData already contains the file, so no need to create a new FormData object or Blob
+           const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${bucketName}/${uuid}.${extension}`;
 
            // Sending the upload request using axios
            const response = await axios.post(url, formData, {
-               headers: generateSupabaseHeaders({ contentType: "multipart/form-data" })
+               headers: generateSupabaseHeaders({
+                   contentType: "multipart/form-data"
+               }, {
+                   // @ts-ignore
+                   accessToken: localStorage.getItem(STK_ACCESS_TOKEN)
+               })
            });
 
            if (response.status !== 200) {
                throw new Error("File upload failed");
            }
 
-           return `${process.env.SUPABASE_URL}/storage/v1/object/public/${bucketName}/${uuid}.${extension}`;
+           return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucketName}/${uuid}.${extension}`;
        } catch (error) {
+           console.error(error)
            throw new Error("Something went wrong")
        }
     }

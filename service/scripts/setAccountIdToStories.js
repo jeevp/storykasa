@@ -2,7 +2,6 @@ async function setAccountIdToStories() {
     require('dotenv').config({ path: '.env' });
 
     const convertArrayToHash = require("../../utils/convertArrayToHash")
-    console.log({ supabaseURL: process.env.SUPABASE_URL })
 
     console.log(">>> Start script - set account_id to stories")
     const Story = require("../models/Story")

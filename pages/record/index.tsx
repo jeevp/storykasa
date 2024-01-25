@@ -7,13 +7,17 @@ import Link from "next/link";
 import {useStory} from "@/contexts/story/StoryContext";
 import {useEffect, useState} from "react";
 import StoryHandler from "@/handlers/StoryHandler";
+import STKLinearProgress from "@/components/STKLinearProgress/STKLinearProgress";
+import STKLoading from "@/components/STKLoading/STKLoading";
 
 function Record() {
     const { currentSubscription } = useSubscription()
     const { totalRecordingTime, setTotalRecordingTime } = useStory()
 
     // States
+    const [loading, setLoading] = useState(true)
     const [allowStoryCreation, setAllowStoryCreation] = useState(true)
+    const [recordingTimeAvailable, setRecordingTimeAvailable] = useState("")
 
     // Mounted
     useEffect(() => {
@@ -24,15 +28,24 @@ function Record() {
     useEffect(() => {
         if (totalRecordingTime && currentSubscription && currentSubscription?.maxRecordingTimeAllowed) {
             setAllowStoryCreation(totalRecordingTime < currentSubscription?.maxRecordingTimeAllowed)
+            // @ts-ignore
+            setRecordingTimeAvailable(Math.round((currentSubscription?.maxRecordingTimeAllowed) - totalRecordingTime))
+
         }
     }, [totalRecordingTime, currentSubscription])
 
     // Methods
     const handleFetchTotalRecordingTime = async () => {
+        setLoading(true)
         const _totalRecordingTime = await StoryHandler.fetchTotalRecordingTime()
         setTotalRecordingTime(_totalRecordingTime)
+        setLoading(false)
     }
 
+    // @ts-ignore
+
+    const recordingTimeUsagePercentage = currentSubscription?.getRecordingTimeUsagePercentage(totalRecordingTime)
+    const recordingTimeLabel = `${recordingTimeAvailable} minutes available`
 
     return (
         <PageWrapper path="record">
@@ -48,6 +61,27 @@ function Record() {
                         Record a story of your own. Remember, only profiles on your account can view and listen to
                         your story. Feel free to enhance it with a description and illustrations or images
                     </p>
+                    <div className="mt-8">
+                        <div className="flex mb-2">
+                            {loading ? (
+                                <STKLoading />
+                            ) : (
+                                <label>{recordingTimeUsagePercentage?.toFixed(2) || 0}% usage</label>
+                            )}
+                        </div>
+
+                        <STKLinearProgress value={!loading && recordingTimeUsagePercentage ? recordingTimeUsagePercentage : 0} />
+                        <div className="mt-2 flex items-center justify-between">
+                            {loading ? (
+                                <STKLoading />
+                            ) : (
+                                <>
+                                    <label className="font-semibold">{recordingTimeLabel}</label>
+                                    <label>{currentSubscription?.maxRecordingTimeAllowed} minutes</label>
+                                </>
+                        )}
+                        </div>
+                    </div>
                     <div className="mt-10">
                         <StoryForm></StoryForm>
                     </div>

@@ -70,4 +70,8 @@ export default class Subscription {
                 break
         }
     }
+
+    getRecordingTimeUsagePercentage(totalRecordingTime: number) {
+        return (totalRecordingTime * 100) / this.maxRecordingTimeAllowed
+    }
 }
