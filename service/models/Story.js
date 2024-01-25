@@ -175,13 +175,15 @@ class Story {
     }
 
     static async findAll(params = { accountId: "" }) {
+        require('dotenv').config({ path: '../../.env' });
+
         const searchParams = {
             select: "*",
             deleted: "eq.false"
         }
         if (params.accountId) searchParams["account_id"] = `eq.${params.accountId}`
 
-        const response = await axios.get(`https://api.storykasa.com/rest/v1/stories`, {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/stories`, {
             params: searchParams,
             headers: generateSupabaseHeaders()
         })
@@ -228,6 +230,8 @@ class Story {
         narratorName,
         accountId
     }) {
+        require('dotenv').config({ path: '../../.env' });
+
         const payload = {}
         if (isPublic === false || isPublic === true) payload.is_public = isPublic
         if (title) payload.title = title
