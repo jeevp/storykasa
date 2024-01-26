@@ -13,7 +13,7 @@ interface STKDialogProps {
     animationDirection?: "right" | "left" | "up" | "down"
     maxWidth?: "xs" | "sm" | "md" | "lg" | "xl"
     includeBackArrow?: boolean,
-    onBack: (e: MouseEvent) => void
+    onBack?: (e: MouseEvent) => void
     onClose: (e: MouseEvent) => void
 }
 
