@@ -25,12 +25,6 @@ const StripeCheckout = ({
 
     return (
         <div>
-            <div className="flex items-center">
-                <STKButton iconButton onClick={() => onCancel()}><ArrowBack /></STKButton>
-                <div>
-                    <h1 className="text-2xl font-bold ml-2">Secure Payment Setup</h1>
-                </div>
-            </div>
             <div>
                 <p className="text-lg max-w-xl">
                     Almost there! To activate your StoryKasa subscription, please enter your credit card details

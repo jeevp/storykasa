@@ -53,7 +53,7 @@ export default function ChooseSubscriptionPlan({ onNext = () => ({}) }) {
                 'Limited story recording time (60 minutes)',
                 'Can add artwork to your own stories'
             ],
-            isSelected: selectedPlan.value === FREE_SUBSCRIPTION_PLAN,
+            isSelected: selectedPlan?.value === FREE_SUBSCRIPTION_PLAN,
             value: FREE_SUBSCRIPTION_PLAN
         },
         {
@@ -66,25 +66,25 @@ export default function ChooseSubscriptionPlan({ onNext = () => ({}) }) {
                 'More story recording time (300 minutes)',
                 'Can add artwork to any stories'
             ],
-            isSelected: selectedPlan.value === PREMIUM_SUBSCRIPTION_PLAN,
+            isSelected: selectedPlan?.value === PREMIUM_SUBSCRIPTION_PLAN,
             value: PREMIUM_SUBSCRIPTION_PLAN
         },
-        {
-            name: 'Premium',
-            extensionName: "Unlimited",
-            price: '$20',
-            features: [
-                'Unlimited listening time to all stories',
-                'Unlimited profiles',
-                'Even more story recording (600 minutes)',
-                'Can add artwork to any stories',
-                'Enhanced story creation tools including AI based suggestions, text transcriptions, audio editing capabilities',
-                'Co-create stories with others',
-                'Add music to stories'
-            ],
-            isSelected: selectedPlan.value === PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN,
-            value: PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN
-        },
+        // {
+        //     name: 'Premium',
+        //     extensionName: "Unlimited",
+        //     price: '$20',
+        //     features: [
+        //         'Unlimited listening time to all stories',
+        //         'Unlimited profiles',
+        //         'Even more story recording (600 minutes)',
+        //         'Can add artwork to any stories',
+        //         'Enhanced story creation tools including AI based suggestions, text transcriptions, audio editing capabilities',
+        //         'Co-create stories with others',
+        //         'Add music to stories'
+        //     ],
+        //     isSelected: selectedPlan.value === PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN,
+        //     value: PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN
+        // },
         {
             name: 'Premium',
             extensionName: "Organizational",
@@ -94,12 +94,9 @@ export default function ChooseSubscriptionPlan({ onNext = () => ({}) }) {
                 'Unlimited profiles',
                 'Even more story recording (600 minutes)',
                 'Can add artwork to any stories',
-                'Enhanced story creation tools including AI based suggestions, text transcriptions, audio editing capabilities',
-                'Co-create stories with others',
-                'Add music to stories',
                 'Includes up to 100 premium users'
             ],
-            isSelected: selectedPlan.value === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
+            isSelected: selectedPlan?.value === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
             value: PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN
         }
     ];
