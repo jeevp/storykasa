@@ -86,7 +86,7 @@ class Story {
         ageGroups: [],
         storyLengths: [],
         private: false,
-    }, params = { userId: "", profileId: "", libraryId: ""}) {
+    }, params = { userId: "", profileId: "", libraryId: "", freeTier: false }) {
         // Prepare query parameters for filtering
         const queryParams = {
             select: '*,profiles!inner(*)',
@@ -166,6 +166,22 @@ class Story {
 
                 return story?.profiles?.profile_name === filters.narrator
             });
+        }
+
+        if (params.freeTier) {
+            const fiveMinutesInSeconds = 5 * 60
+            data = data.map((story) => {
+                const notAvailableOnFreeTier = story.duration > fiveMinutesInSeconds && !story.free_tier_exception
+
+                if (notAvailableOnFreeTier) {
+                    return {
+                        ...story,
+                        recording_url: ""
+                    }
+                }
+
+                return story
+            })
         }
 
         return data.filter((d) => d !== null).sort((a, b) => {

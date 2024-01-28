@@ -68,6 +68,11 @@ export default function StoryDetails({
                         </div>
                     )}
                 </div>
+                {!story?.recordingUrl && (
+                    <div className="inline-flex py-2 px-3 bg-[#eaf8b2] rounded-2xl mt-4">
+                        <label className="text-xs">Available only for <span className="font-semibold">Premium</span> accounts</label>
+                    </div>
+                )}
 
                 {
                     // @ts-ignore
@@ -81,7 +86,7 @@ export default function StoryDetails({
                         duration={story?.duration}
                         targetDuration={storyCurrentTime}
                         restart={storyHasEnded && startIllustrationsDisplay}/>
-                        <div key={story?.recordingUrl} className="mt-2">
+                        <div key={story?.storyId} className="mt-2">
                             <STKAudioPlayer
                                 outlined
                                 html5
@@ -94,20 +99,17 @@ export default function StoryDetails({
                         </div>
                     </div>
                 ) : (
-                    <>
-                        {story?.recordingUrl && (
-                            <div key={story?.recordingUrl} className="mt-6">
-                                <STKAudioPlayer
-                                    outlined src={story?.recordingUrl}
-                                    html5
-                                    onEnd={handleStoryOnEnd}
-                                    // @ts-ignore
-                                    onPlaying={handlePlaying}
-                                    // @ts-ignore
-                                    onTimeChange={handleOnTimeChange}/>
-                            </div>
-                        )}
-                    </>
+                    <div key={story?.recordingUrl} className={`mt-6 ${story?.recordingUrl ? '' : 'disabled'}`}>
+                        <STKAudioPlayer
+                            outlined
+                            src={story?.recordingUrl || ""}
+                            html5
+                            onEnd={handleStoryOnEnd}
+                            // @ts-ignore
+                            onPlaying={handlePlaying}
+                            // @ts-ignore
+                            onTimeChange={handleOnTimeChange}/>
+                    </div>
                 )}
                 <div className="mb-8 mt-6">
                     <div className="mt-4">

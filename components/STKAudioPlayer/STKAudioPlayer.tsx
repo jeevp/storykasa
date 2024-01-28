@@ -49,6 +49,8 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
     useEffect(() => {
         // @ts-ignored
+        if (!src) setLoading(false)
+        // @ts-ignore
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const sound = new Howl({
             src: [src],

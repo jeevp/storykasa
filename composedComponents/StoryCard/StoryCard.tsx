@@ -311,29 +311,37 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex items-center">
-                                    {story?.recordedBy && story.recordedBy !== currentProfileId && (
-                                        <div className="hidden lg:block">
-                                            <STKButton iconButton onClick={handleLikedStories}>
-                                                {liked ? <FavoriteIcon sx={{ fill: green600, width: "22px", height: "22px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "22px", height: "22px" }} />}
-                                            </STKButton>
+                                <div className="items-end hidden lg:block">
+                                    {!story?.recordingUrl ? (
+                                        <div className="inline-flex py-2 px-3 bg-[#eaf8b2] rounded-2xl ml-2">
+                                            <label className="font-semibold text-xs">Premium</label>
                                         </div>
+                                    ) : (
+                                      <>
+                                          {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                                              <div>
+                                                  <STKButton iconButton onClick={handleLikedStories}>
+                                                      {liked ? <FavoriteIcon sx={{ fill: green600, width: "22px", height: "22px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "22px", height: "22px" }} />}
+                                                  </STKButton>
+                                              </div>
+                                          )}
+                                          <div >
+                                              {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
+                                                  <div>
+                                                      <STKMenu
+                                                          options={menuOptions}
+                                                          onChange={handleMenuOnChange}/>
+                                                  </div>
+                                              ) : (
+                                                  <div>
+                                                      <STKMenu
+                                                          options={menuOptions}
+                                                          onChange={handleMenuOnChange}/>
+                                                  </div>
+                                              )}
+                                          </div>
+                                      </>
                                     )}
-                                    <div className="hidden lg:block">
-                                        {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
-                                            <div>
-                                                <STKMenu
-                                                    options={menuOptions}
-                                                    onChange={handleMenuOnChange}/>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <STKMenu
-                                                    options={menuOptions}
-                                                    onChange={handleMenuOnChange}/>
-                                            </div>
-                                        )}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -365,31 +373,39 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                                 </div>
                             )}
                         </div>
-                        <div className="flex items-center">
-                            {story?.recordedBy && story.recordedBy !== currentProfileId && (
-                                <div className="block lg:hidden">
-                                    <STKButton iconButton onClick={handleLikedStories}>
-                                        {liked ? <FavoriteIcon sx={{ fill: green600, width: "22px", height: "22px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "22px", height: "22px" }} />}
-                                    </STKButton>
+                        <div className="flex items-center lg:hidden">
+                            {!story.recordingUrl ? (
+                                <div className="inline-flex py-2 px-3 bg-[#eaf8b2] rounded-2xl ml-2">
+                                    <label className="font-semibold text-xs">Premium</label>
                                 </div>
-                            )}
-                            {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
-                                <div className="block lg:hidden">
-                                    <STKMenu
-                                        options={menuOptions}
-                                        onChange={handleMenuOnChange}/>
-                                </div>
-                            ): (
-                                <div>
-                                    <STKMenu
-                                        options={[
-                                            {
-                                                label: "Add to collection",
-                                                value: ADD_TO_LIBRARY_MENU_OPTION
-                                            }
-                                        ]}
-                                        onChange={handleMenuOnChange}/>
-                                </div>
+                            ) : (
+                                <>
+                                    {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                                        <div className="block">
+                                            <STKButton iconButton onClick={handleLikedStories}>
+                                                {liked ? <FavoriteIcon sx={{ fill: green600, width: "22px", height: "22px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "22px", height: "22px" }} />}
+                                            </STKButton>
+                                        </div>
+                                    )}
+                                    {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
+                                        <div className="block">
+                                            <STKMenu
+                                                options={menuOptions}
+                                                onChange={handleMenuOnChange}/>
+                                        </div>
+                                    ): (
+                                        <div>
+                                            <STKMenu
+                                                options={[
+                                                    {
+                                                        label: "Add to collection",
+                                                        value: ADD_TO_LIBRARY_MENU_OPTION
+                                                    }
+                                                ]}
+                                                onChange={handleMenuOnChange}/>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>

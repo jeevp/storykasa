@@ -10,6 +10,7 @@ import Story from "../models/Story"
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 const Library = require("../models/Library")
 const SubscriptionValidator = require("../validators/SubscriptionValidator")
+const Subscription = require("../models/Subscription")
 
 
 class StoryController {
@@ -146,6 +147,8 @@ class StoryController {
 
     static async getDiscoverStories(req, res) {
         try {
+            const { data: { user } } = await supabase.auth.getUser(req.accessToken)
+
             APIValidator.optionalParams({
                 allowedParams: ["narrator", "language", "ageGroups[]", "storyLengths[]"],
                 incomeParams: req.query
@@ -155,12 +158,16 @@ class StoryController {
             const ageGroups = req.query["ageGroups[]"]
             const storyLengths = req.query["storyLengths[]"]
 
+            const subscription = await Subscription.findOne({ accountId: user?.id })
+
             const publicStories = await Story.getStories({
                 narrator,
                 language,
                 ageGroups,
                 storyLengths,
-                private: false
+                private: false,
+            }, {
+                freeTier: subscription.subscriptionPlan === Subscription.getAllowedSubscriptionPlanNames().FREE_SUBSCRIPTION_PLAN
             })
             return res.status(200).send(publicStories)
         } catch (error) {
