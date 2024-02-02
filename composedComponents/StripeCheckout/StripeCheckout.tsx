@@ -2,9 +2,6 @@ import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import CheckoutForm from "@/composedComponents/StripeCheckout/CheckoutForm/CheckoutForm";
 import STKCard from "@/components/STKCard/STKCard";
-import STKButton from "@/components/STKButton/STKButton";
-import {ArrowBack} from "@mui/icons-material";
-import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
 
 // @ts-ignore
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
