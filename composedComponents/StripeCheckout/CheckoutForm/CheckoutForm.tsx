@@ -33,8 +33,12 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
             });
 
             if (result.error) {
-                console.log(result.error.message);
-                // Handle error here, such as displaying a message to the user
+                setError(`
+                    We're sorry, but we couldn't process your subscription payment. This could be due to a variety of 
+                    reasons such as insufficient funds, card expiration, or a temporary hold by your bank. To 
+                    ensure uninterrupted service, please update your payment details. If you continue to see this message, please contact our 
+                    support team for assistance. We're here to help!
+                `)
             } else {
                 if (result.setupIntent && result.setupIntent.status === 'succeeded') {
                     await SubscriptionPlanHandler.attachPaymentMethodToCustomer({
@@ -45,13 +49,6 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
                     onSuccess()
                 }
             }
-        } catch (error) {
-            setError(`
-                We're sorry, but we couldn't process your subscription payment. This could be due to a variety of 
-                reasons such as insufficient funds, card expiration, or a temporary hold by your bank. To 
-                ensure uninterrupted service, please update your payment details. If you continue to see this message, please contact our 
-                support team for assistance. We're here to help!
-            `)
         } finally {
             setLoading(false)
         }
