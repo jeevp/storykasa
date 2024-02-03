@@ -15,32 +15,45 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
     const { onMobile } = useDevice()
 
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
+
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
 
-        if (!stripe || !elements) {
-            return; // Stripe.js has not yet loaded.
-        }
-        setLoading(true)
-        const result = await stripe.confirmSetup({
-            elements,
-            redirect: 'if_required',
-            confirmParams: {},
-        });
-        
-        if (result.error) {
-            console.log(result.error.message);
-            // Handle error here, such as displaying a message to the user
-        } else {
-            if (result.setupIntent && result.setupIntent.status === 'succeeded') {
-                await SubscriptionPlanHandler.attachPaymentMethodToCustomer({
-                    // @ts-ignore
-                    paymentMethodId: result?.setupIntent.payment_method
-                })
-
-                onSuccess()
+        try {
+            if (!stripe || !elements) {
+                return; // Stripe.js has not yet loaded.
             }
+            setLoading(true)
+            const result = await stripe.confirmSetup({
+                elements,
+                redirect: 'if_required',
+                confirmParams: {},
+            });
+
+            if (result.error) {
+                console.log(result.error.message);
+                // Handle error here, such as displaying a message to the user
+            } else {
+                if (result.setupIntent && result.setupIntent.status === 'succeeded') {
+                    await SubscriptionPlanHandler.attachPaymentMethodToCustomer({
+                        // @ts-ignore
+                        paymentMethodId: result?.setupIntent.payment_method
+                    })
+
+                    onSuccess()
+                }
+            }
+        } catch (error) {
+            setError(`
+                We're sorry, but we couldn't process your subscription payment. This could be due to a variety of 
+                reasons such as insufficient funds, card expiration, or a temporary hold by your bank. To 
+                ensure uninterrupted service, please update your payment details. If you continue to see this message, please contact our 
+                support team for assistance. We're here to help!
+            `)
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -50,6 +63,11 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
             <div className="mt-8 flex justify-end">
                 <STKButton fullWidth={onMobile} type="submit" loading={loading}>Confirm payment</STKButton>
             </div>
+            {error && (
+                <div className="px-4 py-4 bg-red-50 rounded-2xl mt-8">
+                    <label className="mt-4 text-red-800 text-md">{error}</label>
+                </div>
+            )}
         </form>
     );
 };

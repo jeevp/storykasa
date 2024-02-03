@@ -58,7 +58,8 @@ const StripeCheckout = ({
                             <CheckoutForm
                             // @ts-ignore
                             clientSecret={clientSecret}
-                            onSuccess={() => onSuccess()}  />
+                            onSuccess={() => onSuccess()}
+                            />
                         </Elements>
                     </div>
                 </STKCard>
