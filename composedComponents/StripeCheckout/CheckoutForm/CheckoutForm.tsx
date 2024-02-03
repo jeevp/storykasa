@@ -35,8 +35,7 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
             if (result.error) {
                 setError(`
                     We're sorry, but we couldn't process your subscription payment. This could be due to a variety of 
-                    reasons such as insufficient funds, card expiration, or a temporary hold by your bank. To 
-                    ensure uninterrupted service, please update your payment details. If you continue to see this message, please contact our 
+                    reasons such as insufficient funds, card expiration, or a temporary hold by your bank. Please update your payment details and try again. If you continue to see this message, please contact our 
                     support team for assistance. We're here to help!
                 `)
             } else {
@@ -61,7 +60,7 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
                 <STKButton fullWidth={onMobile} type="submit" loading={loading}>Confirm payment</STKButton>
             </div>
             {error && (
-                <div className="px-4 py-4 bg-red-50 rounded-2xl mt-8">
+                <div className="px-4 py-4 bg-red-50 rounded-2xl mt-8 max-w-xl">
                     <label className="mt-4 text-red-800 text-md">{error}</label>
                 </div>
             )}
