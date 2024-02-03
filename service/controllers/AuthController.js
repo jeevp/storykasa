@@ -56,7 +56,7 @@ class AuthController {
             // Create default profile
             const profile = await Profile.createProfile({
                 name: fullName
-            })
+            }, { accessToken: req.accessToken })
 
 
             // Let's create a free account as default

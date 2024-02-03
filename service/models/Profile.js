@@ -40,7 +40,7 @@ class Profile {
         })
     }
 
-    static async createProfile({ name, avatarUrl }) {
+    static async createProfile({ name, avatarUrl }, { accessToken }) {
         if (!name) {
             throw new Error("Cannot add a profile without a name.")
         }

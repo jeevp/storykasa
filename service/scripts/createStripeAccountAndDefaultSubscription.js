@@ -1,5 +1,5 @@
 async function createStripeAccountAndDefaultSubscription() {
-    require('dotenv').config({ path: '../../.env' });
+    require('dotenv').config({ path: '.env' });
     const convertArrayToHash = require("../../utils/convertArrayToHash")
 
     console.log(">>> Start script - create stripe accounts and subscription")
