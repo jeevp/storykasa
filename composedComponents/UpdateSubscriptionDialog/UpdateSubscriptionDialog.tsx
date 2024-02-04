@@ -8,7 +8,7 @@ import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
 import Subscription from "@/models/Subscription";
 import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';import STKButton from "@/components/STKButton/STKButton";
-import {green300, green600} from "@/assets/colorPallet/colors";
+import {green600} from "@/assets/colorPallet/colors";
 import {useRouter} from "next/router";
 interface HelperDialogProps {
     active: boolean
