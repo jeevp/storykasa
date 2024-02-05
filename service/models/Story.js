@@ -169,7 +169,7 @@ class Story {
         }
 
         if (params.freeTier) {
-            const fiveMinutesInSeconds = 5 * 60
+            const fiveMinutesInSeconds = 4 * 60
             data = data.map((story) => {
                 const notAvailableOnFreeTier = story.duration > fiveMinutesInSeconds && !story.free_tier_exception
 
