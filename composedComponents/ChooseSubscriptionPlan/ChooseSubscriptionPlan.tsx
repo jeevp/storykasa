@@ -1,7 +1,7 @@
 import STKButton from "@/components/STKButton/STKButton";
 import AccountPlanCard from "@/composedComponents/AccountPlanCard/AccountPlanCard";
 import {
-    FREE_SUBSCRIPTION_PLAN, PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
+    FREE_SUBSCRIPTION_PLAN, PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN, PREMIUM_PLUS_SUBSCRIPTION_PLAN,
     PREMIUM_SUBSCRIPTION_PLAN,
 } from "@/models/Subscription";
 import {useEffect, useState} from "react";
@@ -67,6 +67,19 @@ export default function ChooseSubscriptionPlan({ onNext = () => ({}) }) {
             ],
             isSelected: selectedPlan.value === PREMIUM_SUBSCRIPTION_PLAN,
             value: PREMIUM_SUBSCRIPTION_PLAN
+        },
+        {
+            name: 'Premium',
+            extensionName: "Plus",
+            price: '$20',
+            features: [
+                'Unlimited listening time to all stories',
+                'Limited to 10 profiles',
+                'More story recording time (600 minutes)',
+                'Can add artwork to any stories',
+            ],
+            isSelected: selectedPlan.value === PREMIUM_PLUS_SUBSCRIPTION_PLAN,
+            value: PREMIUM_PLUS_SUBSCRIPTION_PLAN
         },
         {
             name: 'Premium',

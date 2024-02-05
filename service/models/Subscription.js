@@ -18,7 +18,7 @@ class Subscription {
         const {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN,
+            PREMIUM_PLUS_SUBSCRIPTION_PLAN,
             PREMIUM_SUBSCRIPTION_PLAN
         } = Subscription.getAllowedSubscriptionPlanNames()
 
@@ -28,11 +28,11 @@ class Subscription {
             case PREMIUM_SUBSCRIPTION_PLAN:
                 return 5
 
-            case PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN:
-                return 0
+            case PREMIUM_PLUS_SUBSCRIPTION_PLAN:
+                return 10
 
             case PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN:
-                return 0
+                return 5
             default:
                 break
         }
@@ -42,7 +42,7 @@ class Subscription {
         const {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN,
+            PREMIUM_PLUS_SUBSCRIPTION_PLAN,
             PREMIUM_SUBSCRIPTION_PLAN
         } = Subscription.getAllowedSubscriptionPlanNames()
 
@@ -52,7 +52,7 @@ class Subscription {
             case PREMIUM_SUBSCRIPTION_PLAN:
                 return 300
 
-            case PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN:
+            case PREMIUM_PLUS_SUBSCRIPTION_PLAN:
                 return 600
 
             case PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN:
@@ -67,7 +67,7 @@ class Subscription {
         return {
             FREE_SUBSCRIPTION_PLAN: "FREE_SUBSCRIPTION_PLAN",
             PREMIUM_SUBSCRIPTION_PLAN: "PREMIUM_SUBSCRIPTION_PLAN",
-            PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN: "PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN",
+            PREMIUM_PLUS_SUBSCRIPTION_PLAN: "PREMIUM_PLUS_SUBSCRIPTION_PLAN",
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN: "PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN"
         }
     }
@@ -76,7 +76,7 @@ class Subscription {
         const {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN,
+            PREMIUM_PLUS_SUBSCRIPTION_PLAN,
             PREMIUM_SUBSCRIPTION_PLAN
         } = Subscription.getAllowedSubscriptionPlanNames()
 
@@ -84,7 +84,7 @@ class Subscription {
             case (FREE_SUBSCRIPTION_PLAN):
                 return 0
 
-            case (PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN):
+            case (PREMIUM_PLUS_SUBSCRIPTION_PLAN):
                 return 20
 
             case (PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN):

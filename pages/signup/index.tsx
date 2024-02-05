@@ -8,9 +8,10 @@ import AccountPlanCard from '@/composedComponents/AccountPlanCard/AccountPlanCar
 import STKButton from "@/components/STKButton/STKButton";
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import {
-    FREE_SUBSCRIPTION_PLAN, PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
+    FREE_SUBSCRIPTION_PLAN,
+    PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
     PREMIUM_SUBSCRIPTION_PLAN,
-    PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN
+    PREMIUM_PLUS_SUBSCRIPTION_PLAN
 } from "@/models/Subscription";
 import StripeCheckout from "@/composedComponents/StripeCheckout/StripeCheckout";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
@@ -23,7 +24,7 @@ const CHOOSE_PLAN_STEP = "CHOOSE_PLAN_STEP"
 const STRIPE_CHECKOUT_STEP = "STRIPE_CHECKOUT_STEP"
 
 export default function Signup() {
-    const [currentStep, setCurrentStep] = useState(USER_DETAILS_STEP)
+    const [currentStep, setCurrentStep] = useState(CHOOSE_PLAN_STEP)
     const [selectedPlan, setSelectedPlan] = useState({
         value: FREE_SUBSCRIPTION_PLAN
     });
@@ -80,6 +81,19 @@ export default function Signup() {
             ],
             isSelected: selectedPlan.value === PREMIUM_SUBSCRIPTION_PLAN,
             value: PREMIUM_SUBSCRIPTION_PLAN
+        },
+        {
+            name: 'Premium',
+            extensionName: "Plus",
+            price: '$20',
+            features: [
+                'Unlimited listening time to all stories',
+                'Limited to 10 profiles',
+                'More story recording time (600 minutes)',
+                'Can add artwork to any stories',
+            ],
+            isSelected: selectedPlan.value === PREMIUM_PLUS_SUBSCRIPTION_PLAN,
+            value: PREMIUM_PLUS_SUBSCRIPTION_PLAN
         },
         {
             name: 'Premium',
@@ -172,14 +186,11 @@ export default function Signup() {
                                 {selectedPlan?.value === FREE_SUBSCRIPTION_PLAN ? (
                                     ` An account can have up to three profiles. Get started by creating a profile for
                                 yourself. Later, you can create profiles for other members of your family or group.`
-                                ) : selectedPlan?.value === PREMIUM_SUBSCRIPTION_PLAN ? (
+                                ) : selectedPlan?.value === PREMIUM_SUBSCRIPTION_PLAN || selectedPlan?.value === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN ? (
                                     ` An account can have up to five profiles. Get started by creating a profile for
                                 yourself. Later, you can create profiles for other members of your family or group.`
-                                ) : (
-                                    selectedPlan?.value === PREMIUM_UNLIMITED_SUBSCRIPTION_PLAN
-                                    || selectedPlan?.value === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN
-                                )  ? (
-                                    ` An account can have unlimited profiles. Get started by creating a profile for
+                                ) : (selectedPlan?.value === PREMIUM_PLUS_SUBSCRIPTION_PLAN)  ? (
+                                    ` An account can have ten profiles. Get started by creating a profile for
                                 yourself. Later, you can create profiles for other members of your family or group.`
                                 ): null}
                             </p>
