@@ -142,13 +142,13 @@ class Story {
             data = data.filter(story => {
                 if (!story?.duration) return false
 
-                if (filters.storyLengths.includes('short') && story?.duration <= 300) {
+                if (filters.storyLengths.includes('short') && story?.duration <= 240) {
                     return true;
                 }
-                if (filters.storyLengths.includes('medium') && story?.duration > 300 && story?.duration <= 600) {
+                if (filters.storyLengths.includes('medium') && story?.duration > 240 && story?.duration < 600) {
                     return true;
                 }
-                if (filters.storyLengths.includes('long') && story?.duration > 600) {
+                if (filters.storyLengths.includes('long') && story?.duration >= 600) {
                     return true;
                 }
                 return false;
