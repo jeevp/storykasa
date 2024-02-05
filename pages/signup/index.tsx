@@ -24,7 +24,7 @@ const CHOOSE_PLAN_STEP = "CHOOSE_PLAN_STEP"
 const STRIPE_CHECKOUT_STEP = "STRIPE_CHECKOUT_STEP"
 
 export default function Signup() {
-    const [currentStep, setCurrentStep] = useState(CHOOSE_PLAN_STEP)
+    const [currentStep, setCurrentStep] = useState(USER_DETAILS_STEP)
     const [selectedPlan, setSelectedPlan] = useState({
         value: FREE_SUBSCRIPTION_PLAN
     });
