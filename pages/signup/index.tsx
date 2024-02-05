@@ -101,7 +101,6 @@ export default function Signup() {
             price: '$300',
             features: [
                 'Unlimited listening time to all stories',
-                'Limited to 5 profiles',
                 'Even more story recording (600 minutes)',
                 'Can add artwork to any stories',
                 'Includes up to 100 premium users'
