@@ -198,6 +198,7 @@ class Story {
 
         const searchParams = {
             select: "*",
+            deleted: "eq.false"
         }
 
         if (params.accountId) searchParams["account_id"] = `eq.${params.accountId}`
