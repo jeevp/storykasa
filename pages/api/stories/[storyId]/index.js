@@ -1,5 +1,5 @@
-import authMiddleware from "../../../middlewares/authMiddleware";
-import StoryController from "../../../service/controllers/StoryController"
+import authMiddleware from "../../../../middlewares/authMiddleware";
+import StoryController from "../../../../service/controllers/StoryController"
 
 const deleteStory = async (req, res) => {
     try {

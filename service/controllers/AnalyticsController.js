@@ -1,13 +1,32 @@
 const Account = require("../models/Account")
+const Story = require("../models/Story")
+
 
 class AnalyticsController {
     static async getAnalyticsOverview(req, res) {
         try {
 
             const accounts = await Account.findAll()
+            const stories = await Story.findAll()
+
+            let totalMinutesListened = 0
+            let totalMinutesRecorded = 0
+            let languages = new Set()
+            stories.forEach((story) => {
+                const minutesListened = story.playCount * (story.duration / 60)
+                totalMinutesListened += minutesListened
+
+                const minutesRecorded = story.duration / 60
+                totalMinutesRecorded += minutesRecorded
+
+                languages.add(story.language)
+            })
 
             const analyticsOverview = {
-                users: accounts?.length
+                users: accounts?.length,
+                totalMinutesListened: Math.ceil(totalMinutesListened),
+                languages: languages.size,
+                totalMinutesRecorded: Math.ceil(totalMinutesRecorded)
             }
 
             return res.status(200).send(analyticsOverview)

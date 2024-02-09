@@ -116,7 +116,8 @@ class LibraryStory {
                 recordedBy: story?.recorded_by,
                 recordingUrl: story?.recording_url,
                 profileName: story?.profiles?.profile_name,
-                profileAvatar: story?.profiles?.avatar_url
+                profileAvatar: story?.profiles?.avatar_url,
+                playCount: story?.play_count
             })
         })
     }

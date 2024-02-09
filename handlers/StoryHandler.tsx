@@ -101,7 +101,8 @@ export default class StoryHandler {
             lastUpdated: story?.last_updated,
             illustrationsURL: story?.illustrationsURL,
             publicStoryRequest: story?.publicStoryRequest || {},
-            narratorName: story?.narrator_name
+            narratorName: story?.narrator_name,
+            playCount: story?.play_count
         }))
     }
 
@@ -128,7 +129,8 @@ export default class StoryHandler {
             profileAvatar: story?.profiles?.avatar_url,
             lastUpdated: story?.last_updated,
             illustrationsURL: story?.illustrationsURL,
-            narratorName: story?.narrator_name
+            narratorName: story?.narrator_name,
+            playCount: story?.play_count
         }))
     }
 
@@ -200,5 +202,13 @@ export default class StoryHandler {
         const response = await axios.get("/api/stories/totalRecordingTime", headers)
 
         return response.data.totalRecordingTime
+    }
+
+    static async updatePlayCount({ storyId }: { storyId: string }) {
+        const headers = generateHeaders()
+
+        const response = await axios.put(`/api/stories/${storyId}/playCount`, {}, headers)
+
+        return response.data
     }
 }

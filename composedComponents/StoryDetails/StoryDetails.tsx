@@ -1,12 +1,13 @@
-import {useState} from 'react'
-import { Baby, GlobeSimple, Trash, Pencil } from '@phosphor-icons/react'
+import {useEffect, useState} from 'react'
+import { Baby, GlobeSimple } from '@phosphor-icons/react'
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
-import STKButton from "@/components/STKButton/STKButton";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKSlide from "@/components/STKSlide/STKSlide";
 import Story from "@/models/Story";
-import {useProfile} from "@/contexts/profile/ProfileContext";
 import ReactMarkdown from 'react-markdown';
+import StoryHandler from "@/handlers/StoryHandler";
+import HeadphonesOutlinedIcon from '@mui/icons-material/HeadphonesOutlined';
+
 
 interface StoryDetailsProps {
     story: Story | null;
@@ -20,8 +21,13 @@ export default function StoryDetails({
     const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false)
     const [storyHasEnded, setStoryHasEnded] = useState(false)
     const [storyCurrentTime, setStoryCurrentTime] = useState(0)
+    const [playCounted, setPlayCounted] = useState(false)
 
-    const { currentProfileId } = useProfile()
+    useEffect(() => {
+        if (story) {
+            setPlayCounted(false)
+        }
+    }, [story]);
 
     const handleStoryOnEnd = () => {
         setStoryHasEnded(true)
@@ -29,8 +35,14 @@ export default function StoryDetails({
         setStoryCurrentTime(0)
     }
 
-    const handlePlaying = (playing: boolean) => {
-        if (playing) setStoryHasEnded(false)
+    const handlePlaying = async (playing: boolean) => {
+        if (playing) {
+            setStoryHasEnded(false)
+            if (!playCounted) {
+                await StoryHandler.updatePlayCount({ storyId: story?.storyId || "" })
+                setPlayCounted(true)
+            }
+        }
         setStartIllustrationsDisplay(playing)
     }
 
@@ -67,6 +79,15 @@ export default function StoryDetails({
                             </label>
                         </div>
                     )}
+
+                    {story?.playCount ? (
+                        <div className="flex items-center mt-2">
+                            <HeadphonesOutlinedIcon sx={{ width: "20px" }} />
+                            <label className="ml-2">
+                                {story?.playCount} plays
+                            </label>
+                        </div>
+                    ) : null}
                 </div>
                 {!story?.recordingUrl && (
                     <div className="inline-flex py-2 px-3 bg-[#eaf8b2] rounded-2xl mt-4">

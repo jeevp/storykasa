@@ -436,6 +436,20 @@ class StoryController {
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
+
+    static async updatePlayCount(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, { requiredParams: ["storyId"] })
+
+            const story = await Story.getStory(req.query.storyId)
+            await story.update({ playCount: story.playCount + 1 })
+
+            return res.status(202).send({ message: "Play count updated with success" })
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
 }
 
 

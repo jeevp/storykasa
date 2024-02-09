@@ -21,7 +21,8 @@ class Story {
         profileName,
         profileAvatar,
         narratorName,
-        accountId
+        accountId,
+        playCount = 0
     }) {
         this.storyId = storyId
         this.title = title
@@ -42,6 +43,7 @@ class Story {
         this.profileAvatar = profileAvatar
         this.narratorName = narratorName
         this.accountId = accountId
+        this.playCount = playCount
     }
 
     static async getStory(storyId) {
@@ -76,7 +78,8 @@ class Story {
             duration: story.duration,
             ageGroups: story.age_groups,
             narratorName: story.narrator_name,
-            accountId: story.account_id
+            accountId: story.account_id,
+            playCount: story.play_count
         })
     }
 
@@ -195,8 +198,8 @@ class Story {
 
         const searchParams = {
             select: "*",
-            deleted: "eq.false"
         }
+
         if (params.accountId) searchParams["account_id"] = `eq.${params.accountId}`
 
         const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/stories`, {
@@ -225,7 +228,8 @@ class Story {
                 recordedBy: story?.recorded_by,
                 recordingUrl: story?.recording_url,
                 profileName: story?.profiles?.profile_name,
-                profileAvatar: story?.profiles?.avatar_url
+                profileAvatar: story?.profiles?.avatar_url,
+                playCount: story?.play_count
             })
         })
     }
@@ -237,6 +241,7 @@ class Story {
      * @param {string} description
      * @param {string} narratorName
      * @param {string} accountId
+     * @param {number} playCount
      * @returns {Promise<any>}
      */
     async update({
@@ -244,7 +249,8 @@ class Story {
         title,
         description,
         narratorName,
-        accountId
+        accountId,
+        playCount
     }) {
         require('dotenv').config({ path: '.env' });
 
@@ -254,6 +260,7 @@ class Story {
         if (description) payload.description = description
         if (narratorName) payload.narrator_name = narratorName
         if (accountId) payload.account_id = accountId
+        if (playCount) payload.play_count = playCount
 
         if (Object.keys(payload).length === 0) throw new Error("Payload is missing")
 
@@ -284,7 +291,8 @@ class Story {
             createdAt: story.created_at,
             ageGroups: story.ageGroups,
             narratorName: story.narrator_name,
-            recordedBy: story?.recorded_by
+            recordedBy: story?.recorded_by,
+            playCount: story?.play_count
         })
     }
 }
