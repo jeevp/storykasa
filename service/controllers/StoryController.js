@@ -11,7 +11,7 @@ const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 const Library = require("../models/Library")
 const SubscriptionValidator = require("../validators/SubscriptionValidator")
 const Subscription = require("../models/Subscription")
-
+const Account = require("../models/Account")
 
 class StoryController {
     static async deleteStory(req, res) {
@@ -160,6 +160,8 @@ class StoryController {
 
             const subscription = await Subscription.findOne({ accountId: user?.id })
 
+            const adminAccount = Account.getAdminAccounts().includes(user.email)
+
             const publicStories = await Story.getStories({
                 narrator,
                 language,
@@ -167,7 +169,7 @@ class StoryController {
                 storyLengths,
                 private: false,
             }, {
-                freeTier: subscription.subscriptionPlan === Subscription.getAllowedSubscriptionPlanNames().FREE_SUBSCRIPTION_PLAN
+                freeTier: !adminAccount && subscription.subscriptionPlan === Subscription.getAllowedSubscriptionPlanNames().FREE_SUBSCRIPTION_PLAN
             })
             return res.status(200).send(publicStories)
         } catch (error) {
@@ -184,9 +186,14 @@ class StoryController {
 
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const allowActionToProceed = await SubscriptionValidator.validateMaxStoriesRecordingTime({
-                accountId: user.id
-            })
+            let allowActionToProceed = false
+            if (Account.getAdminAccounts().includes(user.email)) {
+                allowActionToProceed = true
+            } else {
+                allowActionToProceed = await SubscriptionValidator.validateMaxStoriesRecordingTime({
+                    accountId: user.id
+                })
+            }
 
             if (!allowActionToProceed) {
                 return res.status(400).send({ message: "This account has reached the max stories duration allowed" })

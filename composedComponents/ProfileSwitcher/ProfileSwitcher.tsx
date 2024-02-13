@@ -71,7 +71,7 @@ export default function ProfileSwitcher({ profiles, managing }: { profiles: Prof
                     </div>
                 ))}
 
-                {managing && !editing && !currentSubscription?.maxProfilesAllowed || (
+                {(managing && !editing && currentSubscription?.adminAccount) || managing && !editing && !currentSubscription?.maxProfilesAllowed || (
                     managing
                     && !editing
                     // @ts-ignore

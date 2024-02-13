@@ -17,6 +17,13 @@ class Account {
         this.avatarUrl = avatarUrl
     }
 
+    static getAdminAccounts() {
+        return [
+            "rena@storykasa.com",
+            "felipecpfernandes@gmail.com"
+        ]
+    }
+
     static async findAll() {
         const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/accounts`, {
             params: {

@@ -19,7 +19,7 @@ class Subscription {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
             PREMIUM_PLUS_SUBSCRIPTION_PLAN,
-            PREMIUM_SUBSCRIPTION_PLAN
+            PREMIUM_SUBSCRIPTION_PLAN,
         } = Subscription.getAllowedSubscriptionPlanNames()
 
         switch(this.subscriptionPlan) {

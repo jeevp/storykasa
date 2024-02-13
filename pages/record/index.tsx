@@ -50,7 +50,7 @@ function Record() {
     return (
         <PageWrapper path="record">
             <div>
-                {!allowStoryCreation && (
+                {!currentSubscription?.adminAccount && !allowStoryCreation && (
                     <div className="bg-orange-100 p-4 rounded-xl inline-block mb-2">
                         <p>Your account has reached the maximum recording time allowed. <Link href="/account-settings" className="no-underline text-neutral-800 font-semibold"> Upgrade</Link> your subscription plan and record more stories.</p>
                     </div>
@@ -61,27 +61,29 @@ function Record() {
                         Record a story of your own. Remember, only profiles on your account can view and listen to
                         your story. Feel free to enhance it with a description and illustrations or images
                     </p>
-                    <div className="mt-8">
-                        <div className="flex mb-2">
-                            {loading ? (
-                                <STKLoading />
-                            ) : (
-                                <label>{recordingTimeUsagePercentage?.toFixed(2) || 0}% usage</label>
-                            )}
-                        </div>
+                    {!currentSubscription?.adminAccount ? (
+                        <div className="mt-8">
+                            <div className="flex mb-2">
+                                {loading ? (
+                                    <STKLoading />
+                                ) : (
+                                    <label>{recordingTimeUsagePercentage?.toFixed(2) || 0}% usage</label>
+                                )}
+                            </div>
 
-                        <STKLinearProgress value={!loading && recordingTimeUsagePercentage ? recordingTimeUsagePercentage : 0} />
-                        <div className="mt-2 flex items-center justify-between">
-                            {loading ? (
-                                <STKLoading />
-                            ) : (
-                                <>
-                                    <label className="font-semibold">{recordingTimeLabel}</label>
-                                    <label>{currentSubscription?.maxRecordingTimeAllowed} minutes</label>
-                                </>
-                        )}
+                            <STKLinearProgress value={!loading && recordingTimeUsagePercentage ? recordingTimeUsagePercentage : 0} />
+                            <div className="mt-2 flex items-center justify-between">
+                                {loading ? (
+                                    <STKLoading />
+                                ) : (
+                                    <>
+                                        <label className="font-semibold">{recordingTimeLabel}</label>
+                                        <label>{currentSubscription?.maxRecordingTimeAllowed} minutes</label>
+                                    </>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    ) : null}
                     <div className="mt-10">
                         <StoryForm></StoryForm>
                     </div>

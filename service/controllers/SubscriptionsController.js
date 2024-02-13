@@ -3,6 +3,7 @@ const Subscription = require("../models/Subscription")
 const SubscriptionPlan = require("../models/SubscriptionPlan")
 const StripeService = require("../services/StripeService/StripeService")
 const StripeAccount = require("../models/StripeAccount")
+const Account = require("../models/Account")
 
 export default class SubscriptionsController {
     static async updateSubscriptionPlan(req, res) {
@@ -26,7 +27,10 @@ export default class SubscriptionsController {
 
             const subscriptionSerialized = updatedSubscription.serializer()
 
-            return res.status(200).send(subscriptionSerialized)
+            return res.status(200).send({
+                ...subscriptionSerialized,
+                adminAccount: Account.getAdminAccounts().includes(user.email)
+            })
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong." })
@@ -40,7 +44,10 @@ export default class SubscriptionsController {
             const subscription = await Subscription.findOne({ accountId: user.id })
 
             const subscriptionSerialized = subscription.serializer()
-            return res.status(200).send(subscriptionSerialized)
+            return res.status(200).send({
+                ...subscriptionSerialized,
+                adminAccount: Account.getAdminAccounts().includes(user.email)
+            })
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong." })

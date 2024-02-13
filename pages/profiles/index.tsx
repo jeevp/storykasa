@@ -34,7 +34,7 @@ function Profiles() {
 
     return (
         <PageWrapper path="profiles">
-            {currentSubscription && profiles.length >= currentSubscription?.maxProfilesAllowed && (
+            {currentSubscription && !currentSubscription?.adminAccount &&  profiles.length >= currentSubscription?.maxProfilesAllowed && (
                 <div className="bg-orange-100 p-4 rounded-xl inline-block mb-2">
                     <p>Your account has reached the maximum amount of profiles allowed. <Link href="/account-settings" className="no-underline text-neutral-800 font-semibold"> Upgrade</Link> your subscription plan and create more profiles.</p>
                 </div>

@@ -11,6 +11,7 @@ interface SubscriptionProps {
     monthlyPrice: number;
     maxProfilesAllowed: number;
     maxRecordingTimeAllowed: number;
+    adminAccount: boolean;
 }
 
 export default class Subscription {
@@ -20,6 +21,7 @@ export default class Subscription {
     monthlyPrice: number;
     maxProfilesAllowed: number;
     maxRecordingTimeAllowed: number;
+    adminAccount: boolean
 
     constructor({
         accountId,
@@ -27,7 +29,8 @@ export default class Subscription {
         subscriptionPlan,
         monthlyPrice,
         maxProfilesAllowed = 0,
-        maxRecordingTimeAllowed = 0
+        maxRecordingTimeAllowed = 0,
+        adminAccount
     }: SubscriptionProps) {
         this.accountId = accountId
         this.createdAt = createdAt
@@ -35,6 +38,7 @@ export default class Subscription {
         this.monthlyPrice = monthlyPrice
         this.maxProfilesAllowed = maxProfilesAllowed
         this.maxRecordingTimeAllowed = maxRecordingTimeAllowed
+        this.adminAccount = adminAccount
     }
 
     static getAllowedSubscriptionPlanNames() {

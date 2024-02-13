@@ -16,7 +16,8 @@ export default class SubscriptionPlanHandler {
             subscriptionPlan: response.data.subscriptionPlan,
             monthlyPrice: response.data.monthlyPrice,
             maxProfilesAllowed: response.data.maxProfilesAllowed,
-            maxRecordingTimeAllowed: response.data.maxRecordingTimeAllowed
+            maxRecordingTimeAllowed: response.data.maxRecordingTimeAllowed,
+            adminAccount: response.data.adminAccount
         })
     }
 
@@ -46,7 +47,8 @@ export default class SubscriptionPlanHandler {
             subscriptionPlan: response.data.subscriptionPlan,
             monthlyPrice: response.data.monthlyPrice,
             maxProfilesAllowed: response.data.maxProfilesAllowed,
-            maxRecordingTimeAllowed: response.data.maxRecordingTimeAllowed
+            maxRecordingTimeAllowed: response.data.maxRecordingTimeAllowed,
+            adminAccount: response.data.adminAccount
         })
     }
 }
