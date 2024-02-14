@@ -53,32 +53,34 @@ const withAuth = (WrappedComponent: any) => {
       if (typeof window !== 'undefined') {
         const accessToken = localStorage.getItem(STK_ACCESS_TOKEN)
         const refreshToken = localStorage.getItem(STK_REFRESH_TOKEN)
-        const guestAccessToken  = searchParams?.get("guestAccessToken")
+        setTimeout(() => {
+          const guestAccessToken  = searchParams?.get("guestAccessToken")
 
-        console.log({ guestAccessToken, currentUser })
-        if (guestAccessToken || currentUser?.isGuest) {
-          document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
-          if (guestAccessToken) {
-            handleLogin(guestAccessToken)
+          console.log({ guestAccessToken, currentUser })
+          if (guestAccessToken || currentUser?.isGuest) {
+            document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
+            if (guestAccessToken) {
+              handleLogin(guestAccessToken)
+            }
+            return
           }
-          return
-        }
 
-        if (
-          (accessToken && isTokenExpired(accessToken) && refreshToken) ||
-            (!accessToken) ||
-            // @ts-ignore
-            isTokenExpired(accessToken)
-        ) {
-          handleSignOut()
-          return
-        }
+          if (
+              (accessToken && isTokenExpired(accessToken) && refreshToken) ||
+              (!accessToken) ||
+              // @ts-ignore
+              isTokenExpired(accessToken)
+          ) {
+            handleSignOut()
+            return
+          }
 
-        document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
-        // @ts-ignore
-        handleLogin(accessToken)
+          document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
+          // @ts-ignore
+          handleLogin(accessToken)
+        }, 1000)
       }
-    }, [searchParams])
+    }, [])
 
     if (!hasToken) {
       return null
