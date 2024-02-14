@@ -9,10 +9,12 @@ import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import {useStory} from "@/contexts/story/StoryContext";
 import HelperDialog from "@/composedComponents/HelperDialog/HelperDialog";
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 
 const navigationOptions = [
-    { text: "Public Story Requests", icon: <BookOpenText size={24} color={neutral800} />, pathname: "/admin/public-story-requests"  },
-    { text: "Marketing Campaign", icon: <Books size={24} weight="duotone" color={neutral800} />, pathname: "/admin/marketing" },
+    { text: "Public Story Requests", icon: <ChecklistOutlinedIcon sx={{ width: "20px", color: neutral800 }} />, pathname: "/admin/public-story-requests"  },
+    { text: "Marketing", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/marketing" },
 ]
 
 export default function AdminNavigation() {

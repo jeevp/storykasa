@@ -35,6 +35,15 @@ export default function GenerateGuestAccessLinkDialog({
         loadStories()
     }, []);
 
+    useEffect(() => {
+        if (open) {
+            setGuestAccessLink("")
+            setLinkCopied(false)
+            setSelectedStory(null)
+            setLoading(false)
+        }
+    }, [open]);
+
     // Methods
     const loadStories = async () => {
         const _publicStories: Story[] = await StoryHandler.fetchPublicStories({})

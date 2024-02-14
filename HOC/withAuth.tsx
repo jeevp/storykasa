@@ -58,7 +58,6 @@ const withAuth = (WrappedComponent: any) => {
 
         const guestAccessToken  = parsedQuery?.guestAccessToken
 
-        console.log({ guestAccessToken, currentUser })
         if (guestAccessToken || currentUser?.isGuest) {
           document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
           if (guestAccessToken) {
