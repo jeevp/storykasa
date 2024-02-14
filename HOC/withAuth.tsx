@@ -9,6 +9,7 @@ import identifyPendoVisitor from "@/tools/Pendo/identifyPendoVisitor";
 import {useAuth} from "@/contexts/auth/AuthContext";
 import {useTools} from "@/contexts/tools/ToolsContext";
 import { allowedAdminUsers } from "@/service/config"
+import queryString from "query-string"
 
 const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
@@ -53,32 +54,32 @@ const withAuth = (WrappedComponent: any) => {
       if (typeof window !== 'undefined') {
         const accessToken = localStorage.getItem(STK_ACCESS_TOKEN)
         const refreshToken = localStorage.getItem(STK_REFRESH_TOKEN)
-        setTimeout(() => {
-          const guestAccessToken  = searchParams?.get("guestAccessToken")
+        const parsedQuery = queryString.parse(location.search);
 
-          console.log({ guestAccessToken, currentUser })
-          if (guestAccessToken || currentUser?.isGuest) {
-            document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
-            if (guestAccessToken) {
-              handleLogin(guestAccessToken)
-            }
-            return
-          }
+        const guestAccessToken  = parsedQuery?.guestAccessToken
 
-          if (
-              (accessToken && isTokenExpired(accessToken) && refreshToken) ||
-              (!accessToken) ||
-              // @ts-ignore
-              isTokenExpired(accessToken)
-          ) {
-            handleSignOut()
-            return
-          }
-
+        console.log({ guestAccessToken, currentUser })
+        if (guestAccessToken || currentUser?.isGuest) {
           document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
-          // @ts-ignore
-          handleLogin(accessToken)
-        }, 2000)
+          if (guestAccessToken) {
+            handleLogin(guestAccessToken)
+          }
+          return
+        }
+
+        if (
+            (accessToken && isTokenExpired(accessToken) && refreshToken) ||
+            (!accessToken) ||
+            // @ts-ignore
+            isTokenExpired(accessToken)
+        ) {
+          handleSignOut()
+          return
+        }
+
+        document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
+        // @ts-ignore
+        handleLogin(accessToken)
       }
     }, [])
 
