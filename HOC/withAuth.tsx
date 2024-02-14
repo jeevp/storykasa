@@ -62,6 +62,7 @@ const withAuth = (WrappedComponent: any) => {
         if (guestAccessToken || currentUser?.isGuest) {
           document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
           if (guestAccessToken) {
+            // @ts-ignore
             handleLogin(guestAccessToken)
           }
           return
