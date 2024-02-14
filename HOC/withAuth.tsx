@@ -78,7 +78,7 @@ const withAuth = (WrappedComponent: any) => {
           document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
           // @ts-ignore
           handleLogin(accessToken)
-        }, 1000)
+        }, 2000)
       }
     }, [])
 
