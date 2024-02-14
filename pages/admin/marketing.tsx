@@ -37,11 +37,6 @@ function Marketing() {
                     <h2 className="m-0">
                         Marketing
                     </h2>
-                    <div className="mt-4 max-w-2xl">
-                        <p>
-                            Here you can manage the requests sent by the users to make a story available on the public library.
-                        </p>
-                    </div>
                     <div className="mt-10">
                         <div className="flex sm:w-full pb-32 lg:pb-0">
                             <AnimatePresence mode="wait">
