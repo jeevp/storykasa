@@ -28,6 +28,7 @@ const withAuth = (WrappedComponent: any) => {
 
     const handleLogin = (accessToken: string) => {
       const user = decodeJWT(accessToken)
+      console.log({ user })
       const _currentUserIsAdmin = allowedAdminUsers.includes(user.email)
       setCurrentUserIsAdmin(_currentUserIsAdmin)
 
@@ -55,6 +56,7 @@ const withAuth = (WrappedComponent: any) => {
         const refreshToken = localStorage.getItem(STK_REFRESH_TOKEN)
         const guestAccessToken  = searchParams?.get("guestAccessToken")
 
+        console.log({ guestAccessToken })
         if (guestAccessToken) {
           handleLogin(guestAccessToken)
           return
