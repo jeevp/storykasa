@@ -63,10 +63,10 @@ const withAuth = (WrappedComponent: any) => {
         }
 
         if (
-          (accessToken && isTokenExpired(accessToken) && refreshToken && !guestAccessToken) ||
-            (!accessToken && !guestAccessToken) ||
+          (accessToken && isTokenExpired(accessToken) && refreshToken && !currentUser?.isGuest) ||
+            (!accessToken && !currentUser?.isGuest) ||
             // @ts-ignore
-            isTokenExpired(accessToken) && !guestAccessToken
+            isTokenExpired(accessToken) && !currentUser?.isGuest
         ) {
           handleSignOut()
           return
