@@ -55,17 +55,20 @@ const withAuth = (WrappedComponent: any) => {
         const refreshToken = localStorage.getItem(STK_REFRESH_TOKEN)
         const guestAccessToken  = searchParams?.get("guestAccessToken")
 
-        if (guestAccessToken) {
+        console.log({ guestAccessToken, currentUser })
+        if (guestAccessToken || currentUser?.isGuest) {
           document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
-          handleLogin(guestAccessToken)
+          if (guestAccessToken) {
+            handleLogin(guestAccessToken)
+          }
           return
         }
 
         if (
-          (accessToken && isTokenExpired(accessToken) && refreshToken && !currentUser?.isGuest && !guestAccessToken) ||
-            (!accessToken && !currentUser?.isGuest && !guestAccessToken) ||
+          (accessToken && isTokenExpired(accessToken) && refreshToken) ||
+            (!accessToken) ||
             // @ts-ignore
-            isTokenExpired(accessToken) && !currentUser?.isGuest && !guestAccessToken
+            isTokenExpired(accessToken)
         ) {
           handleSignOut()
           return
