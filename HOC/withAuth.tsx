@@ -45,7 +45,6 @@ const withAuth = (WrappedComponent: any) => {
     }
 
     const handleSignOut = async () => {
-      console.log(">>> SIGN OUT", { currentUser })
       await AuthHandler.signOut()
       await router.push('/login')
     }
@@ -63,10 +62,10 @@ const withAuth = (WrappedComponent: any) => {
         }
 
         if (
-          (accessToken && isTokenExpired(accessToken) && refreshToken && !currentUser?.isGuest) ||
-            (!accessToken && !currentUser?.isGuest) ||
+          (accessToken && isTokenExpired(accessToken) && refreshToken && !currentUser?.isGuest && !guestAccessToken) ||
+            (!accessToken && !currentUser?.isGuest && !guestAccessToken) ||
             // @ts-ignore
-            isTokenExpired(accessToken) && !currentUser?.isGuest
+            isTokenExpired(accessToken) && !currentUser?.isGuest && !guestAccessToken
         ) {
           handleSignOut()
           return
