@@ -26,11 +26,12 @@ function Record() {
 
     // Watchers
     useEffect(() => {
-        if (totalRecordingTime && currentSubscription && currentSubscription?.maxRecordingTimeAllowed) {
+        if (currentSubscription?.adminAccount) {
+            setAllowStoryCreation(true)
+        } else if (totalRecordingTime && currentSubscription && currentSubscription?.maxRecordingTimeAllowed) {
             setAllowStoryCreation(totalRecordingTime < currentSubscription?.maxRecordingTimeAllowed)
             // @ts-ignore
             setRecordingTimeAvailable(Math.round((currentSubscription?.maxRecordingTimeAllowed) - totalRecordingTime))
-
         }
     }, [totalRecordingTime, currentSubscription])
 
