@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {STK_PROFILE_ID} from "@/config";
 import ProfileHandler from "@/handlers/ProfileHandler";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 const withProfile = (WrappedComponent: any) => {
     return (props: any) => {
@@ -11,11 +12,17 @@ const withProfile = (WrappedComponent: any) => {
             setCurrentProfileId,
             setCurrentProfile
         } = useProfile();
+        const { currentUser } = useAuth()
         const router = useRouter();
         const [isValidationComplete, setIsValidationComplete] = useState(false);
 
         useEffect(() => {
             if (typeof window !== 'undefined') {
+                if (currentUser?.isGuest) {
+                    setIsValidationComplete(true)
+                    return
+                }
+
                 const storedProfileId = localStorage.getItem(STK_PROFILE_ID)
                 if (!currentProfileId && !storedProfileId) {
                     router.push('/profiles');

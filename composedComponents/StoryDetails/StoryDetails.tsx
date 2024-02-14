@@ -142,7 +142,6 @@ export default function StoryDetails({
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }

@@ -9,7 +9,7 @@ export default function SubscriptionValidation() {
 
     // Mounted
     useEffect(() => {
-        if(currentUser) {
+        if(currentUser && !currentUser?.isGuest) {
             handleFetchCurrentSubscriptionPlan()
         }
     }, [currentUser])

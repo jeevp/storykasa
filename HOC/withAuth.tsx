@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import decodeJWT from '@/utils/decodeJWT'
 import jwtDecode from 'jwt-decode'
@@ -13,6 +14,7 @@ const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
     const { setCurrentUser, setCurrentUserIsAdmin } = useAuth()
     const { pendoTrackingEnabled, setPendoTrackingEnabled } = useTools()
+    const searchParams = useSearchParams()
 
     const router = useRouter()
     const [hasToken, setHasToken] = useState(false)
@@ -32,7 +34,11 @@ const withAuth = (WrappedComponent: any) => {
       setCurrentUser(user)
       setHasToken(true)
 
-      if (!pendoTrackingEnabled) {
+      if (user?.isGuest) {
+        localStorage.setItem(STK_ACCESS_TOKEN, accessToken)
+      }
+
+      if (!pendoTrackingEnabled && !user?.isGuest) {
         identifyPendoVisitor({ userId: user.sub })
         setPendoTrackingEnabled(true)
       }
@@ -47,6 +53,12 @@ const withAuth = (WrappedComponent: any) => {
       if (typeof window !== 'undefined') {
         const accessToken = localStorage.getItem(STK_ACCESS_TOKEN)
         const refreshToken = localStorage.getItem(STK_REFRESH_TOKEN)
+        const guestAccessToken  = searchParams?.get("guestAccessToken")
+
+        if (guestAccessToken) {
+          handleLogin(guestAccessToken)
+          return
+        }
 
         if (
           (accessToken && isTokenExpired(accessToken) && refreshToken) ||
@@ -60,7 +72,7 @@ const withAuth = (WrappedComponent: any) => {
         document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
         handleLogin(accessToken)
       }
-    }, [])
+    }, [searchParams])
 
     if (!hasToken) {
       return null

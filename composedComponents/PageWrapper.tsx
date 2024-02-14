@@ -6,6 +6,7 @@ import {useAuth} from "@/contexts/auth/AuthContext";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import {usePathname} from "next/navigation";
 import {useRouter} from "next/router";
+import AdminNavigation from "@/composedComponents/AdminNavigation/AdminNavigation";
 
 interface PageWrapperProps {
     children: any
@@ -39,6 +40,11 @@ export default function PageWrapper({
                             {!admin && currentUser && router.pathname !== "/profiles" && !hideNavigation && (
                                 <div className="hidden lg:block mr-20 w-80 absolute lg:relative">
                                     <SideNavigation />
+                                </div>
+                            )}
+                            {admin && (
+                                <div className="hidden lg:block mr-20 w-80 absolute lg:relative">
+                                    <AdminNavigation />
                                 </div>
                             )}
                             <div className="w-full ">

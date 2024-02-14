@@ -1,3 +1,5 @@
+import DecodeJWT from "../../utils/decodeJWT";
+
 const supabase = require('../../service/supabase');
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
@@ -147,6 +149,19 @@ class StoryController {
 
     static async getDiscoverStories(req, res) {
         try {
+            const decodedJWT = DecodeJWT(req.accessToken)
+            const isGuestUser = decodedJWT.isGuest
+
+            if (isGuestUser) {
+                const publicStories = await Story.getStories({
+                    private: false,
+                }, {
+                    freeTier: true
+                })
+
+                return res.status(200).send(publicStories)
+            }
+
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
             APIValidator.optionalParams({

@@ -8,6 +8,7 @@ import {useStory} from "@/contexts/story/StoryContext";
 import {allowedAgeGroups, storyLengths} from "@/models/Story";
 import useDevice from "@/customHooks/useDevice";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 interface StoryFiltersDialogProps {
     active?: boolean,
@@ -28,6 +29,7 @@ export default function StoryFiltersDialog({
 
     // Context
     const { currentProfileId } = useProfile()
+    const { currentUser } = useAuth()
     const {
         setPrivateStories,
         setPublicStories,
@@ -57,6 +59,8 @@ export default function StoryFiltersDialog({
 
     // Methods
     const handleFetchStoryFilters = async () => {
+        if (currentUser?.isGuest) return
+
         const { narrators, languages } = await StoryHandler.fetchStoriesFilters({
             profileId: privateStories ? currentProfileId : null
         })
@@ -79,6 +83,8 @@ export default function StoryFiltersDialog({
     }
 
     const handleApplyFilters = async (_filters: any) => {
+        if (currentUser?.isGuest) return
+
         try {
             setLoading(true)
             if (privateStories) {

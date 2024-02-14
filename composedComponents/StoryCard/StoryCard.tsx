@@ -24,6 +24,7 @@ import {useRouter} from "next/router";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStoryDialog";
 import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
+import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 
 
 export const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
@@ -32,10 +33,19 @@ export const REMOVE_FROM_COLLECTION_MENU_OPTION = "REMOVE_FROM_COLLECTION_MENU_O
 export const EDIT_STORY_MENU_OPTION = "EDIT_STORY_MENU_OPTION"
 export const DELETE_STORY_MENU_OPTION = "DELETE_STORY_MENU_OPTION"
 
-export default function StoryCard({ story, enableMenuOptions, menuOptions = [], onClick = () => ({}) }: {
+export default function StoryCard({
+    story,
+    enableMenuOptions,
+    menuOptions = [],
+    includeSoundTrack,
+    disableLike,
+    onClick = () => ({})
+}: {
     story: Story
-    selected: boolean,
+    selected?: boolean,
     enableMenuOptions?: boolean
+    disableLike?: boolean
+    includeSoundTrack?: boolean
     menuOptions?: any[]
     onClick?: () => void
 }) {
@@ -318,35 +328,39 @@ export default function StoryCard({ story, enableMenuOptions, menuOptions = [], 
                                         </div>
                                     ) : (
                                       <>
-                                          {story?.recordedBy && story.recordedBy !== currentProfileId && (
+                                          {story?.recordedBy && story.recordedBy !== currentProfileId && !disableLike && (
                                               <div>
                                                   <STKButton iconButton onClick={handleLikedStories}>
                                                       {liked ? <FavoriteIcon sx={{ fill: green600, width: "22px", height: "22px" }} /> : <FavoriteBorderIcon sx={{ fill: green600, width: "22px", height: "22px" }} />}
                                                   </STKButton>
                                               </div>
                                           )}
-                                          <div >
-                                              {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
-                                                  <div>
-                                                      <STKMenu
-                                                          options={menuOptions}
-                                                          onChange={handleMenuOnChange}/>
-                                                  </div>
-                                              ) : (
-                                                  <div>
-                                                      <STKMenu
-                                                          options={menuOptions}
-                                                          onChange={handleMenuOnChange}/>
-                                                  </div>
-                                              )}
-                                          </div>
+                                          {!enableMenuOptions ? (
+                                              <></>
+                                          ) : (
+                                              <div>
+                                                  {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
+                                                      <div>
+                                                          <STKMenu
+                                                              options={menuOptions}
+                                                              onChange={handleMenuOnChange}/>
+                                                      </div>
+                                                  ) : (
+                                                      <div>
+                                                          <STKMenu
+                                                              options={menuOptions}
+                                                              onChange={handleMenuOnChange}/>
+                                                      </div>
+                                                  )}
+                                              </div>
+                                          )}
                                       </>
                                     )}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="lg:hidden flex items-end justify-between mt-4">
+                    <div className="lg:hidden flex items-end justify-between mt-4">s
                         <div className="flex items-center flex-wrap opacity-60 pr-14">
                             {story?.duration && (
                                 <div className="flex items-center mr-4 mb-1 lg:mb-0">

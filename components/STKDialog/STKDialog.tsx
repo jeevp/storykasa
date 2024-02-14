@@ -10,6 +10,7 @@ interface STKDialogProps {
     children: any
     title?: string
     fullScreen?: boolean
+    persist?: boolean
     animationDirection?: "right" | "left" | "up" | "down"
     maxWidth?: "xs" | "sm" | "md" | "lg" | "xl"
     includeBackArrow?: boolean,
@@ -22,11 +23,18 @@ export default function STKDialog({
     fullScreen,
     children,
     title,
+    persist,
     maxWidth,
     includeBackArrow,
     onClose = (e: MouseEvent) => (e),
     onBack = (e: MouseEvent) => (e)
 }: STKDialogProps) {
+
+    const handleClose = (e: MouseEvent) => {
+        if (persist) return
+        onClose(e)
+    }
+
 
     return (
         <Dialog
@@ -34,9 +42,9 @@ export default function STKDialog({
             fullScreen={fullScreen}
             maxWidth={maxWidth}
             fullWidth={!!maxWidth}
-            onClose={(e: MouseEvent) => onClose(e)}
+            onClose={handleClose}
         >
-            <div className="p-4">
+            <div className="p-4 lg:p-8">
                 <div className="flex items=center justify-between">
                     <div className="flex items-center">
                         <div className="flex items-center">
@@ -52,11 +60,13 @@ export default function STKDialog({
                         </div>
 
                     </div>
-                    <div>
-                        <STKButton iconButton onClick={(e: MouseEvent) => onClose(e)}>
-                            <X size={20} color={neutral800} />
-                        </STKButton>
-                    </div>
+                    {!persist && (
+                        <div>
+                            <STKButton iconButton onClick={handleClose}>
+                                <X size={20} color={neutral800} />
+                            </STKButton>
+                        </div>
+                    )}
                 </div>
                 <div>
                     {children}

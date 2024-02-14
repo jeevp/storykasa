@@ -27,6 +27,8 @@ export const dynamic = 'force-dynamic'
 
 function Discover() {
     const { onMobile } = useDevice()
+    const { currentUser } = useAuth()
+
     const [stories, setStories] = useState<Story[]>([])
     const [selectedStoryId, setSelectedStoryId] = useState<string>()
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)
@@ -52,6 +54,7 @@ function Discover() {
 
     // Methods
     const handleFetchLibraries = async () => {
+        if (currentUser?.isGuest) return
         await LibraryHandler.fetchLibraries(setLibraries)
     }
 
@@ -66,6 +69,13 @@ function Discover() {
     useEffect(() => {
         loadStories()
     }, [])
+
+    useEffect(() => {
+        if (publicStories?.length > 0 && currentUser?.isGuest) {
+            setShowStoryDetailsDialog(true)
+            setSelectedStoryId(currentUser?.storyId)
+        }
+    }, [publicStories]);
 
     const handleFilterQueryChange = (value: string) => {
         setFilterQuery(value)
@@ -200,6 +210,7 @@ function Discover() {
             <StoryDetailsDialog
                 open={showStoryDetailsDialog}
                 editionNotAllowed
+                persist={currentUser?.isGuest}
                 // @ts-ignore
                 story={selectedStoryId !== undefined && selectedStoryId !== null ? publicStories.find((story: Story) => story.storyId === selectedStoryId) : null}
                 onClose={() => setShowStoryDetailsDialog(false)}/>

@@ -4,6 +4,7 @@ import theme from "@/components/theme";
 interface STKAutocompleteProps {
     options: Array<Object>
     optionLabel: string
+    disablePortal?: boolean
     fluid?: boolean
     groupByProp?: string
     placeholder?: string
@@ -13,6 +14,7 @@ interface STKAutocompleteProps {
 function STKAutocomplete({
     options = [],
     optionLabel = "label",
+    disablePortal = true,
     fluid = false,
     groupByProp = "category",
     placeholder,
@@ -27,7 +29,7 @@ function STKAutocomplete({
     return (
         <ThemeProvider theme={theme}>
             <Autocomplete
-                disablePortal
+                disablePortal={disablePortal}
                 id="combo-box-demo"
                 options={options}
                 value={value}
