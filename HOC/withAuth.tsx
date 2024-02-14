@@ -12,7 +12,7 @@ import { allowedAdminUsers } from "@/service/config"
 
 const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
-    const { setCurrentUser, setCurrentUserIsAdmin } = useAuth()
+    const { currentUser, setCurrentUser, setCurrentUserIsAdmin } = useAuth()
     const { pendoTrackingEnabled, setPendoTrackingEnabled } = useTools()
     const searchParams = useSearchParams()
 
@@ -45,6 +45,7 @@ const withAuth = (WrappedComponent: any) => {
     }
 
     const handleSignOut = async () => {
+      console.log(">>> SIGN OUT", { currentUser })
       await AuthHandler.signOut()
       await router.push('/login')
     }
@@ -62,15 +63,17 @@ const withAuth = (WrappedComponent: any) => {
         }
 
         if (
-          (accessToken && isTokenExpired(accessToken) && refreshToken) ||
-          !accessToken ||
-          isTokenExpired(accessToken)
+          (accessToken && isTokenExpired(accessToken) && refreshToken && !guestAccessToken) ||
+            (!accessToken && !guestAccessToken) ||
+            // @ts-ignore
+            isTokenExpired(accessToken) && !guestAccessToken
         ) {
           handleSignOut()
           return
         }
 
         document.cookie = `loggedIn=true;domain=.storykasa.com;path=/`
+        // @ts-ignore
         handleLogin(accessToken)
       }
     }, [searchParams])
