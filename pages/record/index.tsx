@@ -9,9 +9,11 @@ import {useEffect, useState} from "react";
 import StoryHandler from "@/handlers/StoryHandler";
 import STKLinearProgress from "@/components/STKLinearProgress/STKLinearProgress";
 import STKLoading from "@/components/STKLoading/STKLoading";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 function Record() {
     const { currentSubscription } = useSubscription()
+    const { currentUser } = useAuth()
     const { totalRecordingTime, setTotalRecordingTime } = useStory()
 
     // States
@@ -51,7 +53,7 @@ function Record() {
     return (
         <PageWrapper path="record">
             <div>
-                {!currentSubscription?.adminAccount && !allowStoryCreation && (
+                {!currentSubscription?.adminAccount && !allowStoryCreation && !currentUser?.isGuest && (
                     <div className="bg-orange-100 p-4 rounded-xl inline-block mb-2">
                         <p>Your account has reached the maximum recording time allowed. <Link href="/account-settings" className="no-underline text-neutral-800 font-semibold"> Upgrade</Link> your subscription plan and record more stories.</p>
                     </div>
@@ -62,7 +64,7 @@ function Record() {
                         Record a story of your own. Remember, only profiles on your account can view and listen to
                         your story. Feel free to enhance it with a description and illustrations or images
                     </p>
-                    {!currentSubscription?.adminAccount ? (
+                    {!currentSubscription?.adminAccount && !currentUser?.isGuest ? (
                         <div className="mt-8">
                             <div className="flex mb-2">
                                 {loading ? (

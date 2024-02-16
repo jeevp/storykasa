@@ -7,15 +7,21 @@ import {useStory} from "@/contexts/story/StoryContext";
 import Story from "@/models/Story";
 import STKAutocomplete from "@/components/STKAutocomplete/STKAutocomplete";
 import encodeJWT from "@/utils/encodeJWT";
+import STKLoading from "@/components/STKLoading/STKLoading"
+
+export const STORY_LISTENING_DEMO_LINK_TYPE = "STORY_LISTENING_DEMO_LINK_TYPE"
+export const STORY_RECORDING_DEMO_LINK_TYPE = "STORY_RECORDING_DEMO_LINK_TYPE"
 
 
 interface GenerateGuestAccessLinkDialogProps {
     open: boolean;
+    demoLinkType?: string;
     onClose?: () => void;
 }
 
 export default function GenerateGuestAccessLinkDialog({
     open,
+    demoLinkType,
     onClose = () => ({}),
 }: GenerateGuestAccessLinkDialogProps) {
     const { onMobile } = useDevice()
@@ -32,11 +38,17 @@ export default function GenerateGuestAccessLinkDialog({
 
     // Mounted
     useEffect(() => {
-        loadStories()
-    }, []);
+        if (open) {
+            if (demoLinkType === STORY_LISTENING_DEMO_LINK_TYPE) {
+                loadStories()
+            } else if (demoLinkType === STORY_RECORDING_DEMO_LINK_TYPE) {
+                generateGuestAccessLink()
+            }
+        }
+    }, [demoLinkType, open]);
 
     useEffect(() => {
-        if (open) {
+        if (!open) {
             setGuestAccessLink("")
             setLinkCopied(false)
             setSelectedStory(null)
@@ -55,15 +67,24 @@ export default function GenerateGuestAccessLinkDialog({
         setLoading(true)
         const accessToken = encodeJWT({
             // @ts-ignore
-            storyId: selectedStory?.storyId,
+            storyId: demoLinkType === STORY_LISTENING_DEMO_LINK_TYPE ? selectedStory?.storyId : "",
             isGuest: true,
-            allowRecording: false,
+            allowRecording: demoLinkType === STORY_RECORDING_DEMO_LINK_TYPE,
             email: "",
             sub: "guest-user",
             name: ""
         })
 
-        setGuestAccessLink(`${location.origin}/discover?guestAccessToken=${accessToken}`)
+        let _link = ""
+        if (demoLinkType === STORY_LISTENING_DEMO_LINK_TYPE) {
+            _link = `${location.origin}/discover?guestAccessToken=${accessToken}`
+        } else if (demoLinkType === STORY_RECORDING_DEMO_LINK_TYPE) {
+            _link = `${location.origin}/record?guestAccessToken=${accessToken}`
+        }
+
+        console.log({ _link })
+
+        setGuestAccessLink(_link)
     }
 
     const handleStoryOnSelect = (story: Story) => {
@@ -97,7 +118,7 @@ export default function GenerateGuestAccessLinkDialog({
                             <STKButton onClick={copyLink}>{linkCopied ? "Copied" : "Copy link"}</STKButton>
                         </div>
                     </div>
-                ) : (
+                ) : !guestAccessLink && demoLinkType === STORY_LISTENING_DEMO_LINK_TYPE ? (
                   <>
                       <div className="mt-6">
                           <div>
@@ -130,6 +151,10 @@ export default function GenerateGuestAccessLinkDialog({
                           </div>
                       </div>
                   </>
+                ) : (
+                    <div className="mt-6 flex justify-start">
+                        <STKLoading />
+                    </div>
                 )}
             </div>
         </STKDialog>

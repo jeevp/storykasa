@@ -17,6 +17,7 @@ import StripeCheckout from "@/composedComponents/StripeCheckout/StripeCheckout";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
 import {green600} from "@/assets/colorPallet/colors";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
+import {useStory} from "@/contexts/story/StoryContext";
 
 const USER_DETAILS_STEP = "USER_DETAILS_STEP"
 const PROFILE_CREATION_STEP = "PROFILE_CREATION_STEP"
@@ -34,10 +35,15 @@ export default function Signup() {
     const router = useRouter()
     const { currentProfile } = useProfile()
     const { setSnackbarBus } = useSnackbar()
+    const { currentGuestDemoStory } = useStory()
 
     // Methods
     const goToDiscoverPage = async () => {
-        await router.push("/discover")
+        if (currentGuestDemoStory) {
+            await router.push("/record")
+        } else {
+            await router.push("/discover")
+        }
     }
 
     const handleChoosePlan = async () => {
@@ -123,7 +129,6 @@ export default function Signup() {
             type: "success"
         })
     }
-
 
 
     return (

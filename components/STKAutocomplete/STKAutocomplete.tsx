@@ -4,6 +4,7 @@ import theme from "@/components/theme";
 interface STKAutocompleteProps {
     options: Array<Object>
     optionLabel: string
+    optionValue?: string
     disablePortal?: boolean
     fluid?: boolean
     groupByProp?: string
@@ -14,6 +15,7 @@ interface STKAutocompleteProps {
 function STKAutocomplete({
     options = [],
     optionLabel = "label",
+    optionValue = "value",
     disablePortal = true,
     fluid = false,
     groupByProp = "category",

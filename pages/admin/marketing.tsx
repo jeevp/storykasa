@@ -1,33 +1,26 @@
 import PageWrapper from '@/composedComponents/PageWrapper'
 import withProfile from "@/HOC/withProfile";
 import withAuth from "@/HOC/withAuth";
-import {useAdmin} from "@/contexts/admin/useAdmin";
-import {useEffect, useState} from "react";
-import StoryHandler from "@/handlers/StoryHandler";
-import PublicStoryRequestCard from "@/composedComponents/PublicStoryRequestCard/PublicStoryRequestCard";
-import PublicStoryRequestCardSkeleton from "@/composedComponents/PublicStoryRequestCard/PublicStoryRequestCardSkeleton";
+import {useState} from "react";
 import withAdmin from "@/HOC/withAdmin";
-import Story from "@/models/Story";
-import {useStory} from "@/contexts/story/StoryContext";
 import {AnimatePresence, motion} from "framer-motion";
-import StoryCard, {ADD_TO_LIBRARY_MENU_OPTION} from "@/composedComponents/StoryCard/StoryCard";
-import {SmileyMeh} from "@phosphor-icons/react";
-import {neutral300} from "@/assets/colorPallet/colors";
-import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
-import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
-import StoryDetails from "@/composedComponents/StoryDetails/StoryDetails";
-import useDevice from "@/customHooks/useDevice";
 import STKButton from "@/components/STKButton/STKButton";
 import GenerateGuestAccessLinkDialog
-    from "@/composedComponents/GenerateGuestAccessLinkDialog/GenerateGuestAccessLinkDialog";
+    , {
+    STORY_LISTENING_DEMO_LINK_TYPE, STORY_RECORDING_DEMO_LINK_TYPE
+} from "@/composedComponents/GenerateGuestAccessLinkDialog/GenerateGuestAccessLinkDialog";
 
 export const dynamic = 'force-dynamic'
-
 function Marketing() {
-    const { onMobile } = useDevice()
-
     // States
     const [showGenerateGuestAccessLinkDialog, setShowGenerateGuestAccessLinkDialog] = useState(false)
+    const [demoLinkType, setDemoLinkType] = useState("")
+
+    // Methods
+    const handleGuestAccessLink = (demoLink: string) => {
+        setShowGenerateGuestAccessLinkDialog(true)
+        setDemoLinkType(demoLink)
+    }
 
 
     return (
@@ -47,10 +40,33 @@ function Marketing() {
                                     exit={{ x: 10, opacity: 0 }}
                                 >
                                     <div>
-                                        <label className="font-semibold text-lg">Story listening</label>
-                                        <p className="mt-2 text-md">Click the button bellow to generate a guest access link for a specific story</p>
-                                        <div className="mt-4">
-                                            <STKButton onClick={() => setShowGenerateGuestAccessLinkDialog(true)}>Generate Guest Access Link</STKButton>
+                                        <h3 className="text-lg">Demo links</h3>
+                                        <div className="mt-6">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <label className="font-semibold text-md">Story listening</label>
+                                                    <p className="mt-2 text-md">Use the link to demo the story listening feature</p>
+                                                </div>
+
+                                                <div className="mt-4">
+                                                    <STKButton onClick={() => handleGuestAccessLink(STORY_LISTENING_DEMO_LINK_TYPE)}>
+                                                        Generate Guest Access Link
+                                                    </STKButton>
+                                                </div>
+                                            </div>
+                                            <div className="w-full border-t my-4 border-t-neutral-300 border-0 border-solid" />
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <label className="font-semibold text-md">Story recording</label>
+                                                    <p className="mt-2 text-md">Use the link to demo the story recording feature</p>
+                                                </div>
+
+                                                <div className="mt-4">
+                                                    <STKButton onClick={() => handleGuestAccessLink(STORY_RECORDING_DEMO_LINK_TYPE)}>
+                                                        Generate Guest Access Link
+                                                    </STKButton>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -61,6 +77,7 @@ function Marketing() {
             </PageWrapper>
             <GenerateGuestAccessLinkDialog
             open={showGenerateGuestAccessLinkDialog}
+            demoLinkType={demoLinkType}
             onClose={() => setShowGenerateGuestAccessLinkDialog(false)}/>
         </>
     )
