@@ -41,6 +41,7 @@ function Record() {
     const handleFetchTotalRecordingTime = async () => {
         setLoading(true)
         const _totalRecordingTime = await StoryHandler.fetchTotalRecordingTime()
+        console.log({ _totalRecordingTime, maxRecordingTimeAllowed: currentSubscription?.maxRecordingTimeAllowed })
         setTotalRecordingTime(_totalRecordingTime)
         setLoading(false)
     }

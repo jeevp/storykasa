@@ -170,7 +170,7 @@ export default function StoryForm() {
         await router.push("/signup")
         localStorage.removeItem(STK_ACCESS_TOKEN)
         setCurrentUser(null)
-        setCurrentGuestDemoStory({
+        const _currentGuestDemoStory =  {
             title,
             description,
             audioBlob,
@@ -180,9 +180,15 @@ export default function StoryForm() {
             ageGroups,
             storyCreationMethod,
             storyIllustrations
-        })
+        }
+
+        console.log({ _currentGuestDemoStory })
+
+        setCurrentGuestDemoStory(_currentGuestDemoStory)
     }
 
+
+    console.log({ currentGuestDemoStory })
     // @ts-ignore
     return (
         <div className="pb-32 lg:pb-0">
@@ -243,7 +249,7 @@ export default function StoryForm() {
                                     enableSelectAll
                                     selectAllLabel="All ages"
                                     multiple
-                                    value={allowedAgeGroups.every(group => ageGroups.includes(group.value)) ? [""] : allowedAgeGroups.filter((group) => ageGroups.includes(group.value)) }
+                                    value={allowedAgeGroups?.every(group => ageGroups?.includes(group.value)) ? [""] : allowedAgeGroups.filter((group) => ageGroups.includes(group.value)) }
                                     fluid={onMobile}
                                     onChange={handleAgeGroupOnChange}  />
                             </div>

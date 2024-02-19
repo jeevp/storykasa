@@ -16,10 +16,9 @@ class AuthController {
                 termsAgreed,
                 browserName,
                 browserVersion,
-                userIP
             } = req.body
 
-            if (!email || !password || !fullName || !termsAgreed || !browserName || !browserVersion || !userIP) {
+            if (!email || !password || !fullName || !termsAgreed || !browserName || !browserVersion) {
                 return res.status(400).send({
                     message: "Payload is incorrect."
                 })
@@ -40,6 +39,7 @@ class AuthController {
             }
 
             // Save terms of service
+            const userIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress
             await TernsAndPrivacyConsent.create({
                 userId: data.user.id,
                 userIP,

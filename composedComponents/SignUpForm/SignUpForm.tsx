@@ -111,10 +111,6 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
 
             setProcessingAccountCreation(true)
 
-            // Fetch user's IP address
-            const IPAddressResponse = await axios.get('https://api.ipify.org?format=json')
-            const userIP = IPAddressResponse.data.ip
-
             const browserInfo = bowser.getParser(window.navigator.userAgent);
 
             const account = await AuthHandler.signUp({
@@ -122,7 +118,6 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
                 password,
                 fullName,
                 termsAgreed: termsOfServiceAndPrivacyChecked,
-                userIP,
                 browserName: browserInfo.getBrowserName(),
                 browserVersion: browserInfo.getBrowserVersion()
             })

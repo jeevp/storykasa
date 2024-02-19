@@ -9,7 +9,6 @@ export default class AuthHandler {
         password,
         fullName,
         termsAgreed,
-        userIP,
         browserVersion,
         browserName
     }: {
@@ -17,7 +16,6 @@ export default class AuthHandler {
         password: string,
         fullName: string,
         termsAgreed: boolean,
-        userIP: string,
         browserVersion: string,
         browserName: string
 
@@ -27,7 +25,6 @@ export default class AuthHandler {
             password,
             fullName,
             termsAgreed,
-            userIP,
             browserVersion,
             browserName
         })
