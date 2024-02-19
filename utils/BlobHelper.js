@@ -7,7 +7,7 @@ export const blobToBase64 = (blob) => new Promise((resolve, reject) => {
 });
 
 // Converts a Base64 string back to a Blob
-export const base64ToBlob = (base64, type = 'audio/mpeg') => {
+export const base64ToBlob = (base64, type) => {
     if (typeof base64 === 'string' && base64.startsWith('data:')) {
         const byteCharacters = atob(base64.split(',')[1]);
         const byteArrays = [];

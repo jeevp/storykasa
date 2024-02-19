@@ -82,8 +82,6 @@ export default function GenerateGuestAccessLinkDialog({
             _link = `${location.origin}/record?guestAccessToken=${accessToken}`
         }
 
-        console.log({ _link })
-
         setGuestAccessLink(_link)
     }
 

@@ -174,6 +174,7 @@ export default function StoryForm() {
             title,
             description,
             audioBlob,
+            audioBlobType: audioBlob?.type,
             audioDuration,
             audioURL,
             language,
@@ -182,13 +183,9 @@ export default function StoryForm() {
             storyIllustrations
         }
 
-        console.log({ _currentGuestDemoStory })
-
         setCurrentGuestDemoStory(_currentGuestDemoStory)
     }
 
-
-    console.log({ currentGuestDemoStory })
     // @ts-ignore
     return (
         <div className="pb-32 lg:pb-0">
@@ -231,6 +228,7 @@ export default function StoryForm() {
                                 <STKAutocomplete
                                     options={languages}
                                     optionLabel="name"
+                                    optionValue="code"
                                     fluid={onMobile}
                                     value={languages.find((lang) => lang.name === language)}
                                     placeholder="Select a language"

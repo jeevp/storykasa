@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent, useEffect } from 'react';
 // @ts-ignore
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 // @ts-ignore
@@ -131,6 +131,19 @@ function STKTextField({
     const [editorState, setEditorState] = useState(
         enableRichText ? createEditorStateFromText(value || '') : EditorState.createEmpty()
     );
+
+    useEffect(() => {
+        // Only update the editor state if the value prop changes externally
+        // and differs significantly from the current content. This helps avoid
+        // resetting the editor state while typing.
+        const currentContentState = editorState.getCurrentContent();
+        const markdownString = draftToMarkdown(convertToRaw(currentContentState));
+
+        // Check if the external value differs from the current editor content
+        if (value !== markdownString && enableRichText) {
+            setEditorState(createEditorStateFromText(value || ''));
+        }
+    }, [value, enableRichText]);
 
     const handleEditorChange = (state: any) => {
         setEditorState(state);
