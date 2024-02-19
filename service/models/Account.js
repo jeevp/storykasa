@@ -25,9 +25,11 @@ class Account {
     }
 
     static async findAll() {
+        const testAccountName = "Felipe Test"
         const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/accounts`, {
             params: {
-                select: "*"
+                select: "*",
+                name: `not.eq.${testAccountName}`
             },
             headers: generateSupabaseHeaders()
         })
