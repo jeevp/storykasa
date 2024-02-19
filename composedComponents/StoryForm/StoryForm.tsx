@@ -364,10 +364,11 @@ export default function StoryForm() {
             </div>
             <InfoDialog
             active={showMustSignUpDialog}
-            title="Sign up to continue"
-            text="Your must sign up to save a story"
+            title="Save Your Story"
+            text="Your story is ready to be saved and shared with the world! To keep it safe and accessible anytime, please sign up. It's quick, easy, and opens up a world of exclusive features!"
             confirmationButtonText="Sign up"
             onAction={handleGoToSignUp}
+            onClose={() => setShowMustSignUpDialog(false)}
             />
         </div>
     )
