@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import STKTextField from "@/components/STKTextField/STKTextField"
@@ -29,6 +29,12 @@ export default function CreateBlogPostDialog({
         title: "",
         text: ""
     })
+
+    useEffect(() => {
+        if (open) {
+            setBlogPost({ title: "", text: "" })
+        }
+    }, [open]);
 
     // Methods
     const handleBlogPostOnChange = (key: string, value: string) => {
