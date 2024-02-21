@@ -37,13 +37,14 @@ class BlogPost {
         })
     }
 
-    static async findAll() {
+    static async findAll(params = { published: undefined }) {
+        const requestParams = { select: "*" }
+        if (params.published === true || params.published === false) requestParams.published = `eq.${params.published}`
+
         const response = await axios.get(
             `${process.env.SUPABASE_URL}/rest/v1/blog_posts`,
             {
-                params: {
-                    select: "*"
-                },
+                params: requestParams,
                 headers: generateSupabaseHeaders()
             }
         )
@@ -76,8 +77,6 @@ class BlogPost {
                 headers: generateSupabaseHeaders()
             }
         )
-
-        console.log({ response: response.data, payload })
 
         return new BlogPost({
             id: response.data[0].id,

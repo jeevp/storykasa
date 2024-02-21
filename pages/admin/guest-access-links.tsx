@@ -10,7 +10,7 @@ import GenerateGuestAccessLinkDialog
 
 export const dynamic = 'force-dynamic'
 
-function Marketing() {
+function GuestAccessLinks() {
     // States
     const [showGenerateGuestAccessLinkDialog, setShowGenerateGuestAccessLinkDialog] = useState(false)
 
@@ -51,4 +51,4 @@ function Marketing() {
     )
 }
 
-export default withAuth(withProfile(withAdmin(Marketing)))
+export default withAuth(withProfile(withAdmin(GuestAccessLinks)))

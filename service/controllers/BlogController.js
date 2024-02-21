@@ -92,6 +92,17 @@ class BlogController {
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
+
+    static async getPublishedBlogPosts(req, res) {
+        try {
+            const blogPosts = await BlogPost.findAll({ published: true })
+
+            return res.status(200).send(blogPosts)
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
 }
 
 
