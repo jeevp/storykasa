@@ -69,7 +69,7 @@ class BlogPost {
         const payload = {}
         if (title) {
             payload.title = title
-            payload.route_name = Formatter.slugify(title)
+            if (!this.published) payload.route_name = Formatter.slugify(title)
         }
         if (text) payload.text = text
         if (published === true || published === false) {
