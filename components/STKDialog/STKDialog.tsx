@@ -44,7 +44,7 @@ export default function STKDialog({
             fullWidth={!!maxWidth}
             onClose={handleClose}
         >
-            <div className="p-4 lg:p-8">
+            <div className="p-4 lg:p-6">
                 <div className="flex items=center justify-between">
                     <div className="flex items-center">
                         <div className="flex items-center">

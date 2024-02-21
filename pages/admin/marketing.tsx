@@ -1,22 +1,9 @@
 import PageWrapper from '@/composedComponents/PageWrapper'
 import withProfile from "@/HOC/withProfile";
 import withAuth from "@/HOC/withAuth";
-import {useAdmin} from "@/contexts/admin/useAdmin";
-import {useEffect, useState} from "react";
-import StoryHandler from "@/handlers/StoryHandler";
-import PublicStoryRequestCard from "@/composedComponents/PublicStoryRequestCard/PublicStoryRequestCard";
-import PublicStoryRequestCardSkeleton from "@/composedComponents/PublicStoryRequestCard/PublicStoryRequestCardSkeleton";
+import {useState} from "react";
 import withAdmin from "@/HOC/withAdmin";
-import Story from "@/models/Story";
-import {useStory} from "@/contexts/story/StoryContext";
 import {AnimatePresence, motion} from "framer-motion";
-import StoryCard, {ADD_TO_LIBRARY_MENU_OPTION} from "@/composedComponents/StoryCard/StoryCard";
-import {SmileyMeh} from "@phosphor-icons/react";
-import {neutral300} from "@/assets/colorPallet/colors";
-import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
-import StoryCardSkeleton from "@/composedComponents/StoryCard/StoryCardSkeleton";
-import StoryDetails from "@/composedComponents/StoryDetails/StoryDetails";
-import useDevice from "@/customHooks/useDevice";
 import STKButton from "@/components/STKButton/STKButton";
 import GenerateGuestAccessLinkDialog
     from "@/composedComponents/GenerateGuestAccessLinkDialog/GenerateGuestAccessLinkDialog";
@@ -24,8 +11,6 @@ import GenerateGuestAccessLinkDialog
 export const dynamic = 'force-dynamic'
 
 function Marketing() {
-    const { onMobile } = useDevice()
-
     // States
     const [showGenerateGuestAccessLinkDialog, setShowGenerateGuestAccessLinkDialog] = useState(false)
 

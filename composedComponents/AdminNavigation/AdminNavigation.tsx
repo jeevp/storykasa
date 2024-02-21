@@ -15,6 +15,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 const navigationOptions = [
     { text: "Public Story Requests", icon: <ChecklistOutlinedIcon sx={{ width: "20px", color: neutral800 }} />, pathname: "/admin/public-story-requests"  },
     { text: "Marketing", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/marketing" },
+    { text: "Blog", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/blog" },
 ]
 
 export default function AdminNavigation() {

@@ -8,6 +8,7 @@ import {ToolsProvider} from "@/contexts/tools/ToolsContext";
 import {AdminProvider} from "@/contexts/admin/useAdmin";
 import {LibraryProvider} from "@/contexts/library/LibraryContext";
 import {SubscriptionProvider} from "@/contexts/subscription/SubscriptionContext"
+import { BlogProvider } from "@/contexts/blog/BlogContext"
 
 interface ContextWrapperProps {
     children: React.ReactNode;
@@ -22,7 +23,9 @@ export default function ContextWrapper({ children }: ContextWrapperProps){
                            <ToolsProvider>
                                <AdminProvider>
                                    <SubscriptionProvider>
-                                       {children}
+                                       <BlogProvider>
+                                           {children}
+                                       </BlogProvider>
                                    </SubscriptionProvider>
                                </AdminProvider>
                            </ToolsProvider>

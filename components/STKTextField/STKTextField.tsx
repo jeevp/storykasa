@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, {useState, MouseEvent, useEffect} from 'react';
 // @ts-ignore
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 // @ts-ignore
@@ -123,7 +123,10 @@ function STKTextField({
 }: STKTextFieldProps) {
 
     const createEditorStateFromText = (markdownText: any) => {
-        const rawData = markdownToDraft(markdownText);
+        const rawData = markdownToDraft(markdownText, {
+            preserveNewlines: true
+        });
+
         const contentState = convertFromRaw(rawData);
         return EditorState.createWithContent(contentState);
     };
@@ -131,6 +134,15 @@ function STKTextField({
     const [editorState, setEditorState] = useState(
         enableRichText ? createEditorStateFromText(value || '') : EditorState.createEmpty()
     );
+
+    useEffect(() => {
+        const currentContentAsMarkdown = draftToMarkdown(convertToRaw(editorState.getCurrentContent()));
+
+        if (enableRichText && value !== currentContentAsMarkdown) {
+            const contentState = convertFromRaw(markdownToDraft(value));
+            setEditorState(EditorState.createWithContent(contentState));
+        }
+    }, [value, enableRichText, editorState]);
 
     const handleEditorChange = (state: any) => {
         setEditorState(state);
