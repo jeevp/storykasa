@@ -109,9 +109,9 @@ class BlogController {
 
     static async getPublishedBlogPost(req, res) {
         try {
-            APIValidator.requiredParams({ req, res }, { requiredParams: ["postId"] })
+            APIValidator.requiredParams({ req, res }, { requiredParams: ["routeName"] })
 
-            const blogPost = await BlogPost.findOne({ blogPostId: req.query.postId })
+            const blogPost = await BlogPost.findOne({ routeName: req.query.routeName })
 
             return res.status(200).send(blogPost)
         } catch (error) {

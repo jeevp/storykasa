@@ -113,14 +113,20 @@ class BlogPost {
         return response.data
     }
 
-    static async findOne({ blogPostId }) {
+    static async findOne(
+        params = {
+            blogPostId: undefined,
+            routeName: undefined
+        }
+    ) {
+        const searchParams = { select: "*" }
+        if (params.blogPostId) searchParams.id = `eq.${params.blogPostId}`
+        if (params.routeName) searchParams.route_name = `eq.${params.routeName}`
+
         const response = await axios.get(
             `${process.env.SUPABASE_URL}/rest/v1/blog_posts`,
             {
-                params: {
-                    select: '*',
-                    id: `eq.${blogPostId}`
-                },
+                params: searchParams,
                 headers: generateSupabaseHeaders()
             }
         )
