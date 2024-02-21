@@ -107,7 +107,7 @@ function Blog() {
                                 </STKButton>
                             </div>
                             <div className="mt-10">
-                                {blogPosts?.map((blogPost) => (
+                                {blogPosts?.map((blogPost: any) => (
                                     <div
                                     className="mt-2 first:mt-0"
                                     // @ts-ignore

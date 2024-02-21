@@ -103,6 +103,19 @@ class BlogController {
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
+
+    static async getPublishedBlogPost(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, { requiredParams: ["postId"] })
+
+            const blogPost = await BlogPost.findOne({ blogPostId: req.query.postId })
+
+            return res.status(200).send(blogPost)
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
 }
 
 
