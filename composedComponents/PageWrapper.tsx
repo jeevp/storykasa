@@ -38,7 +38,7 @@ export default function PageWrapper({
                         <Navbar />
                         <div className="mt-8 flex w-full">
                             {!admin && currentUser && router.pathname !== "/profiles" && !hideNavigation && (
-                                <div className="hidden lg:block mr-20 w-80 absolute lg:relative">
+                                <div className={`hidden lg:block mr-20 w-80 absolute lg:relative ${currentUser?.isGuest ? 'disabled' : ''}`}>
                                     <SideNavigation />
                                 </div>
                             )}

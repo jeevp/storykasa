@@ -6,7 +6,7 @@ import {
 } from '@phosphor-icons/react'
 import dynamic from 'next/dynamic';
 
-import { SetStateAction, useState} from 'react'
+import {SetStateAction, useEffect, useState} from 'react'
 import {allowedAgeGroups, languages} from "@/models/Story"
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import STKAutocomplete from "@/components/STKAutocomplete/STKAutocomplete";
@@ -20,13 +20,20 @@ import {
     RECORD_BUCKET_NAME,
     RECORD_FILE_EXTENSION,
     PNG_FILE_EXTENSION,
-    ILLUSTRATIONS_BUCKET_NAME
+    ILLUSTRATIONS_BUCKET_NAME,
+    STK_ACCESS_TOKEN
 } from "@/config";
 import StoryHandler from "@/handlers/StoryHandler";
 import CancelRecordingDialog from "@/composedComponents/CancelRecordingDialog/CancelRecordingDialog";
 import STKRadioGroup from "@/components/STKRadioGroup/STKRadioGroup";
 import STKUploadFile from "@/components/STKUploadFile/STKUploadFile";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useAuth} from "@/contexts/auth/AuthContext";
+import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog"
+import {useRouter} from "next/router";
+import {useStory} from "@/contexts/story/StoryContext";
+
+
 const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKRecordAudio'), {
     ssr: false,  // Set to false to disable server-side rendering
 });
@@ -37,6 +44,10 @@ const UPLOAD_STORY_CREATION_METHOD = "UPLOAD_STORY_CREATION_METHOD"
 export default function StoryForm() {
     const {currentProfileId} = useProfile()
     const {onMobile} = useDevice()
+    const { currentUser, setCurrentUser } = useAuth()
+    const { currentGuestDemoStory, setCurrentGuestDemoStory } = useStory()
+
+    const router = useRouter()
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState("")
@@ -50,6 +61,21 @@ export default function StoryForm() {
     const [showCancelRecordingDialog, setShowCancelRecordingDialog] = useState(false)
     const [storyCreationMethod, setStoryCreationMethod] = useState(RECORD_STORY_CREATION_METHOD)
     const [storyIllustrations, setStoryIllustrations] = useState<Array<Blob>>([])
+    const [showMustSignUpDialog, setShowMustSignUpDialog] = useState(false)
+
+    useEffect(() => {
+        if (currentGuestDemoStory) {
+            setTitle(currentGuestDemoStory.title)
+            setDescription(currentGuestDemoStory.description)
+            setAudioBlob(currentGuestDemoStory.audioBlob)
+            setAudioDuration(currentGuestDemoStory.audioDuration)
+            setAudioURL(currentGuestDemoStory.audioURL)
+            setLanguage(currentGuestDemoStory.language)
+            setAgeGroups(currentGuestDemoStory.ageGroups)
+            setStoryCreationMethod(currentGuestDemoStory.storyCreationMethod)
+            setStoryIllustrations(currentGuestDemoStory.storyIllustrations)
+        }
+    }, []);
 
     const updateAudioBlob = (blob: Blob, url: string) => {
         setAudioBlob(blob)
@@ -58,6 +84,11 @@ export default function StoryForm() {
 
     const uploadAndAddStory = async () => {
         try {
+            if (currentUser?.isGuest) {
+                setShowMustSignUpDialog(true)
+                return
+            }
+
             setLoading(true)
             if (!audioBlob) throw new Error('missing audio for story')
             // create form to upload audio blob to bucket
@@ -135,6 +166,26 @@ export default function StoryForm() {
         storyIllustrations.push(blob)
     }
 
+    const handleGoToSignUp = async () => {
+        await router.push("/signup")
+        localStorage.removeItem(STK_ACCESS_TOKEN)
+        setCurrentUser(null)
+        const _currentGuestDemoStory =  {
+            title,
+            description,
+            audioBlob,
+            audioBlobType: audioBlob?.type,
+            audioDuration,
+            audioURL,
+            language,
+            ageGroups,
+            storyCreationMethod,
+            storyIllustrations
+        }
+
+        setCurrentGuestDemoStory(_currentGuestDemoStory)
+    }
+
     // @ts-ignore
     return (
         <div className="pb-32 lg:pb-0">
@@ -152,7 +203,7 @@ export default function StoryForm() {
                             Story title
                         </label>
                         <div className="mt-2">
-                            <STKTextField onChange={(value: SetStateAction<string>) => setTitle(value)} fluid />
+                            <STKTextField onChange={(value: SetStateAction<string>) => setTitle(value)} fluid value={title} />
                         </div>
                     </div>
                     <div className="mt-6">
@@ -163,6 +214,7 @@ export default function StoryForm() {
                             <STKTextField
                                 multiline
                                 fluid
+                                value={description}
                                 enableRichText
                                 onChange={(value: SetStateAction<string>) => setDescription(value)} />
                         </div>
@@ -176,7 +228,9 @@ export default function StoryForm() {
                                 <STKAutocomplete
                                     options={languages}
                                     optionLabel="name"
+                                    optionValue="code"
                                     fluid={onMobile}
+                                    value={languages.find((lang) => lang.name === language)}
                                     placeholder="Select a language"
                                     onChange={handleLanguageOnChange} />
                             </div>
@@ -193,6 +247,7 @@ export default function StoryForm() {
                                     enableSelectAll
                                     selectAllLabel="All ages"
                                     multiple
+                                    value={allowedAgeGroups?.every(group => ageGroups?.includes(group.value)) ? [""] : allowedAgeGroups.filter((group) => ageGroups.includes(group.value)) }
                                     fluid={onMobile}
                                     onChange={handleAgeGroupOnChange}  />
                             </div>
@@ -307,6 +362,14 @@ export default function StoryForm() {
                     </div>
                 </div>
             </div>
+            <InfoDialog
+            active={showMustSignUpDialog}
+            title="Save Your Story"
+            text="Your story is ready to be saved and shared with the world! To keep it safe and accessible anytime, please sign up. It's quick, easy, and opens up a world of exclusive features!"
+            confirmationButtonText="Sign up"
+            onAction={handleGoToSignUp}
+            onClose={() => setShowMustSignUpDialog(false)}
+            />
         </div>
     )
 }

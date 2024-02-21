@@ -6,13 +6,22 @@ import withAdmin from "@/HOC/withAdmin";
 import {AnimatePresence, motion} from "framer-motion";
 import STKButton from "@/components/STKButton/STKButton";
 import GenerateGuestAccessLinkDialog
-    from "@/composedComponents/GenerateGuestAccessLinkDialog/GenerateGuestAccessLinkDialog";
+    , {
+    STORY_LISTENING_DEMO_LINK_TYPE, STORY_RECORDING_DEMO_LINK_TYPE
+} from "@/composedComponents/GenerateGuestAccessLinkDialog/GenerateGuestAccessLinkDialog";
 
 export const dynamic = 'force-dynamic'
 
 function GuestAccessLinks() {
     // States
     const [showGenerateGuestAccessLinkDialog, setShowGenerateGuestAccessLinkDialog] = useState(false)
+    const [demoLinkType, setDemoLinkType] = useState("")
+
+    // Methods
+    const handleGuestAccessLink = (demoLink: string) => {
+        setShowGenerateGuestAccessLinkDialog(true)
+        setDemoLinkType(demoLink)
+    }
 
 
     return (
@@ -32,10 +41,33 @@ function GuestAccessLinks() {
                                     exit={{ x: 10, opacity: 0 }}
                                 >
                                     <div>
-                                        <label className="font-semibold text-lg">Story listening</label>
-                                        <p className="mt-2 text-md">Click the button bellow to generate a guest access link for a specific story</p>
-                                        <div className="mt-4">
-                                            <STKButton onClick={() => setShowGenerateGuestAccessLinkDialog(true)}>Generate Guest Access Link</STKButton>
+                                        <h3 className="text-lg">Demo links</h3>
+                                        <div className="mt-6">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <label className="font-semibold text-md">Story listening</label>
+                                                    <p className="mt-2 text-md">Use the link to demo the story listening feature</p>
+                                                </div>
+
+                                                <div className="mt-4">
+                                                    <STKButton onClick={() => handleGuestAccessLink(STORY_LISTENING_DEMO_LINK_TYPE)}>
+                                                        Generate Guest Access Link
+                                                    </STKButton>
+                                                </div>
+                                            </div>
+                                            <div className="w-full border-t my-4 border-t-neutral-300 border-0 border-solid" />
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <label className="font-semibold text-md">Story recording</label>
+                                                    <p className="mt-2 text-md">Use the link to demo the story recording feature</p>
+                                                </div>
+
+                                                <div className="mt-4">
+                                                    <STKButton onClick={() => handleGuestAccessLink(STORY_RECORDING_DEMO_LINK_TYPE)}>
+                                                        Generate Guest Access Link
+                                                    </STKButton>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -46,6 +78,7 @@ function GuestAccessLinks() {
             </PageWrapper>
             <GenerateGuestAccessLinkDialog
             open={showGenerateGuestAccessLinkDialog}
+            demoLinkType={demoLinkType}
             onClose={() => setShowGenerateGuestAccessLinkDialog(false)}/>
         </>
     )
