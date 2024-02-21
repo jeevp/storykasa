@@ -5,6 +5,7 @@ interface BlogPostProps {
     id: number;
     createdAt: string;
     published: boolean;
+    routeName: string;
 }
 
 export default class BlogPost {
@@ -13,6 +14,7 @@ export default class BlogPost {
     id: number;
     createdAt: string;
     published: boolean;
+    routeName: string;
 
 
     constructor({
@@ -20,12 +22,14 @@ export default class BlogPost {
         createdAt,
         title,
         text,
-        published
+        published,
+        routeName
     }: BlogPostProps) {
         this.id = id
         this.createdAt = createdAt
         this.title = title
         this.text = text
         this.published = published
+        this.routeName = routeName
     }
 }

@@ -1,5 +1,6 @@
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
+const Formatter = require("../../utils/Formatter");
 
 class BlogPost {
     constructor({
@@ -7,19 +8,23 @@ class BlogPost {
         createdAt,
         title,
         text,
-        published
+        published,
+        routeName
     }) {
         this.id = id
         this.createdAt = createdAt
         this.title = title
         this.text = text
         this.published = published
+        this.routeName = routeName
     }
 
     static async create({ title, text }) {
+        const routeName = Formatter.slugify(title)
+
         const response = await axios.post(
             `${process.env.SUPABASE_URL}/rest/v1/blog_posts`,
-            { title, text },
+            { title, text, route_name: routeName },
             {
                 params: {
                     select: '*'
@@ -33,7 +38,8 @@ class BlogPost {
             createdAt: response.data[0].created_at,
             title: response.data[0].title,
             text: response.data[0].text,
-            published: response.data[0].published
+            published: response.data[0].published,
+            routeName: response.data[0].route_name
         })
     }
 
@@ -54,13 +60,17 @@ class BlogPost {
             createdAt: blogPost.created_at,
             title: blogPost.title,
             text: blogPost.text,
-            published: blogPost.published
+            published: blogPost.published,
+            routeName: blogPost.route_name
         }))
     }
 
     async update({ title, text, published = undefined }) {
         const payload = {}
-        if (title) payload.title = title
+        if (title) {
+            payload.title = title
+            payload.route_name = Formatter.slugify(title)
+        }
         if (text) payload.text = text
         if (published === true || published === false) {
             payload.published = published
@@ -83,7 +93,8 @@ class BlogPost {
             createdAt: response.data[0].created_at,
             title: response.data[0].title,
             text: response.data[0].text,
-            published: response.data[0].published
+            published: response.data[0].published,
+            routeName: response.data[0].route_name
         })
     }
 
@@ -119,7 +130,8 @@ class BlogPost {
             createdAt: response.data[0].created_at,
             title: response.data[0].title,
             text: response.data[0].text,
-            published: response.data[0].published
+            published: response.data[0].published,
+            routeName: response.data[0].route_name
         })
     }
 
