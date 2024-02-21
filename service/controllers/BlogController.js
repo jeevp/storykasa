@@ -1,5 +1,7 @@
 const BlogPost = require("../models/BlogPost")
 const APIValidator = require("../validators/APIValidator")
+
+
 class BlogController {
     static async createBlogPost(req, res) {
         try {
@@ -44,6 +46,7 @@ class BlogController {
 
             return res.status(202).send(_blogPost)
         } catch (error) {
+            console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

@@ -1,6 +1,6 @@
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
-const Formatter = require("../../utils/Formatter");
+const Formatter = require("../../utils/Formatter").default;
 
 class BlogPost {
     constructor({
