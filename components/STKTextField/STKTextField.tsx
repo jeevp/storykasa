@@ -139,8 +139,7 @@ function STKTextField({
         const currentContentAsMarkdown = draftToMarkdown(convertToRaw(editorState.getCurrentContent()));
 
         if (enableRichText && value !== currentContentAsMarkdown) {
-            const contentState = convertFromRaw(markdownToDraft(value));
-            setEditorState(EditorState.createWithContent(contentState));
+            setEditorState(createEditorStateFromText(value));
         }
     }, [value, enableRichText, editorState]);
 
