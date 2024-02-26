@@ -29,6 +29,15 @@ const withAuth = (WrappedComponent: any) => {
 
     const handleLogin = (accessToken: string) => {
       const user = decodeJWT(accessToken)
+
+      const parsedQuery = queryString.parse(location.search);
+      const guestAccessToken  = parsedQuery?.guestAccessToken
+
+      if (user.isGuest && !guestAccessToken) {
+        handleSignOut()
+        return
+      }
+
       const _currentUserIsAdmin = allowedAdminUsers.includes(user.email)
       setCurrentUserIsAdmin(_currentUserIsAdmin)
 
