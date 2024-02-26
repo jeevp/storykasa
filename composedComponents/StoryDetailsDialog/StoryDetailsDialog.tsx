@@ -45,9 +45,17 @@ export default function StoryDetailsDialog({
             editionNotAllowed={editionNotAllowed}
             story={story} />
             {currentUser?.isGuest ? (
-                <div className="mt-4">
-                    <STKButton onClick={handleSignUp}>Sign up to continue exploring stories</STKButton>
+                <div className="mt-4 w-full flex flex-col lg:flex-row justify-end items-center">
+                    <div className={"w-full lg:w-auto"}>
+                        <STKButton fullWidth={onMobile} onClick={handleSignUp}>Sign up to continue exploring stories</STKButton>
+                    </div>
+                    <div className="lg:ml-2 w-full lg:w-auto lg:mt-0 mt-2 ml-0">
+                        <a href="https://storykasa.com">
+                            <STKButton fullWidth={onMobile} variant="outlined">Learn more about StoryKasa</STKButton>
+                        </a>
+                    </div>
                 </div>
+
             ) : null}
         </STKDialog>
     )

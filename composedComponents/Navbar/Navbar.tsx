@@ -10,23 +10,20 @@ export default function Navbar() {
     const { currentUser } = useAuth()
     const router = useRouter()
 
-    const goToRoot = async () => {
-       await router.push("/")
-    }
-
     return (
         <div>
             <div className="flex justify-between">
                 <div className="flex items-center">
-                    <Image
-                        src="/logo.svg"
-                        width={0}
-                        className="cursor-pointer h-auto"
-                        height={0}
-                        style={{ width: 150 }}
-                        alt="StoryKasa logo"
-                        onClick={goToRoot}
-                    />
+                    <a href="https://storykasa.com">
+                        <Image
+                            src="/logo.svg"
+                            width={0}
+                            className="cursor-pointer h-auto"
+                            height={0}
+                            style={{ width: 150 }}
+                            alt="StoryKasa logo"
+                        />
+                    </a>
                 </div>
                 {currentUser && <AccountDetails />}
             </div>
