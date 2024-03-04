@@ -81,8 +81,8 @@ class EmailService {
             port: 465,
             secure: true,
             auth: {
-                user: process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
-                pass: process.env.NEXT_PUBLIC_SUPPORT_PASSWORD
+                user: process.env.SUPPORT_EMAIL,
+                pass: process.env.SUPPORT_PASSWORD
             }
         })
 

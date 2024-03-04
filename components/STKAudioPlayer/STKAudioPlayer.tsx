@@ -12,6 +12,7 @@ import useAppleDevice from "@/customHooks/useAppleDevice";
 import STKButton from "@/components/STKButton/STKButton";
 import STKLoading from "@/components/STKLoading/STKLoading";
 import {neutral800} from "@/assets/colorPallet/colors";
+import STKMenu from "@/components/STKMenu/STKMenu";
 
 interface STKAudioPlayerProps {
     src: string;
@@ -38,7 +39,15 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     onEnd = () => ({}),
     onTimeChange = () => ({})
 }) => {
+    const speedControlOption = [
+        { label: "1.0x", value: 1.0 },
+        { label: "1.2x", value: 1.2 },
+        { label: "1.5x", value: 1.5 },
+        { label: "2.0x", value: 2.0 }
+    ]
+
     const isAppleDevice = useAppleDevice()
+
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(1);
     const [progress, setProgress] = useState(0);
@@ -46,6 +55,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     const [currentTime, setCurrentTime] = useState('0:00');
     const [totalDuration, setTotalDuration] = useState('0:00');
     const [loading, setLoading] = useState(true)
+    const [playbackSpeed, setPlaybackSpeed] = useState(1.0)
 
     useEffect(() => {
         // @ts-ignored
@@ -55,7 +65,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         const sound = new Howl({
             src: [src],
             preload,
-            html5: isIOS,
+            html5: true,
             onload: () => {
                 setHowl(sound);
                 setTotalDuration(formatTime(sound.duration()));
@@ -73,6 +83,33 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         if (howl) {
             isPlaying ? howl.play() : howl.pause();
         }
+    }, [howl, isPlaying]);
+
+    useEffect(() => {
+        let frameId: number;
+
+        const updateProgress = () => {
+            if (howl && howl.playing()) {
+                const current = howl.seek(); // Ensure this is cast to a number if necessary
+                setCurrentTime(formatTime(current));
+                setProgress((current / howl.duration()) * 100);
+            }
+        };
+
+        const loop = () => {
+            updateProgress();
+            frameId = requestAnimationFrame(loop);
+        };
+
+        // Start the loop only if the audio is playing
+        if (isPlaying) {
+            loop();
+        }
+
+        // Clean up
+        return () => {
+            cancelAnimationFrame(frameId);
+        };
     }, [howl, isPlaying]);
 
     useEffect(() => {
@@ -141,16 +178,26 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             howl.seek(newTime);
             setCurrentTime(formatTime(newTime));
             setProgress((newTime / howl.duration()) * 100);
+            requestAnimationFrame(updateProgress);
             // @ts-ignore
-            onTimeChange(newTime);
+            if (onTimeChange) onTimeChange(newTime);
         }
     };
+
 
 
     const handleStartPlaying = () => {
         setIsPlaying(!isPlaying)
         onPlaying(!isPlaying)
     }
+
+    const changePlaybackSpeed = (speed: any) => {
+        if (howl) {
+            howl.rate(speed.value);
+            setPlaybackSpeed(speed.value);
+        }
+    };
+
 
     return (
         <div className={`stk-audio-player ${!outlined ? '!border-0' : ''}`} style={{ background: 'white' }}>
@@ -202,7 +249,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                         <Image src={skipIcon} alt="Skip forward" width={16} />
                     </STKButton>
                 </div>
-                <div className={`volume w-30 flex items-center pl-10 ${loading ? 'disabled' : ''}`}>
+                <div className={`volume w-30 flex items-center pl-5 lg:pl-10 ${loading ? 'disabled' : ''}`}>
                     <div className="mr-2">
                         <STKButton iconButton onClick={toggleMute}>
                             <Image src={volume ? volumeOnIcon : volumeOffIcon} alt="Volume Toggle" width={16} />
@@ -222,6 +269,13 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                         />
                     </div>
                 </div>
+                <div className="w-14 flex justify-end pl-5 lg:pl-10">
+                    <STKMenu
+                    options={speedControlOption}
+                    width="auto"
+                    onChange={changePlaybackSpeed} customTarget={`${playbackSpeed}x`} />
+                </div>
+
             </div>
         </div>
     );

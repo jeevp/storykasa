@@ -58,8 +58,6 @@ export default class SharedLibraryInvitationController {
             APIValidator.requiredParams({ req, res }, { requiredParams: ["libraryId"] })
             APIValidator.requiredPayload({ req, res }, { requiredPayload: ["listenersEmails"] })
 
-            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
-
             const { listenersEmails, profileId} = req.body
             const { libraryId } = req.query
 
