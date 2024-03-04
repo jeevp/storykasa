@@ -10,6 +10,8 @@ import Stop from "@/assets/icons/iconsJS/Stop";
 import Formatter from "@/utils/Formatter";
 import STKAudioWave from "@/components/STKAudioWave/STKAudioWave";
 import STKLoading from "@/components/STKLoading/STKLoading";
+import Countdown from "@/composedComponents/CountDown/CountDown";
+import CountDown from "@/composedComponents/CountDown/CountDown";
 
 interface STKRecordAudioProps {
     onComplete: Function,
@@ -23,6 +25,8 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
     const [duration, setDuration] = useState(0);
     const [stream, setStream] = useState(null);
     const [processing, setProcessing] = useState(false);
+    const [showCountDown, setShowCountDown] = useState(false)
+    const [countdownTrigger, setCountdownTrigger] = useState(0); // Counter to trigger countdown
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -40,6 +44,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
             intervalRef.current = setInterval(() => {
                 setDuration((prevDuration) => prevDuration + 1);
             }, 1000);
+            setCountdownTrigger(prev => prev + 1); // Increment to trigger countdown
         } catch (error) {
             console.error(error);
         }
@@ -59,6 +64,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                 setDuration((prevDuration) => prevDuration + 1);
             }, 1000);
         }
+        setCountdownTrigger(prev => prev + 1); // Increment to trigger countdown
     };
 
 
@@ -77,13 +83,24 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
         });
     };
 
+    const handleCountDownComplete = () => {
+        setShowCountDown(false)
+
+        if (!recording) {
+            startRecording()
+        } else {
+            pauseResumeRecording()
+        }
+    }
+
+    console.log({  showCountDown })
     return (
         <div className="stk-record-audio">
             <div>
                 <div className="flex items-center justify-between">
                     {recording ? (
                         paused ? (
-                            <button onClick={pauseResumeRecording} className="bg-neutral-50 theme text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center">
+                            <button onClick={() => setShowCountDown(true)} className="bg-neutral-50 theme text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center">
                                 <Record fill={neutral800} />
                                 <span className="ml-2">Resume</span>
                             </button>
@@ -94,7 +111,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                             </button>
                         )
                     ) : (
-                        <button onClick={startRecording} className="bg-red-50 text-red-800 theme rounded-3xl border border-red-300 px-4 h-10 flex items-center">
+                        <button onClick={() => setShowCountDown(true)} className="bg-red-50 text-red-800 theme rounded-3xl border border-red-300 px-4 h-10 flex items-center">
                             <Record fill={red800} />
                             <span className="ml-2">Start recording</span>
                         </button>
@@ -125,6 +142,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                     </div>
                 </div>
             </div>
+            <CountDown key={countdownTrigger} start={showCountDown} onCountdownComplete={handleCountDownComplete} />
         </div>
     );
 };

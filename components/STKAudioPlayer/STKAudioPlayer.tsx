@@ -40,10 +40,14 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     onTimeChange = () => ({})
 }) => {
     const speedControlOption = [
-        { label: "1.0x", value: 1.0 },
-        { label: "1.2x", value: 1.2 },
-        { label: "1.5x", value: 1.5 },
-        { label: "2.0x", value: 2.0 }
+        { label: "0.25", value: 0.25 },
+        { label: "0.5", value: 0.5 },
+        { label: "0.75", value: 0.75 },
+        { label: "1.0", value: 1.0 },
+        { label: "1.25", value: 1.25 },
+        { label: "1.5", value: 1.5 },
+        { label: "1.75", value: 1.75 },
+        { label: "2.0", value: 2.0 }
     ]
 
     const isAppleDevice = useAppleDevice()
@@ -58,26 +62,46 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     const [playbackSpeed, setPlaybackSpeed] = useState(1.0)
 
     useEffect(() => {
-        // @ts-ignored
-        if (!src) setLoading(false)
-        // @ts-ignore
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (!src) {
+            setLoading(false);
+            return;
+        }
+
         const sound = new Howl({
             src: [src],
             preload,
             html5: true,
             onload: () => {
-                setHowl(sound);
-                setTotalDuration(formatTime(sound.duration()));
-                setLoading(false)
+                if (isFinite(sound.duration())) {
+                    setTotalDuration(formatTime(sound.duration()));
+                } else {
+                    console.log('Duration not finite immediately after load, trying again...');
+                    // Try to set the duration again after a short delay
+                    setTimeout(() => {
+                        if (isFinite(sound.duration())) {
+                            setTotalDuration(formatTime(sound.duration()));
+                        }
+                    }, 1000);
+                }
+                setLoading(false);
+            },
+            onloaderror: (id, err) => {
+                console.error('Failed to load sound', err);
+                setLoading(false);
+            },
+            onplayerror: (id, err) => {
+                console.error('Playback failed', err);
+                sound.once('unlock', () => sound.play());
             },
             format: ["mp3"]
         });
 
+        setHowl(sound);
+
         return () => {
             sound.unload();
         };
-    }, [src, preload]);
+    }, [src, preload, html5]);
 
     useEffect(() => {
         if (howl) {
@@ -249,33 +273,34 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                         <Image src={skipIcon} alt="Skip forward" width={16} />
                     </STKButton>
                 </div>
-                <div className={`volume w-30 flex items-center pl-5 lg:pl-10 ${loading ? 'disabled' : ''}`}>
-                    <div className="mr-2">
-                        <STKButton iconButton onClick={toggleMute}>
-                            <Image src={volume ? volumeOnIcon : volumeOffIcon} alt="Volume Toggle" width={16} />
-                        </STKButton>
+                <div className="flex items-center">
+                    <div className={`volume w-30 flex items-center pl-2 lg:pl-2 ${loading ? 'disabled' : ''}`}>
+                        <div className="mr-2">
+                            <STKButton iconButton onClick={toggleMute}>
+                                <Image src={volume ? volumeOnIcon : volumeOffIcon} alt="Volume Toggle" width={16} />
+                            </STKButton>
+                        </div>
+                        <div className="volume-bar items-center flex">
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={volume}
+                                onChange={(e) => setVolume(+e.target.value)}
+                                // @ts-ignore
+                                style={{ '--volume': `${volume * 100}%` }}
+                                className="volume-bar"
+                            />
+                        </div>
                     </div>
-                    <div className="volume-bar items-center flex">
-                        <input
-                            type="range"
-                            min="0"
-                            max="1"
-                            step="0.01"
-                            value={volume}
-                            onChange={(e) => setVolume(+e.target.value)}
-                            // @ts-ignore
-                            style={{ '--volume': `${volume * 100}%` }}
-                            className="volume-bar"
-                        />
+                    <div className="w-40 flex justify-end pl-2 lg:pl-2">
+                        <STKMenu
+                            options={speedControlOption}
+                            width="auto"
+                            onChange={changePlaybackSpeed} customTarget={`Speed ${playbackSpeed}x`} />
                     </div>
                 </div>
-                <div className="w-14 flex justify-end pl-5 lg:pl-10">
-                    <STKMenu
-                    options={speedControlOption}
-                    width="auto"
-                    onChange={changePlaybackSpeed} customTarget={`${playbackSpeed}x`} />
-                </div>
-
             </div>
         </div>
     );

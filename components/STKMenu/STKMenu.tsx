@@ -49,7 +49,7 @@ export default function STKMenu({
         <ThemeProvider theme={theme}>
             <div>
                 {customTarget ? (
-                    <STKButton onClick={handleClick} iconButton>
+                    <STKButton onClick={handleClick} variant="default">
                         <label className="font-semibold text-neutral-800 text-sm">{customTarget}</label>
                     </STKButton>
                 ) : (
