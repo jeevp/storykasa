@@ -96,8 +96,6 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         };
     }, [src, preload, html5, customDuration]);
 
-    console.log({ totalDuration })
-
 
     useEffect(() => {
         if (howl) {

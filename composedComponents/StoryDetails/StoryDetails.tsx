@@ -50,7 +50,6 @@ export default function StoryDetails({
         setStoryCurrentTime(time)
     }
 
-
     return (
         <div>
             <div>
@@ -114,6 +113,7 @@ export default function StoryDetails({
                                 // @ts-ignore
                                 src={story?.recordingUrl}
                                 onEnd={handleStoryOnEnd}
+                                customDuration={story?.duration}
                                 // @ts-ignore
                                 onTimeChange={handleOnTimeChange}
                                 onPlaying={handlePlaying} />
@@ -126,6 +126,7 @@ export default function StoryDetails({
                             src={story?.recordingUrl || ""}
                             html5
                             onEnd={handleStoryOnEnd}
+                            customDuration={story?.duration}
                             // @ts-ignore
                             onPlaying={handlePlaying}
                             // @ts-ignore
