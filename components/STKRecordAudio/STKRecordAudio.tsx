@@ -78,7 +78,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 onDuration(duration);
                 const audioURL = URL.createObjectURL(blob);
-                onComplete(blob, audioURL);
+                onComplete(blob, audioURL, duration);
             }
         });
     };
@@ -93,7 +93,6 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
         }
     }
 
-    console.log({  showCountDown })
     return (
         <div className="stk-record-audio">
             <div>

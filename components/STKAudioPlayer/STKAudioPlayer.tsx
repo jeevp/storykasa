@@ -13,12 +13,14 @@ import STKButton from "@/components/STKButton/STKButton";
 import STKLoading from "@/components/STKLoading/STKLoading";
 import {neutral800} from "@/assets/colorPallet/colors";
 import STKMenu from "@/components/STKMenu/STKMenu";
+import useDevice from "@/customHooks/useDevice";
 
 interface STKAudioPlayerProps {
     src: string;
     preload?: boolean;
     outlined?: boolean;
     html5?: boolean;
+    customDuration?: number;
     onPlaying?: (playing: boolean) => void;
     onEnd?: () => void;
     onTimeChange?: () => void
@@ -35,6 +37,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     preload = true,
     outlined = false,
     html5 = false,
+    customDuration = 0,
     onPlaying = () => ({}),
     onEnd = () => ({}),
     onTimeChange = () => ({})
@@ -43,7 +46,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         { label: "0.25", value: 0.25 },
         { label: "0.5", value: 0.5 },
         { label: "0.75", value: 0.75 },
-        { label: "1.0", value: 1.0 },
+        { label: "Normal", value: 1 },
         { label: "1.25", value: 1.25 },
         { label: "1.5", value: 1.5 },
         { label: "1.75", value: 1.75 },
@@ -51,13 +54,14 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     ]
 
     const isAppleDevice = useAppleDevice()
+    const { onMobile } = useDevice()
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(1);
     const [progress, setProgress] = useState(0);
     const [howl, setHowl] = useState<Howl | null>(null);
     const [currentTime, setCurrentTime] = useState('0:00');
-    const [totalDuration, setTotalDuration] = useState('0:00');
+    const [totalDuration, setTotalDuration] = useState(0)
     const [loading, setLoading] = useState(true)
     const [playbackSpeed, setPlaybackSpeed] = useState(1.0)
 
@@ -72,26 +76,15 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             preload,
             html5: true,
             onload: () => {
-                if (isFinite(sound.duration())) {
-                    setTotalDuration(formatTime(sound.duration()));
+                setHowl(sound);
+                setLoading(false)
+
+                const loadedDuration = sound.duration()
+                if (loadedDuration === Infinity && customDuration) {
+                    setTotalDuration(customDuration)
                 } else {
-                    console.log('Duration not finite immediately after load, trying again...');
-                    // Try to set the duration again after a short delay
-                    setTimeout(() => {
-                        if (isFinite(sound.duration())) {
-                            setTotalDuration(formatTime(sound.duration()));
-                        }
-                    }, 1000);
+                    setTotalDuration(loadedDuration)
                 }
-                setLoading(false);
-            },
-            onloaderror: (id, err) => {
-                console.error('Failed to load sound', err);
-                setLoading(false);
-            },
-            onplayerror: (id, err) => {
-                console.error('Playback failed', err);
-                sound.once('unlock', () => sound.play());
             },
             format: ["mp3"]
         });
@@ -101,7 +94,10 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         return () => {
             sound.unload();
         };
-    }, [src, preload, html5]);
+    }, [src, preload, html5, customDuration]);
+
+    console.log({ totalDuration })
+
 
     useEffect(() => {
         if (howl) {
@@ -111,12 +107,12 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
     useEffect(() => {
         let frameId: number;
-
         const updateProgress = () => {
             if (howl && howl.playing()) {
                 const current = howl.seek(); // Ensure this is cast to a number if necessary
                 setCurrentTime(formatTime(current));
-                setProgress((current / howl.duration()) * 100);
+
+                setProgress((current / (totalDuration || customDuration)) * 100);
             }
         };
 
@@ -161,8 +157,13 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     const updateProgress = () => {
         if (howl && howl.playing()) {
             const current = (howl.seek() as number);
+            let _totalDuration = howl.duration()
+            if (_totalDuration === Infinity && customDuration) {
+                _totalDuration = customDuration
+            }
+
             setCurrentTime(formatTime(current));
-            setProgress((current / howl.duration()) * 100);
+            setProgress((current / _totalDuration) * 100);
             requestAnimationFrame(updateProgress);
         }
     };
@@ -171,7 +172,12 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         if (howl) {
             const newTime = Math.max((howl.seek() as number) - 10, 0);
             howl.seek(newTime);
-            setProgress((newTime / howl.duration()) * 100);
+            let _totalDuration = howl.duration()
+            if (_totalDuration === Infinity && customDuration) {
+                _totalDuration = customDuration
+            }
+            setProgress((newTime / _totalDuration) * 100);
+
             setCurrentTime(formatTime(newTime));
             // @ts-ignore
             onTimeChange(newTime);
@@ -180,9 +186,13 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
     const handleForward = () => {
         if (howl) {
-            const newTime = Math.min((howl.seek() as number) + 10, howl.duration());
+            const newTime = Math.min((howl.seek() as number) + 10, totalDuration);
             howl.seek(newTime);
-            setProgress((newTime / howl.duration()) * 100);
+            let _totalDuration = howl.duration()
+            if (_totalDuration === Infinity && customDuration) {
+                _totalDuration = customDuration
+            }
+            setProgress((newTime / _totalDuration) * 100);
             setCurrentTime(formatTime(newTime));
             // @ts-ignore
             onTimeChange(newTime);
@@ -198,10 +208,14 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
     const handleProgressBarOnChange = (e: any) => {
         if (howl) {
-            const newTime = (howl.duration() / 100) * +e.target.value;
+            const newTime = (totalDuration / 100) * +e.target.value;
             howl.seek(newTime);
             setCurrentTime(formatTime(newTime));
-            setProgress((newTime / howl.duration()) * 100);
+            let _totalDuration = howl.duration()
+            if (_totalDuration === Infinity && customDuration) {
+                _totalDuration = customDuration
+            }
+            setProgress((newTime / _totalDuration) * 100);
             requestAnimationFrame(updateProgress);
             // @ts-ignore
             if (onTimeChange) onTimeChange(newTime);
@@ -222,6 +236,13 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         }
     };
 
+
+    const totalDurationFormatted = formatTime(totalDuration)
+
+    let playbackTarget = playbackSpeed == 1 ? "Normal Speed" : `Speed ${playbackSpeed}x`
+    if (onMobile) {
+        playbackTarget = playbackSpeed == 1 ? "Normal" : `${playbackSpeed}x`
+    }
 
     return (
         <div className={`stk-audio-player ${!outlined ? '!border-0' : ''}`} style={{ background: 'white' }}>
@@ -256,7 +277,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                         </AnimatePresence>
                     )}
                 </div>
-                <span className="timestamp">{totalDuration}</span>
+                <span className="timestamp">{totalDurationFormatted}</span>
             </div>
 
             <div className="flex items-center w-full justify-between mt-4">
@@ -264,7 +285,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                     <STKButton onClick={handleBackward} iconButton>
                         <Image src={skipIcon} alt="Skip backwards" width={16} style={{ transform: "rotate(180deg)" }} />
                     </STKButton>
-                    <div className="px-2">
+                    <div>
                         <STKButton iconButton onClick={handleStartPlaying}>
                             {isPlaying ? <Image width={20} src={pauseIcon} alt="Pause" /> : <Image src={playIcon} width={20} alt="Play" />}
                         </STKButton>
@@ -274,7 +295,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                     </STKButton>
                 </div>
                 <div className="flex items-center">
-                    <div className={`volume w-30 flex items-center pl-2 lg:pl-2 ${loading ? 'disabled' : ''}`}>
+                    <div className={`volume flex w-24 items-center ml-4 lg:pl-2 ${loading ? 'disabled' : ''}`}>
                         <div className="mr-2">
                             <STKButton iconButton onClick={toggleMute}>
                                 <Image src={volume ? volumeOnIcon : volumeOffIcon} alt="Volume Toggle" width={16} />
@@ -294,11 +315,12 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                             />
                         </div>
                     </div>
-                    <div className="w-40 flex justify-end pl-2 lg:pl-2">
+                    <div className="flex justify-end ml-4 lg:pl-2">
                         <STKMenu
                             options={speedControlOption}
                             width="auto"
-                            onChange={changePlaybackSpeed} customTarget={`Speed ${playbackSpeed}x`} />
+                            onChange={changePlaybackSpeed}
+                            customTarget={playbackTarget}/>
                     </div>
                 </div>
             </div>

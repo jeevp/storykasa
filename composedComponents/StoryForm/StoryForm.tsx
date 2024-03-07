@@ -77,7 +77,12 @@ export default function StoryForm() {
         }
     }, []);
 
-    const updateAudioBlob = (blob: Blob, url: string) => {
+    useEffect(() => {
+        setAudioBlob(null)
+    }, [storyCreationMethod]);
+
+    const updateAudioBlob = (blob: Blob, url: string, duration: number) => {
+        setAudioDuration(duration)
         setAudioBlob(blob)
         setAudioURL(url)
     }
@@ -276,7 +281,7 @@ export default function StoryForm() {
                         onChange={(creationMethod: any) => setStoryCreationMethod(creationMethod)}/>
                     </div>
                     {audioBlob ? (
-                        <STKAudioPlayer src={audioURL} outlined />
+                        <STKAudioPlayer src={audioURL} outlined customDuration={audioDuration} />
                     ) : (
                         <>
                             {storyCreationMethod === RECORD_STORY_CREATION_METHOD ? (

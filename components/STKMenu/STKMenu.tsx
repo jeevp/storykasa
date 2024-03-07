@@ -6,6 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {ThemeProvider} from "@mui/material";
 import theme from "@/components/theme";
 import STKButton from "@/components/STKButton/STKButton";
+import {CaretDown} from "@phosphor-icons/react";
 
 const ITEM_HEIGHT = 48;
 
@@ -49,7 +50,7 @@ export default function STKMenu({
         <ThemeProvider theme={theme}>
             <div>
                 {customTarget ? (
-                    <STKButton onClick={handleClick} variant="default">
+                    <STKButton onClick={handleClick} variant="default" endIcon={<CaretDown size={14}/>}>
                         <label className="font-semibold text-neutral-800 text-sm">{customTarget}</label>
                     </STKButton>
                 ) : (

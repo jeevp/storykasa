@@ -70,7 +70,7 @@ const STKUploadFile: React.FC = (props: STKUploadFileProps) => {
                             // Process the file once the progress reaches 100%
                             processFile(file);
                         }
-                    }, 500);
+                    }, 1);
                 }
             };
 
