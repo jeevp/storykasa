@@ -53,11 +53,21 @@ export default class StorageHandler {
                throw new Error("File size exceeds the maximum allowed size");
            }
 
+           let fileExtension = "webm";
+           // @ts-ignore
+           if (file.type === "audio/mp3" || file.type === "audio/mpeg") {
+               fileExtension = "mp3";
+           // @ts-ignore
+           } else if (file.type.startsWith("audio/")) {
+           // @ts-ignore
+               fileExtension = file.type.split("/")[1].split(";")[0];
+           }
+
            const uuid = v4();
            const { bucketName, extension } = JSON.parse(formData.get("uploadDetails") as string);
 
            // The URL to which you will send the file upload request
-           const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${bucketName}/${uuid}.${extension}`;
+           const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${bucketName}/${uuid}.${fileExtension}`;
 
            // Sending the upload request using axios
            const response = await axios.post(url, formData, {
@@ -73,7 +83,7 @@ export default class StorageHandler {
                throw new Error("File upload failed");
            }
 
-           return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucketName}/${uuid}.${extension}`;
+           return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucketName}/${uuid}.${fileExtension}`;
        } catch (error) {
            console.error(error)
            throw new Error("Something went wrong")

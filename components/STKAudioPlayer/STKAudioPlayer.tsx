@@ -86,7 +86,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                     setTotalDuration(loadedDuration)
                 }
             },
-            format: ["mp3"]
+            format: ["mp3", "webm"]
         });
 
         setHowl(sound);
@@ -94,7 +94,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         return () => {
             sound.unload();
         };
-    }, [src, preload, html5, customDuration]);
+    }, [src, preload, customDuration]);
 
 
     useEffect(() => {
