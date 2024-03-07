@@ -64,6 +64,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     const [totalDuration, setTotalDuration] = useState(0)
     const [loading, setLoading] = useState(true)
     const [playbackSpeed, setPlaybackSpeed] = useState(1.0)
+    const [userIsDragging, setUserIsDragging] = useState(false); // New state to track user interaction
 
     useEffect(() => {
         if (!src) {
@@ -106,7 +107,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     useEffect(() => {
         let frameId: number;
         const updateProgress = () => {
-            if (howl && howl.playing()) {
+            if (howl && howl.playing() && !userIsDragging) {
                 const current = howl.seek(); // Ensure this is cast to a number if necessary
                 setCurrentTime(formatTime(current));
 
@@ -128,7 +129,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         return () => {
             cancelAnimationFrame(frameId);
         };
-    }, [howl, isPlaying]);
+    }, [howl, isPlaying, userIsDragging]);
 
     useEffect(() => {
         if (howl) {
@@ -206,6 +207,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
     const handleProgressBarOnChange = (e: any) => {
         if (howl) {
+            setUserIsDragging(false);
             const newTime = (totalDuration / 100) * +e.target.value;
             howl.seek(newTime);
             setCurrentTime(formatTime(newTime));
@@ -234,8 +236,17 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         }
     };
 
+    const handleProgressBarInteractionStart = () => {
+        setUserIsDragging(true); // User starts dragging
+    };
+
+    const handleProgressBarInteractionEnd = () => {
+        setUserIsDragging(false); // User ends dragging
+        updateProgress(); // Manually update progress once dragging ends
+    };
 
     const totalDurationFormatted = formatTime(totalDuration)
+    console.log({ totalDurationFormatted })
 
     let playbackTarget = playbackSpeed == 1 ? "Normal Speed" : `Speed ${playbackSpeed}x`
     if (onMobile) {
@@ -268,6 +279,11 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                                 max="100"
                                 value={progress}
                                 onChange={(e) => handleProgressBarOnChange(e)}
+                                onMouseDown={handleProgressBarInteractionStart}
+                                onTouchStart={handleProgressBarInteractionStart}
+                                onMouseUp={handleProgressBarInteractionEnd}
+                                onTouchEnd={handleProgressBarInteractionEnd}
+                                onMouseLeave={handleProgressBarInteractionEnd}
                                 // @ts-ignore
                                 style={{ '--progress': `${progress}%` }}
                             />
