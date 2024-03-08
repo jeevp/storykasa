@@ -1,5 +1,10 @@
 import DecodeJWT from "../../utils/decodeJWT";
 const ffmpeg = require('fluent-ffmpeg');
+const ffmpegStatic = require('ffmpeg-static');
+
+// Set the path to the FFmpeg binary
+ffmpeg.setFfmpegPath(ffmpegStatic);
+
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
