@@ -43,7 +43,6 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     onTimeChange = () => ({})
 }) => {
     const speedControlOption = [
-        { label: "0.25", value: 0.25 },
         { label: "0.5", value: 0.5 },
         { label: "0.75", value: 0.75 },
         { label: "Normal", value: 1 },
@@ -241,17 +240,13 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     };
 
     const handleProgressBarInteractionEnd = () => {
-        setUserIsDragging(false); // User ends dragging
-        updateProgress(); // Manually update progress once dragging ends
+        setUserIsDragging(false);
+        updateProgress();
     };
 
     const totalDurationFormatted = formatTime(totalDuration)
-    console.log({ totalDurationFormatted })
 
-    let playbackTarget = playbackSpeed == 1 ? "Normal Speed" : `Speed ${playbackSpeed}x`
-    if (onMobile) {
-        playbackTarget = playbackSpeed == 1 ? "Normal" : `${playbackSpeed}x`
-    }
+    const playbackTarget = `${playbackSpeed}x`
 
     return (
         <div className={`stk-audio-player ${!outlined ? '!border-0' : ''}`} style={{ background: 'white' }}>

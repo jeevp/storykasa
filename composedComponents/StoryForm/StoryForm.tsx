@@ -107,7 +107,7 @@ export default function StoryForm() {
             }));
 
             // get the public URL of the recording after uploading to bucket
-            const recordingURL = await StorageHandler.uploadFile(audioFormData)
+            // const recordingURL = await StorageHandler.uploadFile(audioFormData)
 
             // @ts-ignore
             const illustrationsURL = []
@@ -125,7 +125,7 @@ export default function StoryForm() {
 
             // add public URL and recording duration to story form data
             const storyFormData = new FormData()
-            storyFormData.set('recording_url', recordingURL)
+            // storyFormData.set('recording_url', recordingURL)
             storyFormData.set('duration', String(audioDuration))
             storyFormData.set('recorded_by', currentProfileId)
             storyFormData.set('title', title)
@@ -134,7 +134,7 @@ export default function StoryForm() {
             storyFormData.set('age_groups', ageGroups)
 
             await StoryHandler.createStory({
-                recordingURL,
+                audioBlob,
                 duration: String(audioDuration),
                 title,
                 description,
