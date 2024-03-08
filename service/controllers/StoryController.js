@@ -2,8 +2,8 @@ import DecodeJWT from "../../utils/decodeJWT";
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const path = require('path');
-
-const tmpDir = path.join(__dirname, 'tmp');
+const os = require('os');
+const tmpDir = os.tmpdir();
 
 if (!fs.existsSync(tmpDir)){
     fs.mkdirSync(tmpDir, { recursive: true });
