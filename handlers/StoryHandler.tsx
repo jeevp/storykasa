@@ -3,10 +3,9 @@ import generateHeaders from "@/handlers/generateHeaders";
 import Story from "@/models/Story";
 import PublicStoryRequest from "@/models/PublicStoryRequest"
 import Profile from "@/models/Profile";
-import {v4} from "uuid";
 
 interface createStoryProps {
-    audioBlob: any
+    recordingURL: string
     duration: string
     title: string,
     description: string
@@ -32,7 +31,7 @@ interface CreateStoryParameters {
 
 export default class StoryHandler {
     static async createStory({
-        audioBlob,
+        recordingURL,
         duration,
         title,
         description,
@@ -43,6 +42,7 @@ export default class StoryHandler {
         const payload = {
             isPublic: false,
             title: title,
+            recordingURL: recordingURL,
             description: description,
             language: language,
             ageGroups: ageGroups,
@@ -50,21 +50,8 @@ export default class StoryHandler {
             illustrationsURL
         }
 
-        const formData = new FormData();
-
-        const uuid = v4();
-        formData.append('file', audioBlob, `${uuid}.mp3`);
-        // @ts-ignore
-        formData.append('isPublic', false);
-        formData.append('title', payload.title);
-        formData.append('description', payload.description);
-        formData.append('language', payload.language);
-        formData.append('ageGroups', JSON.stringify(payload.ageGroups))
-        formData.append('duration', payload.duration);
-        formData.append('illustrationsURL', JSON.stringify(payload.illustrationsURL));
-
         const headers = generateHeaders()
-        await axios.post(`/api/profiles/${parameters.profileId}/stories`, formData, headers)
+        await axios.post(`/api/profiles/${parameters.profileId}/stories`, payload, headers)
     }
 
     static async updateStory({ storyId }: { storyId: string }, {

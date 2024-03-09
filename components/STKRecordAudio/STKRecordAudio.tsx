@@ -11,6 +11,7 @@ import Formatter from "@/utils/Formatter";
 import STKAudioWave from "@/components/STKAudioWave/STKAudioWave";
 import STKLoading from "@/components/STKLoading/STKLoading";
 import CountDown from "@/composedComponents/CountDown/CountDown";
+import convertToMP3 from "@/utils/convertToMP3";
 
 interface STKRecordAudioProps {
     onComplete: Function,
@@ -71,13 +72,15 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
         // @ts-ignore
         mediaRecorderRef.current?.stopRecording(async () => {
             // @ts-ignore
-            const blob = mediaRecorderRef.current?.getBlob();
+            const originalBlob = mediaRecorderRef.current?.getBlob();
 
-            if (blob && typeof window !== "undefined") {
+            if (originalBlob && typeof window !== "undefined") {
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 onDuration(duration);
-                const audioURL = URL.createObjectURL(blob);
-                onComplete(blob, audioURL, duration);
+
+                const mp3Blob = await convertToMP3(originalBlob);
+                const audioURL = URL.createObjectURL(mp3Blob);
+                onComplete(mp3Blob, audioURL, duration);
             }
         });
     };

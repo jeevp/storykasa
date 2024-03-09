@@ -1,18 +1,5 @@
 import DecodeJWT from "../../utils/decodeJWT";
-const ffmpeg = require('fluent-ffmpeg');
-const ffmpegStatic = require('ffmpeg-static');
-
-// Set the path to the FFmpeg binary
-ffmpeg.setFfmpegPath(ffmpegStatic);
-
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const tmpDir = os.tmpdir();
-
-if (!fs.existsSync(tmpDir)){
-    fs.mkdirSync(tmpDir, { recursive: true });
-}
+const fs = require("fs")
 const supabase = require('../../service/supabase');
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
@@ -229,52 +216,18 @@ class StoryController {
                 return res.status(400).send({ message: "This account has reached the max stories duration allowed" })
             }
 
-            const audioFile = req.file
-
-            if (!audioFile) {
-                return res.status(400).send({ message: "Audio file is required" });
-            }
-
-            const outputFilePath = path.join(tmpDir, `${audioFile.originalname.split('.')[0]}.mp3`);
-
-            await new Promise((resolve, reject) => {
-                ffmpeg(audioFile.path)
-                    .toFormat('mp3')
-                    .on('error', (err) => reject(err))
-                    .on('end', () => resolve())
-                    .save(outputFilePath);
-            });
-
-            const fileContents = fs.readFileSync(outputFilePath);
-            const uuid = v4();
-
-            // The URL to which you will send the file upload request
-            const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${RECORD_BUCKET_NAME}/${uuid}.mp3`;
-
-            // Sending the upload request using axios
-            await axios.post(url, fileContents, {
-                headers: generateSupabaseHeaders({
-                    contentType: "audio/mpeg"
-                }, {
-                    // @ts-ignore
-                    accessToken: process.env.SUPABASE_SERVICE_ROLE_KEY
-                })
-            });
-
-            const recordingURL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${RECORD_BUCKET_NAME}/${uuid}.mp3`
-
             const {
                 title,
                 description,
                 isPublic,
                 language,
-                duration
+                ageGroups,
+                recordingURL,
+                duration,
+                illustrationsURL
             } = req.body
 
             const { profileId } = req.query
-
-            const illustrationsURL = JSON.parse(req.body.illustrationsURL)
-            const ageGroups = JSON.parse(req.body.ageGroups)
 
             const newStory = {
                 is_public: isPublic,
@@ -340,12 +293,6 @@ class StoryController {
                     )
                 })
 
-            }
-
-            fs.unlink(outputFilePath, (err) => {});
-
-            if (audioFile && audioFile.path) {
-                fs.unlink(audioFile.path, (err) => {})
             }
 
             return res.status(201).send({ message: "Story created with success" })
