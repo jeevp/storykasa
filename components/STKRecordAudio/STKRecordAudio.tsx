@@ -26,7 +26,8 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
     const [stream, setStream] = useState(null);
     const [processing, setProcessing] = useState(false);
     const [showCountDown, setShowCountDown] = useState(false)
-    const [countdownTrigger, setCountdownTrigger] = useState(0); // Counter to trigger countdown
+    const [countdownTrigger, setCountdownTrigger] = useState(0);
+    const [convertingAudio, setConvertingAudio] = useState(false)
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -77,7 +78,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
             if (originalBlob && typeof window !== "undefined") {
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 onDuration(duration);
-
+                setProcessing(true)
                 const mp3Blob = await convertToMP3(originalBlob);
                 const audioURL = URL.createObjectURL(mp3Blob);
                 onComplete(mp3Blob, audioURL, duration);
@@ -125,7 +126,9 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                     )}
                     {processing && (
                         <button className="bg-red-50 text-red-800 rounded-3xl border border-red-300 px-4 h-10 flex items-center">
-                            <STKLoading />
+                            <STKLoading
+                            // @ts-ignore
+                            color="rgb(153 27 27)"/>
                         </button>
                     )}
                 </div>
