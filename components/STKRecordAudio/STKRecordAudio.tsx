@@ -102,12 +102,14 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                 <div className="flex items-center justify-between">
                     {recording ? (
                         paused ? (
-                            <button onClick={() => setShowCountDown(true)} className="bg-neutral-50 theme text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center">
+                            <button
+                            onClick={() => setShowCountDown(true)}
+                            className={`bg-neutral-50 theme text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center ${processing ? 'opacity-0' : ''}`}>
                                 <Record fill={neutral800} />
                                 <span className="ml-2">Resume</span>
                             </button>
                         ) : (
-                            <button onClick={pauseResumeRecording} className="bg-neutral-50 theme text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center">
+                            <button onClick={pauseResumeRecording} className={`bg-neutral-50 theme text-neutral-800 rounded-3xl border border-neutral-300 px-4 h-10 flex items-center ${processing ? 'opacity-0' : ''}`}>
                                 <PauseSolid fill={neutral800} />
                                 <span className="ml-2">Pause</span>
                             </button>
@@ -132,10 +134,10 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                         </button>
                     )}
                 </div>
-                <div className="flex justify-center w-full py-4">
+                <div className={`flex justify-center w-full py-4 ${processing ? 'opacity-0' : ''}`}>
                     {stream && <STKAudioWave stream={stream} active={recording && !paused} />}
                 </div>
-                <div className="mt-8 flex items-center justify-between">
+                <div className={`${processing ? 'opacity-0' : ''} mt-8 flex items-center justify-between`}>
                     <div className={`flex items-center ${recording ? '' : 'disabled'}`}>
                         <span>REC</span>
                         <div className={`circle ml-2 ${recording && !paused ? 'bg-red-800' : recording && paused ? 'bg-neutral-300 stop-animation' : 'hidden'}`} />
