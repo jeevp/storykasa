@@ -15,15 +15,15 @@ interface createStoryProps {
 }
 
 interface updateStoryProps {
-    title: string
-    description: string
-    narratorName: string
-    recordingURL: string
-    duration: string
-    language: string
-    ageGroups: string
-    illustrationsURL: Array<string>
-    finished: boolean
+    title?: string
+    description?: string
+    narratorName?: string
+    recordingURL?: string
+    duration?: string
+    language?: string
+    ageGroups?: string
+    illustrationsURL?: Array<string>
+    finished?: boolean
 }
 
 interface StoryFilterOptions {
