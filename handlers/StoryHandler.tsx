@@ -14,6 +14,18 @@ interface createStoryProps {
     illustrationsURL: Array<string>
 }
 
+interface updateStoryProps {
+    title: string
+    description: string
+    narratorName: string
+    recordingURL: string
+    duration: string
+    language: string
+    ageGroups: string
+    illustrationsURL: Array<string>
+    finished: boolean
+}
+
 interface StoryFilterOptions {
     narrator?: string
     language?: string
@@ -51,14 +63,24 @@ export default class StoryHandler {
         }
 
         const headers = generateHeaders()
-        await axios.post(`/api/profiles/${parameters.profileId}/stories`, payload, headers)
+        const response = await axios.post(`/api/profiles/${parameters.profileId}/stories`, payload, headers)
+
+        return new Story({
+            ...response.data
+        })
     }
 
     static async updateStory({ storyId }: { storyId: string }, {
         title,
         description,
-        narratorName
-    }: { title: string, description: string, narratorName: string }) {
+        narratorName,
+        recordingURL,
+        duration,
+        language,
+        ageGroups,
+        illustrationsURL,
+        finished
+    }: updateStoryProps) {
         const headers = generateHeaders()
         const payload = {}
         // @ts-ignore
@@ -67,6 +89,18 @@ export default class StoryHandler {
         if (description) payload.description = description
         // @ts-ignore
         if (narratorName) payload.narratorName = narratorName
+        // @ts-ignore
+        if (recordingURL) payload.recordingURL = recordingURL
+        // @ts-ignore
+        if (duration) payload.duration = duration
+        // @ts-ignore
+        if (language) payload.language = language
+        // @ts-ignore
+        if (ageGroups) payload.ageGroups = ageGroups
+        // @ts-ignore
+        if (illustrationsURL) payload.illustrationsURL = illustrationsURL
+        // @ts-ignore
+        if (finished === true || finished === false) payload.finished = finished
 
         await axios.put(`/api/stories/${storyId}`, payload, headers)
     }
@@ -85,25 +119,28 @@ export default class StoryHandler {
         })
 
 
-        return response.data.map((story: any) => new Story({
-            storyId: story.story_id,
-            isPublic: story.is_public,
-            duration: story.duration,
-            recordingUrl: story.recording_url,
-            recordedBy: story.recorded_by,
-            title: story.title,
-            ageGroups: story.age_groups || [],
-            description: story.description,
-            language: story.language,
-            profileId: story?.profiles?.profile_id,
-            profileName: story?.profiles?.profile_name,
-            profileAvatar: story?.profiles?.avatar_url,
-            lastUpdated: story?.last_updated,
-            illustrationsURL: story?.illustrationsURL,
-            publicStoryRequest: story?.publicStoryRequest || {},
-            narratorName: story?.narrator_name,
-            playCount: story?.play_count
-        }))
+        return response.data.map((story: any) => {
+            // @ts-ignore
+            return new Story({
+                storyId: story.story_id,
+                isPublic: story.is_public,
+                duration: story.duration,
+                recordingUrl: story.recording_url,
+                recordedBy: story.recorded_by,
+                title: story.title,
+                ageGroups: story.age_groups || [],
+                description: story.description,
+                language: story.language,
+                profileId: story?.profiles?.profile_id,
+                profileName: story?.profiles?.profile_name,
+                profileAvatar: story?.profiles?.avatar_url,
+                lastUpdated: story?.last_updated,
+                illustrationsURL: story?.illustrationsURL,
+                publicStoryRequest: story?.publicStoryRequest || {},
+                narratorName: story?.narrator_name,
+                playCount: story?.play_count
+            })
+        })
     }
 
     static async fetchPublicStories(filterOptions: StoryFilterOptions) {
@@ -210,5 +247,22 @@ export default class StoryHandler {
         const response = await axios.put(`/api/stories/${storyId}/playCount`, {}, headers)
 
         return response.data
+    }
+
+    static async fetchUnfinishedStories({ profileId }: { profileId: string }) {
+        const headers = generateHeaders()
+
+        const response = await axios.get(
+            `/api/profiles/${profileId}/stories/unfinished`,
+            headers
+        )
+
+        return response.data.map((story: any) => new Story({
+            ...story,
+            recordingUrl: story.recording_url,
+            storyId: story.story_id,
+            ageGroups: story.age_groups,
+            language: story.language
+        }))
     }
 }

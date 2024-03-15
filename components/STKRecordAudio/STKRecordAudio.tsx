@@ -1,5 +1,5 @@
 // STKRecordAudio.tsx
-import React, { useState, useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import RecordRTC from 'recordrtc';
 
 import './style.scss';
@@ -14,11 +14,18 @@ import CountDown from "@/composedComponents/CountDown/CountDown";
 import convertToMP3 from "@/utils/convertToMP3";
 
 interface STKRecordAudioProps {
-    onComplete: Function,
+    onComplete: Function
     onDuration: Function
+    audioURL?: string
+    startButtonText?: string
 }
 
-const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: STKRecordAudioProps) => {
+const STKRecordAudio = ({
+    audioURL = "",
+    startButtonText = "Start recording",
+    onComplete = () => ({}),
+    onDuration = () => ({})
+}: STKRecordAudioProps) => {
     const [loaded, setLoaded] = useState(false);
     const [recording, setRecording] = useState(false);
     const [paused, setPaused] = useState(false);
@@ -27,10 +34,29 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
     const [processing, setProcessing] = useState(false);
     const [showCountDown, setShowCountDown] = useState(false)
     const [countdownTrigger, setCountdownTrigger] = useState(0);
-    const [convertingAudio, setConvertingAudio] = useState(false)
+    const [existingAudioBlob, setExistingAudioBlob] = useState<Blob | null>(null);
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Watchers
+    useEffect(() => {
+        // Effect to fetch the existing audio blob if audioURL is provided
+        const fetchExistingAudio = async () => {
+            if (audioURL) {
+                try {
+                    const response = await fetch(audioURL);
+
+                    const blob = await response.blob();
+                    setExistingAudioBlob(blob);
+                } catch (error) {
+                    console.error("Failed to fetch existing audio:", error);
+                }
+            }
+        };
+
+        fetchExistingAudio();
+    }, [audioURL]);
 
     const startRecording = async () => {
         try {
@@ -68,23 +94,45 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
         setCountdownTrigger(prev => prev + 1); // Increment to trigger countdown
     };
 
-
     const stopRecording = () => {
         // @ts-ignore
         mediaRecorderRef.current?.stopRecording(async () => {
             // @ts-ignore
-            const originalBlob = mediaRecorderRef.current?.getBlob();
+            let newBlob = mediaRecorderRef.current?.getBlob();
 
-            if (originalBlob && typeof window !== "undefined") {
+            if (newBlob && typeof window !== "undefined") {
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 onDuration(duration);
-                setProcessing(true)
-                const mp3Blob = await convertToMP3(originalBlob);
-                const audioURL = URL.createObjectURL(mp3Blob);
-                onComplete(mp3Blob, audioURL, duration);
+                setProcessing(true);
+
+                newBlob = await convertToMP3(newBlob)
+
+                // Check if there's existing audio to combine with
+                if (existingAudioBlob) {
+                    newBlob = await combineAudioBlobs(existingAudioBlob, newBlob);
+                }
+
+                const audioURL = URL.createObjectURL(newBlob);
+
+                onComplete(newBlob, audioURL, duration);
             }
         });
     };
+
+    const combineAudioBlobs = async (blob1: any, blob2: any) => {
+        // Convert blobs to array buffers
+        const buffer1 = await blob1.arrayBuffer();
+        const buffer2 = await blob2.arrayBuffer();
+
+        // Combine the array buffers
+        const combinedArrayBuffer = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+        combinedArrayBuffer.set(new Uint8Array(buffer1), 0);
+        combinedArrayBuffer.set(new Uint8Array(buffer2), buffer1.byteLength);
+
+        // Create a new blob from the combined array buffer
+        return new Blob([combinedArrayBuffer], {type: blob1.type});
+    };
+
 
     const handleCountDownComplete = () => {
         setShowCountDown(false)
@@ -117,7 +165,7 @@ const STKRecordAudio = ({ onComplete = () => ({}), onDuration = () => ({}) }: ST
                     ) : (
                         <button onClick={() => setShowCountDown(true)} className="bg-red-50 text-red-800 theme rounded-3xl border border-red-300 px-4 h-10 flex items-center">
                             <Record fill={red800} />
-                            <span className="ml-2">Start recording</span>
+                            <span className="ml-2">{startButtonText}</span>
                         </button>
                     )}
                     {recording && !processing && (

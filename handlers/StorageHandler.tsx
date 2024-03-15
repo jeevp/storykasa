@@ -54,6 +54,7 @@ export default class StorageHandler {
            }
 
            let fileExtension = "webm";
+
            // @ts-ignore
            if (file.type === "audio/mp3" || file.type === "audio/mpeg") {
                fileExtension = "mp3";

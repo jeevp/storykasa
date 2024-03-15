@@ -41,7 +41,7 @@ const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKReco
 const RECORD_STORY_CREATION_METHOD = "RECORD_STORY_CREATION_METHOD"
 const UPLOAD_STORY_CREATION_METHOD = "UPLOAD_STORY_CREATION_METHOD"
 
-export default function StoryForm() {
+export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory: any, onSave: () => void }) {
     const {currentProfileId} = useProfile()
     const {onMobile} = useDevice()
     const { currentUser, setCurrentUser } = useAuth()
@@ -54,14 +54,16 @@ export default function StoryForm() {
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
     const [audioDuration, setAudioDuration] = useState(0)
     const [audioURL, setAudioURL] = useState('')
-    const [language, setLanguage] = useState('')
-    const [ageGroups, setAgeGroups] = useState('')
+    const [language, setLanguage] = useState("")
+    const [ageGroups, setAgeGroups] = useState([])
     const [showUploadStoryDialog, setShowUploadStoryDialog] = useState(false)
     const [loading, setLoading] = useState(false)
     const [showCancelRecordingDialog, setShowCancelRecordingDialog] = useState(false)
     const [storyCreationMethod, setStoryCreationMethod] = useState(RECORD_STORY_CREATION_METHOD)
     const [storyIllustrations, setStoryIllustrations] = useState<Array<Blob>>([])
     const [showMustSignUpDialog, setShowMustSignUpDialog] = useState(false)
+    const [draftStory, setDraftStory] = useState(null)
+    const [showLoadingAutoSave, setShowLoadingAutoSave] = useState(false)
 
     useEffect(() => {
         if (currentGuestDemoStory) {
@@ -77,17 +79,93 @@ export default function StoryForm() {
         }
     }, []);
 
+    // Watchers
+
+    useEffect(() => {
+        if (unfinishedStory) {
+            setTitle(unfinishedStory?.title)
+            setDescription(unfinishedStory?.description)
+            setLanguage(unfinishedStory?.language)
+            setAgeGroups(unfinishedStory?.ageGroups)
+        }
+    }, [unfinishedStory]);
+
     useEffect(() => {
         setAudioBlob(null)
     }, [storyCreationMethod]);
 
-    const updateAudioBlob = (blob: Blob, url: string, duration: number) => {
+    useEffect(() => {
+        if (audioBlob) {
+            autoSaveStory()
+        }
+    }, [audioBlob])
+
+    const updateAudioBlob = async (blob: Blob, url: string, duration: number) => {
         setAudioDuration(duration)
         setAudioBlob(blob)
         setAudioURL(url)
     }
 
-    const uploadAndAddStory = async () => {
+
+    const autoSaveStory = async () => {
+        if (currentUser?.isGuest) {
+            setShowMustSignUpDialog(true)
+            return
+        }
+
+        setShowLoadingAutoSave(true)
+        if (!audioBlob) throw new Error('missing audio for story')
+        // create form to upload audio blob to bucket
+        const audioFormData = new FormData()
+        audioFormData.set('file', audioBlob)
+
+        // @ts-ignore
+        audioFormData.set('uploadDetails', JSON.stringify({
+            bucketName: RECORD_BUCKET_NAME,
+            extension: RECORD_FILE_EXTENSION
+        }));
+
+        // get the public URL of the recording after uploading to bucket
+        const recordingURL = await StorageHandler.uploadFile(audioFormData)
+
+        // add public URL and recording duration to story form data
+        const storyFormData = new FormData()
+        storyFormData.set('recording_url', recordingURL)
+        storyFormData.set('duration', String(audioDuration))
+        storyFormData.set('recorded_by', currentProfileId)
+        storyFormData.set('title', title)
+        storyFormData.set('description', description)
+        storyFormData.set('language', language)
+        // @ts-ignore
+        storyFormData.set('age_groups', ageGroups || [])
+
+        const storyData = {
+            recordingURL,
+            duration: String(audioDuration),
+            title,
+            description,
+            language,
+            ageGroups
+        }
+
+        if (unfinishedStory) {
+            await StoryHandler.updateStory({
+                storyId: unfinishedStory.storyId
+                // @ts-ignore
+            }, { ...storyData })
+        } else {
+            // @ts-ignore
+            const draftStory = await StoryHandler.createStory({
+                ...storyData
+            }, { profileId: currentProfileId })
+            // @ts-ignore
+            setDraftStory(draftStory)
+        }
+
+        setShowLoadingAutoSave(false)
+    }
+
+    const saveStory = async () => {
         try {
             if (currentUser?.isGuest) {
                 setShowMustSignUpDialog(true)
@@ -95,20 +173,9 @@ export default function StoryForm() {
             }
 
             setLoading(true)
-            if (!audioBlob) throw new Error('missing audio for story')
-            // create form to upload audio blob to bucket
-            const audioFormData = new FormData()
-            audioFormData.set('file', audioBlob)
 
             // @ts-ignore
-            audioFormData.set('uploadDetails', JSON.stringify({
-                bucketName: RECORD_BUCKET_NAME,
-                extension: RECORD_FILE_EXTENSION
-            }));
-
-            // get the public URL of the recording after uploading to bucket
-            const recordingURL = await StorageHandler.uploadFile(audioFormData)
-
+            const storyId = draftStory?.storyId || unfinishedStory?.storyId
             // @ts-ignore
             const illustrationsURL = []
             await Promise.all(storyIllustrations.map(async(illustrationBob) => {
@@ -123,28 +190,15 @@ export default function StoryForm() {
                 illustrationsURL.push(illustrationURL)
             }))
 
-            // add public URL and recording duration to story form data
-            const storyFormData = new FormData()
-            storyFormData.set('recording_url', recordingURL)
-            storyFormData.set('duration', String(audioDuration))
-            storyFormData.set('recorded_by', currentProfileId)
-            storyFormData.set('title', title)
-            storyFormData.set('description', description)
-            storyFormData.set('language', language)
-            storyFormData.set('age_groups', ageGroups)
-
-            await StoryHandler.createStory({
-                recordingURL,
-                duration: String(audioDuration),
-                title,
-                description,
-                language,
-                ageGroups,
+            // @ts-ignore
+            await StoryHandler.updateStory({ storyId }, {
+                finished: true,
                 // @ts-ignore
                 illustrationsURL
-            }, { profileId: currentProfileId })
+            })
 
             setShowUploadStoryDialog(true)
+            onSave()
         } finally {
             setLoading(false)
         }
@@ -190,6 +244,7 @@ export default function StoryForm() {
 
         setCurrentGuestDemoStory(_currentGuestDemoStory)
     }
+
 
     // @ts-ignore
     return (
@@ -252,6 +307,7 @@ export default function StoryForm() {
                                     enableSelectAll
                                     selectAllLabel="All ages"
                                     multiple
+                                    // @ts-ignore
                                     value={allowedAgeGroups?.every(group => ageGroups?.includes(group.value)) ? [""] : allowedAgeGroups.filter((group) => ageGroups.includes(group.value)) }
                                     fluid={onMobile}
                                     onChange={handleAgeGroupOnChange}  />
@@ -263,8 +319,8 @@ export default function StoryForm() {
 
 
 
-            <div className="lg:pr-2 mt-6">
-                <div className={`flex items-center ${title.length ? '' : 'disabled'}`}>
+            <div className={`lg:pr-2 mt-6 ${title.length ? '' : 'disabled'}`}>
+                <div className={`flex items-center`}>
                     <NumberCircleTwo size={28} />
                     <label className="font-semibold ml-1">Your story</label>
                 </div>
@@ -281,13 +337,28 @@ export default function StoryForm() {
                         onChange={(creationMethod: any) => setStoryCreationMethod(creationMethod)}/>
                     </div>
                     {audioBlob ? (
-                        <STKAudioPlayer src={audioURL} outlined customDuration={audioDuration} />
+                        <STKAudioPlayer
+                        src={audioURL}
+                        outlined
+                        customDuration={audioDuration} />
                     ) : (
                         <>
                             {storyCreationMethod === RECORD_STORY_CREATION_METHOD ? (
-                                <STKRecordAudio
-                                onComplete={updateAudioBlob}
-                                onDuration={(duration: number) => setAudioDuration(duration)} />
+                                <div>
+                                    {unfinishedStory ? (
+                                        <div className="mb-2">
+                                        <STKAudioPlayer
+                                        customDuration={unfinishedStory?.duration}
+                                        outlined
+                                        src={unfinishedStory.recordingUrl} />
+                                        </div>
+                                    ) : null}
+                                    <STKRecordAudio
+                                        onComplete={updateAudioBlob}
+                                        startButtonText={unfinishedStory ? "Continue recording" : "Start recording"}
+                                        audioURL={unfinishedStory?.recordingUrl}
+                                        onDuration={(duration: number) => setAudioDuration(duration)} />
+                                </div>
                             ) : (
                                 <div>
                                     <STKUploadFile
@@ -322,7 +393,7 @@ export default function StoryForm() {
                     </div>
                 </div>
 
-                <div className={`mt-6 ${title.length && audioBlob ? '' : 'disabled'}`}>
+                <div className={`mt-6 ${unfinishedStory || title.length && audioBlob ? '' : 'disabled'}`}>
                     <div className="flex items-center">
                         <NumberCircleFour size={28} />
                         <div>
@@ -342,7 +413,7 @@ export default function StoryForm() {
                                 loading={loading}
                                 fullWidth={onMobile}
                                 startIcon={<CheckCircle size={24} weight="duotone" />}
-                                onClick={uploadAndAddStory}>
+                                onClick={saveStory}>
                                     Save to library
                                 </STKButton>
                             </div>
@@ -374,6 +445,13 @@ export default function StoryForm() {
             confirmationButtonText="Sign up"
             onAction={handleGoToSignUp}
             onClose={() => setShowMustSignUpDialog(false)}
+            />
+            <InfoDialog
+                active={showLoadingAutoSave}
+                title="Saving draft"
+                persist
+                text="Please wait while we are saving a draft of your story."
+                loading={showLoadingAutoSave}
             />
         </div>
     )

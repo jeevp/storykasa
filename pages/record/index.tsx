@@ -10,20 +10,28 @@ import StoryHandler from "@/handlers/StoryHandler";
 import STKLinearProgress from "@/components/STKLinearProgress/STKLinearProgress";
 import STKLoading from "@/components/STKLoading/STKLoading";
 import {useAuth} from "@/contexts/auth/AuthContext";
+import STKCard from "@/components/STKCard/STKCard";
+import STKButton from "@/components/STKButton/STKButton";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 function Record() {
     const { currentSubscription } = useSubscription()
     const { currentUser } = useAuth()
+    const { currentProfileId } = useProfile()
     const { totalRecordingTime, setTotalRecordingTime } = useStory()
 
     // States
     const [loading, setLoading] = useState(true)
+    const [loadingUnfinishedStories, setLoadingUnfinishedStories] = useState(true)
     const [allowStoryCreation, setAllowStoryCreation] = useState(true)
     const [recordingTimeAvailable, setRecordingTimeAvailable] = useState("")
+    const [unfinishedStories, setUnfinishedStories] = useState([])
+    const [selectedUnfinishedStory, setSelectedUnfinishedStory] = useState(null)
 
     // Mounted
     useEffect(() => {
         handleFetchTotalRecordingTime()
+        handleFetchUnfinishedStories()
     }, []);
 
     // Watchers
@@ -45,10 +53,20 @@ function Record() {
         setLoading(false)
     }
 
-    // @ts-ignore
+    const handleFetchUnfinishedStories = async () => {
+        setLoadingUnfinishedStories(true)
+        const unfinishedStories = await StoryHandler.fetchUnfinishedStories({ profileId: currentProfileId })
+        setUnfinishedStories(unfinishedStories)
+        setLoadingUnfinishedStories(false)
+    }
 
     const recordingTimeUsagePercentage = currentSubscription?.getRecordingTimeUsagePercentage(totalRecordingTime)
     const recordingTimeLabel = `${recordingTimeAvailable} minutes available`
+
+    const handleStoryOnSave = () => {
+        // @ts-ignore
+        setUnfinishedStories([...unfinishedStories.filter((story) => story.storyId !== selectedUnfinishedStory?.storyId)])
+    }
 
     return (
         <PageWrapper path="record">
@@ -64,6 +82,47 @@ function Record() {
                         Record a story of your own. Remember, only profiles on your account can view and listen to
                         your story. Feel free to enhance it with a description and illustrations or images
                     </p>
+                    <div className="mt-10">
+                        <h3 className="font-semibold m-0">
+                            Unfinished stories
+                        </h3>
+                        <div>
+                            {loadingUnfinishedStories ? (
+                                <div className="flex mt-5"><STKLoading /></div>
+                            ) : (
+                              <>
+                                  {unfinishedStories?.length > 0 ? (
+                                      <div className="mt-5">
+                                          {unfinishedStories.map((story) => (
+                                              <div key={story} className="first:mt-0 mt-2">
+                                                  <STKCard>
+                                                      <div className="p-4 flex items-center justify-between">
+                                                          <label>
+                                                          {
+                                                            // @ts-ignore
+                                                            story?.title
+                                                          }
+                                                          </label>
+                                                          <div className="flex items-center gap-2">
+                                                              <STKButton
+                                                                  variant="outlined"
+                                                                  height="30px"
+                                                                  onClick={() => setSelectedUnfinishedStory(story)}>
+                                                                  Continue
+                                                              </STKButton>
+                                                          </div>
+                                                      </div>
+                                                  </STKCard>
+                                              </div>
+                                          ))}
+                                      </div>
+                                  ) : (
+                                      <label className="mt-4">You don&ldquo;t have any unfinished story to complete.</label>
+                                  )}
+                              </>
+                            )}
+                        </div>
+                    </div>
                     {!currentSubscription?.adminAccount && !currentUser?.isGuest ? (
                         <div className="mt-8">
                             <div className="flex mb-2">
@@ -88,7 +147,7 @@ function Record() {
                         </div>
                     ) : null}
                     <div className="mt-10">
-                        <StoryForm></StoryForm>
+                        <StoryForm unfinishedStory={selectedUnfinishedStory} onSave={handleStoryOnSave}></StoryForm>
                     </div>
                 </div>
             </div>

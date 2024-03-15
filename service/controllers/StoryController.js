@@ -9,8 +9,7 @@ const PublicStoryRequest = require("../models/PublicStoryRequest");
 const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
 import Story from "../models/Story"
-import {RECORD_BUCKET_NAME, STK_ACCESS_TOKEN} from "../../config";
-import {v4} from "uuid";
+
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 const Library = require("../models/Library")
 const SubscriptionValidator = require("../validators/SubscriptionValidator")
@@ -41,9 +40,29 @@ class StoryController {
     static async updateStory(req, res) {
         try {
             const { storyId } = req.query
-            const { title, description, narratorName } = req.body
+            const {
+                title,
+                description,
+                narratorName,
+                recordingURL,
+                duration,
+                language,
+                ageGroups,
+                illustrationsURL,
+                finished
+            } = req.body
 
-            if (!title && !description) {
+            if (
+                !title
+                && !description
+                && !narratorName
+                && !recordingURL
+                && !duration
+                && !language
+                && !ageGroups
+                && !illustrationsURL
+                && !finished
+            ) {
                 return res.status(400).send({
                     message: "Payload is missing"
                 })
@@ -58,7 +77,13 @@ class StoryController {
             const updatedStory = await story.update({
                 title,
                 description,
-                narratorName
+                narratorName,
+                recordingURL,
+                duration,
+                language,
+                ageGroups,
+                illustrationsURL,
+                finished
             })
 
             return res.status(202).send(updatedStory)
@@ -93,7 +118,8 @@ class StoryController {
                 language,
                 ageGroups,
                 storyLengths,
-                private: true
+                private: true,
+                finished: true
             }, {
                 userId: user.id,
                 profileId,
@@ -276,26 +302,27 @@ class StoryController {
 
                 const createdStory = response.data[0]
 
-                // Let's add the illustrations
-                illustrationsURL.map(async(illustrationURL) => {
-                    await axios.post(
-                        `${process.env.SUPABASE_URL}/rest/v1/stories_images`,
-                        {
-                            image_url: illustrationURL,
-                            story_id: createdStory?.story_id
-                        },
-                        {
-                            params: {
-                                select: '*'
+                if (illustrationsURL?.length > 0) {
+                    // Let's add the illustrations
+                    illustrationsURL.map(async(illustrationURL) => {
+                        await axios.post(
+                            `${process.env.SUPABASE_URL}/rest/v1/stories_images`,
+                            {
+                                image_url: illustrationURL,
+                                story_id: createdStory?.story_id
                             },
-                            headers: generateSupabaseHeaders()
-                        }
-                    )
-                })
-
+                            {
+                                params: {
+                                    select: '*'
+                                },
+                                headers: generateSupabaseHeaders()
+                            }
+                        )
+                    })
+                }
             }
 
-            return res.status(201).send({ message: "Story created with success" })
+            return res.status(201).send({ storyId: newStoryID })
         } catch (error) {
             console.log(error)
             return res.status(400).send({ message: "Something went wrong" })
@@ -470,6 +497,24 @@ class StoryController {
             await story.update({ playCount: story.playCount + 1 })
 
             return res.status(202).send({ message: "Play count updated with success" })
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async getUnfinishedStories(req, res) {
+        try {
+            const { profileId } = req.query
+
+            const { data: { user } } = await supabase.auth.getUser(req.accessToken)
+
+            const stories = await Story.getStories({ finished: false, private: true }, {
+                userId: user.id,
+                profileId,
+            })
+
+            return res.status(200).send(stories)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })

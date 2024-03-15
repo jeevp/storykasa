@@ -152,6 +152,7 @@ interface StoryProps {
     publicStoryRequest: any
     narratorName: string
     playCount: number
+    finished: boolean
 }
 
 export default class Story {
@@ -172,6 +173,7 @@ export default class Story {
     publicStoryRequest: any
     narratorName: string
     playCount: number
+    finished: boolean
 
     constructor({
         storyId,
@@ -190,7 +192,8 @@ export default class Story {
         illustrationsURL = [],
         publicStoryRequest,
         narratorName,
-        playCount
+        playCount,
+        finished
     }: StoryProps) {
         this.storyId = storyId
         this.isPublic = isPublic
@@ -209,6 +212,7 @@ export default class Story {
         this.publicStoryRequest = publicStoryRequest
         this.narratorName = narratorName
         this.playCount = playCount
+        this.finished = finished
     }
 
     get ageGroupsLabel() {

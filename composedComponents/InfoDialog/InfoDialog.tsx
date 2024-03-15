@@ -16,6 +16,7 @@ interface InfoDialogProps {
     title: string
     loading?: boolean
     enableComment?: boolean
+    persist?: boolean
     onClose?: () => void
     onAction?: (comment: string) => void
 }
@@ -26,6 +27,7 @@ export default function InfoDialog({
     title,
     text,
     loading,
+    persist,
     enableComment,
     confirmationButtonText,
     onClose = () => ({}),
@@ -50,7 +52,7 @@ export default function InfoDialog({
     }
 
     return (
-        <STKDialog title={title} maxWidth="xs" active={active} onClose={handleClose}>
+        <STKDialog persist={persist} title={title} maxWidth="xs" active={active} onClose={handleClose}>
             <div>
 
                 {loadingBeforeContent ? (
@@ -77,22 +79,29 @@ export default function InfoDialog({
                       )}
                   </div>
                 )}
-                <div className="mt-10 flex justify-end items-center">
-                    {confirmationButtonText ? (
-                        <>
+                {loading ? (
+                    <div className="flex mt-4">
+                        <STKLoading />
+                    </div>
+                ) : null}
+                {!persist && (
+                    <div className="mt-10 flex justify-end items-center">
+                        {confirmationButtonText ? (
+                            <>
+                                <div>
+                                    <STKButton variant="contained" loading={loading} onClick={handleAction}>{confirmationButtonText}</STKButton>
+                                </div>
+                                <div className="ml-2">
+                                    <STKButton variant="outlined" onClick={handleClose}>Cancel</STKButton>
+                                </div>
+                            </>
+                        ) : (
                             <div>
-                                <STKButton variant="contained" loading={loading} onClick={handleAction}>{confirmationButtonText}</STKButton>
+                                <STKButton onClick={handleClose}>Close</STKButton>
                             </div>
-                            <div className="ml-2">
-                                <STKButton variant="outlined" onClick={handleClose}>Cancel</STKButton>
-                            </div>
-                        </>
-                    ) : (
-                        <div>
-                            <STKButton onClick={handleClose}>Close</STKButton>
-                        </div>
-                    )}
-                </div>
+                        )}
+                    </div>
+                )}
             </div>
         </STKDialog>
     )

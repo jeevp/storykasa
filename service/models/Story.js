@@ -22,7 +22,8 @@ class Story {
         profileAvatar,
         narratorName,
         accountId,
-        playCount = 0
+        playCount = 0,
+        finished
     }) {
         this.storyId = storyId
         this.title = title
@@ -44,6 +45,7 @@ class Story {
         this.narratorName = narratorName
         this.accountId = accountId
         this.playCount = playCount
+        this.finished = finished
     }
 
     static async getStory(storyId) {
@@ -79,7 +81,8 @@ class Story {
             ageGroups: story.age_groups,
             narratorName: story.narrator_name,
             accountId: story.account_id,
-            playCount: story.play_count
+            playCount: story.play_count,
+            finished: story.finished
         })
     }
 
@@ -89,6 +92,7 @@ class Story {
         ageGroups: [],
         storyLengths: [],
         private: false,
+        finished: true
     }, params = { userId: "", profileId: "", libraryId: "", freeTier: false }) {
         // Prepare query parameters for filtering
         const queryParams = {
@@ -96,13 +100,17 @@ class Story {
         };
 
         let endpoint = `${process.env.SUPABASE_URL}/rest/v1/stories`
+
         if (filters?.private && params?.userId) {
             endpoint = `${process.env.SUPABASE_URL}/rest/v1/library_stories`
             queryParams.select = '*, stories (*, profiles (*))'
             queryParams.account_id = `eq.${params.userId}`
             queryParams.profile_id = `eq.${params.profileId}`
             queryParams["stories.deleted"] = `eq.false`
-            queryParams.library_id = `eq.${params.libraryId}`
+            if (params.libraryId) {
+                queryParams.library_id = `eq.${params.libraryId}`
+            }
+            queryParams["stories.finished"] = `eq.${filters.finished || false}`
         } else {
             queryParams.is_public = "eq.true"
             queryParams.order = 'last_updated.desc'
@@ -230,7 +238,8 @@ class Story {
                 recordingUrl: story?.recording_url,
                 profileName: story?.profiles?.profile_name,
                 profileAvatar: story?.profiles?.avatar_url,
-                playCount: story?.play_count
+                playCount: story?.play_count,
+                finished: story?.finished
             })
         })
     }
@@ -243,6 +252,12 @@ class Story {
      * @param {string} narratorName
      * @param {string} accountId
      * @param {number} playCount
+     * @param {string} recordingURL
+     * @param {string} duration
+     * @param {string} language
+     * @param {string[]} ageGroups
+     * @param {string[]} illustrationsURL
+     * @param {boolean} finished
      * @returns {Promise<any>}
      */
     async update({
@@ -251,7 +266,13 @@ class Story {
         description,
         narratorName,
         accountId,
-        playCount
+        playCount,
+        recordingURL,
+        duration,
+        language,
+        ageGroups,
+        finished,
+        illustrationsURL
     }) {
         require('dotenv').config({ path: '.env' });
 
@@ -262,6 +283,11 @@ class Story {
         if (narratorName) payload.narrator_name = narratorName
         if (accountId) payload.account_id = accountId
         if (playCount) payload.play_count = playCount
+        if (recordingURL) payload.recording_url = recordingURL
+        if (duration) payload.duration = duration
+        if (language) payload.language = language
+        if (ageGroups) payload.age_groups = ageGroups
+        if (finished === true || finished === false) payload.finished = finished
 
         if (Object.keys(payload).length === 0) throw new Error("Payload is missing")
 
@@ -277,6 +303,25 @@ class Story {
 
         const story = response.data[0]
 
+        if (illustrationsURL?.length > 0) {
+            illustrationsURL.map(async(illustrationURL) => {
+                await axios.post(
+                    `${process.env.SUPABASE_URL}/rest/v1/stories_images`,
+                    {
+                        image_url: illustrationURL,
+                        story_id: this.storyId
+                    },
+                    {
+                        params: {
+                            select: '*',
+                            image_url: `not.eq.${illustrationURL}`
+                        },
+                        headers: generateSupabaseHeaders()
+                    }
+                )
+            })
+        }
+
         return new Story({
             storyId: story.story_id,
             title: story.title,
@@ -290,10 +335,12 @@ class Story {
             imageUrl: story.imageUrl,
             lastUpdated: story.last_updated,
             createdAt: story.created_at,
-            ageGroups: story.ageGroups,
+            ageGroups: story.age_groups,
             narratorName: story.narrator_name,
             recordedBy: story?.recorded_by,
-            playCount: story?.play_count
+            playCount: story?.play_count,
+            finished: story?.finished,
+            recordingUrl: story?.recording_url
         })
     }
 }
