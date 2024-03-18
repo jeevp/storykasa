@@ -32,6 +32,7 @@ import {useAuth} from "@/contexts/auth/AuthContext";
 import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog"
 import {useRouter} from "next/router";
 import {useStory} from "@/contexts/story/StoryContext";
+import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 
 
 const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKRecordAudio'), {
@@ -46,6 +47,7 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
     const {onMobile} = useDevice()
     const { currentUser, setCurrentUser } = useAuth()
     const { currentGuestDemoStory, setCurrentGuestDemoStory } = useStory()
+    const { setSnackbarBus } = useSnackbar()
 
     const router = useRouter()
 
@@ -63,7 +65,9 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
     const [storyIllustrations, setStoryIllustrations] = useState<Array<Blob>>([])
     const [showMustSignUpDialog, setShowMustSignUpDialog] = useState(false)
     const [draftStory, setDraftStory] = useState(null)
-    const [showLoadingAutoSave, setShowLoadingAutoSave] = useState(false)
+    const [loadingAutoSave, setLoadingAutoSave] = useState(false)
+    const [showStoryAudioInfo, setShowStoryAudioInfo] = useState(false)
+
 
     useEffect(() => {
         if (currentGuestDemoStory) {
@@ -94,16 +98,11 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
         setAudioBlob(null)
     }, [storyCreationMethod]);
 
-    useEffect(() => {
-        if (audioBlob) {
-            autoSaveStory()
-        }
-    }, [audioBlob])
-
     const updateAudioBlob = async (blob: Blob, url: string, duration: number) => {
         setAudioDuration(duration)
         setAudioBlob(blob)
         setAudioURL(url)
+        setShowStoryAudioInfo(true)
     }
 
 
@@ -113,20 +112,23 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
             return
         }
 
-        setShowLoadingAutoSave(true)
-        if (!audioBlob) throw new Error('missing audio for story')
+        setLoadingAutoSave(true)
         // create form to upload audio blob to bucket
-        const audioFormData = new FormData()
-        audioFormData.set('file', audioBlob)
+        let recordingURL = ""
 
-        // @ts-ignore
-        audioFormData.set('uploadDetails', JSON.stringify({
-            bucketName: RECORD_BUCKET_NAME,
-            extension: RECORD_FILE_EXTENSION
-        }));
+        if (audioBlob) {
+            const audioFormData = new FormData()
+            audioFormData.set('file', audioBlob)
 
-        // get the public URL of the recording after uploading to bucket
-        const recordingURL = await StorageHandler.uploadFile(audioFormData)
+            // @ts-ignore
+            audioFormData.set('uploadDetails', JSON.stringify({
+                bucketName: RECORD_BUCKET_NAME,
+                extension: RECORD_FILE_EXTENSION
+            }));
+
+            recordingURL = await StorageHandler.uploadFile(audioFormData)
+        }
+
 
         // add public URL and recording duration to story form data
         const storyFormData = new FormData()
@@ -162,7 +164,12 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
             setDraftStory(draftStory)
         }
 
-        setShowLoadingAutoSave(false)
+        setSnackbarBus({
+            active: true,
+            message: "Story saved as draft.",
+            type: "success"
+        })
+        setLoadingAutoSave(false)
     }
 
     const saveStory = async () => {
@@ -421,8 +428,9 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
                                 <STKButton
                                     fullWidth={onMobile}
                                     variant="outlined"
-                                    onClick={() => setShowCancelRecordingDialog(true)}>
-                                    Cancel
+                                    loading={loadingAutoSave}
+                                    onClick={autoSaveStory}>
+                                    Finish later
                                 </STKButton>
                             </div>
 
@@ -446,12 +454,13 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
             onAction={handleGoToSignUp}
             onClose={() => setShowMustSignUpDialog(false)}
             />
+
             <InfoDialog
-                active={showLoadingAutoSave}
-                title="Saving draft"
-                persist
-                text="Please wait while we are saving a draft of your story."
-                loading={showLoadingAutoSave}
+                active={showStoryAudioInfo}
+                text="To review your recording, simply play it back. When you're satisfied and ready to save it, select &quot;Save to Library&quot;. If you intend to return and further edit your recording, choose &quot;Finish Later.&quot;"
+                title=""
+                onAction={handleGoToSignUp}
+                onClose={() => setShowStoryAudioInfo(false)}
             />
         </div>
     )

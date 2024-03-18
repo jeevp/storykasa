@@ -82,7 +82,11 @@ export default function STKButton({
 
     const getLoadingColor = () => {
         if (color === "primary") {
-            return "white"
+            if (variant === "outlined") {
+                return green600
+            } else {
+                return "white"
+            }
         }
 
         return green600

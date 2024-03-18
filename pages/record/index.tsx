@@ -70,7 +70,7 @@ function Record() {
 
     return (
         <PageWrapper path="record">
-            <div>
+            <div className="pb-10">
                 {!currentSubscription?.adminAccount && !allowStoryCreation && !currentUser?.isGuest && (
                     <div className="bg-orange-100 p-4 rounded-xl inline-block mb-2">
                         <p>Your account has reached the maximum recording time allowed. <Link href="/account-settings" className="no-underline text-neutral-800 font-semibold"> Upgrade</Link> your subscription plan and record more stories.</p>
