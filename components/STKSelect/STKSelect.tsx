@@ -9,6 +9,7 @@ interface STKSelectProps {
     optionLabel?: string
     placeholder?: string
     multiple?: boolean
+    color?: string
     enableSelectAll?: boolean
     selectAllLabel?: string
     value?: object
@@ -23,6 +24,7 @@ function STKSelect({
     value,
     multiple,
     enableSelectAll,
+    color,
     selectAllLabel = "All",
     placeholder,
     optionValue = "value",
@@ -106,6 +108,7 @@ function STKSelect({
                 id={id}
                 multiple={multiple}
                 displayEmpty
+                color={color}
                 renderValue={(selected) => {
                     // @ts-ignore
                     if (selected?.length === 0) {

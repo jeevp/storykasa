@@ -10,6 +10,7 @@ interface STKDialogProps {
     children: any
     title?: string
     fullScreen?: boolean
+    aiMode?: boolean
     persist?: boolean
     animationDirection?: "right" | "left" | "up" | "down"
     maxWidth?: "xs" | "sm" | "md" | "lg" | "xl"
@@ -22,6 +23,7 @@ export default function STKDialog({
     active,
     fullScreen,
     children,
+    aiMode,
     title,
     persist,
     maxWidth,
@@ -44,7 +46,7 @@ export default function STKDialog({
             fullWidth={!!maxWidth}
             onClose={handleClose}
         >
-            <div className="p-4 lg:p-6">
+            <div className="p-4 lg:p-6" style={{ border: aiMode ? `2px solid #8f65d9` : '' }}>
                 <div className="flex items=center justify-between">
                     <div className="flex items-center">
                         <div className="flex items-center">

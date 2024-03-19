@@ -73,7 +73,7 @@ export default function STKButton({
         textTransform: "none",
         height: slim ? "30px" : height || "40px",
         width: fullWidth ? "100%" : width || "auto",
-        color: neutral800
+        color: color === "aiMode" ? "white" : neutral800
     } : {
         textTransform: "none",
         height: slim ? "30px" : height || "40px",

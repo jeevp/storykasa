@@ -16,7 +16,7 @@ export default function AIStoryGenerator() {
             <STKCard>
                 <div className="p-4 flex justify-between items-center">
                     <label>Need some help getting started? Generate a story idea and then finish it yourself!</label>
-                    <STKButton onClick={() => setShowAIStoryGeneratorDialog(true)}>Try our AI idea generator</STKButton>
+                    <STKButton color="aiMode" onClick={() => setShowAIStoryGeneratorDialog(true)}>Try our AI idea generator</STKButton>
                 </div>
             </STKCard>
             <AIStoryGeneratorDialog

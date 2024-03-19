@@ -4,6 +4,7 @@ import STKAutocomplete from "@/components/STKAutocomplete/STKAutocomplete";
 import {allowedAgeGroups, languages} from "@/models/Story";
 import STKSelect from "@/components/STKSelect/STKSelect";
 import STKButton from "@/components/STKButton/STKButton";
+import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 
 
 interface AIStoryGeneratorDialogProps {
@@ -15,11 +16,18 @@ export default function AIStoryGeneratorDialog({
     active,
     onClose = () => ({})
 }: AIStoryGeneratorDialogProps) {
+    // Methods
+    const handleStoryOnChange = (key: string, value: any) => {
+        console.log({ key, value })
+    }
+
+
     return (
         <STKDialog
         active={active}
         title="Story Idea Generator"
         maxWidth="md"
+        aiMode
         onClose={() => onClose()}>
             <div className="mt-4">
                 <p>
@@ -31,13 +39,10 @@ export default function AIStoryGeneratorDialog({
                         <div>
                             <label className="font-semibold">1. Is your story fictional?</label>
                             <div className="mt-2 ml-4">
-                                <STKSelect
-                                    fluid
-                                    options={[
-                                        { label: "Yes, it's completely made up.", value: 1 },
-                                        { label: "No, it's a real-life story.", value: 2 }
-                                    ]}
-                                    onChange={(ages: any) => ({})}/>
+                                <STKButtonTabs tabs={[
+                                    { text: "Yes, it's completely made up.", value: 1 },
+                                    { text: "No, it's a real-life story.", value: 2 }
+                                ]} onChange={(value) => handleStoryOnChange("fictionalStory", value)} />
                             </div>
                         </div>
                         <div className="mt-4">
@@ -47,13 +52,15 @@ export default function AIStoryGeneratorDialog({
                                     <STKAutocomplete
                                         placeholder="Filter by language"
                                         options={languages}
-                                        optionLabel="language"
+                                        optionLabel="name"
+                                        color="aiMode"
                                         fluid
                                         onChange={(language: any) => ({})}/>
                                 </div>
                                 <div className="mt-2">
                                     <STKSelect
                                         fluid
+                                        color="aiMode"
                                         placeholder="Filter by ages"
                                         options={allowedAgeGroups}
                                         enableSelectAll
@@ -69,7 +76,7 @@ export default function AIStoryGeneratorDialog({
                     <div className="w-2/3 pl-10 flex flex-col">
                         <label className="font-semibold">3. What is your story about?</label>
                         <div className="mt-2 ml-4">
-                            <STKTextField fluid multiline />
+                            <STKTextField color="aiMode" fluid multiline />
                             <div className="mt-2">
                                 <label className="text-sm">
                                     In 20 words or less, describe the setting and
@@ -78,7 +85,7 @@ export default function AIStoryGeneratorDialog({
                             </div>
                         </div>
                         <div className="flex items-end flex-col mt-10">
-                            <STKButton>Generate story ideas</STKButton>
+                            <STKButton color="aiMode">Generate story ideas</STKButton>
                             <div className="mt-2">
                                 <label className="text-sm">2 uses remaining</label>
                             </div>
