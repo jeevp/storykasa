@@ -13,6 +13,7 @@ import {useAuth} from "@/contexts/auth/AuthContext";
 import STKCard from "@/components/STKCard/STKCard";
 import STKButton from "@/components/STKButton/STKButton";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import AIStoryGenerator from "@/composedComponents/AIStoryGenerator/AIStoryGenerator";
 
 function Record() {
     const { currentSubscription } = useSubscription()
@@ -146,6 +147,9 @@ function Record() {
                             </div>
                         </div>
                     ) : null}
+                    <div className="mt-10">
+                        <AIStoryGenerator />
+                    </div>
                     <div className="mt-10">
                         <StoryForm unfinishedStory={selectedUnfinishedStory} onSave={handleStoryOnSave}></StoryForm>
                     </div>

@@ -19,7 +19,7 @@ const theme = createTheme({
             main: neutral800,
             light: neutral300,
             dark: neutral400
-        }
+        },
     },
     typography: {
         // @ts-ignore
