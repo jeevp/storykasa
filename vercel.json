@@ -1,7 +1,6 @@
 {
   "functions": {
-    "api/*/*.js": {
-      "memory": 3009,
+    "api/stories/generateideas.js": {
       "maxDuration": 80
     }
   }
