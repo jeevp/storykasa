@@ -534,8 +534,6 @@ class StoryController {
             the list of characters formatted with bullet points bellow the description . The stories should be for ${ageGroups}`
 
 
-            console.log({ prompt })
-
             const response = await OpenAIService.createCompletion({ prompt })
             let data = response.message.content
 
