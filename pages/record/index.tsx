@@ -28,6 +28,7 @@ function Record() {
     const [recordingTimeAvailable, setRecordingTimeAvailable] = useState("")
     const [unfinishedStories, setUnfinishedStories] = useState([])
     const [selectedUnfinishedStory, setSelectedUnfinishedStory] = useState(null)
+    const [selectedStoryIdea, setSelectedStoryIdea] = useState(null)
 
     // Mounted
     useEffect(() => {
@@ -67,6 +68,10 @@ function Record() {
     const handleStoryOnSave = () => {
         // @ts-ignore
         setUnfinishedStories([...unfinishedStories.filter((story) => story.storyId !== selectedUnfinishedStory?.storyId)])
+    }
+
+    const handleStoryOnSelect = (storyIdea: any) => {
+        setSelectedStoryIdea(storyIdea)
     }
 
     return (
@@ -148,10 +153,14 @@ function Record() {
                         </div>
                     ) : null}
                     <div className="mt-10">
-                        <AIStoryGenerator />
+                        <AIStoryGenerator onSelect={handleStoryOnSelect} />
                     </div>
                     <div className="mt-10">
-                        <StoryForm unfinishedStory={selectedUnfinishedStory} onSave={handleStoryOnSave}></StoryForm>
+                        <StoryForm
+                        unfinishedStory={selectedUnfinishedStory}
+                        // @ts-ignore
+                        storyIdea={selectedStoryIdea}
+                        onSave={handleStoryOnSave}></StoryForm>
                     </div>
                 </div>
             </div>

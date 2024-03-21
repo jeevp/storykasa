@@ -237,6 +237,28 @@ export default class Story {
         return `${ageGroups[0]?.name} - ${ageGroups[ageGroups.length - 1]?.name}`
     }
 
+    static generateAgeGroupsLabel(ageGroups: any[]) {
+        if (ageGroups.length === 0) return ""
+        const _ageGroups = allowedAgeGroups.filter((ageGroup) => {
+            // @ts-ignore
+            return ageGroups.includes(ageGroup.value)
+            // @ts-ignore
+        }).sort((a: any, b: any) => {
+            if (a.value > b.value) return 1
+            if (a.value < b.value) return -1
+        })
+
+        if (_ageGroups.length === 1) {
+            return ageGroups[0].name
+        }
+
+        if (_ageGroups.length === allowedAgeGroups.length) {
+            return "All ages"
+        }
+
+        return `${_ageGroups[0]?.name} - ${_ageGroups[_ageGroups.length - 1]?.name}`
+    }
+
     get ageGroupsShortLabel() {
         if (this.ageGroups.length === 0 || !this.ageGroups) return "All ages"
         const ageGroups = allowedAgeGroups.filter((ageGroup) => {

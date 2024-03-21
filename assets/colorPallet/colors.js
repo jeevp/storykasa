@@ -22,3 +22,6 @@ export const red600 = "#e54d2e"
 
 export const yellow600 = "#f4dc82"
 
+export const purple500 = "#8f66d9"
+export const purple600 = "#714ab8"
+

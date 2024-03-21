@@ -1,5 +1,14 @@
 import {createTheme, PaletteColor, PaletteColorOptions} from "@mui/material";
-import {green300, green600, neutral300, neutral400, neutral800, red600, yellow600} from "@/assets/colorPallet/colors";
+import {
+    green300,
+    green600,
+    neutral300,
+    neutral400,
+    neutral800,
+    purple500,
+    red600,
+    yellow600
+} from "@/assets/colorPallet/colors";
 
 declare module '@mui/material/styles' {
     interface Palette {
@@ -30,7 +39,7 @@ const theme = createTheme({
             dark: neutral400
         },
         aiMode: {
-            main: "#8f65d9",
+            main: purple500,
         },
     },
     typography: {

@@ -5,6 +5,7 @@ import "./style.scss";
 
 interface STKAccordionProps {
     title: string
+    titlePrefix?: boolean
     titleSize?: string
     text?: string
     list?: Array<string>

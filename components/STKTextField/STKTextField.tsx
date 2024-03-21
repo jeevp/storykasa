@@ -100,7 +100,7 @@ interface STKTextFieldProps {
     fluid?: boolean;
     placeholder?: string;
     error?: boolean;
-    color?; string;
+    color?: string;
     type?: string;
     value?: string;
     startAdornment?: any;

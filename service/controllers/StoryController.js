@@ -524,13 +524,17 @@ class StoryController {
 
     static async generateStoryIdeas(req, res) {
         try {
-            const { fictional, language, ageGroups, description } = req.body
+            const { isFictional, language, ageGroups, description } = req.body
 
-            const prompt = `Create a summary for three ${fictional ? 'fictional' : 'real-life'} stories 
+            const prompt = `Create a summary for three ${isFictional ? 'fictional' : 'real-life'} stories 
             in ${language} with title, description (must have between 250 and 300 characters) and the story's characters with a 
             resume about each character with no more then 70 characters. The stories should be about ${description}. Return 
             the stories summary in a array of objects format with title:string, description:string, characters: array of 
-            objects with the name:string and description:string`
+            objects with the name:string and description:string, fullDescription:string which should contain 
+            the list of characters formatted with bullet points bellow the description . The stories should be for ${ageGroups}`
+
+
+            console.log({ prompt })
 
             const response = await OpenAIService.createCompletion({ prompt })
             let data = response.message.content

@@ -77,7 +77,8 @@ export default function STKButton({
     } : {
         textTransform: "none",
         height: slim ? "30px" : height || "40px",
-        width: fullWidth ? "100%" : width || "auto"
+        width: fullWidth ? "100%" : width || "auto",
+        color: color === "aiMode" ? "white" : null
     };
 
     const getLoadingColor = () => {
@@ -87,6 +88,10 @@ export default function STKButton({
             } else {
                 return "white"
             }
+        }
+
+        if (color === "aiMode") {
+            return "white"
         }
 
         return green600

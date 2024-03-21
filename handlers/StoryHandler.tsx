@@ -269,7 +269,7 @@ export default class StoryHandler {
     static async generateStoryIdeas({ isFictional, language, ageGroups, description }: {
         isFictional: boolean,
         language: string,
-        ageGroups: string[],
+        ageGroups: string,
         description: string
     }) {
         const headers = generateHeaders()

@@ -42,7 +42,7 @@ const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKReco
 const RECORD_STORY_CREATION_METHOD = "RECORD_STORY_CREATION_METHOD"
 const UPLOAD_STORY_CREATION_METHOD = "UPLOAD_STORY_CREATION_METHOD"
 
-export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory: any, onSave: () => void }) {
+export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfinishedStory: any, onSave: () => void }) {
     const {currentProfileId} = useProfile()
     const {onMobile} = useDevice()
     const { currentUser, setCurrentUser } = useAuth()
@@ -93,6 +93,15 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
             setAgeGroups(unfinishedStory?.ageGroups)
         }
     }, [unfinishedStory]);
+
+    useEffect(() => {
+        if (storyIdea) {
+            setTitle(storyIdea?.title)
+            setDescription(storyIdea?.description)
+            setLanguage(storyIdea?.language)
+            setAgeGroups(storyIdea?.ageGroups)
+        }
+    }, [storyIdea]);
 
     useEffect(() => {
         setAudioBlob(null)
