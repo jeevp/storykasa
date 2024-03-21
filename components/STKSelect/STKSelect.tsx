@@ -108,6 +108,7 @@ function STKSelect({
                 id={id}
                 multiple={multiple}
                 displayEmpty
+                // @ts-ignore
                 color={color}
                 renderValue={(selected) => {
                     // @ts-ignore
