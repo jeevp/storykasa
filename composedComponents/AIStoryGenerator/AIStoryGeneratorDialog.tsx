@@ -84,13 +84,19 @@ export default function AIStoryGeneratorDialog({
         await router.push("/account-settings")
     }
 
+    const blockFeatureAccess = (
+        currentSubscription?.subscriptionPlan === FREE_SUBSCRIPTION_PLAN
+        && !currentSubscription?.adminAccount
+    )
+
+
     return (
         <STKDialog
         active={active}
         fullScreen={onMobile}
         title="Story Idea Generator"
         titleColor={purple600}
-        maxWidth={currentSubscription?.subscriptionPlan === FREE_SUBSCRIPTION_PLAN ? "sm" : "md"}
+        maxWidth={blockFeatureAccess ? "sm" : "md"}
         aiMode
         onClose={() => onClose()}>
             <div className="mt-4">
@@ -128,7 +134,7 @@ export default function AIStoryGeneratorDialog({
                     </div>
                 ) : (
                     <>
-                        {currentSubscription?.subscriptionPlan === FREE_SUBSCRIPTION_PLAN ? (
+                        {blockFeatureAccess ? (
                             <div>
                                 <p>
                                     This feature is only available for <span className="font-semibold">premium users</span>.
