@@ -1,14 +1,24 @@
+// Import your middleware and controller
 import authMiddleware from "../../../middlewares/authMiddleware";
-import StoryController from "../../../service/controllers/StoryController"
+import StoryController from "../../../service/controllers/StoryController";
 
+// Export the maxDuration at the top level
+export const config = {
+    api: {
+        maxDuration: 80
+    },
+};
+
+// Define your API route logic
 const generateStoryIdeas = async (req, res) => {
     try {
-        return StoryController.generateStoryIdeas(req, res)
+        if (req.method !== "POST") return res.status(400).send({ message: "Endpoint doesn't exist" });
+        return StoryController.generateStoryIdeas(req, res);
     } catch (error) {
-        console.error(error)
-        return res.status(400).send({ message: "Something went wrong" })
+        console.error(error);
+        return res.status(400).send({ message: "Something went wrong" });
     }
-}
+};
 
-export default authMiddleware(generateStoryIdeas)
-
+// Wrap your function with the middleware and export it
+export default authMiddleware(generateStoryIdeas);
