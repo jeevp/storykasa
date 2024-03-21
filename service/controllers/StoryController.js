@@ -9,6 +9,7 @@ const PublicStoryRequest = require("../models/PublicStoryRequest");
 const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
 import Story from "../models/Story"
+import OpenAIService from "../services/OpenAIService/OpenAIService";
 
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 const Library = require("../models/Library")
@@ -515,6 +516,29 @@ class StoryController {
             })
 
             return res.status(200).send(stories)
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async generateStoryIdeas(req, res) {
+        try {
+            const { fictional, language, ageGroups, description } = req.body
+
+            const prompt = `Create a summary for ${fictional ? 'fictional' : 'real-life'} story 
+            in ${language} with title, description (maximum of 220 characters) and the story's characters with a 
+            resume about each character with no more then 70 characters. The story should be about ${description}. Return 
+            the story summary in a JSON format with title:string, description:string, characters: array of 
+            objects with the name:string and description:string`
+
+            const response = await OpenAIService.createCompletion({ prompt })
+            let data = response.message.content
+
+            data = data.replace(/```json\n|\n```|\n/g, '');
+            const storyIdea = JSON.parse(data);
+
+            return res.status(200).send(storyIdea)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
