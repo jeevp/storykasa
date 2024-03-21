@@ -203,6 +203,7 @@ function STKTextField({
                 placeholder={placeholder}
                 inputProps={{ type }}
                 helperText={helperText}
+                // @ts-ignore
                 color={color}
                 error={error}
                 maxRows={maxRows}
