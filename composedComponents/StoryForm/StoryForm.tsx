@@ -42,7 +42,7 @@ const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKReco
 const RECORD_STORY_CREATION_METHOD = "RECORD_STORY_CREATION_METHOD"
 const UPLOAD_STORY_CREATION_METHOD = "UPLOAD_STORY_CREATION_METHOD"
 
-export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfinishedStory: any, onSave: () => void }) {
+export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfinishedStory: any, storyIdea: any, onSave: () => void }) {
     const {currentProfileId} = useProfile()
     const {onMobile} = useDevice()
     const { currentUser, setCurrentUser } = useAuth()
