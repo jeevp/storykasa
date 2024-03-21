@@ -2,14 +2,16 @@ import * as React from 'react';
 import { Dialog } from '@mui/material';
 import STKButton from "@/components/STKButton/STKButton";
 import { X } from '@phosphor-icons/react'
-import {neutral800} from "@/assets/colorPallet/colors";
+import {neutral800, purple500} from "@/assets/colorPallet/colors";
 import {ArrowBack} from "@mui/icons-material";
 
 interface STKDialogProps {
     active: boolean
     children: any
     title?: string
+    titleColor?: string
     fullScreen?: boolean
+    aiMode?: boolean
     persist?: boolean
     animationDirection?: "right" | "left" | "up" | "down"
     maxWidth?: "xs" | "sm" | "md" | "lg" | "xl"
@@ -22,7 +24,9 @@ export default function STKDialog({
     active,
     fullScreen,
     children,
+    aiMode,
     title,
+    titleColor,
     persist,
     maxWidth,
     includeBackArrow,
@@ -44,7 +48,7 @@ export default function STKDialog({
             fullWidth={!!maxWidth}
             onClose={handleClose}
         >
-            <div className="p-4 lg:p-6">
+            <div className="p-4 lg:p-6" style={{ border: aiMode ? `2px solid ${purple500}` : '' }}>
                 <div className="flex items=center justify-between">
                     <div className="flex items-center">
                         <div className="flex items-center">
@@ -54,7 +58,7 @@ export default function STKDialog({
                             )}
                             <div>
                                 {title && (
-                                    <label className="font-bold text-lg">{title}</label>
+                                    <label className="font-bold text-lg" style={{ color: titleColor || neutral800 }}>{title}</label>
                                 )}
                             </div>
                         </div>

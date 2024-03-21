@@ -9,6 +9,7 @@ const PublicStoryRequest = require("../models/PublicStoryRequest");
 const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
 import Story from "../models/Story"
+import OpenAIService from "../services/OpenAIService/OpenAIService";
 
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 const Library = require("../models/Library")
@@ -515,6 +516,31 @@ class StoryController {
             })
 
             return res.status(200).send(stories)
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async generateStoryIdeas(req, res) {
+        try {
+            const { isFictional, language, ageGroups, description } = req.body
+
+            const prompt = `Create a summary for three ${isFictional ? 'fictional' : 'real-life'} stories 
+            in ${language} with title, description (must have between 250 and 300 characters) and the story's characters with a 
+            resume about each character with no more then 70 characters. The stories should be about ${description}. Return 
+            the stories summary in a array of objects format with title:string, description:string, characters: array of 
+            objects with the name:string and description:string, fullDescription:string which should contain 
+            the list of characters formatted with bullet points bellow the description . The stories should be for ${ageGroups}`
+
+
+            const response = await OpenAIService.createCompletion({ prompt })
+            let data = response.message.content
+
+            data = data.replace(/```json\n|\n```|\n/g, '');
+            const storyIdeas = JSON.parse(data);
+
+            return res.status(200).send(storyIdeas)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })

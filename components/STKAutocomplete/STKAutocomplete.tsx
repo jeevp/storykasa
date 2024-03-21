@@ -7,6 +7,7 @@ interface STKAutocompleteProps {
     optionValue?: string
     disablePortal?: boolean
     fluid?: boolean
+    color?: string
     groupByProp?: string
     placeholder?: string
     value?: any
@@ -18,6 +19,7 @@ function STKAutocomplete({
     optionValue = "value",
     disablePortal = true,
     fluid = false,
+    color,
     groupByProp = "category",
     placeholder,
     value,
@@ -34,6 +36,7 @@ function STKAutocomplete({
                 disablePortal={disablePortal}
                 id="combo-box-demo"
                 options={options}
+                color={color}
                 value={value}
                 sx={{ width: fluid ? '100%' : '300px', backgroundColor: "white" }}
                 // @ts-ignore
