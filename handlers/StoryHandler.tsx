@@ -265,4 +265,22 @@ export default class StoryHandler {
             language: story.language
         }))
     }
+
+    static async generateStoryIdeas({ isFictional, language, ageGroups, description }: {
+        isFictional: boolean,
+        language: string,
+        ageGroups: string[],
+        description: string
+    }) {
+        const headers = generateHeaders()
+
+        const response = await axios.post(`/api/stories/generateIdeas`, {
+            isFictional,
+            language,
+            ageGroups,
+            description
+        }, headers)
+
+        return response.data
+    }
 }
