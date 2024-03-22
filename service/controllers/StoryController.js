@@ -251,7 +251,8 @@ class StoryController {
                 ageGroups,
                 recordingURL,
                 duration,
-                illustrationsURL
+                illustrationsURL,
+                finished
             } = req.body
 
             const { profileId } = req.query
@@ -265,7 +266,8 @@ class StoryController {
                 language: language,
                 age_groups: ageGroups,
                 duration: duration,
-                account_id: user?.id
+                account_id: user?.id,
+                finished: finished
             }
 
             const response = await axios.post(
