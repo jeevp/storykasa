@@ -15,6 +15,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
 import {FREE_SUBSCRIPTION_PLAN} from "@/models/Subscription";
 import {useRouter} from "next/router";
+import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 
 
 interface AIStoryGeneratorDialogProps {
@@ -38,6 +39,11 @@ export default function AIStoryGeneratorDialog({
     const [description, setDescription] = useState("")
     const [ageGroups, setAgeGroups] = useState([])
     const [storyIdeas, setStoryIdeas] = useState([])
+    const [firstStoryIdea, setFirstStoryIdea] = useState([])
+    const [secondStoryIdea, setSecondStoryIdea] = useState([])
+    const [thirdStoryIdea, setThirdStoryIdea] = useState([])
+    const [storiesLoading, setStoriesLoading] = useState<number>(3);
+
 
     // Watchers
     useEffect(() => {
@@ -53,21 +59,36 @@ export default function AIStoryGeneratorDialog({
 
     // Methods
     const handleGenerateStoryIdeas = async () => {
-        if (loading) return
-        setLoading(true)
+        if (loading) return;
+        setLoading(true);
 
-        const _ageGroups = Story.generateAgeGroupsLabel(ageGroups)
+        const _ageGroups = Story.generateAgeGroupsLabel(ageGroups);
 
-        const storyIdeasResponse = await StoryHandler.generateStoryIdeas({
-            isFictional,
-            language,
-            description,
-            ageGroups: _ageGroups
-        })
+        setStoryIdeas([]);
 
-        setStoryIdeas(storyIdeasResponse)
-        setLoading(false)
-    }
+        const generateAndSetStoryIdea = async () => {
+            try {
+                const storyIdea = await StoryHandler.generateStoryIdea({
+                    isFictional,
+                    language,
+                    description,
+                    ageGroups: _ageGroups
+                });
+                // @ts-ignore
+                setStoryIdeas(prevStoryIdeas => [...prevStoryIdeas, storyIdea]);
+            } finally {
+                setStoriesLoading(prevCount => prevCount - 1);
+            }
+        }
+
+        const storyIdeaPromises = [1, 2, 3].map(() => generateAndSetStoryIdea());
+
+        Promise.all(storyIdeaPromises).finally(() => {
+            setLoading(false)
+        });
+    };
+
+
 
 
     const handleStoryOnSelect = (storyIdea: any) => {
@@ -132,6 +153,12 @@ export default function AIStoryGeneratorDialog({
                                         </STKButton>
                                     </div>
                                 </STKAccordion>
+                            </div>
+                        ))}
+
+                        {Array.from({ length: storiesLoading }, (_, index) => (
+                            <div key={index} className="first:mt-0 mt-2">
+                                <STKSkeleton height="60px" />
                             </div>
                         ))}
                     </div>

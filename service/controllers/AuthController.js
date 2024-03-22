@@ -5,6 +5,7 @@ const TernsAndPrivacyConsent = require("../models/TermsAndPrivacyConsent")
 const StripeService = require("../services/StripeService/StripeService")
 const StripeAccount = require("../models/StripeAccount")
 const Subscription = require("../models/Subscription")
+const AccountToolsUsage = require("../models/AccountToolsUsage")
 
 class AuthController {
     static async signUp(req, res) {
@@ -79,6 +80,9 @@ class AuthController {
                 stripeAccountId: stripeAccount.id,
                 subscriptionPlan: FREE_SUBSCRIPTION_PLAN,
             })
+
+            // Let's create the account tools usage configuration
+            await AccountToolsUsage.create({ accountId: data.user.id })
 
             return res.status(200).send({
                 ...data,

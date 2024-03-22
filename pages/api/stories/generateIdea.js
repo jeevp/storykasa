@@ -10,10 +10,10 @@ export const config = {
 };
 
 // Define your API route logic
-const generateStoryIdeas = async (req, res) => {
+const generateStoryIdea = async (req, res) => {
     try {
         if (req.method !== "POST") return res.status(400).send({ message: "Endpoint doesn't exist" });
-        return StoryController.generateStoryIdeas(req, res);
+        return StoryController.generateStoryIdea(req, res);
     } catch (error) {
         console.error(error);
         return res.status(400).send({ message: "Something went wrong" });
@@ -21,4 +21,4 @@ const generateStoryIdeas = async (req, res) => {
 };
 
 // Wrap your function with the middleware and export it
-export default authMiddleware(generateStoryIdeas);
+export default authMiddleware(generateStoryIdea);

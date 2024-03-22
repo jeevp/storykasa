@@ -10,12 +10,14 @@ const convertArrayToHash = require("../../utils/convertArrayToHash");
 const {allowedAdminUsers} = require("../config");
 import Story from "../models/Story"
 import OpenAIService from "../services/OpenAIService/OpenAIService";
+import {MONTHLY_STORY_IDEAS_ALLOWED} from "../models/AccountToolsUsage";
 
 const applyAlphabeticalOrder = require("../../utils/applyAlphabeticalOrder");
 const Library = require("../models/Library")
 const SubscriptionValidator = require("../validators/SubscriptionValidator")
 const Subscription = require("../models/Subscription")
 const Account = require("../models/Account")
+const AccountToolsUsage = require("../models/AccountToolsUsage")
 
 class StoryController {
     static async deleteStory(req, res) {
@@ -524,23 +526,46 @@ class StoryController {
         }
     }
 
-    static async generateStoryIdeas(req, res) {
+    static async generateStoryIdea(req, res) {
         try {
+            APIValidator.requiredPayload({ req, res }, {
+                requiredPayload: ["isFictional", "language", "ageGroups", "description"]
+            })
+
             const { isFictional, language, ageGroups, description } = req.body
 
-            const prompt = `Create a summary for three ${isFictional ? 'fictional' : 'real-life'} stories 
-            in ${language} with title, description (must have between 250 and 300 characters) and the story's characters with a 
-            resume about each character with no more then 70 characters. The stories should be about ${description}. Return 
-            the stories summary in a array of objects format with title:string, description:string, characters: array of 
-            objects with the name:string and description:string, fullDescription:string which should contain 
-            the list of characters formatted with bullet points bellow the description . The stories should be for ${ageGroups}`
+            const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
+            if (!user) return res.status(401).send({ message: "Not allowed" })
+
+            const accountToolsUsage = await AccountToolsUsage.findOne({
+                accountId: user.id
+            })
+
+            if (!accountToolsUsage) {
+                return res.status(400).send({ message: "Missing tools usage configuration" })
+            }
+
+            if (accountToolsUsage.currentMonthTotalStoryIdeas >= MONTHLY_STORY_IDEAS_ALLOWED) {
+                return res.status(401).send({ message: "AI Story idea generator usage has reached it's limit" })
+            }
+
+            const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story summary 
+            in ${language}. Include a title, a brief description (250-300 characters), and two main characters 
+            with short descriptions (up to 70 characters each). The story should be about ${description} and 
+            suitable for ${ageGroups}. Format the response as an object with title, description, and characters.
+`
 
             const response = await OpenAIService.createCompletion({ prompt })
             let data = response.message.content
 
             data = data.replace(/```json\n|\n```|\n/g, '');
             const storyIdeas = JSON.parse(data);
+
+            await accountToolsUsage.update({
+                currentMonthTotalStoryIdeas: accountToolsUsage.currentMonthTotalStoryIdeas + 1,
+                totalStoryIdeas: accountToolsUsage.totalStoryIdeas + 1
+            })
 
             return res.status(200).send(storyIdeas)
         } catch (error) {
