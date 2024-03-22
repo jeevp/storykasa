@@ -147,6 +147,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
         // add public URL and recording duration to story form data
         const storyFormData = new FormData()
+        // @ts-ignore
         storyFormData.set('recording_url', recordingURL)
         storyFormData.set('duration', String(audioDuration))
         storyFormData.set('recorded_by', currentProfileId)
@@ -213,10 +214,8 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
             }))
 
             // @ts-ignore
-
+            const recordingURL = await generateRecordingURL()
             if (!storyId) {
-                const recordingURL = await generateRecordingURL()
-
                 const storyData = {
                     recordingURL,
                     duration: String(audioDuration),
@@ -227,12 +226,14 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                     finished: true
                 }
 
+                // @ts-ignore
                 await StoryHandler.createStory({ ...storyData }, { profileId: currentProfileId })
             } else {
                 await StoryHandler.updateStory({ storyId }, {
                     finished: true,
                     // @ts-ignore
-                    illustrationsURL
+                    illustrationsURL,
+                    recordingURL
                 })
             }
 
@@ -284,6 +285,14 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
         setCurrentGuestDemoStory(_currentGuestDemoStory)
     }
 
+
+    const storyIsIncomplete = (
+        !language
+        || !title
+        || !description
+        || (!audioURL && !unfinishedStory?.recordingUrl)
+        || ageGroups.length === 0
+    )
 
     // @ts-ignore
     return (
@@ -451,6 +460,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                                 <STKButton
                                 loading={loading}
                                 fullWidth={onMobile}
+                                disabled={storyIsIncomplete}
                                 startIcon={<CheckCircle size={24} weight="duotone" />}
                                 onClick={saveStory}>
                                     Save to library
