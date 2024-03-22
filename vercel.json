@@ -1,7 +1,8 @@
 {
-  "functions": {
-    "pages/api/**/*.js": {
-      "maxDuration": 80
+  "crons": [
+    {
+      "path": "/api/system/accountUsageToolsRecharge?secret=75ee75549aa43ca8b56ef43c7c64bc77f12feb9e1269992bcf164322bebd521b",
+      "schedule": "0 2 1 * *"
     }
-  }
+  ]
 }

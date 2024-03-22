@@ -1,6 +1,9 @@
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
 const axios = require("axios")
 const Profile = require("../models/Profile")
+const AccountToolsUsage = require("../models/AccountToolsUsage")
+const {FREE_SUBSCRIPTION_PLAN} = require("../../models/Subscription");
+const Subscription = require("../models/Subscription")
 
 class Account {
     constructor({
@@ -88,6 +91,20 @@ class Account {
             accountId: profile.account_id,
             profileName: profile.profile_name,
             avatarUrl: profile.avatar_url
+        })
+    }
+
+    static async rechargeAccountsToolsUsage() {
+        const accounts = await Account.findAll()
+
+        accounts.map(async(account) => {
+            const subscription = await Subscription.findOne({ accountId: account.accountId })
+            if (subscription.subscriptionPlan === FREE_SUBSCRIPTION_PLAN) return
+
+            const accountToolsUsage = AccountToolsUsage.findOne({ accountId: account.accountId })
+            if (!accountToolsUsage) return
+
+            await accountToolsUsage.update({ currentMonthTotalStoryIdeas: 0 })
         })
     }
 }
