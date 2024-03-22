@@ -32,7 +32,6 @@ export default function AIStoryGeneratorDialog({
     const { onMobile } = useDevice()
     const { currentSubscription } = useSubscription()
 
-
     const [loading, setLoading] = useState(false)
     const [isFictional, setIsFictional] = useState(false)
     const [language, setLanguage] = useState("")
@@ -54,6 +53,7 @@ export default function AIStoryGeneratorDialog({
 
     // Methods
     const handleGenerateStoryIdeas = async () => {
+        if (loading) return
         setLoading(true)
 
         const _ageGroups = Story.generateAgeGroupsLabel(ageGroups)
@@ -77,6 +77,7 @@ export default function AIStoryGeneratorDialog({
             language,
             ageGroups,
         })
+
         onClose()
     }
 
@@ -114,8 +115,8 @@ export default function AIStoryGeneratorDialog({
                                     <div className="mt-4">
                                         <label className="font-semibold">Characters</label>
                                         <ul>
-                                            {storyIdea?.characters.map((character: string, index: number) => (
-                                                <li key={index}>
+                                            {storyIdea?.characters.map((character: string, _index: number) => (
+                                                <li key={_index}>
                                                     <span
                                                         // @ts-ignore
                                                         className="font-semibold">{character?.name}</span>: {character?.description}
@@ -124,7 +125,9 @@ export default function AIStoryGeneratorDialog({
                                         </ul>
                                     </div>
                                     <div className="mt-8">
-                                        <STKButton startIcon={<CheckCircleOutlineIcon />} onClick={() => handleStoryOnSelect(storyIdea)}>
+                                        <STKButton
+                                        startIcon={<CheckCircleOutlineIcon />}
+                                        onClick={() => handleStoryOnSelect(storyIdea)}>
                                             Use this idea
                                         </STKButton>
                                     </div>

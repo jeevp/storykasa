@@ -1,7 +1,6 @@
-import {Button, createTheme, IconButton, styled, ThemeProvider} from "@mui/material";
+import {Button, createTheme, styled, ThemeProvider} from "@mui/material";
 import {useEffect, useState} from "react";
 import {yellow600} from "@/assets/colorPallet/colors";
-import useDevice from "@/customHooks/useDevice";
 import {useRouter} from "next/router";
 
 const StyledButton = styled(Button)(({

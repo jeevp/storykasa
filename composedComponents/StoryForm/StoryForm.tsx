@@ -87,25 +87,26 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
     useEffect(() => {
         if (unfinishedStory) {
-            setTitle(unfinishedStory?.title)
-            setDescription(unfinishedStory?.description)
-            setLanguage(unfinishedStory?.language)
-            setAgeGroups(unfinishedStory?.ageGroups)
+            preFillStoryForm(unfinishedStory)
         }
     }, [unfinishedStory]);
 
     useEffect(() => {
         if (storyIdea) {
-            setTitle(storyIdea?.title)
-            setDescription(storyIdea?.description)
-            setLanguage(storyIdea?.language)
-            setAgeGroups(storyIdea?.ageGroups)
+            preFillStoryForm(storyIdea)
         }
     }, [storyIdea]);
 
     useEffect(() => {
         setAudioBlob(null)
     }, [storyCreationMethod]);
+
+    const preFillStoryForm = (data: any) => {
+        setTitle(data?.title)
+        setDescription(data?.description)
+        setLanguage(data?.language)
+        setAgeGroups(data?.ageGroups)
+    }
 
     const updateAudioBlob = async (blob: Blob, url: string, duration: number) => {
         setAudioDuration(duration)
@@ -114,15 +115,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
         setShowStoryAudioInfo(true)
     }
 
-
-    const autoSaveStory = async () => {
-        if (currentUser?.isGuest) {
-            setShowMustSignUpDialog(true)
-            return
-        }
-
-        setLoadingAutoSave(true)
-        // create form to upload audio blob to bucket
+    const generateRecordingURL = async () => {
         let recordingURL = ""
 
         if (audioBlob) {
@@ -136,8 +129,21 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
             }));
 
             recordingURL = await StorageHandler.uploadFile(audioFormData)
+
+            return recordingURL
+        }
+    }
+
+    const autoSaveStory = async () => {
+        if (currentUser?.isGuest) {
+            setShowMustSignUpDialog(true)
+            return
         }
 
+        setLoadingAutoSave(true)
+        // create form to upload audio blob to bucket
+
+        const recordingURL = await generateRecordingURL()
 
         // add public URL and recording duration to story form data
         const storyFormData = new FormData()
@@ -207,11 +213,28 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
             }))
 
             // @ts-ignore
-            await StoryHandler.updateStory({ storyId }, {
-                finished: true,
-                // @ts-ignore
-                illustrationsURL
-            })
+
+            if (!storyId) {
+                const recordingURL = await generateRecordingURL()
+
+                const storyData = {
+                    recordingURL,
+                    duration: String(audioDuration),
+                    title,
+                    description,
+                    language,
+                    ageGroups,
+                    finished: true
+                }
+
+                await StoryHandler.createStory({ ...storyData }, { profileId: currentProfileId })
+            } else {
+                await StoryHandler.updateStory({ storyId }, {
+                    finished: true,
+                    // @ts-ignore
+                    illustrationsURL
+                })
+            }
 
             setShowUploadStoryDialog(true)
             onSave()

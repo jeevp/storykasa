@@ -5,7 +5,7 @@ import {useState} from "react";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import useDevice from "@/customHooks/useDevice";
 
-export default function AIStoryGenerator({ onSelect }: { onSelect: (storyIdea: any) => void }) {
+export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: (storyIdea: any) => void }) {
     const { onMobile } = useDevice()
 
     // States
@@ -13,6 +13,10 @@ export default function AIStoryGenerator({ onSelect }: { onSelect: (storyIdea: a
         showAIStoryGeneratorDialog,
         setShowAIStoryGeneratorDialog
     ] = useState(false)
+
+    const handleOnSelect = (storyIdea: any) => {
+        onSelect(storyIdea)
+    }
 
 
     return (
@@ -31,7 +35,7 @@ export default function AIStoryGenerator({ onSelect }: { onSelect: (storyIdea: a
             </STKCard>
             <AIStoryGeneratorDialog
             active={showAIStoryGeneratorDialog}
-            onSelect={(storyIdea) => onSelect(storyIdea)}
+            onSelect={handleOnSelect}
             onClose={() => setShowAIStoryGeneratorDialog(false)} />
         </div>
     )
