@@ -92,7 +92,14 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
     }, [unfinishedStory]);
 
     useEffect(() => {
-        if (storyIdea) {
+        if (
+            storyIdea
+            && storyIdea.title !== title
+            && storyIdea.description !== description
+            && storyIdea.language !== language
+            // @ts-ignore
+            && storyIdea.ageGroups.some((ageGroup: any) => !ageGroups.includes(ageGroup))
+        ) {
             preFillStoryForm(storyIdea)
         }
     }, [storyIdea]);
