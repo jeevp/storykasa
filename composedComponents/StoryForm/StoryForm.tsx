@@ -106,14 +106,7 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
     }
 
 
-    const autoSaveStory = async () => {
-        if (currentUser?.isGuest) {
-            setShowMustSignUpDialog(true)
-            return
-        }
-
-        setLoadingAutoSave(true)
-        // create form to upload audio blob to bucket
+    const generateRecordingURL = async () => {
         let recordingURL = ""
 
         if (audioBlob) {
@@ -127,11 +120,25 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
             }));
 
             recordingURL = await StorageHandler.uploadFile(audioFormData)
+
+            return recordingURL
+        }
+    }
+
+    const autoSaveStory = async () => {
+        if (currentUser?.isGuest) {
+            setShowMustSignUpDialog(true)
+            return
         }
 
+        setLoadingAutoSave(true)
+        // create form to upload audio blob to bucket
+
+        const recordingURL = await generateRecordingURL()
 
         // add public URL and recording duration to story form data
         const storyFormData = new FormData()
+        // @ts-ignore
         storyFormData.set('recording_url', recordingURL)
         storyFormData.set('duration', String(audioDuration))
         storyFormData.set('recorded_by', currentProfileId)
@@ -198,11 +205,28 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
             }))
 
             // @ts-ignore
-            await StoryHandler.updateStory({ storyId }, {
-                finished: true,
+            const recordingURL = await generateRecordingURL()
+            if (!storyId) {
+                const storyData = {
+                    recordingURL,
+                    duration: String(audioDuration),
+                    title,
+                    description,
+                    language,
+                    ageGroups,
+                    finished: true
+                }
+
                 // @ts-ignore
-                illustrationsURL
-            })
+                await StoryHandler.createStory({ ...storyData }, { profileId: currentProfileId })
+            } else {
+                await StoryHandler.updateStory({ storyId }, {
+                    finished: true,
+                    // @ts-ignore
+                    illustrationsURL,
+                    recordingURL
+                })
+            }
 
             setShowUploadStoryDialog(true)
             onSave()
@@ -252,6 +276,14 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
         setCurrentGuestDemoStory(_currentGuestDemoStory)
     }
 
+
+    const storyIsIncomplete = (
+        !language
+        || !title
+        || !description
+        || (!audioURL && !unfinishedStory?.recordingUrl)
+        || ageGroups.length === 0
+    )
 
     // @ts-ignore
     return (
@@ -419,6 +451,7 @@ export default function StoryForm({ unfinishedStory, onSave }: { unfinishedStory
                                 <STKButton
                                 loading={loading}
                                 fullWidth={onMobile}
+                                disabled={storyIsIncomplete}
                                 startIcon={<CheckCircle size={24} weight="duotone" />}
                                 onClick={saveStory}>
                                     Save to library
