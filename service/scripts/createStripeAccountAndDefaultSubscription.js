@@ -2,7 +2,7 @@ async function createStripeAccountAndDefaultSubscription() {
     require('dotenv').config({ path: '.env' });
     const convertArrayToHash = require("../../utils/convertArrayToHash")
 
-    console.log(">>> Start script - create stripe accounts and subscription")
+    console.log(">>> Start script - create stripe accountToolsUsage and subscription")
     const Account = require("../models/Account")
     const StripeAccount = require("../models/StripeAccount")
     const User = require("../models/User")
@@ -53,7 +53,7 @@ async function createStripeAccountAndDefaultSubscription() {
         }
     }
 
-    console.log(">>> End script - create stripe accounts and subscription")
+    console.log(">>> End script - create stripe accountToolsUsage and subscription")
 }
 
 createStripeAccountAndDefaultSubscription()

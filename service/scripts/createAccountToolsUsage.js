@@ -1,7 +1,7 @@
 async function createAccountToolsUsage() {
     require('dotenv').config({ path: '.env' });
 
-    console.log(">>> Start script - create Account tools usage for existing accounts")
+    console.log(">>> Start script - create Account tools usage for existing accountToolsUsage")
     const Account = require("../models/Account")
     const User = require("../models/User")
     const AccountToolsUsage = require("../models/AccountToolsUsage")
@@ -26,7 +26,7 @@ async function createAccountToolsUsage() {
         await AccountToolsUsage.create({ accountId: accountId })
     }
 
-    console.log(">>> End script - create Account tools usage for existing accounts")
+    console.log(">>> End script - create Account tools usage for existing accountToolsUsage")
 }
 
 createAccountToolsUsage()

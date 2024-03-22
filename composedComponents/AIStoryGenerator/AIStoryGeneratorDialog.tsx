@@ -16,6 +16,7 @@ import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
 import {FREE_SUBSCRIPTION_PLAN} from "@/models/Subscription";
 import {useRouter} from "next/router";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
+import AccountToolsUsageHandler from "@/handlers/AccountToolsUsageHandler";
 
 
 interface AIStoryGeneratorDialogProps {
@@ -43,7 +44,13 @@ export default function AIStoryGeneratorDialog({
     const [secondStoryIdea, setSecondStoryIdea] = useState([])
     const [thirdStoryIdea, setThirdStoryIdea] = useState([])
     const [storiesLoading, setStoriesLoading] = useState<number>(3);
+    const [loadingAccountToolsUsage, setLoadingAccountToolsUsage] = useState(false)
+    const [remainingStoryIdeasUsage, setRemainingStoryIdeasUsage] = useState(0)
 
+    // Mounted
+    useEffect(() => {
+        checkAccountToolsUsage()
+    }, []);
 
     // Watchers
     useEffect(() => {
@@ -58,6 +65,16 @@ export default function AIStoryGeneratorDialog({
     }, [active]);
 
     // Methods
+    const checkAccountToolsUsage = async () => {
+        setLoadingAccountToolsUsage(true)
+        const _accountToolsUsage = await AccountToolsUsageHandler.fetchAccountToolsUsage()
+
+        const _remainingStoryIdeasUsage = 30 - _accountToolsUsage?.currentMonthTotalStoryIdeas
+
+        setRemainingStoryIdeasUsage(_remainingStoryIdeasUsage)
+        setLoadingAccountToolsUsage(false)
+    }
+
     const handleGenerateStoryIdeas = async () => {
         if (loading) return;
         setLoading(true);
@@ -85,6 +102,7 @@ export default function AIStoryGeneratorDialog({
 
         Promise.all(storyIdeaPromises).finally(() => {
             setLoading(false)
+            setRemainingStoryIdeasUsage(remainingStoryIdeasUsage - 1)
         });
     };
 
@@ -92,6 +110,7 @@ export default function AIStoryGeneratorDialog({
 
 
     const handleStoryOnSelect = (storyIdea: any) => {
+        console.log({ storyIdea })
         onSelect({
             title: storyIdea.title,
             description: storyIdea?.fullDescription,
@@ -241,6 +260,7 @@ export default function AIStoryGeneratorDialog({
                                               minRows={8}
                                               maxRows={14}
                                               multiline
+                                              value={description}
                                               onChange={(value) => setDescription(value)} />
                                           <div className="mt-2">
                                               <label className="text-sm">
@@ -254,12 +274,17 @@ export default function AIStoryGeneratorDialog({
                                               color="aiMode"
                                               fullWidth={onMobile}
                                               loading={loading}
+                                              disabled={loadingAccountToolsUsage || remainingStoryIdeasUsage <= 0}
                                               startIcon={<AutoAwesomeIcon />}
                                               onClick={handleGenerateStoryIdeas}>
                                               Generate story ideas
                                           </STKButton>
                                           <div className="mt-2">
-                                              <label className="text-sm">2 uses remaining</label>
+                                              {loadingAccountToolsUsage ? (
+                                                  <label className="text-sm">Checking usage...</label>
+                                              ) : (
+                                                  <label className="text-sm">{remainingStoryIdeasUsage || 0} uses remaining</label>
+                                              )}
                                           </div>
                                       </div>
                                   </div>

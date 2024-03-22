@@ -329,8 +329,8 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                             <STKTextField
                                 multiline
                                 fluid
-                                value={description}
                                 enableRichText
+                                value={description}
                                 onChange={(value: SetStateAction<string>) => setDescription(value)} />
                         </div>
                     </div>

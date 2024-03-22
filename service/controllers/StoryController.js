@@ -553,21 +553,22 @@ class StoryController {
             const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story summary 
             in ${language}. Include a title, a brief description (250-300 characters), and two main characters 
             with short descriptions (up to 70 characters each). The story should be about ${description} and 
-            suitable for ${ageGroups}. Format the response as an object with title, description, and characters.
-`
+            suitable for ${ageGroups}. Format the response as an object with title, description and characters`
 
             const response = await OpenAIService.createCompletion({ prompt })
             let data = response.message.content
 
             data = data.replace(/```json\n|\n```|\n/g, '');
-            const storyIdeas = JSON.parse(data);
+            const storyIdea = JSON.parse(data);
 
             await accountToolsUsage.update({
                 currentMonthTotalStoryIdeas: accountToolsUsage.currentMonthTotalStoryIdeas + 1,
                 totalStoryIdeas: accountToolsUsage.totalStoryIdeas + 1
             })
 
-            return res.status(200).send(storyIdeas)
+            storyIdea.fullDescription =  `${storyIdea.description}\n\nCharacters:\n${storyIdea?.characters.map(character => `• ${character.name}: ${character.description}`).join('\n')}`;
+
+            return res.status(200).send(storyIdea)
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })

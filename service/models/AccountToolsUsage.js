@@ -92,12 +92,13 @@ class AccountToolsUsage {
 
         if (Object.keys(payload).length === 0) return
 
-        await axios.put(`
+        await axios.patch(`
             ${process.env.SUPABASE_URL}/rest/v1/account_tools_usage`,
             payload, {
                 headers,
                 params: {
-                    accountId: `eq.${this.accountId}`
+                    select: "*",
+                    account_id: `eq.${this.accountId}`
                 }
             }
         )
