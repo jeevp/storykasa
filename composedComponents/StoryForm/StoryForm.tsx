@@ -96,11 +96,10 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
             storyIdea
             && storyIdea.title !== title
             && storyIdea.description !== description
-            && storyIdea.language !== language
-            // @ts-ignore
-            && storyIdea.ageGroups.some((ageGroup: any) => !ageGroups.includes(ageGroup))
         ) {
             preFillStoryForm(storyIdea)
+            setAudioURL("")
+            setAudioBlob(null)
         }
     }, [storyIdea]);
 
@@ -411,7 +410,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                                     <STKRecordAudio
                                         onComplete={updateAudioBlob}
                                         startButtonText={unfinishedStory ? "Continue recording" : "Start recording"}
-                                        audioURL={unfinishedStory?.recordingUrl}
+                                        audioURL={storyIdea ? null : unfinishedStory?.recordingUrl ? unfinishedStory?.recordingUrl : null}
                                         onDuration={(duration: number) => setAudioDuration(duration)} />
                                 </div>
                             ) : (

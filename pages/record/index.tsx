@@ -72,6 +72,7 @@ function Record() {
 
     const handleStoryOnSelect = (storyIdea: any) => {
         setSelectedStoryIdea(storyIdea)
+        setSelectedUnfinishedStory(null)
     }
 
     return (
