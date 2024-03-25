@@ -33,7 +33,8 @@ import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog"
 import {useRouter} from "next/router";
 import {useStory} from "@/contexts/story/StoryContext";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
-
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
+import {purple600} from "@/assets/colorPallet/colors";
 
 const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKRecordAudio'), {
     ssr: false,  // Set to false to disable server-side rendering
@@ -378,6 +379,15 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                     <NumberCircleTwo size={28} />
                     <label className="font-semibold ml-1">Your story</label>
                 </div>
+                {storyIdea?.firstLine ? (
+                    <div className="p-4 w-auto inline-block bg-purple-50 rounded-2xl mt-4">
+                        <div className="flex items-center">
+                            <TipsAndUpdatesIcon sx={{ color: purple600 }} />
+                            <label className="ml-2 font-semibold">First line</label>
+                        </div>
+                        <p className="mt-2">{storyIdea?.firstLine}...</p>
+                    </div>
+                ) : null}
                 <div className="mt-4">
                     <div className="mb-4">
                         <STKRadioGroup

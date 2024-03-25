@@ -6,7 +6,9 @@ export default class OpenAIService {
     static async createCompletion({ prompt }){
         const completion = await openai.chat.completions.create({
             messages: [{ role: "system", content: "You are a Story maker" }, { role: "user", content: prompt }],
-            model: "gpt-4-0125-preview"
+            model: "gpt-4-0125-preview",
+            max_tokens: 200,
+            temperature: 0.5
         })
 
         return completion?.choices[0]

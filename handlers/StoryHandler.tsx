@@ -284,6 +284,12 @@ export default class StoryHandler {
             description
         }, headers)
 
-        return response.data
+        // @ts-ignore
+        const fullDescription =  `${response.data.description}\n\nCharacters:\n${response?.data?.characters.map(character => `• ${character.name}: ${character.description}`).join('\n')}`;
+
+        return {
+            ...response.data,
+            fullDescription
+        }
     }
 }

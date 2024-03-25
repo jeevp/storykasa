@@ -551,9 +551,9 @@ class StoryController {
             }
 
             const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story summary 
-            in ${language}. Include a title, a brief description (250-300 characters), and two main characters 
-            with short descriptions (up to 70 characters each). The story should be about ${description} and 
-            suitable for ${ageGroups}. Format the response as an object with title, description and characters`
+            in ${language}. Include a title, a brief description (250-300 characters), two main characters 
+            with short descriptions (up to 70 characters each) and provide the first line (100-120 characters) of the story. The story should be about ${description} and 
+            suitable for ${ageGroups}. Format the response as an object with title, description, characters and firstLine`
 
             const response = await OpenAIService.createCompletion({ prompt })
             let data = response.message.content
@@ -565,8 +565,6 @@ class StoryController {
                 currentMonthTotalStoryIdeas: accountToolsUsage.currentMonthTotalStoryIdeas + 1,
                 totalStoryIdeas: accountToolsUsage.totalStoryIdeas + 1
             })
-
-            storyIdea.fullDescription =  `${storyIdea.description}\n\nCharacters:\n${storyIdea?.characters.map(character => `• ${character.name}: ${character.description}`).join('\n')}`;
 
             return res.status(200).send(storyIdea)
         } catch (error) {

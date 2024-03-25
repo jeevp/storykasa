@@ -61,6 +61,7 @@ export default function AIStoryGeneratorDialog({
             setDescription("")
             setAgeGroups([])
             setLoading(false)
+            setStoriesLoading(3)
         }
     }, [active]);
 
@@ -110,12 +111,12 @@ export default function AIStoryGeneratorDialog({
 
 
     const handleStoryOnSelect = (storyIdea: any) => {
-        console.log({ storyIdea })
         onSelect({
             title: storyIdea.title,
             description: storyIdea?.fullDescription,
             language,
             ageGroups,
+            firstLine: storyIdea.firstLine
         })
 
         onClose()
@@ -163,6 +164,10 @@ export default function AIStoryGeneratorDialog({
                                                 </li>
                                             ))}
                                         </ul>
+                                    </div>
+                                    <div className="mt-4">
+                                        <label className="font-semibold">First line</label>
+                                        <p className="mt-2">{storyIdea?.firstLine}</p>
                                     </div>
                                     <div className="mt-8">
                                         <STKButton
