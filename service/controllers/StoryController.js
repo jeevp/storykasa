@@ -550,10 +550,14 @@ class StoryController {
                 return res.status(401).send({ message: "AI Story idea generator usage has reached it's limit" })
             }
 
-            const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story summary 
-            in ${language}. Include a title, a brief description (250-300 characters), two main characters 
-            with short descriptions (up to 70 characters each) and provide the first line (100-120 characters) of the story. The story should be about ${description} and 
-            suitable for ${ageGroups}. Format the response as an object with title, description, characters and firstLine`
+            const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story idea in english. 
+                Describe the setting (start with something like "This story takes place/is set/etc..." and 280 characters with spaces, 230 without spaces), three main characters with 
+                short descriptions (525 characters with spaces, 440 without spaces (for all 3 story characters), 
+                title (50 characters with spaces, 40 characters without spaces) and provide the first line (210 characters) 
+                of the story (the beginning of the story). The story should be about ${description} and suitable for ${ageGroups}. Format the response 
+                as an object with title:string, setting:string, characters:array of objects(name:string, description:string)  and firstLine:string.
+            `;
+
 
             const response = await OpenAIService.createCompletion({ prompt })
             let data = response.message.content

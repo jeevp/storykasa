@@ -152,7 +152,7 @@ export default function AIStoryGeneratorDialog({
                                     title={`"${storyIdea?.title}"`}
                                     titleSize="text-lg"
                                     defaultExpanded={index === 0}>
-                                    <p>{storyIdea?.description}</p>
+                                    <p>{storyIdea?.setting}</p>
                                     <div className="mt-4">
                                         <label className="font-semibold">Characters</label>
                                         <ul>
@@ -228,16 +228,6 @@ export default function AIStoryGeneratorDialog({
                                           </div>
                                           <div className="mt-4 ml-4">
                                               <div>
-                                                  <STKAutocomplete
-                                                      placeholder="Filter by language"
-                                                      options={languages}
-                                                      optionLabel="name"
-                                                      // @ts-ignore
-                                                      color="aiMode"
-                                                      fluid
-                                                      onChange={(lang: any) => setLanguage(lang?.name) }/>
-                                              </div>
-                                              <div className="mt-2">
                                                   <STKSelect
                                                       fluid
                                                       color="aiMode"
