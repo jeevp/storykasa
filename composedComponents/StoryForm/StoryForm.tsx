@@ -375,7 +375,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
 
 
-            <div className={`lg:pr-2 mt-6 ${title.length ? '' : 'disabled'}`}>
+            <div className={`lg:pr-2 mt-6 ${title?.length ? '' : 'disabled'}`}>
                 <div className={`flex items-center mb-4`}>
                     <NumberCircleTwo size={28} />
                     <label className="font-semibold ml-1">Your story</label>
@@ -450,7 +450,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                 </div>
 
                 <div className="mt-6">
-                    <div className={`flex items-center ${title.length ? '' : 'disabled'}`}>
+                    <div className={`flex items-center ${title?.length ? '' : 'disabled'}`}>
                         <NumberCircleThree size={28} />
                         <label className="font-semibold ml-1">Illustrations</label>
                     </div>
@@ -468,7 +468,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                     </div>
                 </div>
 
-                <div className={`mt-6 ${unfinishedStory || title.length && audioBlob ? '' : 'disabled'}`}>
+                <div className={`mt-6 ${unfinishedStory || title?.length && audioBlob ? '' : 'disabled'}`}>
                     <div className="flex items-center">
                         <NumberCircleFour size={28} />
                         <div>

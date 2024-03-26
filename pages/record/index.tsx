@@ -61,6 +61,11 @@ function Record() {
         setLoadingUnfinishedStories(false)
     }
 
+    const handleSelectUnfinishedStory = (story: any) => {
+        setSelectedUnfinishedStory(story)
+        setSelectedStoryIdea(null)
+    }
+
     const recordingTimeUsagePercentage = currentSubscription?.getRecordingTimeUsagePercentage(totalRecordingTime)
     const recordingTimeLabel = `${recordingTimeAvailable} minutes available`
 
@@ -113,7 +118,7 @@ function Record() {
                                                               <STKButton
                                                                   variant="outlined"
                                                                   height="30px"
-                                                                  onClick={() => setSelectedUnfinishedStory(story)}>
+                                                                  onClick={() => handleSelectUnfinishedStory(story)}>
                                                                   Continue
                                                               </STKButton>
                                                           </div>
