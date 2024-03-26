@@ -96,8 +96,9 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
         if (
             storyIdea
             && storyIdea.title !== title
-            && storyIdea.description !== description
+            && storyIdea.fullDescription !== description
         ) {
+            console.log({ storyIdea })
             preFillStoryForm(storyIdea)
             setAudioURL("")
             setAudioBlob(null)
@@ -110,9 +111,9 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
     const preFillStoryForm = (data: any) => {
         setTitle(data?.title)
-        setDescription(data?.description)
+        setDescription(data?.description || data?.fullDescription)
         setLanguage(data?.language)
-        setAgeGroups(data?.ageGroups)
+        setAgeGroups(data?.ageGroups || [])
     }
 
     const updateAudioBlob = async (blob: Blob, url: string, duration: number) => {
@@ -375,12 +376,22 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
 
             <div className={`lg:pr-2 mt-6 ${title.length ? '' : 'disabled'}`}>
-                <div className={`flex items-center`}>
+                <div className={`flex items-center mb-4`}>
                     <NumberCircleTwo size={28} />
                     <label className="font-semibold ml-1">Your story</label>
                 </div>
+                {storyIdea?.setting ? (
+                    <div className="p-4 w-auto inline-block bg-purple-50 rounded-2xl mb-4">
+                        <div className="flex items-center">
+                            <TipsAndUpdatesIcon sx={{ color: purple600 }} />
+                            <label className="ml-2 font-semibold">Setting</label>
+                        </div>
+                        <p className="mt-2">{storyIdea?.setting}</p>
+                    </div>
+                ) : null}
+
                 {storyIdea?.firstLine ? (
-                    <div className="p-4 w-auto inline-block bg-purple-50 rounded-2xl mt-4">
+                    <div className="p-4 w-auto inline-block bg-purple-50 rounded-2xl mb-4">
                         <div className="flex items-center">
                             <TipsAndUpdatesIcon sx={{ color: purple600 }} />
                             <label className="ml-2 font-semibold">First line</label>

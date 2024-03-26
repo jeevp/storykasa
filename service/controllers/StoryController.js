@@ -526,13 +526,15 @@ class StoryController {
         }
     }
 
+
+
     static async generateStoryIdea(req, res) {
         try {
             APIValidator.requiredPayload({ req, res }, {
                 requiredPayload: ["isFictional", "language", "ageGroups", "description"]
             })
 
-            const { isFictional, language, ageGroups, description } = req.body
+            const { isFictional, ageGroups, description } = req.body
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
 
@@ -550,12 +552,24 @@ class StoryController {
                 return res.status(401).send({ message: "AI Story idea generator usage has reached it's limit" })
             }
 
-            const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story idea in english. 
-                Describe the setting (start with something like "This story takes place/is set/etc..." and 280 characters with spaces, 230 without spaces), three main characters with 
-                short descriptions (525 characters with spaces, 440 without spaces (for all 3 story characters), 
-                title (50 characters with spaces, 40 characters without spaces) and provide the first line (210 characters) 
-                of the story (the beginning of the story). The story should be about ${description} and suitable for ${ageGroups}. Format the response 
-                as an object with title:string, setting:string, characters:array of objects(name:string, description:string)  and firstLine:string.
+            function generateRandomString(length) {
+                let result = '';
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                const charactersLength = characters.length;
+                for (let i = 0; i < length; i++) {
+                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                }
+                return result;
+            }
+
+            const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story idea in English. 
+            Describe a unique setting in 280 characters. 
+            Introduce three main characters with distinct descriptions in 525 characters.
+            Provide a title in 50 characters that includes specific keywords/themes and is unique and should some of following letters "${generateRandomString(10)}".
+            Give the first line of the story in 210 characters.
+            The story should revolve around ${description} and be suitable for ${ageGroups}. 
+            Format the response as an object with id:guid, title:string, setting:string, characters:array of objects(name:string, description:string)  and firstLine:string.
+            Ensure each aspect of the prompt adds uniqueness and specificity to the story idea.
             `;
 
 

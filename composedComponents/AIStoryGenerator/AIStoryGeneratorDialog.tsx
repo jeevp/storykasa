@@ -17,10 +17,12 @@ import {FREE_SUBSCRIPTION_PLAN} from "@/models/Subscription";
 import {useRouter} from "next/router";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import AccountToolsUsageHandler from "@/handlers/AccountToolsUsageHandler";
+import AIStoryIdeaList from "@/composedComponents/AIStoryGenerator/AIStoryIdeaList";
 
 
 interface AIStoryGeneratorDialogProps {
     active: boolean,
+    onChange: (stories: any) => void
     onSelect: (story: any) => void
     onClose: () => void
 }
@@ -28,6 +30,7 @@ interface AIStoryGeneratorDialogProps {
 export default function AIStoryGeneratorDialog({
     active,
     onSelect = () => ({}),
+    onChange= () => ({}),
     onClose = () => ({})
 }: AIStoryGeneratorDialogProps) {
     const router = useRouter()
@@ -40,9 +43,6 @@ export default function AIStoryGeneratorDialog({
     const [description, setDescription] = useState("")
     const [ageGroups, setAgeGroups] = useState([])
     const [storyIdeas, setStoryIdeas] = useState([])
-    const [firstStoryIdea, setFirstStoryIdea] = useState([])
-    const [secondStoryIdea, setSecondStoryIdea] = useState([])
-    const [thirdStoryIdea, setThirdStoryIdea] = useState([])
     const [storiesLoading, setStoriesLoading] = useState<number>(3);
     const [loadingAccountToolsUsage, setLoadingAccountToolsUsage] = useState(false)
     const [remainingStoryIdeasUsage, setRemainingStoryIdeasUsage] = useState(0)
@@ -64,6 +64,22 @@ export default function AIStoryGeneratorDialog({
             setStoriesLoading(3)
         }
     }, [active]);
+
+    useEffect(() => {
+        if (storyIdeas && storyIdeas.length > 0) {
+            onChange(storyIdeas.map((storyIdea: any) => {
+                return {
+                    id: storyIdea.id,
+                    title: storyIdea.title,
+                    description: storyIdea?.fullDescription,
+                    language,
+                    ageGroups,
+                    setting: storyIdea.setting,
+                    firstLine: storyIdea.firstLine
+                }
+            }))
+        }
+    }, [storyIdeas]);
 
     // Methods
     const checkAccountToolsUsage = async () => {
@@ -94,12 +110,19 @@ export default function AIStoryGeneratorDialog({
                 });
                 // @ts-ignore
                 setStoryIdeas(prevStoryIdeas => [...prevStoryIdeas, storyIdea]);
+                onChange([...storyIdeas, storyIdea])
             } finally {
                 setStoriesLoading(prevCount => prevCount - 1);
             }
         }
 
-        const storyIdeaPromises = [1, 2, 3].map(() => generateAndSetStoryIdea());
+        const storyIdeaPromises = []
+        const storyIdeaRequests = [1,2,3]
+
+        // @ts-ignore
+        for (let count = 0; count < storyIdeaRequests.length; count += 1) {
+            storyIdeaPromises.push(generateAndSetStoryIdea())
+        }
 
         Promise.all(storyIdeaPromises).finally(() => {
             setLoading(false)
@@ -110,13 +133,16 @@ export default function AIStoryGeneratorDialog({
 
 
 
+
     const handleStoryOnSelect = (storyIdea: any) => {
         onSelect({
+            id: storyIdea.id,
             title: storyIdea.title,
             description: storyIdea?.fullDescription,
             language,
             ageGroups,
-            firstLine: storyIdea.firstLine
+            firstLine: storyIdea.firstLine,
+            setting: storyIdea.setting
         })
 
         onClose()
@@ -144,41 +170,7 @@ export default function AIStoryGeneratorDialog({
             <div className="mt-4">
                 {storyIdeas?.length > 0 ? (
                     <div>
-                        {storyIdeas?.map((storyIdea: any, index: number) => (
-                            <div key={index} className="first:mt-0 mt-2">
-                                <STKAccordion
-                                    // @ts-ignore
-                                    titlePrefix={`Idea ${index + 1}`}
-                                    title={`"${storyIdea?.title}"`}
-                                    titleSize="text-lg"
-                                    defaultExpanded={index === 0}>
-                                    <p>{storyIdea?.setting}</p>
-                                    <div className="mt-4">
-                                        <label className="font-semibold">Characters</label>
-                                        <ul>
-                                            {storyIdea?.characters.map((character: string, _index: number) => (
-                                                <li key={_index}>
-                                                    <span
-                                                        // @ts-ignore
-                                                        className="font-semibold">{character?.name}</span>: {character?.description}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <div className="mt-4">
-                                        <label className="font-semibold">First line</label>
-                                        <p className="mt-2">{storyIdea?.firstLine}</p>
-                                    </div>
-                                    <div className="mt-8">
-                                        <STKButton
-                                        startIcon={<CheckCircleOutlineIcon />}
-                                        onClick={() => handleStoryOnSelect(storyIdea)}>
-                                            Use this idea
-                                        </STKButton>
-                                    </div>
-                                </STKAccordion>
-                            </div>
-                        ))}
+                        <AIStoryIdeaList storyIdeas={storyIdeas} onSelect={handleStoryOnSelect} />
 
                         {Array.from({ length: storiesLoading }, (_, index) => (
                             <div key={index} className="first:mt-0 mt-2">

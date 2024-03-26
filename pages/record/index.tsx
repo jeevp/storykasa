@@ -29,7 +29,6 @@ function Record() {
     const [unfinishedStories, setUnfinishedStories] = useState([])
     const [selectedUnfinishedStory, setSelectedUnfinishedStory] = useState(null)
     const [selectedStoryIdea, setSelectedStoryIdea] = useState(null)
-
     // Mounted
     useEffect(() => {
         handleFetchTotalRecordingTime()
