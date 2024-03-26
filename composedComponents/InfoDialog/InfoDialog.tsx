@@ -79,7 +79,7 @@ export default function InfoDialog({
                       )}
                   </div>
                 )}
-                {loading ? (
+                {loading && !confirmationButtonText ? (
                     <div className="flex mt-4">
                         <STKLoading />
                     </div>

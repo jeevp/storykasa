@@ -14,6 +14,7 @@ import STKCard from "@/components/STKCard/STKCard";
 import STKButton from "@/components/STKButton/STKButton";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import AIStoryGenerator from "@/composedComponents/AIStoryGenerator/AIStoryGenerator";
+import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
 
 function Record() {
     const { currentSubscription } = useSubscription()
@@ -29,6 +30,10 @@ function Record() {
     const [unfinishedStories, setUnfinishedStories] = useState([])
     const [selectedUnfinishedStory, setSelectedUnfinishedStory] = useState(null)
     const [selectedStoryIdea, setSelectedStoryIdea] = useState(null)
+    const [selectedUnfinishedStoryToBeDeleted, setSelectedUnfinishedStoryToBeDeleted] = useState(false)
+    const [showDeleteUnfinishedStoryDialog, setShowDeleteUnfinishedStoryDialog] = useState(false)
+    const [loadingDeleteUnfinishedStory, setLoadingDeleteUnfinishedStory] = useState(false)
+
     // Mounted
     useEffect(() => {
         handleFetchTotalRecordingTime()
@@ -79,6 +84,23 @@ function Record() {
         setSelectedUnfinishedStory(null)
     }
 
+    const handleDeleteUnfinishedStory = (story: any) => {
+        setShowDeleteUnfinishedStoryDialog(true)
+        setSelectedUnfinishedStoryToBeDeleted(story)
+    }
+
+    const deleteUnfinishedStory = async () => {
+        setLoadingDeleteUnfinishedStory(true)
+        // @ts-ignore
+        const { storyId } = selectedUnfinishedStoryToBeDeleted
+        await StoryHandler.deleteStory(storyId)
+        // @ts-ignore
+        setUnfinishedStories([...unfinishedStories].filter((story) => story.storyId !== storyId))
+        setLoadingDeleteUnfinishedStory(false)
+        setShowDeleteUnfinishedStoryDialog(false)
+    }
+
+
     return (
         <PageWrapper path="record">
             <div className="pb-10">
@@ -112,10 +134,15 @@ function Record() {
                                                     </label>
                                                     <div className="flex items-center gap-2">
                                                         <STKButton
-                                                            variant="outlined"
                                                             height="30px"
                                                             onClick={() => handleSelectUnfinishedStory(story)}>
                                                             Continue
+                                                        </STKButton>
+                                                        <STKButton
+                                                            variant="outlined"
+                                                            height="30px"
+                                                            onClick={() => handleDeleteUnfinishedStory(story)}>
+                                                            Delete draft
                                                         </STKButton>
                                                     </div>
                                                 </div>
@@ -162,6 +189,15 @@ function Record() {
                     </div>
                 </div>
             </div>
+            <InfoDialog
+            active={showDeleteUnfinishedStoryDialog}
+            // @ts-ignore
+            text={`Are you sure you want to delete the story "${selectedUnfinishedStoryToBeDeleted?.title}"? This action cannot be undone.`}
+            title="Delete unfinished story"
+            loading={loadingDeleteUnfinishedStory}
+            confirmationButtonText="Delete"
+            onAction={deleteUnfinishedStory}
+            onClose={() => setShowDeleteUnfinishedStoryDialog(false)}/>
         </PageWrapper>
     )
 }
