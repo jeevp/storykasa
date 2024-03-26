@@ -11,9 +11,11 @@ import './style.scss';
 import useAppleDevice from "@/customHooks/useAppleDevice";
 import STKButton from "@/components/STKButton/STKButton";
 import STKLoading from "@/components/STKLoading/STKLoading";
-import {neutral800} from "@/assets/colorPallet/colors";
+import {neutral800, red600} from "@/assets/colorPallet/colors";
 import STKMenu from "@/components/STKMenu/STKMenu";
 import useDevice from "@/customHooks/useDevice";
+import DeleteIcon from '@mui/icons-material/Delete';
+import STKTooltip from "@/components/STKTooltip/STKTooltip"
 
 interface STKAudioPlayerProps {
     src: string;
@@ -22,8 +24,10 @@ interface STKAudioPlayerProps {
     html5?: boolean;
     customDuration?: number;
     onPlaying?: (playing: boolean) => void;
+    clearable?: boolean
     onEnd?: () => void;
     onTimeChange?: () => void
+    onClear?: () => void
 }
 
 const formatTime = (seconds: number) => {
@@ -37,10 +41,12 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     preload = true,
     outlined = false,
     html5 = false,
+    clearable,
     customDuration = 0,
     onPlaying = () => ({}),
     onEnd = () => ({}),
-    onTimeChange = () => ({})
+    onTimeChange = () => ({}),
+    onClear = () => ({})
 }) => {
     const speedControlOption = [
         { label: "0.5", value: 0.5 },
@@ -331,6 +337,13 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                             onChange={changePlaybackSpeed}
                             customTarget={playbackTarget}/>
                     </div>
+                    {clearable ? (
+                        <STKTooltip text="Clear recording" position="left">
+                            <STKButton iconButton onClick={() => onClear()}>
+                                <DeleteIcon sx={{ width: "20px", height: "20px" }} />
+                            </STKButton>
+                        </STKTooltip>
+                    ) : null}
                 </div>
             </div>
         </div>

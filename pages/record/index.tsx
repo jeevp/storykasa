@@ -93,47 +93,40 @@ function Record() {
                         Record a story of your own. Remember, only profiles on your account can view and listen to
                         your story. Feel free to enhance it with a description and illustrations or images
                     </p>
-                    <div className="mt-10">
-                        <h3 className="font-semibold m-0">
-                            Unfinished stories
-                        </h3>
-                        <div>
-                            {loadingUnfinishedStories ? (
-                                <div className="flex mt-5"><STKLoading /></div>
-                            ) : (
-                              <>
-                                  {unfinishedStories?.length > 0 ? (
-                                      <div className="mt-5">
-                                          {unfinishedStories.map((story) => (
-                                              <div key={story} className="first:mt-0 mt-2">
-                                                  <STKCard>
-                                                      <div className="p-4 flex items-center justify-between">
-                                                          <label>
-                                                          {
+                    {!loading && unfinishedStories?.length > 0 && (
+                        <div className="mt-10">
+                            <h3 className="font-semibold m-0">
+                                Unfinished stories
+                            </h3>
+                            <div>
+                                <div className="mt-5">
+                                    {unfinishedStories.map((story) => (
+                                        <div key={story} className="first:mt-0 mt-2">
+                                            <STKCard>
+                                                <div className="p-4 flex items-center justify-between">
+                                                    <label>
+                                                        {
                                                             // @ts-ignore
                                                             story?.title
-                                                          }
-                                                          </label>
-                                                          <div className="flex items-center gap-2">
-                                                              <STKButton
-                                                                  variant="outlined"
-                                                                  height="30px"
-                                                                  onClick={() => handleSelectUnfinishedStory(story)}>
-                                                                  Continue
-                                                              </STKButton>
-                                                          </div>
-                                                      </div>
-                                                  </STKCard>
-                                              </div>
-                                          ))}
-                                      </div>
-                                  ) : (
-                                      <label className="mt-4">You don&ldquo;t have any unfinished story to complete.</label>
-                                  )}
-                              </>
-                            )}
+                                                        }
+                                                    </label>
+                                                    <div className="flex items-center gap-2">
+                                                        <STKButton
+                                                            variant="outlined"
+                                                            height="30px"
+                                                            onClick={() => handleSelectUnfinishedStory(story)}>
+                                                            Continue
+                                                        </STKButton>
+                                                    </div>
+                                                </div>
+                                            </STKCard>
+                                        </div>
+                                    ))}
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
+                    )}
                     {!currentSubscription?.adminAccount && !currentUser?.isGuest ? (
                         <div className="mt-8">
                             <div className="flex mb-2">

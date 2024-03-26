@@ -68,6 +68,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
     const [draftStory, setDraftStory] = useState(null)
     const [loadingAutoSave, setLoadingAutoSave] = useState(false)
     const [showStoryAudioInfo, setShowStoryAudioInfo] = useState(false)
+    const [unfinishedStoryRecordingURL, setUnfinishedStoryRecordingURL] = useState("")
 
 
     useEffect(() => {
@@ -89,6 +90,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
     useEffect(() => {
         if (unfinishedStory) {
             preFillStoryForm(unfinishedStory)
+            setUnfinishedStoryRecordingURL(unfinishedStory.recordingUrl)
         }
     }, [unfinishedStory]);
 
@@ -293,6 +295,13 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
         setCurrentGuestDemoStory(_currentGuestDemoStory)
     }
 
+    const clearRecording = () => {
+        setAudioURL("")
+        setAudioBlob(null)
+        setAudioDuration(0)
+        setUnfinishedStoryRecordingURL("")
+    }
+
 
     const storyIsIncomplete = (
         !language
@@ -415,23 +424,28 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                         <STKAudioPlayer
                         src={audioURL}
                         outlined
-                        customDuration={audioDuration} />
+                        clearable
+                        customDuration={audioDuration}
+                        onClear={clearRecording}/>
                     ) : (
                         <>
                             {storyCreationMethod === RECORD_STORY_CREATION_METHOD ? (
                                 <div>
-                                    {unfinishedStory ? (
+                                    {unfinishedStoryRecordingURL ? (
                                         <div className="mb-2">
-                                        <STKAudioPlayer
-                                        customDuration={unfinishedStory?.duration}
-                                        outlined
-                                        src={unfinishedStory.recordingUrl} />
+                                            <STKAudioPlayer
+                                            customDuration={unfinishedStory?.duration}
+                                            outlined
+                                            clearable
+                                            src={unfinishedStory.recordingUrl}
+                                            onClear={clearRecording}/>
                                         </div>
                                     ) : null}
                                     <STKRecordAudio
                                         onComplete={updateAudioBlob}
                                         startButtonText={unfinishedStory ? "Continue recording" : "Start recording"}
-                                        audioURL={storyIdea ? null : unfinishedStory?.recordingUrl ? unfinishedStory?.recordingUrl : null}
+                                        // @ts-ignore
+                                        audioURL={storyIdea ? null : unfinishedStoryRecordingURL ? unfinishedStoryRecordingURL : null}
                                         onDuration={(duration: number) => setAudioDuration(duration)} />
                                 </div>
                             ) : (
