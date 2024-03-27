@@ -4,11 +4,13 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 interface AIStoryIdeaListProps {
     storyIdeas: any[],
+    expandFirstItem?: boolean
     onSelect: (storyIdea: any) => void
 }
 
 export default function AIStoryIdeaList({
     storyIdeas,
+    expandFirstItem = false,
     onSelect = () => ({})
 }: AIStoryIdeaListProps) {
     return (
@@ -20,7 +22,7 @@ export default function AIStoryIdeaList({
                         titlePrefix={`Idea ${index + 1}`}
                         title={`"${storyIdea?.title}"`}
                         titleSize="text-lg"
-                        defaultExpanded={index === 0}>
+                        defaultExpanded={expandFirstItem ? index === 0 : null}>
                         <p>{storyIdea?.setting}</p>
                         <div className="mt-4">
                             <label className="font-semibold">Characters</label>

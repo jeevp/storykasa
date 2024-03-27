@@ -18,6 +18,7 @@ import {useRouter} from "next/router";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import AccountToolsUsageHandler from "@/handlers/AccountToolsUsageHandler";
 import AIStoryIdeaList from "@/composedComponents/AIStoryGenerator/AIStoryIdeaList";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 
 interface AIStoryGeneratorDialogProps {
@@ -36,6 +37,7 @@ export default function AIStoryGeneratorDialog({
     const router = useRouter()
     const { onMobile } = useDevice()
     const { currentSubscription } = useSubscription()
+    const { currentProfileId } = useProfile()
 
     const [loading, setLoading] = useState(false)
     const [isFictional, setIsFictional] = useState(false)
@@ -103,6 +105,8 @@ export default function AIStoryGeneratorDialog({
         const generateAndSetStoryIdea = async () => {
             try {
                 const storyIdea = await StoryHandler.generateStoryIdea({
+                    profileId: currentProfileId
+                }, {
                     isFictional,
                     language,
                     description,
@@ -129,10 +133,6 @@ export default function AIStoryGeneratorDialog({
             setRemainingStoryIdeasUsage(remainingStoryIdeasUsage - 1)
         });
     };
-
-
-
-
 
     const handleStoryOnSelect = (storyIdea: any) => {
         onSelect({
@@ -170,7 +170,7 @@ export default function AIStoryGeneratorDialog({
             <div className="mt-4">
                 {storyIdeas?.length > 0 ? (
                     <div>
-                        <AIStoryIdeaList storyIdeas={storyIdeas} onSelect={handleStoryOnSelect} />
+                        <AIStoryIdeaList expandFirstItem storyIdeas={storyIdeas} onSelect={handleStoryOnSelect} />
 
                         {Array.from({ length: storiesLoading }, (_, index) => (
                             <div key={index} className="first:mt-0 mt-2">

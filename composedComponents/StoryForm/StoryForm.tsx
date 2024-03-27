@@ -437,7 +437,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                                             customDuration={unfinishedStory?.duration}
                                             outlined
                                             clearable
-                                            src={unfinishedStory.recordingUrl}
+                                            src={unfinishedStory?.recordingUrl}
                                             onClear={clearRecording}/>
                                         </div>
                                     ) : null}

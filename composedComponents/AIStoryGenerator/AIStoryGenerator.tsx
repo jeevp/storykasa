@@ -1,13 +1,18 @@
 import STKCard from "@/components/STKCard/STKCard";
 import STKButton from "@/components/STKButton/STKButton";
 import AIStoryGeneratorDialog from "@/composedComponents/AIStoryGenerator/AIStoryGeneratorDialog";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import useDevice from "@/customHooks/useDevice";
 import AIStoryIdeaList from "@/composedComponents/AIStoryGenerator/AIStoryIdeaList";
+import StoryIdeasHandler from "@/handlers/StoryIdeasHandler";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: (storyIdea: any) => void }) {
     const { onMobile } = useDevice()
+
+    // Contexts
+    const { currentProfileId } = useProfile()
 
     // States
     const [storyIdeas, setStoryIdeas] = useState([])
@@ -16,8 +21,18 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
         setShowAIStoryGeneratorDialog
     ] = useState(false)
 
+    // Mounted
+    useEffect(() => {
+        handleFetchStoryIdeas()
+    }, []);
+
+    // Methods
+    const handleFetchStoryIdeas = async () => {
+        const _storyIdeas = await StoryIdeasHandler.fetchStoryIdeas({ profileId: currentProfileId })
+        setStoryIdeas(_storyIdeas)
+    }
+
     const handleOnSelect = (storyIdea: any) => {
-        console.log({ storyIdea })
         onSelect(storyIdea)
     }
 
