@@ -89,7 +89,6 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
     useEffect(() => {
         if (unfinishedStory) {
-            console.log(">>> OK 1 >>>")
             preFillStoryForm(unfinishedStory)
             setUnfinishedStoryRecordingURL(unfinishedStory.recordingUrl)
         }
@@ -111,7 +110,6 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
     }, [storyCreationMethod]);
 
     const preFillStoryForm = (data: any) => {
-        console.log({ data })
         setTitle(data?.title)
         setDescription(data?.description || "")
         setLanguage(data?.language)

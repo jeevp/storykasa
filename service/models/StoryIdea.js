@@ -136,7 +136,6 @@ class StoryIdea {
             }, {});
         }
 
-        console.log(response.data)
 
         return {
             totalStoryIdeas,

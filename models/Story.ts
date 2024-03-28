@@ -246,7 +246,6 @@ export default class Story {
     }
 
     static generateAgeGroupsLabel(ageGroups: any[]) {
-        console.log({ ageGroups })
         if (ageGroups.length === 0) return ""
         const _ageGroups = allowedAgeGroups.filter((ageGroup) => {
             // @ts-ignore

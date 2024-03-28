@@ -145,7 +145,8 @@ export default function AIStoryGeneratorDialog({
             language,
             ageGroups,
             firstLine: storyIdea.firstLine,
-            setting: storyIdea.setting
+            setting: storyIdea.setting,
+            characters: storyIdea?.characters || []
         })
 
         onClose()

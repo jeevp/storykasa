@@ -47,8 +47,8 @@ class StoryIdeaController {
             }
 
             const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story idea in English. 
-            Describe a unique setting in 280 characters. 
-            Introduce three main characters with distinct descriptions in 525 characters.
+            Describe a unique setting where the story is taking place in 280 characters. 
+            Introduce three main characters with distinct names and descriptions in 525 characters.
             Provide a title in 50 characters that includes specific keywords/themes and is unique and should some of following letters "${generateRandomString(10)}".
             Give the first line of the story in 210 characters.
             The story should revolve around ${description} and be suitable for ${ageGroupsLabel}. 
@@ -85,14 +85,14 @@ class StoryIdeaController {
             await Promise.all(generatedStoryIdea.characters.map(async(character) => {
                 const storyIdeaCharacter = await StoryIdeaCharacter.create({
                     storyIdeaId: storyIdea?.id,
-                    name: character.name,
-                    description: character.description
+                    name: character?.name || "",
+                    description: character?.description || ""
                 })
 
                 storyIdeaCharacters.push(storyIdeaCharacter)
             }))
 
-            return res.status(200).send({
+            return res.status(201).send({
                 ...storyIdea,
                 characters: storyIdeaCharacters
             })
