@@ -201,7 +201,7 @@ class Story {
         const { storyIdeas } = await StoryIdea.findAll({
             accountId: params.userId,
             profileId: params.profileId
-        })
+        }, { serialized: true })
 
         const storyIdeasHash = storyIdeas.reduce((acc, item) => {
             acc[item["id"]] = item
