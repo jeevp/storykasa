@@ -14,10 +14,10 @@ class StoryIdeaController {
             })
 
             APIValidator.requiredPayload({ req, res }, {
-                requiredPayload: ["isFictional", "language", "ageGroups", "description"]
+                requiredPayload: ["isFictional", "language", "ageGroups", "description", "ageGroupsLabel"]
             })
 
-            const { isFictional, ageGroups, description } = req.body
+            const { isFictional, ageGroups, description, ageGroupsLabel } = req.body
             const { profileId } = req.query
 
             const { data: { user } } = await supabase.auth.getUser(req.accessToken)
@@ -51,7 +51,7 @@ class StoryIdeaController {
             Introduce three main characters with distinct descriptions in 525 characters.
             Provide a title in 50 characters that includes specific keywords/themes and is unique and should some of following letters "${generateRandomString(10)}".
             Give the first line of the story in 210 characters.
-            The story should revolve around ${description} and be suitable for ${ageGroups}. 
+            The story should revolve around ${description} and be suitable for ${ageGroupsLabel}. 
             Format the response as an object with id:guid, title:string, setting:string, characters:array of objects(name:string, description:string)  and firstLine:string.
             Ensure each aspect of the prompt adds uniqueness and specificity to the story idea.
             `;
@@ -76,7 +76,9 @@ class StoryIdeaController {
                 creationStepsDescription: generatedStoryIdea.creationStepsDescription || "",
                 isFictional,
                 accountId: user.id,
-                profileId
+                profileId,
+                ageGroups,
+                language: "English"
             })
 
             const storyIdeaCharacters = []
@@ -106,14 +108,14 @@ class StoryIdeaController {
                 requiredParams: ["profileId"]
             })
 
-            const { profileId } = req.query
+            const { profileId, page } = req.query
 
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
             const storyIdeas = await StoryIdea.findAll({
                 accountId: user.id,
                 profileId
-            }, { serialized: true })
+            }, { serialized: true, page })
 
             return res.status(200).send(storyIdeas)
         } catch (error) {

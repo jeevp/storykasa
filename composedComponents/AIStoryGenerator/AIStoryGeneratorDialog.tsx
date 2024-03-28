@@ -77,7 +77,9 @@ export default function AIStoryGeneratorDialog({
                     language,
                     ageGroups,
                     setting: storyIdea.setting,
-                    firstLine: storyIdea.firstLine
+                    firstLine: storyIdea.firstLine,
+                    createdAt: storyIdea?.createdAt,
+                    characters: storyIdea?.characters
                 }
             }))
         }
@@ -98,7 +100,7 @@ export default function AIStoryGeneratorDialog({
         if (loading) return;
         setLoading(true);
 
-        const _ageGroups = Story.generateAgeGroupsLabel(ageGroups);
+        const ageGroupsLabel = Story.generateAgeGroupsLabel(ageGroups);
 
         setStoryIdeas([]);
 
@@ -110,7 +112,8 @@ export default function AIStoryGeneratorDialog({
                     isFictional,
                     language,
                     description,
-                    ageGroups: _ageGroups
+                    ageGroups,
+                    ageGroupsLabel
                 });
                 // @ts-ignore
                 setStoryIdeas(prevStoryIdeas => [...prevStoryIdeas, storyIdea]);

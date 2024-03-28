@@ -153,6 +153,8 @@ interface StoryProps {
     narratorName: string
     playCount: number
     finished: boolean
+    storyIdeaId: number
+    storyIdea: any
 }
 
 export default class Story {
@@ -174,6 +176,8 @@ export default class Story {
     narratorName: string
     playCount: number
     finished: boolean
+    storyIdeaId: number
+    storyIdea: any
 
     constructor({
         storyId,
@@ -193,7 +197,9 @@ export default class Story {
         publicStoryRequest,
         narratorName,
         playCount,
-        finished
+        finished,
+        storyIdeaId,
+        storyIdea
     }: StoryProps) {
         this.storyId = storyId
         this.isPublic = isPublic
@@ -213,6 +219,8 @@ export default class Story {
         this.narratorName = narratorName
         this.playCount = playCount
         this.finished = finished
+        this.storyIdeaId = storyIdeaId
+        this.storyIdea = storyIdea
     }
 
     get ageGroupsLabel() {
@@ -238,6 +246,7 @@ export default class Story {
     }
 
     static generateAgeGroupsLabel(ageGroups: any[]) {
+        console.log({ ageGroups })
         if (ageGroups.length === 0) return ""
         const _ageGroups = allowedAgeGroups.filter((ageGroup) => {
             // @ts-ignore

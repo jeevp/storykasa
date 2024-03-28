@@ -32,10 +32,10 @@ export default class StoryIdeasHandler {
         }
     }
 
-    static async fetchStoryIdeas({ profileId }: { profileId: string }) {
+    static async fetchStoryIdeas({ profileId, page }: { profileId: string, page: number }) {
         const headers = generateHeaders()
 
-        const response = await axios.get(`/api/profiles/${profileId}/storyIdeas`, headers)
+        const response = await axios.get(`/api/profiles/${profileId}/storyIdeas?page=${page}`, headers)
 
         return response.data
     }

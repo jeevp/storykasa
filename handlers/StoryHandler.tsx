@@ -13,6 +13,7 @@ interface createStoryProps {
     ageGroups: string
     illustrationsURL: Array<string>
     finished?: boolean
+    storyIdeaId?: number
 }
 
 interface updateStoryProps {
@@ -25,6 +26,7 @@ interface updateStoryProps {
     ageGroups?: string
     illustrationsURL?: Array<string>
     finished?: boolean
+    storyIdeaId?: number
 }
 
 interface StoryFilterOptions {
@@ -51,7 +53,8 @@ export default class StoryHandler {
         language,
         ageGroups,
         illustrationsURL,
-        finished
+        finished,
+        storyIdeaId
     }: createStoryProps, parameters: CreateStoryParameters) {
         const payload = {
             isPublic: false,
@@ -62,7 +65,8 @@ export default class StoryHandler {
             ageGroups: ageGroups,
             duration: duration,
             illustrationsURL,
-            finished
+            finished,
+            storyIdeaId
         }
 
         const headers = generateHeaders()
@@ -265,7 +269,8 @@ export default class StoryHandler {
             recordingUrl: story.recording_url,
             storyId: story.story_id,
             ageGroups: story.age_groups,
-            language: story.language
+            language: story.language,
+            storyIdea: story.storyIdea
         }))
     }
 
@@ -273,11 +278,13 @@ export default class StoryHandler {
         isFictional,
         language,
         ageGroups,
+        ageGroupsLabel,
         description
     }: {
         isFictional: boolean,
         language: string,
-        ageGroups: string,
+        ageGroups: any[],
+        ageGroupsLabel: string
         description: string
     }) {
         const headers = generateHeaders()
@@ -286,15 +293,10 @@ export default class StoryHandler {
             isFictional,
             language,
             ageGroups,
-            description
+            description,
+            ageGroupsLabel
         }, headers)
 
-        // @ts-ignore
-        const fullDescription =  `${response.data.setting}\n\nCharacters:\n${response?.data?.characters.map(character => `• ${character.name}: ${character.description}`).join('\n')}`;
-
-        return {
-            ...response.data,
-            fullDescription
-        }
+        return response.data
     }
 }

@@ -1,5 +1,6 @@
 const axios = require("axios")
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
+const StoryIdea = require("../models/StoryIdea");
 
 class Story {
     constructor({
@@ -23,7 +24,8 @@ class Story {
         narratorName,
         accountId,
         playCount = 0,
-        finished
+        finished,
+        storyIdeaId
     }) {
         this.storyId = storyId
         this.title = title
@@ -46,6 +48,7 @@ class Story {
         this.accountId = accountId
         this.playCount = playCount
         this.finished = finished
+        this.storyIdeaId = storyId
     }
 
     static async getStory(storyId) {
@@ -195,10 +198,26 @@ class Story {
             })
         }
 
+        const { storyIdeas } = await StoryIdea.findAll({
+            accountId: params.userId,
+            profileId: params.profileId
+        })
+
+        const storyIdeasHash = storyIdeas.reduce((acc, item) => {
+            acc[item["id"]] = item
+
+            return acc
+        }, {})
+
         return data.filter((d) => d !== null).sort((a, b) => {
             if (a.library_created_at < b.library_created_at) return 1
             if (a.library_created_at > b.library_created_at) return -1
-        });
+        }).map((story) => {
+            return {
+                ...story,
+                storyIdea: story?.story_idea_id ? storyIdeasHash[story.story_idea_id] : null
+            }
+        })
     }
 
     static async findAll(params = { accountId: "" }) {

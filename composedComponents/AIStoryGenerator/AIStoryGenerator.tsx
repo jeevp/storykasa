@@ -7,6 +7,7 @@ import useDevice from "@/customHooks/useDevice";
 import AIStoryIdeaList from "@/composedComponents/AIStoryGenerator/AIStoryIdeaList";
 import StoryIdeasHandler from "@/handlers/StoryIdeasHandler";
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import StoryIdeasHistory from "@/composedComponents/StoryIdeasHistoryDialog/StoryIdeasHistory";
 
 export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: (storyIdea: any) => void }) {
     const { onMobile } = useDevice()
@@ -16,6 +17,7 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
 
     // States
     const [storyIdeas, setStoryIdeas] = useState([])
+    const [showStoryIdeasHistoryDialog, setShowStoryIdeasHistoryDialog] = useState(false)
     const [
         showAIStoryGeneratorDialog,
         setShowAIStoryGeneratorDialog
@@ -28,8 +30,8 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
 
     // Methods
     const handleFetchStoryIdeas = async () => {
-        const _storyIdeas = await StoryIdeasHandler.fetchStoryIdeas({ profileId: currentProfileId })
-        setStoryIdeas(_storyIdeas)
+        const response = await StoryIdeasHandler.fetchStoryIdeas({ profileId: currentProfileId, page: 1 })
+        setStoryIdeas(response.storyIdeas)
     }
 
     const handleOnSelect = (storyIdea: any) => {
@@ -37,17 +39,7 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
     }
 
     const handleStoryIdeasOnChange = (_storyIdeas: any) => {
-        const updatedStoryIdeas = [...storyIdeas]
-        _storyIdeas.forEach((_storyIdea: any) => {
-            // @ts-ignore
-            const isAlreadyInTheList = storyIdeas.find((storyIdea) => storyIdea?.id === _storyIdea?.id)
-
-            if (isAlreadyInTheList) return
-            // @ts-ignore
-            updatedStoryIdeas.push((_storyIdea))
-        })
-
-        setStoryIdeas([...updatedStoryIdeas])
+        setStoryIdeas(_storyIdeas)
     }
 
     return (
@@ -65,8 +57,16 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
                 </div>
             </STKCard>
             {storyIdeas.length > 0 ? (
-                <div className="mt-2">
-                    <AIStoryIdeaList storyIdeas={storyIdeas} onSelect={handleOnSelect} />
+                <div className="mt-4">
+                    <label className="font-semibold">Story ideas history</label>
+                    <div className="mt-4">
+                        <AIStoryIdeaList storyIdeas={storyIdeas.slice(0,3)} onSelect={handleOnSelect} />
+                        <div className="mt-4 flex justify-end">
+                            <STKButton variant="outlined" onClick={() => setShowStoryIdeasHistoryDialog(true)}>
+                                Open full story idea history
+                            </STKButton>
+                        </div>
+                    </div>
                 </div>
             ) : null}
             <AIStoryGeneratorDialog
@@ -74,6 +74,10 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
             onSelect={handleOnSelect}
             onChange={handleStoryIdeasOnChange}
             onClose={() => setShowAIStoryGeneratorDialog(false)} />
+            <StoryIdeasHistory
+            active={showStoryIdeasHistoryDialog}
+            onSelect={handleOnSelect}
+            onClose={() => setShowStoryIdeasHistoryDialog(false)} />
         </div>
     )
 }

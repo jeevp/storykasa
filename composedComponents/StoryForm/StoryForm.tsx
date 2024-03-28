@@ -89,21 +89,20 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
     useEffect(() => {
         if (unfinishedStory) {
+            console.log(">>> OK 1 >>>")
             preFillStoryForm(unfinishedStory)
             setUnfinishedStoryRecordingURL(unfinishedStory.recordingUrl)
         }
     }, [unfinishedStory]);
 
     useEffect(() => {
-        if (
-            storyIdea
-            && storyIdea.title !== title
-            && storyIdea.fullDescription !== description
-        ) {
-            console.log({ storyIdea })
+        if (storyIdea && storyIdea.title !== title) {
             preFillStoryForm(storyIdea)
-            setAudioURL("")
-            setAudioBlob(null)
+            if (!unfinishedStory) {
+                setAudioURL("")
+                setUnfinishedStoryRecordingURL("")
+                setAudioBlob(null)
+            }
         }
     }, [storyIdea]);
 
@@ -112,8 +111,9 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
     }, [storyCreationMethod]);
 
     const preFillStoryForm = (data: any) => {
+        console.log({ data })
         setTitle(data?.title)
-        setDescription(data?.description || data?.fullDescription)
+        setDescription(data?.description || "")
         setLanguage(data?.language)
         setAgeGroups(data?.ageGroups || [])
     }
@@ -173,7 +173,8 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
             title,
             description,
             language,
-            ageGroups
+            ageGroups,
+            storyIdeaId: storyIdea?.id
         }
 
         if (unfinishedStory) {
@@ -396,6 +397,26 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                             <label className="ml-2 font-semibold">Setting</label>
                         </div>
                         <p className="mt-2">{storyIdea?.setting}</p>
+                    </div>
+                ) : null}
+
+                {storyIdea?.characters?.length > 0 ? (
+                    <div className="p-4 w-auto inline-block bg-purple-50 rounded-2xl mb-4">
+                        <div className="flex items-center">
+                            <TipsAndUpdatesIcon sx={{ color: purple600 }} />
+                            <label className="ml-2 font-semibold">Characters</label>
+                        </div>
+                        <div className="mt-4">
+                            <ul>
+                                {storyIdea?.characters?.map((character: string, _index: number) => (
+                                    <li key={_index}>
+                                        <span
+                                            // @ts-ignore
+                                            className="font-semibold">{character?.name}</span>: {character?.description}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 ) : null}
 

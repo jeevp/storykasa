@@ -254,7 +254,8 @@ class StoryController {
                 recordingURL,
                 duration,
                 illustrationsURL,
-                finished
+                finished,
+                storyIdeaId
             } = req.body
 
             const { profileId } = req.query
@@ -269,7 +270,8 @@ class StoryController {
                 age_groups: ageGroups,
                 duration: duration,
                 account_id: user?.id,
-                finished
+                finished,
+                story_idea_id: storyIdeaId
             }
 
             const response = await axios.post(

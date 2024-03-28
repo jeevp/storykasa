@@ -13,7 +13,9 @@ class StoryIdea {
         creationStepsDescription,
         isFictional,
         createdAt,
-        characters = []
+        characters = [],
+        ageGroups = [],
+        language
     }) {
         this.id = id
         this.title = title
@@ -25,6 +27,8 @@ class StoryIdea {
         this.isFictional = isFictional
         this.createdAt = createdAt
         this.characters = characters
+        this.ageGroups = ageGroups
+        this.language = language
     }
 
     static async create({
@@ -34,7 +38,9 @@ class StoryIdea {
         profileId,
         accountId,
         creationStepsDescription,
-        isFictional
+        isFictional,
+        language,
+        ageGroups
     }) {
         const headers = generateSupabaseHeaders()
         const payload = {}
@@ -46,6 +52,8 @@ class StoryIdea {
         if (accountId) payload.account_id = accountId
         if (creationStepsDescription) payload.creationStepsDescription = creationStepsDescription
         if (isFictional === true || isFictional === false) payload.is_fictional = isFictional
+        if (language) payload.language = language
+        if (ageGroups) payload.age_groups = ageGroups
 
         if (Object.keys(payload).length === 0) return
 
@@ -64,16 +72,40 @@ class StoryIdea {
             accountId: response.data[0].account_id,
             creationStepsDescription: response.data[0].creation_steps_description,
             isFictional: response.data[0].is_fictional,
-            createdAt: response.data[0].created_at
+            createdAt: response.data[0].created_at,
+            language: response.data[0].language,
+            ageGroups: response.data[0].age_groups
         })
     }
 
-    static async findAll({ accountId, profileId }, options = { serialized: false }) {
+    static async findAll({ accountId, profileId }, options = { serialized: false, page: 1 }) {
         const headers = generateSupabaseHeaders()
+        const limit = 10
+        const offset = (options.page - 1) * limit;
 
-        const params = { select: "*" }
+        const params = {
+            select: "*",
+            limit,
+            offset,
+            order: 'created_at.desc'
+        }
+
         if (accountId) params.account_id = `eq.${accountId}`
         if (profileId) params.profile_id = `eq.${profileId}`
+
+        const countResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/story_ideas?select=count`,
+            {
+                params: {
+                    // Apply the same filters but don't include pagination parameters
+                    account_id: accountId ? `eq.${accountId}` : undefined,
+                    profile_id: profileId ? `eq.${profileId}` : undefined,
+                },
+                headers
+            }
+        );
+        const totalStoryIdeas = countResponse.data[0].count;
+        const totalPages = Math.ceil(totalStoryIdeas / limit);
 
         const response = await axios.get(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/story_ideas`,
@@ -104,20 +136,28 @@ class StoryIdea {
             }, {});
         }
 
-        return response.data.map((storyIdea) => {
-            const characters = options.serialized ? storyIdeaCharactersHash[storyIdea.id] : []
+        console.log(response.data)
 
-            return new StoryIdea({
-               ...storyIdea,
-               firstLine: storyIdea.first_line,
-               profileId: storyIdea.profile_id,
-               accountId: storyIdea.account_id,
-               creationStepsDescription: storyIdea.creation_steps_description,
-               isFictional: storyIdea.is_fictional,
-               createdAt: storyIdea.created_at,
-               characters
+        return {
+            totalStoryIdeas,
+            totalPages,
+            storyIdeas: response.data.map((storyIdea) => {
+                const characters = options.serialized ? storyIdeaCharactersHash[storyIdea.id] : []
+
+                return new StoryIdea({
+                    ...storyIdea,
+                    firstLine: storyIdea.first_line,
+                    profileId: storyIdea.profile_id,
+                    accountId: storyIdea.account_id,
+                    creationStepsDescription: storyIdea.creation_steps_description,
+                    isFictional: storyIdea.is_fictional,
+                    createdAt: storyIdea.created_at,
+                    characters,
+                    ageGroups: storyIdea.age_groups,
+                    language: storyIdea.language
+                })
             })
-        })
+        }
     }
 }
 

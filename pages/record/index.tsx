@@ -68,7 +68,7 @@ function Record() {
 
     const handleSelectUnfinishedStory = (story: any) => {
         setSelectedUnfinishedStory(story)
-        setSelectedStoryIdea(null)
+        setSelectedStoryIdea(story?.storyIdea)
     }
 
     const recordingTimeUsagePercentage = currentSubscription?.getRecordingTimeUsagePercentage(totalRecordingTime)
