@@ -471,7 +471,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                                         onComplete={updateAudioBlob}
                                         startButtonText={unfinishedStory ? "Continue recording" : "Start recording"}
                                         // @ts-ignore
-                                        audioURL={storyIdea ? null : unfinishedStoryRecordingURL ? unfinishedStoryRecordingURL : null}
+                                        audioURL={unfinishedStoryRecordingURL}
                                         onDuration={(duration: number) => setAudioDuration(duration)} />
                                 </div>
                             ) : (

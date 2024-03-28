@@ -73,7 +73,7 @@ const STKRecordAudio = ({
             intervalRef.current = setInterval(() => {
                 setDuration((prevDuration) => prevDuration + 1);
             }, 1000);
-            setCountdownTrigger(prev => prev + 1); // Increment to trigger countdown
+            setCountdownTrigger(prev => prev + 1)
         } catch (error) {
             console.error(error);
         }
