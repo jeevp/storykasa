@@ -302,7 +302,7 @@ class Story {
         if (narratorName) payload.narrator_name = narratorName
         if (accountId) payload.account_id = accountId
         if (playCount) payload.play_count = playCount
-        if (recordingURL) payload.recording_url = recordingURL
+        if (recordingURL || recordingURL === "") payload.recording_url = recordingURL
         if (duration) payload.duration = duration
         if (language) payload.language = language
         if (ageGroups) payload.age_groups = ageGroups

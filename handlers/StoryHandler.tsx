@@ -97,7 +97,7 @@ export default class StoryHandler {
         // @ts-ignore
         if (narratorName) payload.narratorName = narratorName
         // @ts-ignore
-        if (recordingURL) payload.recordingURL = recordingURL
+        if (recordingURL || recordingURL === "") payload.recordingURL = recordingURL
         // @ts-ignore
         if (duration) payload.duration = duration
         // @ts-ignore

@@ -11,6 +11,7 @@ interface STKAccordionProps {
     list?: Array<string>
     defaultExpanded?: boolean
     children?: any
+    alignContentLeft?: boolean
 }
 
 export default function STKAccordion({
@@ -20,7 +21,8 @@ export default function STKAccordion({
     text,
     list,
     defaultExpanded,
-    children
+    children,
+    alignContentLeft
 }: STKAccordionProps) {
     return (
         <ThemeProvider theme={theme}>
@@ -28,14 +30,22 @@ export default function STKAccordion({
             classes={{ root: "stk-accordion" }}
             defaultExpanded={defaultExpanded}>
                 <AccordionSummary classes={{ root: "stk-accordion--summary" }} expandIcon={<ExpandMoreIcon />}>
-                    <h3 className={`font-semibold text-base m-0 flex items-center ${titleSize ? titleSize : ''}`}>
-                        {titlePrefix ? <span className="mr-6 font-semibold uppercase text-sm">{titlePrefix}</span> : null}
-                        {title}
-                    </h3>
+                    <div className="flex items-center">
+                        {titlePrefix ? (
+                            <label className="mr-6 font-semibold uppercase text-sm">
+                                {titlePrefix}
+                            </label>
+                        ) : null}
+                        <div className="overflow-hidden max-w-[180px] lg:max-w-full text-ellipsis">
+                            <label className={`font-semibold text-base m-0 whitespace-nowrap ${titleSize ? titleSize : ''}`}>
+                                {title}
+                            </label>
+                        </div>
+                    </div>
                 </AccordionSummary>
                 <AccordionDetails>
                     {children ? (
-                        <div className={titlePrefix ? 'ml-[78px]' : ''}>
+                        <div className={titlePrefix && !alignContentLeft ? 'ml-[78px]' : ''}>
                             {children}
                         </div>
                     ) : (

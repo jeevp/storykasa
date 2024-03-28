@@ -48,7 +48,7 @@ export default function STKDialog({
             fullWidth={!!maxWidth}
             onClose={handleClose}
         >
-            <div className="p-4 lg:p-6" style={{ border: aiMode ? `2px solid ${purple500}` : '' }}>
+            <div className="p-4 lg:p-6" style={{ border: aiMode && !fullScreen ? `2px solid ${purple500}` : '' }}>
                 <div className="flex items=center justify-between">
                     <div className="flex items-center">
                         <div className="flex items-center">

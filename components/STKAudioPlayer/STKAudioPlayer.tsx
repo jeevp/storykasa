@@ -16,6 +16,7 @@ import STKMenu from "@/components/STKMenu/STKMenu";
 import useDevice from "@/customHooks/useDevice";
 import DeleteIcon from '@mui/icons-material/Delete';
 import STKTooltip from "@/components/STKTooltip/STKTooltip"
+import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog"
 
 interface STKAudioPlayerProps {
     src: string;
@@ -25,6 +26,7 @@ interface STKAudioPlayerProps {
     customDuration?: number;
     onPlaying?: (playing: boolean) => void;
     clearable?: boolean
+    clearRecordWarningText?: string
     onEnd?: () => void;
     onTimeChange?: () => void
     onClear?: () => void
@@ -42,6 +44,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     outlined = false,
     html5 = false,
     clearable,
+    clearRecordWarningText,
     customDuration = 0,
     onPlaying = () => ({}),
     onEnd = () => ({}),
@@ -69,7 +72,8 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     const [totalDuration, setTotalDuration] = useState(0)
     const [loading, setLoading] = useState(true)
     const [playbackSpeed, setPlaybackSpeed] = useState(1.0)
-    const [userIsDragging, setUserIsDragging] = useState(false); // New state to track user interaction
+    const [userIsDragging, setUserIsDragging] = useState(false)
+    const [showClearRecordingWarning, setShowClearRecordingWarning] = useState(false)
 
     useEffect(() => {
         if (!src) {
@@ -339,13 +343,20 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                     </div>
                     {clearable ? (
                         <STKTooltip text="Clear recording" position="left">
-                            <STKButton iconButton onClick={() => onClear()}>
+                            <STKButton iconButton onClick={() => setShowClearRecordingWarning(true)}>
                                 <DeleteIcon sx={{ width: "20px", height: "20px" }} />
                             </STKButton>
                         </STKTooltip>
                     ) : null}
                 </div>
             </div>
+            <InfoDialog
+            active={showClearRecordingWarning}
+            title="Clear recording"
+            confirmationButtonText="Clear record"
+            text={clearRecordWarningText}
+            onAction={() => onClear()}
+            onClose={() => setShowClearRecordingWarning(false)}/>
         </div>
     );
 };

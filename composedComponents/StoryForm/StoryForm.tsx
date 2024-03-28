@@ -137,9 +137,9 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
             }));
 
             recordingURL = await StorageHandler.uploadFile(audioFormData)
-
-            return recordingURL
         }
+
+        return recordingURL
     }
 
     const autoSaveStory = async () => {
@@ -444,6 +444,10 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                         src={audioURL}
                         outlined
                         clearable
+                        clearRecordWarningText={unfinishedStory ? `By proceeding, the current recording will 
+                        be cleared from your working area. However, it will only be permanently 
+                        removed if you save your changes.` : `Confirming this action will permanently remove the 
+                        current recording. This process cannot be undone`}
                         customDuration={audioDuration}
                         onClear={clearRecording}/>
                     ) : (
@@ -456,6 +460,9 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                                             customDuration={unfinishedStory?.duration}
                                             outlined
                                             clearable
+                                            clearRecordWarningText={`By proceeding, the current recording will 
+                                            be cleared from your working area. However, it will only be permanently 
+                                            removed if you save your changes.`}
                                             src={unfinishedStory?.recordingUrl}
                                             onClear={clearRecording}/>
                                         </div>

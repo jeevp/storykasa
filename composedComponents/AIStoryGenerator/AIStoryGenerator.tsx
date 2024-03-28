@@ -62,7 +62,7 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
                     <div className="mt-4">
                         <AIStoryIdeaList storyIdeas={storyIdeas.slice(0,3)} onSelect={handleOnSelect} />
                         <div className="mt-4 flex justify-end">
-                            <STKButton variant="outlined" onClick={() => setShowStoryIdeasHistoryDialog(true)}>
+                            <STKButton fullWidth={onMobile} variant="outlined" onClick={() => setShowStoryIdeasHistoryDialog(true)}>
                                 Open full story idea history
                             </STKButton>
                         </div>

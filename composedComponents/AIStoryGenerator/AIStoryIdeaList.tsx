@@ -6,6 +6,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
 import {Baby, GlobeSimple} from "@phosphor-icons/react";
 import Story from "@/models/Story";
+import useDevice from "@/customHooks/useDevice";
 
 interface AIStoryIdeaListProps {
     storyIdeas: any[],
@@ -20,6 +21,7 @@ export default function AIStoryIdeaList({
     loading,
     onSelect = () => ({})
 }: AIStoryIdeaListProps) {
+    const { onMobile } = useDevice()
 
     return (
         <div>
@@ -40,8 +42,12 @@ export default function AIStoryIdeaList({
                               titlePrefix={`${DateTime.fromISO(storyIdea.createdAt).toLocaleString()}`}
                               title={`"${storyIdea?.title}"`}
                               titleSize="text-lg"
+                              alignContentLeft={onMobile}
                               // @ts-ignore
                               defaultExpanded={expandFirstItem ? index === 0 : null}>
+                              {onMobile ? (
+                                  <h2 className="text-xl mt-0 p-0 mb-4">{storyIdea?.title}</h2>
+                              ) : null}
                               <p>{storyIdea?.setting}</p>
                               <div className="mt-4">
                                   <label className="font-semibold">Characters</label>

@@ -5,7 +5,7 @@ import withProfile from "@/HOC/withProfile"
 import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
 import Link from "next/link";
 import {useStory} from "@/contexts/story/StoryContext";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import StoryHandler from "@/handlers/StoryHandler";
 import STKLinearProgress from "@/components/STKLinearProgress/STKLinearProgress";
 import STKLoading from "@/components/STKLoading/STKLoading";
@@ -17,6 +17,8 @@ import AIStoryGenerator from "@/composedComponents/AIStoryGenerator/AIStoryGener
 import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
 
 function Record() {
+    const storyFormContainerRef = useRef(null)
+
     const { currentSubscription } = useSubscription()
     const { currentUser } = useAuth()
     const { currentProfileId } = useProfile()
@@ -69,6 +71,7 @@ function Record() {
     const handleSelectUnfinishedStory = (story: any) => {
         setSelectedUnfinishedStory(story)
         setSelectedStoryIdea(story?.storyIdea)
+        scrollToStoryForm()
     }
 
     const recordingTimeUsagePercentage = currentSubscription?.getRecordingTimeUsagePercentage(totalRecordingTime)
@@ -79,9 +82,22 @@ function Record() {
         setUnfinishedStories([...unfinishedStories.filter((story) => story.storyId !== selectedUnfinishedStory?.storyId)])
     }
 
+    const scrollToStoryForm = () => {
+        if (storyFormContainerRef?.current) {
+            // @ts-ignore
+            const offsetTop = storyFormContainerRef.current.offsetTop
+            const offsetBefore = 20
+
+            window.scrollTo({
+                top: offsetTop - offsetBefore,
+                behavior: 'smooth'
+            });
+        }
+    }
     const handleStoryOnSelect = (storyIdea: any) => {
         setSelectedStoryIdea(storyIdea)
         setSelectedUnfinishedStory(null)
+        scrollToStoryForm()
     }
 
     const handleDeleteUnfinishedStory = (story: any) => {
@@ -126,12 +142,14 @@ function Record() {
                                         <div key={story} className="first:mt-0 mt-2">
                                             <STKCard>
                                                 <div className="p-4 flex items-center justify-between">
-                                                    <label>
-                                                        {
-                                                            // @ts-ignore
-                                                            story?.title
-                                                        }
-                                                    </label>
+                                                    <div className="overflow-hidden max-w-[150px] lg:max-w-full text-ellipsis">
+                                                        <label className="whitespace-nowrap">
+                                                            {
+                                                                // @ts-ignore
+                                                                story?.title
+                                                            }
+                                                        </label>
+                                                    </div>
                                                     <div className="flex items-center gap-2">
                                                         <STKButton
                                                             height="30px"
@@ -142,7 +160,7 @@ function Record() {
                                                             variant="outlined"
                                                             height="30px"
                                                             onClick={() => handleDeleteUnfinishedStory(story)}>
-                                                            Delete draft
+                                                            Delete
                                                         </STKButton>
                                                     </div>
                                                 </div>
@@ -180,7 +198,7 @@ function Record() {
                     <div className="mt-10">
                         <AIStoryGenerator onSelect={handleStoryOnSelect} />
                     </div>
-                    <div className="mt-10">
+                    <div className="mt-10" ref={storyFormContainerRef}>
                         <StoryForm
                         unfinishedStory={selectedUnfinishedStory}
                         // @ts-ignore
