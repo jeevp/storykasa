@@ -45,7 +45,7 @@ export default function STKAccordion({
                 </AccordionSummary>
                 <AccordionDetails>
                     {children ? (
-                        <div className={titlePrefix && !alignContentLeft ? 'ml-[78px]' : ''}>
+                        <div className={titlePrefix && !alignContentLeft ? 'ml-[100px]' : ''}>
                             {children}
                         </div>
                     ) : (

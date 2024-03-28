@@ -354,6 +354,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
             active={showClearRecordingWarning}
             title="Clear recording"
             confirmationButtonText="Clear record"
+            // @ts-ignore
             text={clearRecordWarningText}
             onAction={() => onClear()}
             onClose={() => setShowClearRecordingWarning(false)}/>
