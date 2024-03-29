@@ -23,6 +23,7 @@ export default function AIStoryIdeaList({
 }: AIStoryIdeaListProps) {
     const { onMobile } = useDevice()
 
+
     return (
         <div>
             {loading ? (
@@ -40,6 +41,8 @@ export default function AIStoryIdeaList({
                           <STKAccordion
                               // @ts-ignore
                               titlePrefix={`${DateTime.fromISO(storyIdea.createdAt).toLocaleString()}`}
+                              category={storyIdea?.isFictional ? "fictional" : "real-life"}
+                              categoryColor={storyIdea?.isFictional ? "bg-indigo-200" : "bg-emerald-200"}
                               title={`"${storyIdea?.title}"`}
                               titleSize="text-lg"
                               alignContentLeft={onMobile}
@@ -48,23 +51,35 @@ export default function AIStoryIdeaList({
                               {onMobile ? (
                                   <h2 className="text-xl mt-0 p-0 mb-4">{storyIdea?.title}</h2>
                               ) : null}
-                              <p>{storyIdea?.setting}</p>
-                              <div className="mt-4">
-                                  <label className="font-semibold">Characters</label>
-                                  <ul>
-                                      {storyIdea?.characters?.map((character: string, _index: number) => (
-                                          <li key={_index}>
+                              {storyIdea?.isFictional ? (
+                                  <>
+                                      <p>{storyIdea?.setting}</p>
+                                      <div className="mt-4">
+                                          <label className="font-semibold">Characters</label>
+                                          <ul>
+                                              {storyIdea?.characters?.map((character: string, _index: number) => (
+                                                  <li key={_index}>
                                         <span
                                             // @ts-ignore
                                             className="font-semibold">{character?.name}</span>: {character?.description}
-                                          </li>
+                                                  </li>
+                                              ))}
+                                          </ul>
+                                      </div>
+                                      <div className="mt-4">
+                                          <label className="font-semibold">First line</label>
+                                          <p className="mt-2">{storyIdea?.firstLine}</p>
+                                      </div>
+                                  </>
+
+                              ) : (
+                                  <ul className="list-disc pl-5 space-y-2">
+                                      {storyIdea?.creationStepsDescription?.split('\n').map((item: any, index: number) => (
+                                          <li key={index}>{item.substring(2)}</li>
                                       ))}
                                   </ul>
-                              </div>
-                              <div className="mt-4">
-                                  <label className="font-semibold">First line</label>
-                                  <p className="mt-2">{storyIdea?.firstLine}</p>
-                              </div>
+                              )}
+
 
                               <div className="mt-8">
                                   <div className="flex items-center mr-4 mb-1 lg:mb-0">

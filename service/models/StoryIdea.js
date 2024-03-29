@@ -50,7 +50,7 @@ class StoryIdea {
         if (firstLine) payload.first_line = firstLine
         if (profileId) payload.profile_id = profileId
         if (accountId) payload.account_id = accountId
-        if (creationStepsDescription) payload.creationStepsDescription = creationStepsDescription
+        if (creationStepsDescription) payload.creation_steps_description = creationStepsDescription
         if (isFictional === true || isFictional === false) payload.is_fictional = isFictional
         if (language) payload.language = language
         if (ageGroups) payload.age_groups = ageGroups

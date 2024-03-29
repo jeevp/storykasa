@@ -12,11 +12,15 @@ interface STKAccordionProps {
     defaultExpanded?: boolean
     children?: any
     alignContentLeft?: boolean
+    category?: string
+    categoryColor?: string
 }
 
 export default function STKAccordion({
     title,
     titlePrefix,
+    category,
+    categoryColor,
     titleSize,
     text,
     list,
@@ -41,6 +45,11 @@ export default function STKAccordion({
                                 {title}
                             </label>
                         </div>
+                        {category ? (
+                            <div className={`rounded-2xl flex justify-center items-center py-1 px-3 ${categoryColor} ml-4`}>
+                                <label className="uppercase font-semibold text-[10px]">{category}</label>
+                            </div>
+                        ) : null}
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>

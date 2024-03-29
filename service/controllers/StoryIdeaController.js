@@ -46,15 +46,25 @@ class StoryIdeaController {
                 return result;
             }
 
-            const prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story idea in English. 
-            Describe a unique setting where the story is taking place in 280 characters. 
-            Introduce three main characters with distinct names and descriptions in 525 characters.
-            Provide a title in 50 characters that includes specific keywords/themes and is unique and should some of following letters "${generateRandomString(10)}".
-            Give the first line of the story in 210 characters.
-            The story should revolve around ${description} and be suitable for ${ageGroupsLabel}. 
-            Format the response as an object with id:guid, title:string, setting:string, characters:array of objects(name:string, description:string)  and firstLine:string.
-            Ensure each aspect of the prompt adds uniqueness and specificity to the story idea.
-            `;
+            let prompt = ""
+
+            if (isFictional) {
+                prompt = `Generate a ${isFictional ? 'fictional' : 'real-life'} story idea in English. 
+                    Describe a unique setting where the story is taking place in 280 characters. 
+                    Introduce three main characters with distinct names and descriptions in 525 characters.
+                    Provide a title in 50 characters that includes specific keywords/themes and is unique and should some of following letters "${generateRandomString(10)}".
+                    Give the first line of the story in 210 characters.
+                    The story should revolve around ${description} and be suitable for ${ageGroupsLabel}. 
+                    Format the response as an object with id:guid, title:string, setting:string, characters:array of objects(name:string, description:string)  and firstLine:string.
+                    Ensure each aspect of the prompt adds uniqueness and specificity to the story idea.
+                `
+            } else {
+                prompt = `
+                     I want to tell a true story about ${description} and the story is 
+                     for an audience of ${ageGroupsLabel}. Could you provide me with some ideas for how to get 
+                     started, not the actual story? Format the response as an object with id:guid, title:string, creationStepsDescription:string. Make sure the creationStepsDescription string is formatted with bullet points.
+                `
+            }
 
 
             const response = await OpenAIService.createCompletion({ prompt })
@@ -82,15 +92,17 @@ class StoryIdeaController {
             })
 
             const storyIdeaCharacters = []
-            await Promise.all(generatedStoryIdea.characters.map(async(character) => {
-                const storyIdeaCharacter = await StoryIdeaCharacter.create({
-                    storyIdeaId: storyIdea?.id,
-                    name: character?.name || "",
-                    description: character?.description || ""
-                })
+            if (generatedStoryIdea?.characters?.length > 0) {
+                await Promise.all(generatedStoryIdea.characters.map(async(character) => {
+                    const storyIdeaCharacter = await StoryIdeaCharacter.create({
+                        storyIdeaId: storyIdea?.id,
+                        name: character?.name || "",
+                        description: character?.description || ""
+                    })
 
-                storyIdeaCharacters.push(storyIdeaCharacter)
-            }))
+                    storyIdeaCharacters.push(storyIdeaCharacter)
+                }))
+            }
 
             return res.status(201).send({
                 ...storyIdea,

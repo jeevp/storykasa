@@ -111,7 +111,12 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
     const preFillStoryForm = (data: any) => {
         setTitle(data?.title)
-        setDescription(data?.description || "")
+        if (storyIdea && !storyIdea.isFictional) {
+            setDescription(data?.creationStepsDescription)
+        } else {
+            setDescription(data?.description || data?.setting)
+        }
+
         setLanguage(data?.language)
         setAgeGroups(data?.ageGroups || [])
     }

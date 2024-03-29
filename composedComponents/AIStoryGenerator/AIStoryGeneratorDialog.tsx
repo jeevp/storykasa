@@ -79,7 +79,8 @@ export default function AIStoryGeneratorDialog({
                     setting: storyIdea.setting,
                     firstLine: storyIdea.firstLine,
                     createdAt: storyIdea?.createdAt,
-                    characters: storyIdea?.characters
+                    characters: storyIdea?.characters,
+                    creationStepsDescription: storyIdea?.creationStepsDescription
                 }
             }))
         }
@@ -146,7 +147,8 @@ export default function AIStoryGeneratorDialog({
             ageGroups,
             firstLine: storyIdea.firstLine,
             setting: storyIdea.setting,
-            characters: storyIdea?.characters || []
+            characters: storyIdea?.characters || [],
+            creationStepsDescription: storyIdea?.creationStepsDescription
         })
 
         onClose()

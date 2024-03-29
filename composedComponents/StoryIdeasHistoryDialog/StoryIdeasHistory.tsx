@@ -49,7 +49,8 @@ export default function StoryIdeasHistory({
             ageGroups: storyIdea?.ageGroups,
             firstLine: storyIdea.firstLine,
             setting: storyIdea.setting,
-            characters: storyIdea?.characters
+            characters: storyIdea?.characters,
+            creationStepsDescription: storyIdea?.creationStepsDescription
         })
 
         onClose()
