@@ -125,7 +125,7 @@ export default function AIStoryGeneratorDialog({
         }
 
         const storyIdeaPromises = []
-        const storyIdeaRequests = [1,2,3]
+        const storyIdeaRequests = isFictional ? [1,2,3] : [1]
 
         // @ts-ignore
         for (let count = 0; count < storyIdeaRequests.length; count += 1) {
@@ -163,6 +163,15 @@ export default function AIStoryGeneratorDialog({
         && !currentSubscription?.adminAccount
     )
 
+    const handleIsFictionalOnChange = (option: any) => {
+        setIsFictional(option?.value)
+
+        if (option?.value) {
+            setStoriesLoading(3)
+        } else {
+            setStoriesLoading(1)
+        }
+    }
 
     return (
         <STKDialog
@@ -216,7 +225,7 @@ export default function AIStoryGeneratorDialog({
                                               <STKButtonTabs tabs={[
                                                   { text: "Yes, it's completely made up.", value: true },
                                                   { text: "No, it's a real-life story.", value: false }
-                                              ]} onChange={(option) => setIsFictional(option?.value)} />
+                                              ]} onChange={handleIsFictionalOnChange} />
                                           </div>
                                       </div>
                                       <div className="mt-10">

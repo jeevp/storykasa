@@ -31,7 +31,7 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
     // Methods
     const handleFetchStoryIdeas = async () => {
         const response = await StoryIdeasHandler.fetchStoryIdeas({ profileId: currentProfileId, page: 1 })
-        setStoryIdeas(response.storyIdeas)
+        setStoryIdeas(response.storyIdeas.slice(0,3))
     }
 
     const handleOnSelect = (storyIdea: any) => {
@@ -39,7 +39,15 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
     }
 
     const handleStoryIdeasOnChange = (_storyIdeas: any) => {
-        setStoryIdeas(_storyIdeas)
+        const list = [...storyIdeas]
+        _storyIdeas.forEach((storyIdea: any) => {
+            if (!list.find((_storyIdea: any) => _storyIdea.id === storyIdea.id)) {
+                // @ts-ignore
+                list.unshift(storyIdea)
+            }
+        })
+
+        setStoryIdeas(list)
     }
 
     return (
