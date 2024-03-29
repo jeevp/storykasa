@@ -40,7 +40,7 @@ export default function STKAccordion({
                                 {titlePrefix}
                             </label>
                         ) : null}
-                        <div className="overflow-hidden max-w-[110px] lg:max-w-full text-ellipsis">
+                        <div className="overflow-hidden max-w-[110px] md:max-w-[80%] lg:max-w-full text-ellipsis">
                             <label className={`font-semibold text-base m-0 whitespace-nowrap ${titleSize ? titleSize : ''}`}>
                                 {title}
                             </label>
