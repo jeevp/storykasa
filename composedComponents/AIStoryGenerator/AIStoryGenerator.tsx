@@ -39,6 +39,7 @@ export default function AIStoryGenerator({ onSelect = () => ({}) }: { onSelect: 
     }
 
     const handleStoryIdeasOnChange = (_storyIdeas: any) => {
+        console.log({ _storyIdeas })
         const list = [...storyIdeas]
         _storyIdeas.forEach((storyIdea: any) => {
             if (!list.find((_storyIdea: any) => _storyIdea.id === storyIdea.id)) {

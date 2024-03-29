@@ -80,7 +80,8 @@ export default function AIStoryGeneratorDialog({
                     firstLine: storyIdea.firstLine,
                     createdAt: storyIdea?.createdAt,
                     characters: storyIdea?.characters,
-                    creationStepsDescription: storyIdea?.creationStepsDescription
+                    creationStepsDescription: storyIdea?.creationStepsDescription,
+                    isFictional: storyIdea?.isFictional
                 }
             }))
         }
@@ -148,7 +149,8 @@ export default function AIStoryGeneratorDialog({
             firstLine: storyIdea.firstLine,
             setting: storyIdea.setting,
             characters: storyIdea?.characters || [],
-            creationStepsDescription: storyIdea?.creationStepsDescription
+            creationStepsDescription: storyIdea?.creationStepsDescription,
+            isFictional: storyIdea?.isFictional
         })
 
         onClose()
