@@ -88,7 +88,8 @@ class StoryIdeaController {
                 accountId: user.id,
                 profileId,
                 ageGroups,
-                language: "English"
+                language: "English",
+                prompt: description
             })
 
             const storyIdeaCharacters = []

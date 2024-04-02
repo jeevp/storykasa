@@ -112,11 +112,10 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
     const preFillStoryForm = (data: any) => {
         setTitle(data?.title)
         if (storyIdea && !storyIdea.isFictional) {
-            setDescription(data?.creationStepsDescription)
+            setDescription(data?.prompt || "")
         } else {
             setDescription(data?.description || data?.setting)
         }
-
         setLanguage(data?.language)
         setAgeGroups(data?.ageGroups || [])
     }
@@ -393,6 +392,20 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                     <NumberCircleTwo size={28} />
                     <label className="font-semibold ml-1">Your story</label>
                 </div>
+                {storyIdea?.creationStepsDescription ? (
+                    <div className="p-4 w-auto inline-block bg-purple-50 rounded-2xl mb-4">
+                        <div className="flex items-center">
+                            <TipsAndUpdatesIcon sx={{ color: purple600 }} />
+                            <label className="ml-2 font-semibold">Tips on how to create your story</label>
+                        </div>
+                        <ul className="list-disc pl-5 space-y-2">
+                            {storyIdea?.creationStepsDescription?.split('\n').map((item: any, index: number) => (
+                                <li key={index}>{item.substring(2)}</li>
+                            ))}
+                        </ul>
+                    </div>
+                ) : null}
+
                 {storyIdea?.setting ? (
                     <div className="p-4 w-auto inline-block bg-purple-50 rounded-2xl mb-4">
                         <div className="flex items-center">

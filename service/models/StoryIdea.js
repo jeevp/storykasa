@@ -15,7 +15,8 @@ class StoryIdea {
         createdAt,
         characters = [],
         ageGroups = [],
-        language
+        language,
+        prompt
     }) {
         this.id = id
         this.title = title
@@ -29,6 +30,7 @@ class StoryIdea {
         this.characters = characters
         this.ageGroups = ageGroups
         this.language = language
+        this.prompt = prompt
     }
 
     static async create({
@@ -40,7 +42,8 @@ class StoryIdea {
         creationStepsDescription,
         isFictional,
         language,
-        ageGroups
+        ageGroups,
+        prompt
     }) {
         const headers = generateSupabaseHeaders()
         const payload = {}
@@ -54,6 +57,7 @@ class StoryIdea {
         if (isFictional === true || isFictional === false) payload.is_fictional = isFictional
         if (language) payload.language = language
         if (ageGroups) payload.age_groups = ageGroups
+        if (prompt) payload.prompt = prompt
 
         if (Object.keys(payload).length === 0) return
 
@@ -153,7 +157,8 @@ class StoryIdea {
                     createdAt: storyIdea.created_at,
                     characters,
                     ageGroups: storyIdea.age_groups,
-                    language: storyIdea.language
+                    language: storyIdea.language,
+                    prompt: storyIdea.prompt
                 })
             })
         }

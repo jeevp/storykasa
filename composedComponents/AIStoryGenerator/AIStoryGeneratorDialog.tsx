@@ -81,7 +81,8 @@ export default function AIStoryGeneratorDialog({
                     createdAt: storyIdea?.createdAt,
                     characters: storyIdea?.characters,
                     creationStepsDescription: storyIdea?.creationStepsDescription,
-                    isFictional: storyIdea?.isFictional
+                    isFictional: storyIdea?.isFictional,
+                    prompt: storyIdea?.prompt
                 }
             }))
         }
@@ -150,7 +151,8 @@ export default function AIStoryGeneratorDialog({
             setting: storyIdea.setting,
             characters: storyIdea?.characters || [],
             creationStepsDescription: storyIdea?.creationStepsDescription,
-            isFictional: storyIdea?.isFictional
+            isFictional: storyIdea?.isFictional,
+            prompt: storyIdea?.prompt
         })
 
         onClose()
