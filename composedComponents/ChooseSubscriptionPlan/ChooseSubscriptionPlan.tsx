@@ -63,7 +63,8 @@ export default function ChooseSubscriptionPlan({ onNext = () => ({}) }) {
                 'Unlimited listening time to all stories',
                 'Limited to 5 profiles',
                 'More story recording time (300 minutes)',
-                'Can add artwork to any stories'
+                'Can add artwork to any stories',
+                'AI Story Idea Generator for endless inspiration'
             ],
             isSelected: selectedPlan.value === PREMIUM_SUBSCRIPTION_PLAN,
             value: PREMIUM_SUBSCRIPTION_PLAN
@@ -77,6 +78,7 @@ export default function ChooseSubscriptionPlan({ onNext = () => ({}) }) {
                 'Limited to 10 profiles',
                 'More story recording time (600 minutes)',
                 'Can add artwork to any stories',
+                'AI Story Idea Generator for endless inspiration'
             ],
             isSelected: selectedPlan.value === PREMIUM_PLUS_SUBSCRIPTION_PLAN,
             value: PREMIUM_PLUS_SUBSCRIPTION_PLAN
@@ -89,7 +91,8 @@ export default function ChooseSubscriptionPlan({ onNext = () => ({}) }) {
                 'Unlimited listening time to all stories',
                 'Even more story recording (600 minutes)',
                 'Can add artwork to any stories',
-                'Includes up to 100 premium users'
+                'AI Story Idea Generator for endless inspiration',
+                'Includes up to 100 premium users',
             ],
             isSelected: selectedPlan.value === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
             value: PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN
