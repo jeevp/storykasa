@@ -75,6 +75,10 @@ class EmailService {
         await this.sendEmail(emailContext, emailTemplate)
     }
 
+    static createTransporter = async () => {
+        const oauth2Client = new OAuth2()
+    }
+
     static async sendEmail(emailContext, emailTemplate) {
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
