@@ -8,8 +8,9 @@ import Story from "@/models/Story";
 export default class LibraryHandler {
     static async fetchLibraries(setLibraries: any) {
         const headers = generateHeaders()
-        const response = await axios.get("/api/libraries", headers)
+        const response = await axios.get("/api/libraries?includeShared=1", headers)
 
+        console.log({ x: response.data })
         setLibraries(response.data.map((library: any) => new Library({
             ...library
         })))

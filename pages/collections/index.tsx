@@ -14,6 +14,7 @@ import {useRouter} from "next/router";
 import Library from "@/models/Library";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton"
 import useDevice from "@/customHooks/useDevice";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 function Collections() {
     const router = useRouter()
@@ -30,6 +31,8 @@ function Collections() {
         setSharedLibraryInvitations,
         setCurrentLibrary
     } = useLibrary()
+
+    const { currentUser } = useAuth()
 
     const startLoading = (
         libraries.length === 0
@@ -86,6 +89,7 @@ function Collections() {
         })
     }
 
+    console.log({ currentUser })
 
     return (
         <PageWrapper path="library">
@@ -163,7 +167,8 @@ function Collections() {
                                 ) : (
 
                                     <div className="flex flex-wrap -mx-1 mt-4">
-                                        {libraries.map((library, index) => (
+                                        {   // @ts-ignore
+                                            libraries.filter((lib) => lib?.accountId === currentUser?.sub).map((library, index) => (
                                             <div className="p-3 lg:w-[320px] w-full" key={index}>
                                                 <LibraryCard
                                                     showListeners
