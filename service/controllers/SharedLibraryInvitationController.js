@@ -49,6 +49,7 @@ export default class SharedLibraryInvitationController {
 
             return res.status(200).send(sharedLibrariesInvitationsSerialized)
         } catch (error) {
+            console.log(error)
             return res.status(400).send({  message: "Something went wrong." })
         }
     }

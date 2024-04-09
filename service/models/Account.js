@@ -23,7 +23,8 @@ class Account {
     static getAdminAccounts() {
         return [
             "rena@storykasa.com",
-            "felipecpfernandes@gmail.com"
+            "felipecpfernandes@gmail.com",
+            "felipecpfernandes+joao@gmail.com"
         ]
     }
 

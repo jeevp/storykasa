@@ -220,6 +220,7 @@ function Library() {
                                                 story={story}
                                                 // @ts-ignore
                                                 selected={selectedStory?.storyId === story?.storyId}
+                                                enableMenuOptions
                                                 menuOptions={[{ label: "Remove from collection", value: REMOVE_FROM_COLLECTION_MENU_OPTION }]}
                                                 onClick={() => handleStoryClick(story)}
                                             ></StoryCard>
