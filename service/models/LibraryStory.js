@@ -110,7 +110,7 @@ class LibraryStory {
                 imageUrl: story?.imageUrl,
                 lastUpdated: story?.last_updated,
                 createdAt: story?.created_at,
-                ageGroups: story?.ageGroups,
+                ageGroups: story?.age_groups,
                 narratorName: story?.narrator_name,
                 duration: story?.duration,
                 recordedBy: story?.recorded_by,

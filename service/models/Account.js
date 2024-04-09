@@ -24,7 +24,7 @@ class Account {
         return [
             "rena@storykasa.com",
             "felipecpfernandes@gmail.com",
-            "felipecpfernandes+joao@gmail.com"
+            "felipecpfernandes+joaopedro@gmail.com"
         ]
     }
 
