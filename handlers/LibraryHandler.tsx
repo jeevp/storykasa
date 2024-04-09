@@ -67,6 +67,7 @@ export default class LibraryHandler {
 
     static async addStory({ storyId, libraryId, profileId }: { storyId: string, libraryId: string, profileId: string }) {
         const headers = generateHeaders()
+
         await axios.post(`/api/profiles/${profileId}/libraries/${libraryId}/stories`, {
             storyId
         }, headers)
