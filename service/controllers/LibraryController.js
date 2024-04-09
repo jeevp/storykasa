@@ -12,8 +12,11 @@ export default class LibraryController {
 
             const { includeShared } = req.query
 
+            const defaultLibrary = await Library.findDefaultLibrary({ accountId: user?.id })
+
             const privateLibraries = await Library.findAll({
                 accountId: user.id,
+                idsToExclude: [defaultLibrary.libraryId]
             }, {
                 serialized: true
             })
@@ -33,7 +36,7 @@ export default class LibraryController {
             let _libraries = libraries.sort((a, b) => {
                 if (a.createdAt > b.createdAt) return 1
                 if (a.createdAt < b.createdAt) return -1
-            })
+            }).filter((library) => library.libraryId !== defaultLibrary.libraryId)
 
             return res.status(200).send(_libraries)
         } catch (error) {
