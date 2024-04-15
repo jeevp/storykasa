@@ -6,10 +6,14 @@ export default class PromoCodesController {
     static async createPromoCode(req, res) {
         try {
             APIValidator.requiredPayload({ req, res }, {
-                requiredPayload: ["discountPercentage", "duration", "durationInMonths"]
+                requiredPayload: ["discountPercentage", "duration"]
             })
 
             const { duration, discountPercentage, durationInMonths } = req.body
+
+            if (duration === "repeating" && !durationInMonths) {
+                return res.status(400).send({ message: "Payload is incorrect" })
+            }
 
             const stripeCoupon = await StripeService.coupons.create({
                 duration,

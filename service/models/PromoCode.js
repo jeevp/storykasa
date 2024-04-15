@@ -14,7 +14,7 @@ export default class PromoCode {
     }) {
         this.id = id
         this.createdAt = createdAt
-        this.discountedPercentage = discountPercentage
+        this.discountPercentage = discountPercentage
         this.durationInMonths = durationInMonths
         this.duration = duration
         this.isValid = isValid
