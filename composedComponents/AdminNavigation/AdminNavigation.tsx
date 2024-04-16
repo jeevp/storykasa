@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import {BookOpenText, Books} from '@phosphor-icons/react'
 import useDevice from "@/customHooks/useDevice";
 import STKButtonTabs from "@/components/STKButtonTabs/STKButtonTabs";
 import {useRouter} from "next/router";
@@ -12,12 +11,13 @@ import HelperDialog from "@/composedComponents/HelperDialog/HelperDialog";
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
+import DiscountOutlinedIcon from '@mui/icons-material/DiscountOutlined';
 
 const navigationOptions = [
     { text: "Public Story Requests", icon: <ChecklistOutlinedIcon sx={{ width: "20px", color: neutral800 }} />, pathname: "/admin/public-story-requests"  },
     { text: "Guest Access Links", icon: <InsertLinkOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/guest-access-links" },
     { text: "Blog System", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/blog" },
-    { text: "Promo Code", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/promo-code" },
+    { text: "Promo Codes", icon: <DiscountOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/promo-code" },
 ]
 
 export default function AdminNavigation() {

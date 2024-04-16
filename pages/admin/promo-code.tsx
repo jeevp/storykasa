@@ -53,18 +53,16 @@ function GuestAccessLinks() {
                     <div className="mt-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <label className="font-semibold text-md">Cupom creation</label>
+                          <label className="font-semibold text-md">Generate promo codes</label>
                           <p className="mt-2 text-md">
-                            Please click the adjacent button to generate a discount
-                            coupon.{" "}
-                          </p>
+                            Instantly create and share discount promo codes with clients.</p>
                         </div>
 
                         <div className="mt-4">
                           <STKButton
                             onClick={() => setShowCreatePromoCodeDialog(true)}
                           >
-                            Generate Promo Code
+                            Create Promo Code
                           </STKButton>
                         </div>
                       </div>
@@ -98,7 +96,7 @@ function GuestAccessLinks() {
                                     <div className="mt-2">
                                       <label>{
                                         // @ts-ignore
-                                        promoCode?.durationInMonths || 1}</label>
+                                        promoCode?.durationInMonths || 1} months</label>
                                     </div>
                                   </div>
                                   <div className="ml-10">
