@@ -10,18 +10,33 @@ export default class LibraryController {
         try {
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const libraries = await Library.findAll({
-                accountId: user.id
+            const { includeShared } = req.query
+
+            const defaultLibrary = await Library.findDefaultLibrary({ accountId: user?.id })
+
+            const privateLibraries = await Library.findAll({
+                accountId: user.id,
+                idsToExclude: [defaultLibrary.libraryId]
             }, {
                 serialized: true
             })
 
+            let sharedLibraries = []
+            if (includeShared) {
+                sharedLibraries = await Library.findAll({
+                    sharedAccountId: user.id
+                }, {
+                    serialized: true
+                })
+            }
+
+
+            const libraries = [...privateLibraries, ...sharedLibraries]
+
             let _libraries = libraries.sort((a, b) => {
                 if (a.createdAt > b.createdAt) return 1
                 if (a.createdAt < b.createdAt) return -1
-            })
-
-            if (_libraries.length > 0) libraries.shift()
+            }).filter((library) => library.libraryId !== defaultLibrary.libraryId)
 
             return res.status(200).send(_libraries)
         } catch (error) {
