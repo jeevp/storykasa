@@ -167,7 +167,7 @@ export default function CreatePromoCodeDialog({
                 </div>
               </div>
               <div className="mt-4">
-                <label className="font-semibold">Duration</label>
+                <label className="font-semibold">Recurrence</label>
                 <div className="mt-2">
                   <STKAutocomplete
                     fluid
@@ -181,7 +181,7 @@ export default function CreatePromoCodeDialog({
               </div>
               {promoCode.duration === "repeating" && (
                 <div className="mt-4">
-                  <label className="font-semibold">Duration in months</label>
+                  <label className="font-semibold">Duration</label>
                   <div className="mt-2">
                     <STKAutocomplete
                       fluid
