@@ -4,30 +4,32 @@ import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
 import STKAutocomplete from "@/components/STKAutocomplete/STKAutocomplete";
 import PromoCodeHandler from "@/handlers/PromoCodeHandler";
+import {usePromoCode} from "@/contexts/promoCode/PromoCodeContext";
+import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
+import CopyButton from "@/composedComponents/CopyButton/CopyButton";
 
 interface GenerateCouponCodeDialogProps {
   open: boolean;
-  demoLinkType?: string;
   onClose?: () => void;
 }
 
-export default function GeneratecouponCodeDialog({
+export default function CreatePromoCodeDialog({
   open,
-  demoLinkType,
   onClose = () => ({}),
 }: GenerateCouponCodeDialogProps) {
   const { onMobile } = useDevice();
+  const { promoCodes, setPromoCodes } = usePromoCode()
+  const { setSnackbarBus } = useSnackbar()
 
   // States
   const [loading, setLoading] = useState(false);
-  const [isCouponCopied, setIsCouponCopied] = useState(false);
-  const [isCouponCreated, setIsCouponCreated] = useState(false);
   const [isCreateButtonDisable, setIsCreateButtonDisable] = useState(false);
   const [disableMonths, setDisableMonths] = useState(true);
   const [promoCode, setPromoCode] = useState({
     discountPercentage: 0.0, // float
     durationInMonths: 0, // int
-    duration: "", // 'once', 'forever', 'repeating'
+    duration: "", // 'once', 'forever', 'repeating',
+    code: ""
   });
   const discountPercentages = [
     { Title: "25%", value: 25 },
@@ -62,19 +64,45 @@ export default function GeneratecouponCodeDialog({
   }, [promoCode]);
 
   useEffect(() => {
-    if (!open) {
+    if (open) {
       setLoading(false);
+      setPromoCode({
+        discountPercentage: 0.0,
+        durationInMonths: 0,
+        duration: "",
+        code: ""
+      })
     }
   }, [open]);
 
   // Methods
   const createCoupon = async () => {
-    setLoading(true);
-    generateCouponCode();
-    const promoCodes = await PromoCodeHandler.createPromoCode(promoCode);
-    console.log("okay 3");
+    try {
+      setLoading(true);
+      const _promoCode = await PromoCodeHandler.createPromoCode({
+        discountPercentage: promoCode.discountPercentage,
+        // @ts-ignore
+        duration: promoCode.duration,
+        durationInMonths: promoCode.durationInMonths
+      })
 
-    console.log(promoCodes);
+      // @ts-ignore
+      setPromoCodes([...promoCodes, _promoCode])
+      setPromoCode({ ...promoCode, code: _promoCode?.code })
+    } catch {
+      setSnackbarBus({
+        active: true,
+        message: "Ops! Something went wrong.",
+        type: "error"
+      });
+    } finally {
+      setLoading(false);
+      setSnackbarBus({
+        active: true,
+        message: "Promo code generated with success.",
+        type: "success"
+      });
+    }
   };
 
   const checkFields = () => {
@@ -83,17 +111,6 @@ export default function GeneratecouponCodeDialog({
     const hasDurationInMonths =
       promoCode.duration === "repeating" ? promoCode.durationInMonths > 0 : true;
     return hasDiscountPercentage && hasDuration && hasDurationInMonths;
-  };
-
-  const generateCouponCode = () => {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < 8; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    // setPromoCode({ ...promoCode, code: result });
-    setIsCouponCreated(true);
   };
 
   const handlePercentage = (percentage: any) => {
@@ -123,32 +140,17 @@ export default function GeneratecouponCodeDialog({
     });
   };
 
-  const copyToClipboard = async () => {
-    return;
-    // if (!navigator.clipboard) {
-    //   console.error("Clipboard not available");
-    //   return;
-    // }
-
-    // try {
-    //   await navigator.clipboard.writeText(promoCode.code);
-    //   setIsCouponCopied(true);
-    //   console.log("Text copied to clipboard");
-    // } catch (err) {
-    //   console.error("Failed to copy text: ", err);
-    // }
-  };
 
   return (
     <STKDialog
       active={open}
       maxWidth="xs"
-      title="Generate Promocode"
+      title="Create Promo Code"
       fullScreen={onMobile}
       onClose={() => onClose()}
     >
       <div>
-        {!isCouponCreated ? (
+        {!promoCode?.code ? (
           <>
             <div className="mt-6">
               <div>
@@ -221,12 +223,15 @@ export default function GeneratecouponCodeDialog({
         ) : (
           <>
             <div className="mt-6">
-              <label className="font-semibold">Codigo do coupon </label>
+              <div>
+                <label className="font-semibold">Promo code</label>
+                <div className="mt-2">
+                  <label>{promoCode?.code}</label>
+                </div>
+              </div>
               <div className="mt-2 overflow-hidden w-[500px] text-ellipsis"></div>
               <div className="mt-8 flex justify-end">
-                <STKButton onClick={copyToClipboard}>
-                  {isCouponCopied ? "Copied" : "Copy Code"}
-                </STKButton>
+                <CopyButton text={promoCode?.code} />
               </div>
             </div>
           </>

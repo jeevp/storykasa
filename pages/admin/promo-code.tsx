@@ -1,26 +1,39 @@
 import PageWrapper from "@/composedComponents/PageWrapper";
 import withProfile from "@/HOC/withProfile";
 import withAuth from "@/HOC/withAuth";
-import { useState } from "react";
+import React, {useEffect, useState} from "react";
 import withAdmin from "@/HOC/withAdmin";
 import { AnimatePresence, motion } from "framer-motion";
 import STKButton from "@/components/STKButton/STKButton";
-import { STORY_LISTENING_DEMO_LINK_TYPE } from "@/composedComponents/GenerateGuestAccessLinkDialog/GenerateGuestAccessLinkDialog";
-import GenerateCupomCodeDialog from "@/composedComponents/GenerateCupomCodeDialog/GenerateCupomCodeDialog";
+import CreatePromoCodeDialog from "@/composedComponents/CreatePromoCodeDialog/CreatePromoCodeDialog";
+import {usePromoCode} from "@/contexts/promoCode/PromoCodeContext";
+import STKCard from "@/components/STKCard/STKCard";
+import PromoCodeHandler from "@/handlers/PromoCodeHandler";
+import CopyButton from "@/composedComponents/CopyButton/CopyButton";
+import STKChip from "@/components/STKChip/STKChip"
+
 
 export const dynamic = "force-dynamic";
 
 function GuestAccessLinks() {
+  // Contexts
+  const { promoCodes, setPromoCodes } = usePromoCode()
+
   // States
-  const [showGenerateGuestAccessLinkDialog, setShowGenerateGuestAccessLinkDialog] =
-    useState(false);
-  const [demoLinkType, setDemoLinkType] = useState("");
+  const [showCreatePromoCodeDialog, setShowCreatePromoCodeDialog] = useState(false);
+
+  // Mounted
+  useEffect(() => {
+    handleFetchPromoCodes()
+  }, []);
 
   // Methods
-  const handleGuestAccessLink = (demoLink: string) => {
-    setShowGenerateGuestAccessLinkDialog(true);
-    setDemoLinkType(demoLink);
-  };
+  const handleFetchPromoCodes = async () => {
+    const _promoCodes = await PromoCodeHandler.fetchPromoCodes()
+
+    setPromoCodes(_promoCodes)
+  }
+
 
   return (
     <>
@@ -49,15 +62,69 @@ function GuestAccessLinks() {
 
                         <div className="mt-4">
                           <STKButton
-                            onClick={() =>
-                              handleGuestAccessLink(STORY_LISTENING_DEMO_LINK_TYPE)
-                            }
+                            onClick={() => setShowCreatePromoCodeDialog(true)}
                           >
                             Generate Promo Code
                           </STKButton>
                         </div>
                       </div>
-                      <div className="w-full border-t my-4 border-t-neutral-300 border-0 border-solid" />
+                    </div>
+                    <div className="mt-10">
+                      {promoCodes.map((promoCode, index) => (
+                          <div key={index} className="first:mt-0 mt-2">
+                            <STKCard>
+                              <div className={`p-4 flex items-center justify-between ${
+                                  // @ts-ignore
+                                promoCode.isValid ? '' : 'disabled'}`}>
+                                <div className="flex items-center">
+                                  <div>
+                                    <label className="font-semibold">Code</label>
+                                    <div className="mt-2">
+                                      <label>{
+                                        // @ts-ignore
+                                        promoCode?.code}</label>
+                                    </div>
+                                  </div>
+                                  <div className="ml-10">
+                                    <label className="font-semibold">Recurrence</label>
+                                    <div className="mt-2">
+                                      <label>{
+                                        // @ts-ignore
+                                        promoCode?.duration}</label>
+                                    </div>
+                                  </div>
+                                  <div className="ml-10">
+                                    <label className="font-semibold">Duration</label>
+                                    <div className="mt-2">
+                                      <label>{
+                                        // @ts-ignore
+                                        promoCode?.durationInMonths || 1}</label>
+                                    </div>
+                                  </div>
+                                  <div className="ml-10">
+                                    <label className="font-semibold">Discount %</label>
+                                    <div className="mt-2">
+                                      <label>{
+                                        // @ts-ignore
+                                        promoCode?.discountPercentage} %</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div>
+                                  {
+                                    // @ts-ignore
+                                    promoCode?.isValid ? (
+                                      <CopyButton
+                                          // @ts-ignore
+                                          text={promoCode?.code} />
+                                  ) : (
+                                      <STKChip label="Invalid" />
+                                  )}
+                                </div>
+                              </div>
+                            </STKCard>
+                          </div>
+                      ))}
                     </div>
                   </div>
                 </motion.div>
@@ -66,10 +133,9 @@ function GuestAccessLinks() {
           </div>
         </div>
       </PageWrapper>
-      <GenerateCupomCodeDialog
-        open={showGenerateGuestAccessLinkDialog}
-        demoLinkType={demoLinkType}
-        onClose={() => setShowGenerateGuestAccessLinkDialog(false)}
+      <CreatePromoCodeDialog
+        open={showCreatePromoCodeDialog}
+        onClose={() => setShowCreatePromoCodeDialog(false)}
       />
     </>
   );

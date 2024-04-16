@@ -7,45 +7,38 @@ import PromoCode from "@/models/PromoCode";
 export default class PromoCodeHandler {
   static async fetchPromoCodes() {
     const headers = generateHeaders();
-    try {
-      const response = await axios.get("/api/admin/promo-codes", headers);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await axios.get("/api/admin/promo-codes", headers);
+    return response.data.map((promoCode: PromoCode) => new PromoCode({
+      ...promoCode
+    }));
   }
 
-  static async createPromoCode(promoCode: any) {
-    console.log({ promoCode });
-
+  static async createPromoCode({ discountPercentage, duration, durationInMonths }: {
+    discountPercentage: number,
+    duration: 'once' | 'forever' | 'repeating',
+    durationInMonths: number
+  }) {
     const headers = generateHeaders();
-    console.log(headers);
     const payload = {
-      discountPercentage: promoCode?.discountPercentage,
-      duration: promoCode.duration,
-      durationInMonths: promoCode?.durationInMonths,
+      discountPercentage,
+      duration,
     };
 
-    console.log({ payload });
+    // @ts-ignore
+    if (duration === "repeating") payload.durationInMonths = durationInMonths
 
-    try {
-        console.log("okay 1")
       const response = await axios.post(`/api/admin/promo-codes`, payload, headers);
-      console.log("okay 2")
 
-      return new PromoCode({
-        id: response.data.id,
-        createdAt: response.data.createdAt,
-        discountPercentage: response.data.discountPercentage,
-        durationInMonths: response.data.durationInMonths,
-        duration: response.data.duration,
-        isValid: response.data.isValid,
-        code: response.data.code,
-        stripePromoCodeId: response.data.stripePromoCodeId,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return new PromoCode({
+      id: response.data.id,
+      createdAt: response.data.createdAt,
+      discountPercentage: response.data.discountPercentage,
+      durationInMonths: response.data.durationInMonths,
+      duration: response.data.duration,
+      isValid: response.data.isValid,
+      code: response.data.code,
+      stripePromoCodeId: response.data.stripePromoCodeId,
+    });
   }
 
   static async updateProfile(
