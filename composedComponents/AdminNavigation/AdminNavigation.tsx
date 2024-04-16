@@ -17,6 +17,7 @@ const navigationOptions = [
     { text: "Public Story Requests", icon: <ChecklistOutlinedIcon sx={{ width: "20px", color: neutral800 }} />, pathname: "/admin/public-story-requests"  },
     { text: "Guest Access Links", icon: <InsertLinkOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/guest-access-links" },
     { text: "Blog System", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/blog" },
+    { text: "Promo Code", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/promo-code" },
 ]
 
 export default function AdminNavigation() {

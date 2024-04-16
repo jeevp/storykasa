@@ -96,6 +96,8 @@ export default function GenerateGuestAccessLinkDialog({
             setTimeout(() => setLinkCopied(false), 2000);
         }
     }
+  
+    
 
 
     return (
