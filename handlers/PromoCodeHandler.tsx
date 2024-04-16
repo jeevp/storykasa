@@ -1,49 +1,66 @@
-import axios from "axios"
+import axios from "axios";
 import generateHeaders from "@/handlers/generateHeaders";
-import {STK_ACCESS_TOKEN} from "@/config";
+import { STK_ACCESS_TOKEN } from "@/config";
 import Profile from "@/models/Profile";
+import PromoCode from "@/models/PromoCode";
 
-export default class ProfileHandler {
-    static async fetchProfiles() {
-        try {
-            const headers = generateHeaders()
-            const response = await axios.get("/api/profiles", headers)
-            return response.data
-        } catch (error) {
-            localStorage.removeItem(STK_ACCESS_TOKEN)
-        }
+export default class PromoCodeHandler {
+  static async fetchPromoCodes() {
+    const headers = generateHeaders();
+    try {
+      const response = await axios.get("/api/admin/promo-codes", headers);
+      return response.data;
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    static async createProfile({ name,  avatarUrl }: { name: string, avatarUrl: string }) {
-        const payload = { name }
-        // @ts-ignore
-        if (avatarUrl) payload.avatarUrl = avatarUrl
+  static async createPromoCode(promoCode: any) {
+    console.log({ promoCode });
 
-        const headers = generateHeaders()
+    const headers = generateHeaders();
+    console.log(headers);
+    const payload = {
+      discountPercentage: promoCode?.discountPercentage,
+      duration: promoCode.duration,
+      durationInMonths: promoCode?.durationInMonths,
+    };
 
+    console.log({ payload });
 
-        const response = await axios.post(`/api/profiles`, payload, headers)
+    try {
+        console.log("okay 1")
+      const response = await axios.post(`/api/admin/promo-codes`, payload, headers);
+      console.log("okay 2")
 
-        return new Profile({
-            profileName: response.data.profile_name,
-            profileId: response.data.profile_id,
-            avatarUrl: response.data.avatar_url
-        })
+      return new PromoCode({
+        id: response.data.id,
+        createdAt: response.data.createdAt,
+        discountPercentage: response.data.discountPercentage,
+        durationInMonths: response.data.durationInMonths,
+        duration: response.data.duration,
+        isValid: response.data.isValid,
+        code: response.data.code,
+        stripePromoCodeId: response.data.stripePromoCodeId,
+      });
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    static async updateProfile(
-        { profileId }: { profileId: string },
-        { name, avatarUrl }: { name: string, avatarUrl: string }
-    ) {
-        const headers = generateHeaders()
-        const payload = {}
-        // @ts-ignore
-        if (name) payload.name = name
-        // @ts-ignore
-        if (avatarUrl) payload.avatarUrl = avatarUrl
+  static async updateProfile(
+    { profileId }: { profileId: string },
+    { name, avatarUrl }: { name: string; avatarUrl: string }
+  ) {
+    const headers = generateHeaders();
+    const payload = {};
+    // @ts-ignore
+    if (name) payload.name = name;
+    // @ts-ignore
+    if (avatarUrl) payload.avatarUrl = avatarUrl;
 
-        const response = await axios.put(`/api/profiles/${profileId}`, payload, headers)
+    const response = await axios.put(`/api/profiles/${profileId}`, payload, headers);
 
-        return response.data
-    }
+    return response.data;
+  }
 }

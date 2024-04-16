@@ -3,6 +3,7 @@ import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import useDevice from "@/customHooks/useDevice";
 import STKAutocomplete from "@/components/STKAutocomplete/STKAutocomplete";
+import PromoCodeHandler from "@/handlers/PromoCodeHandler";
 
 interface GenerateCouponCodeDialogProps {
   open: boolean;
@@ -27,8 +28,6 @@ export default function GeneratecouponCodeDialog({
     discountPercentage: 0.0, // float
     durationInMonths: 0, // int
     duration: "", // 'once', 'forever', 'repeating'
-    isValid: false, // boolean
-    code: "", // string
   });
   const discountPercentages = [
     { Title: "25%", value: 25 },
@@ -69,10 +68,13 @@ export default function GeneratecouponCodeDialog({
   }, [open]);
 
   // Methods
-  const generateGuestAccessLink = () => {
+  const createCoupon = async () => {
     setLoading(true);
-    const code = generateCouponCode();
-    setPromoCode({ ...promoCode, code: code });
+    generateCouponCode();
+    const promoCodes = await PromoCodeHandler.createPromoCode(promoCode);
+    console.log("okay 3");
+
+    console.log(promoCodes);
   };
 
   const checkFields = () => {
@@ -90,8 +92,8 @@ export default function GeneratecouponCodeDialog({
     for (let i = 0; i < 8; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
+    // setPromoCode({ ...promoCode, code: result });
     setIsCouponCreated(true);
-    return result;
   };
 
   const handlePercentage = (percentage: any) => {
@@ -108,7 +110,7 @@ export default function GeneratecouponCodeDialog({
       duration: duration?.value,
     });
     // @ts-ignore
-    if (duration?.value == "repeating") {
+    if (duration.value == "repeating") {
       setDisableMonths(false);
     } else {
       setDisableMonths(true);
@@ -122,21 +124,20 @@ export default function GeneratecouponCodeDialog({
   };
 
   const copyToClipboard = async () => {
-    if (!navigator.clipboard) {
-      console.error("Clipboard not available");
-      return;
-    }
+    return;
+    // if (!navigator.clipboard) {
+    //   console.error("Clipboard not available");
+    //   return;
+    // }
 
-    try {
-      await navigator.clipboard.writeText(promoCode.code);
-      setIsCouponCopied(true);
-      console.log("Text copied to clipboard");
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    }
+    // try {
+    //   await navigator.clipboard.writeText(promoCode.code);
+    //   setIsCouponCopied(true);
+    //   console.log("Text copied to clipboard");
+    // } catch (err) {
+    //   console.error("Failed to copy text: ", err);
+    // }
   };
-
-  console.log({ isCreateButtonDisable });
 
   return (
     <STKDialog
@@ -210,7 +211,7 @@ export default function GeneratecouponCodeDialog({
                   color="primary"
                   disabled={isCreateButtonDisable}
                   loading={loading}
-                  onClick={generateGuestAccessLink}
+                  onClick={createCoupon}
                 >
                   Generate promo code
                 </STKButton>
@@ -220,7 +221,7 @@ export default function GeneratecouponCodeDialog({
         ) : (
           <>
             <div className="mt-6">
-              <label className="font-semibold">Codigo do coupon {promoCode.code}</label>
+              <label className="font-semibold">Codigo do coupon </label>
               <div className="mt-2 overflow-hidden w-[500px] text-ellipsis"></div>
               <div className="mt-8 flex justify-end">
                 <STKButton onClick={copyToClipboard}>
