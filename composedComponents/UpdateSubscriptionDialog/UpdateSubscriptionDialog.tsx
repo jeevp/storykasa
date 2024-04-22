@@ -122,7 +122,7 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
         const updatedSubscriptionPlan = await SubscriptionPlanHandler.updateSubscriptionPlan({
             // @ts-ignore
             subscriptionPlan: subscriptionPlan || selectedSubscriptionPlan?.value,
-            promoCode
+            promoCode: promoCode
         })
 
         setCurrentSubscription(updatedSubscriptionPlan)

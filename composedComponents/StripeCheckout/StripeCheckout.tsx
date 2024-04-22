@@ -53,7 +53,7 @@ const StripeCheckout = ({
         // @ts-ignore
         if (_promoCode?.isValid) onPromoCode(_promoCode)
 
-        generateChargeHelperText(_promoCode)
+        generateChargeHelperText(_promoCode?.code)
         setLoadingPromoCodeValidation(false)
     }
 
