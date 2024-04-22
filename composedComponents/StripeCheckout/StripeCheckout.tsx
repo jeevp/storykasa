@@ -51,9 +51,9 @@ const StripeCheckout = ({
         setPromoCodeDetails(_promoCode)
 
         // @ts-ignore
-        if (_promoCode?.isValid) onPromoCode(_promoCode)
+        if (_promoCode?.isValid) onPromoCode(_promoCode?.code)
 
-        generateChargeHelperText(_promoCode?.code)
+        generateChargeHelperText(_promoCode)
         setLoadingPromoCodeValidation(false)
     }
 
@@ -83,7 +83,6 @@ const StripeCheckout = ({
         setChargeHelperText(text)
     }
 
-    console.log({ subscriptionPlan })
     return (
         <div>
             <div>
