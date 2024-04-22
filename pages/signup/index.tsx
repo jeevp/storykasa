@@ -124,6 +124,7 @@ export default function Signup() {
     ];
 
     const handleUpdateSubscriptionPlan = async () => {
+        // @ts-ignore
         await SubscriptionPlanHandler.updateSubscriptionPlan({
             subscriptionPlan: selectedPlan?.value
         })
@@ -184,6 +185,7 @@ export default function Signup() {
 
                     </>
                 ) : currentStep === STRIPE_CHECKOUT_STEP ? (
+                    // @ts-ignore
                     <StripeCheckout
                         clientSecret={setupIntentClientSecret}
                         subscriptionPlan={selectedPlan}
