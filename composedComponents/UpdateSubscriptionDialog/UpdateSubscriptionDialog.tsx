@@ -23,6 +23,7 @@ const SUCCESS_FEEDBACK_STEP = "SUCCESS_FEEDBACK_STEP"
 export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) }: HelperDialogProps) {
     const router = useRouter()
 
+    const [promoCode, setPromoCode] = useState("")
     const [currentStep, setCurrentStep] = useState(CHOOSE_SUBSCRIPTION_PLAN_STEP)
     const [clientSecret, setClientSecret] = useState("")
     const [selectedSubscriptionPlan, setSelectedSubscriptionPlan] = useState("")
@@ -31,7 +32,6 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
 
     // Contexts
     const { setCurrentSubscription, currentSubscription } = useSubscription()
-    const { setSnackbarBus } = useSnackbar()
 
     useEffect(() => {
         if (active) {
@@ -72,6 +72,7 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
                                 clientSecret={clientSecret}
                                 subscriptionPlan={selectedSubscriptionPlan}
                                 onCancel={() => setCurrentStep(CHOOSE_SUBSCRIPTION_PLAN_STEP)}
+                                onPromoCode={(_promoCode: string) => setPromoCode(_promoCode)}
                                 // @ts-ignore
                                 onSuccess={handleSuccess}
                             />
@@ -120,7 +121,8 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
     const handleSuccess = async (subscriptionPlan: string) => {
         const updatedSubscriptionPlan = await SubscriptionPlanHandler.updateSubscriptionPlan({
             // @ts-ignore
-            subscriptionPlan: subscriptionPlan || selectedSubscriptionPlan?.value
+            subscriptionPlan: subscriptionPlan || selectedSubscriptionPlan?.value,
+            promoCode
         })
 
         setCurrentSubscription(updatedSubscriptionPlan)

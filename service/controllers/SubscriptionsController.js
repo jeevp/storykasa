@@ -1,3 +1,5 @@
+import PromoCode from "../models/PromoCode";
+
 const supabase = require("../supabase")
 const Subscription = require("../models/Subscription")
 const SubscriptionPlan = require("../models/SubscriptionPlan")
@@ -8,7 +10,13 @@ const Account = require("../models/Account")
 export default class SubscriptionsController {
     static async updateSubscriptionPlan(req, res) {
         try {
-            const { subscriptionPlan } = req.body
+            const { subscriptionPlan, promoCode } = req.body
+
+            let stripePromoCodeId = null
+            if (promoCode) {
+                const _promoCode = await PromoCode.findOne({ code: promoCode })
+                stripePromoCodeId = _promoCode.stripePromoCodeId
+            }
 
             const stripeSubscriptionPriceId = SubscriptionPlan.getStripeSubscriptionPriceId(subscriptionPlan)
 
@@ -19,7 +27,8 @@ export default class SubscriptionsController {
             await StripeService.subscriptions.update({
                 subscriptionId: stripeAccount.stripeSubscriptionId
             }, {
-                priceId: stripeSubscriptionPriceId
+                priceId: stripeSubscriptionPriceId,
+                stripePromoCodeId
             })
 
             const subscription = await Subscription.findOne({ accountId: user.id })

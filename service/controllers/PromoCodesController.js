@@ -47,4 +47,32 @@ export default class PromoCodesController {
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
+
+    static async validatePromoCode(req, res) {
+        try {
+            APIValidator.requiredPayload({ req, res }, {
+                requiredPayload: ["promoCode"]
+            })
+
+            const promoCode = await PromoCode.findOne({ code: req.body.promoCode })
+            if (!promoCode || !promoCode?.isValid) {
+                return res.status(201).send(new PromoCode({
+                    code: req.body.promoCode,
+                    isValid: false
+                }))
+            }
+
+
+            return res.status(201).send(new PromoCode({
+                code: promoCode.code,
+                isValid: promoCode.isValid,
+                discountPercentage: promoCode.discountPercentage,
+                durationInMonths: promoCode.durationInMonths,
+                duration: promoCode.duration
+            }))
+        } catch (error) {
+            console.error(error)
+            return res.status(400).send({ message: "Something went wrong." })
+        }
+    }
 }

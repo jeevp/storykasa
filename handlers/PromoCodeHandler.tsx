@@ -8,6 +8,7 @@ export default class PromoCodeHandler {
   static async fetchPromoCodes() {
     const headers = generateHeaders();
     const response = await axios.get("/api/admin/promo-codes", headers);
+    // @ts-ignore
     return response.data.map((promoCode: PromoCode) => new PromoCode({
       ...promoCode
     }));
@@ -55,5 +56,21 @@ export default class PromoCodeHandler {
     const response = await axios.put(`/api/profiles/${profileId}`, payload, headers);
 
     return response.data;
+  }
+
+  static async validatePromoCode(promoCode: string) {
+    const headers = generateHeaders();
+    const payload = { promoCode }
+
+    const response = await axios.post("/api/promo-codes/validate-promo-code",payload, headers);
+
+    // @ts-ignore
+    return new PromoCode({
+      code: response.data.code,
+      isValid: response.data.isValid,
+      discountPercentage: response.data.discountPercentage,
+      durationInMonths: response.data.durationInMonths,
+      duration: response.data.duration
+    })
   }
 }

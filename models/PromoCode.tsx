@@ -10,14 +10,14 @@ interface PromoCodeProps {
 }
 
 export default class PromoCode {
-  id: number;
-  createdAt: string;
+  id?: number;
+  createdAt?: string;
   discountPercentage: number;
   durationInMonths: number;
   duration: "once" | "forever" | "repeating";
   isValid: boolean;
   code: string;
-  stripePromoCodeId: string;
+  stripePromoCodeId?: string;
 
   constructor({
     id,

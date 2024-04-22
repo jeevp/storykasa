@@ -66,6 +66,7 @@ export default function Signup() {
             name: 'Free',
             extensionName: "",
             price: '$0',
+            priceNumber: 0,
             features: [
                 'Limited listening time to select stories',
                 'Limited to 3 profiles',
@@ -79,6 +80,7 @@ export default function Signup() {
             name: 'Premium',
             extensionName: "",
             price: '$10',
+            priceNumber: 10,
             features: [
                 'Unlimited listening time to all stories',
                 'Limited to 5 profiles',
@@ -93,6 +95,7 @@ export default function Signup() {
             name: 'Premium',
             extensionName: "Plus",
             price: '$20',
+            priceNumber: 20,
             features: [
                 'Unlimited listening time to all stories',
                 'Limited to 10 profiles',
@@ -107,6 +110,7 @@ export default function Signup() {
             name: 'Premium',
             extensionName: "Organizational",
             price: '$300',
+            priceNumber: 300,
             features: [
                 'Unlimited listening time to all stories',
                 'Even more story recording (600 minutes)',

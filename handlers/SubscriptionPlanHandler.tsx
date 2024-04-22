@@ -4,11 +4,12 @@ import Subscription from "@/models/Subscription"
 
 
 export default class SubscriptionPlanHandler {
-    static async updateSubscriptionPlan({ subscriptionPlan }: { subscriptionPlan: string }) {
+    static async updateSubscriptionPlan({ subscriptionPlan, promoCode }: { subscriptionPlan: string, promoCode: string }) {
         const headers = generateHeaders()
-        const response = await axios.put("/api/payments/subscription", {
-            subscriptionPlan
-        }, headers)
+        const payload: { subscriptionPlan: string, promoCode?: string } = { subscriptionPlan }
+        if (promoCode) payload.promoCode = promoCode
+
+        const response = await axios.put("/api/payments/subscription", payload, headers)
 
         return new Subscription({
             accountId: response.data.accountId,
