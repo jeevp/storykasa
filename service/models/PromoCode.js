@@ -10,7 +10,8 @@ export default class PromoCode {
         duration,
         isValid,
         code,
-        stripePromoCodeId
+        stripePromoCodeId,
+        unlimitedUsage
     }) {
         this.id = id
         this.createdAt = createdAt
@@ -20,6 +21,7 @@ export default class PromoCode {
         this.isValid = isValid
         this.code = code
         this.stripePromoCodeId = stripePromoCodeId
+        this.unlimitedUsage = unlimitedUsage
     }
 
     static async create({
@@ -27,7 +29,8 @@ export default class PromoCode {
         duration,
         durationInMonths,
         stripePromoCodeId,
-        code
+        code,
+        unlimitedUsage
     }) {
 
         const response = await axios.post(
@@ -38,7 +41,8 @@ export default class PromoCode {
                 duration,
                 code,
                 is_valid: true,
-                stripe_promo_code_id: stripePromoCodeId
+                stripe_promo_code_id: stripePromoCodeId,
+                unlimited_usage: unlimitedUsage
             },
             {
                 headers: generateSupabaseHeaders()
@@ -55,7 +59,8 @@ export default class PromoCode {
             duration: promoCode.duration,
             isValid: promoCode.is_valid,
             stripePromoCodeId: promoCode.stripe_promo_code_id,
-            code: promoCode.code
+            code: promoCode.code,
+            unlimitedUsage: promoCode.unlimited_usage
         })
     }
 
@@ -78,7 +83,8 @@ export default class PromoCode {
             duration: promoCode.duration,
             isValid: promoCode.is_valid,
             stripePromoCodeId: promoCode.stripe_promo_code_id,
-            code: promoCode.code
+            code: promoCode.code,
+            unlimitedUsage: promoCode.unlimited_usage
         }))
     }
 
@@ -106,7 +112,8 @@ export default class PromoCode {
             duration: promoCode.duration,
             isValid: promoCode.is_valid,
             stripePromoCodeId: promoCode.stripe_promo_code_id,
-            code: promoCode.code
+            code: promoCode.code,
+            unlimitedUsage: promoCode.unlimited_usage
         })
     }
 }

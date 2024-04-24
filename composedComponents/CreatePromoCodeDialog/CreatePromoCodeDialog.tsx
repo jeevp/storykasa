@@ -7,6 +7,7 @@ import PromoCodeHandler from "@/handlers/PromoCodeHandler";
 import {usePromoCode} from "@/contexts/promoCode/PromoCodeContext";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import CopyButton from "@/composedComponents/CopyButton/CopyButton";
+import STKSelect from "@/components/STKSelect/STKSelect";
 
 interface GenerateCouponCodeDialogProps {
   open: boolean;
@@ -29,7 +30,8 @@ export default function CreatePromoCodeDialog({
     discountPercentage: 0.0, // float
     durationInMonths: 0, // int
     duration: "", // 'once', 'forever', 'repeating',
-    code: ""
+    code: "",
+    unlimitedUsage: false
   });
   const discountPercentages = [
     { Title: "25%", value: 25 },
@@ -57,6 +59,11 @@ export default function CreatePromoCodeDialog({
     { Title: "Repeating", value: "repeating" },
   ];
 
+  const usageLimitOptions = [
+    { label: "Can be used only once", value: false },
+    { label: "Can be used multiple times", value: true }
+  ]
+
   // Mounted
   useEffect(() => {
     const isDisabled = !checkFields();
@@ -70,7 +77,8 @@ export default function CreatePromoCodeDialog({
         discountPercentage: 0.0,
         durationInMonths: 0,
         duration: "",
-        code: ""
+        code: "",
+        unlimitedUsage: false
       })
     }
   }, [open]);
@@ -83,7 +91,8 @@ export default function CreatePromoCodeDialog({
         discountPercentage: promoCode.discountPercentage,
         // @ts-ignore
         duration: promoCode.duration,
-        durationInMonths: promoCode.durationInMonths
+        durationInMonths: promoCode.durationInMonths,
+        unlimitedUsage: promoCode.unlimitedUsage
       })
 
       // @ts-ignore
@@ -121,6 +130,14 @@ export default function CreatePromoCodeDialog({
       discountPercentage: percentage.value,
     });
   };
+
+  const handleUsageLimit = (usageLimit: any) => {
+    setPromoCode({
+      ...promoCode,
+      unlimitedUsage: usageLimit.value
+    })
+  }
+
   const handleDuration = (duration: any) => {
     setPromoCode({
       ...promoCode, // @ts-ignore
@@ -154,6 +171,20 @@ export default function CreatePromoCodeDialog({
           <>
             <div className="mt-6">
               <div>
+                <label className="font-semibold">Usage limit</label>
+                <div className="mt-2">
+                  <div className="mt-2">
+                    <STKAutocomplete
+                        fluid
+                        disablePortal={false}
+                        // @ts-ignore
+                        options={usageLimitOptions}
+                        onChange={handleUsageLimit}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4">
                 <label className="font-semibold">Discount Percentage</label>
                 <div className="mt-2">
                   <STKAutocomplete

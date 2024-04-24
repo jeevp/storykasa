@@ -9,7 +9,7 @@ export default class PromoCodesController {
                 requiredPayload: ["discountPercentage", "duration"]
             })
 
-            const { duration, discountPercentage, durationInMonths } = req.body
+            const { duration, discountPercentage, durationInMonths, unlimitedUsage } = req.body
 
             if (duration === "repeating" && !durationInMonths) {
                 return res.status(400).send({ message: "Payload is incorrect" })
@@ -28,7 +28,8 @@ export default class PromoCodesController {
                 duration,
                 durationInMonths,
                 stripePromoCodeId: stripePromoCode.id,
-                code: stripePromoCode.code
+                code: stripePromoCode.code,
+                unlimitedUsage
             })
 
             return res.status(201).send(promoCode)
@@ -68,7 +69,8 @@ export default class PromoCodesController {
                 isValid: promoCode.isValid,
                 discountPercentage: promoCode.discountPercentage,
                 durationInMonths: promoCode.durationInMonths,
-                duration: promoCode.duration
+                duration: promoCode.duration,
+                unlimitedUsage: promoCode.unlimitedUsage
             }))
         } catch (error) {
             console.error(error)

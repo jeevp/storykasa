@@ -14,15 +14,17 @@ export default class PromoCodeHandler {
     }));
   }
 
-  static async createPromoCode({ discountPercentage, duration, durationInMonths }: {
+  static async createPromoCode({ discountPercentage, duration, durationInMonths, unlimitedUsage }: {
     discountPercentage: number,
     duration: 'once' | 'forever' | 'repeating',
     durationInMonths: number
+    unlimitedUsage: boolean
   }) {
     const headers = generateHeaders();
     const payload = {
       discountPercentage,
       duration,
+      unlimitedUsage
     };
 
     // @ts-ignore
@@ -39,6 +41,7 @@ export default class PromoCodeHandler {
       isValid: response.data.isValid,
       code: response.data.code,
       stripePromoCodeId: response.data.stripePromoCodeId,
+      unlimitedUsage: response.data.unlimitedUsage
     });
   }
 
@@ -70,7 +73,8 @@ export default class PromoCodeHandler {
       isValid: response.data.isValid,
       discountPercentage: response.data.discountPercentage,
       durationInMonths: response.data.durationInMonths,
-      duration: response.data.duration
+      duration: response.data.duration,
+      unlimitedUsage: response.data.unlimitedUsage
     })
   }
 }

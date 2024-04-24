@@ -7,6 +7,7 @@ interface PromoCodeProps {
   isValid: boolean;
   code: string;
   stripePromoCodeId: string;
+  unlimitedUsage?: boolean
 }
 
 export default class PromoCode {
@@ -18,6 +19,7 @@ export default class PromoCode {
   isValid: boolean;
   code: string;
   stripePromoCodeId?: string;
+  unlimitedUsage?: boolean
 
   constructor({
     id,
@@ -28,6 +30,7 @@ export default class PromoCode {
     isValid,
     code,
     stripePromoCodeId,
+    unlimitedUsage
   }: PromoCodeProps) {
     this.id = id;
     this.createdAt = createdAt;
@@ -37,5 +40,6 @@ export default class PromoCode {
     this.isValid = isValid;
     this.code = code;
     this.stripePromoCodeId = stripePromoCodeId;
+    this.unlimitedUsage = unlimitedUsage
   }
 }

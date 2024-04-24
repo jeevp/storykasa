@@ -75,12 +75,20 @@ function GuestAccessLinks() {
                                   // @ts-ignore
                                 promoCode.isValid ? '' : 'disabled'}`}>
                                 <div className="flex items-center">
-                                  <div>
+                                  <div className="w-[100px]">
                                     <label className="font-semibold">Code</label>
                                     <div className="mt-2">
                                       <label>{
                                         // @ts-ignore
                                         promoCode?.code}</label>
+                                    </div>
+                                  </div>
+                                  <div className="ml-10">
+                                    <label className="font-semibold">Usage limit</label>
+                                    <div className="mt-2">
+                                      <label>{
+                                        // @ts-ignore
+                                        promoCode?.unlimitedUsage ? 'Unlimited' : 'Once'}</label>
                                     </div>
                                   </div>
                                   <div className="ml-10">
