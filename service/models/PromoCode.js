@@ -116,4 +116,40 @@ export default class PromoCode {
             unlimitedUsage: promoCode.unlimited_usage
         })
     }
+
+    async update({ isValid }) {
+        const payload = { isValid }
+        const response = await axios.patch(
+            `${process.env.SUPABASE_URL}/rest/v1/promo_codes`,
+            payload,
+            {
+                params: {
+                    select: "*",
+                    stripePromoCodeId: `eq.${this.stripePromoCodeId}`
+                }
+            }
+        )
+
+        if (!response.data[0]) return null
+
+        const promoCode = response.data[0]
+
+        return new PromoCode({
+            id: promoCode.id,
+            createdAt: promoCode.created_at,
+            discountPercentage: promoCode.discount_percentage,
+            durationInMonths: promoCode.duration_in_months,
+            duration: promoCode.duration,
+            isValid: promoCode.is_valid,
+            stripePromoCodeId: promoCode.stripe_promo_code_id,
+            code: promoCode.code,
+            unlimitedUsage: promoCode.unlimited_usage
+        })
+    }
+
+    async applyUsageLimitValidation() {
+        if (this.unlimitedUsage) return
+
+        await this.update({ isValid: false })
+    }
 }

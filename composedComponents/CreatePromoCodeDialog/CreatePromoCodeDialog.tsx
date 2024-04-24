@@ -174,7 +174,9 @@ export default function CreatePromoCodeDialog({
                 <label className="font-semibold">Usage limit</label>
                 <div className="mt-2">
                   <div className="mt-2">
-                    <STKAutocomplete
+                    <
+                      // @ts-ignore
+                      STKAutocomplete
                         fluid
                         disablePortal={false}
                         // @ts-ignore

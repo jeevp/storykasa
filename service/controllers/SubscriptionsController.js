@@ -13,8 +13,9 @@ export default class SubscriptionsController {
             const { subscriptionPlan, promoCode } = req.body
 
             let stripePromoCodeId = null
+            let _promoCode = null
             if (promoCode) {
-                const _promoCode = await PromoCode.findOne({ code: promoCode })
+                _promoCode = await PromoCode.findOne({ code: promoCode })
                 stripePromoCodeId = _promoCode.stripePromoCodeId
             }
 
@@ -33,6 +34,10 @@ export default class SubscriptionsController {
 
             const subscription = await Subscription.findOne({ accountId: user.id })
             const updatedSubscription = await subscription.update({ subscriptionPlan })
+
+            if (_promoCode) {
+                await _promoCode.applyUsageLimitValidation()
+            }
 
             const subscriptionSerialized = updatedSubscription.serializer()
 
