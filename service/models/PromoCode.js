@@ -126,7 +126,8 @@ export default class PromoCode {
                 params: {
                     select: "*",
                     stripePromoCodeId: `eq.${this.stripePromoCodeId}`
-                }
+                },
+                headers: generateSupabaseHeaders()
             }
         )
 
