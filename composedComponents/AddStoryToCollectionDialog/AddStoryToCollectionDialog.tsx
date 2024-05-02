@@ -80,7 +80,6 @@ export default function AddStoryToCollectionDialog({
         onClose()
     }
 
-    console.log({ libraries })
     return (
         <STKDialog
         active={open}

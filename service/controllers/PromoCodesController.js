@@ -44,7 +44,6 @@ export default class PromoCodesController {
 
             return res.status(201).send(promoCodes)
         } catch (error) {
-            console.log(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

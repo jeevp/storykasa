@@ -113,6 +113,22 @@ class Subscription {
         return response.data[0]
     }
 
+    static async findAll() {
+        const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/subscriptions`, {
+            params: {
+                select: "*"
+            },
+            headers: generateSupabaseHeaders()
+        })
+
+        return response.data.map((subscription) => new Subscription({
+            accountId: subscription.account_id,
+            stripeAccountId: subscription.stripe_account_id,
+            subscriptionPlan: subscription.subscription_plan,
+            monthlyPrice: subscription.monthly_price
+        }))
+    }
+
     static async findOne({ accountId }) {
         const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/subscriptions`, {
             params: {

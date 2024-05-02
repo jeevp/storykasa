@@ -18,6 +18,7 @@ const navigationOptions = [
     { text: "Guest Access Links", icon: <InsertLinkOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/guest-access-links" },
     { text: "Blog System", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/blog" },
     { text: "Promo Codes", icon: <DiscountOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/promo-code" },
+    { text: "Analytics", icon: <DiscountOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/analytics" },
 ]
 
 export default function AdminNavigation() {

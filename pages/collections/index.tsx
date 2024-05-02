@@ -89,8 +89,6 @@ function Collections() {
         })
     }
 
-    console.log({ currentUser })
-
     return (
         <PageWrapper path="library">
             <div>

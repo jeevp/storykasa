@@ -76,13 +76,11 @@ class PublicStoryRequest {
         })
     }
     static async findAll({ storyIds = [] }) {
-        if (storyIds.length === 0) throw new Error("storyIds must not be empty")
+        const params = { select: "*" }
+        if (storyIds?.length > 0) params["story_id"] = `in.(${storyIds})`
 
         const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/public_story_requests`, {
-            params: {
-                select: "*",
-                story_id: `in.(${storyIds})`
-            },
+            params,
             headers: generateSupabaseHeaders()
         })
 

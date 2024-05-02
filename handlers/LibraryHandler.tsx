@@ -10,7 +10,6 @@ export default class LibraryHandler {
         const headers = generateHeaders()
         const response = await axios.get("/api/libraries?includeShared=1", headers)
 
-        console.log({ x: response.data })
         setLibraries(response.data.map((library: any) => new Library({
             ...library
         })))

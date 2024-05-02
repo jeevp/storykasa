@@ -71,17 +71,15 @@ class Library {
 
     /**
      *
-     * @param {string} accountId
-     * @param {string} sharedAccountId
-     * @param {string} accessToken
+     * @param {object} searchParams
      * @param {{serialized: boolean}} options
      * @returns {Promise<*>}
      */
-    static async findAll({ accountId, sharedAccountId }, options = { serialized: false }) {
+    static async findAll(searchParams ={ accountId: null, sharedAccountId: null}, options = { serialized: false }) {
         const queryParams = { select: "*" }
-        if (accountId) queryParams.account_id = `eq.${accountId}`;
-        if (sharedAccountId) {
-            queryParams.shared_account_ids = `cs.{${sharedAccountId}}`;
+        if (searchParams.accountId) queryParams.account_id = `eq.${searchParams.accountId}`;
+        if (searchParams.sharedAccountId) {
+            queryParams.shared_account_ids = `cs.{${searchParams.sharedAccountId}}`;
         }
 
         const response = await axios.get(`${process.env.SUPABASE_URL}/rest/v1/libraries`, {
