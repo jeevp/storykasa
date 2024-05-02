@@ -4,13 +4,7 @@ import withAuth from "@/HOC/withAuth";
 import React, {useEffect, useState} from "react";
 import withAdmin from "@/HOC/withAdmin";
 import { AnimatePresence, motion } from "framer-motion";
-import STKButton from "@/components/STKButton/STKButton";
-import CreatePromoCodeDialog from "@/composedComponents/CreatePromoCodeDialog/CreatePromoCodeDialog";
-import {usePromoCode} from "@/contexts/promoCode/PromoCodeContext";
 import STKCard from "@/components/STKCard/STKCard";
-import PromoCodeHandler from "@/handlers/PromoCodeHandler";
-import CopyButton from "@/composedComponents/CopyButton/CopyButton";
-import STKChip from "@/components/STKChip/STKChip"
 import {useAnalytics} from "@/contexts/analytics/AnalyticsContext";
 import AnalyticsHandler from "@/handlers/AnalyticsHandler";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
