@@ -12,12 +12,14 @@ import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 import DiscountOutlinedIcon from '@mui/icons-material/DiscountOutlined';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 const navigationOptions = [
     { text: "Public Story Requests", icon: <ChecklistOutlinedIcon sx={{ width: "20px", color: neutral800 }} />, pathname: "/admin/public-story-requests"  },
     { text: "Guest Access Links", icon: <InsertLinkOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/guest-access-links" },
     { text: "Blog System", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/blog" },
     { text: "Promo Codes", icon: <DiscountOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/promo-code" },
+    { text: "Analytics", icon: <BarChartIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/analytics" },
 ]
 
 export default function AdminNavigation() {
