@@ -1,4 +1,4 @@
-interface LibraryProps {
+    interface LibraryProps {
     libraryId: string
     accountId: string
     profileId: string

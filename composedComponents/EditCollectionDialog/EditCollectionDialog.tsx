@@ -9,17 +9,20 @@ import { useSnackbar } from "@/contexts/snackbar/SnackbarContext";
 import { useProfile } from "@/contexts/profile/ProfileContext";
 import { useStory } from "@/contexts/story/StoryContext";
 import Story from "@/models/Story";
+import LibraryHandler from "@/handlers/LibraryHandler";
+import {useLibrary} from "@/contexts/library/LibraryContext";
+import Library from "@/models/Library";
 
 interface DeleteStoryDialogProps {
   open: boolean;
-  story: any;
+  collection: any;
   onClose?: () => void;
   onSuccess?: () => void;
 }
 
-export default function EditCollectionNameDialog({
+export default function EditCollectionDialog({
   open,
-  story,
+  collection,
   onClose = () => ({}),
   onSuccess = () => ({}),
 }: DeleteStoryDialogProps) {
@@ -28,28 +31,22 @@ export default function EditCollectionNameDialog({
 
   const [loading, setLoading] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [narratorName, setNarratorName] = useState("");
+  const [collectionName, setCollectionName] = useState("");
 
-  const { privateStories, setPrivateStories } = useStory();
   const { currentProfileId } = useProfile();
+  const { libraries, setLibraries } = useLibrary()
   const { setStoryNarrators, setStoryLanguages } = useStory();
 
   // Watchers
   useEffect(() => {
-    if (story) {
-      setTitle(story?.title);
-      setDescription(story?.description);
-      setNarratorName(story?.narratorName);
+    if (collection) {
+      setCollectionName(collection?.libraryName);
     }
-  }, [story]);
+  }, [collection]);
 
   // Methods
   const handleOnChange = (key: string, value: string) => {
-    if (key === "title") setTitle(value);
-    if (key === "description") setDescription(value);
-    if (key === "narratorName") setNarratorName(value);
+    if (key === "collectionName") setCollectionName(value);
   };
 
   const handleFetchStoryFilters = async () => {
@@ -64,36 +61,31 @@ export default function EditCollectionNameDialog({
   const handleSave = async () => {
     try {
       setLoading(true);
-      await StoryHandler.updateStory(
-        { storyId: story.storyId },
-        {
-          title,
-          description,
-          narratorName,
-        }
-      );
 
-      handleFetchStoryFilters();
+      const updatedLibrary = await LibraryHandler.updateLibrary({
+        profileId: currentProfileId,
+        libraryId: collection.libraryId
+      }, {
+        libraryName: collectionName
+      })
 
-      const _privateStories = privateStories.map((privateStory: Story) => {
-        if (privateStory.storyId === story.storyId) {
-          return new Story({
-            ...privateStory,
-            title: title || privateStory.title,
-            description: description || privateStory.description,
-            narratorName: narratorName || privateStory.narratorName,
-          });
-        }
+      const _libraries = libraries.map((_library: Library) => {
+         if (_library.libraryId === collection.libraryId) {
+           return new Library({
+             ...collection,
+             libraryName: collectionName
+           })
+         }
 
-        return privateStory;
-      });
+         return _library
+      })
 
       // @ts-ignore
-      setPrivateStories([..._privateStories]);
+      setLibraries(_libraries)
 
       setSnackbarBus({
         active: true,
-        message: "Story updated with success",
+        message: "Collection updated with success",
         type: "success",
       });
 
@@ -108,7 +100,7 @@ export default function EditCollectionNameDialog({
     <STKDialog
       active={open}
       maxWidth="sm"
-      title="Edit Collection Name"
+      title="Edit Collection"
       fullScreen={onMobile}
       onClose={() => onClose()}
     >
@@ -119,9 +111,9 @@ export default function EditCollectionNameDialog({
             <div className="mt-2">
               <STKTextField
                 fluid
-                value={title}
+                value={collectionName}
                 placeholder="Collection name"
-                onChange={(value: string) => handleOnChange("title", value)}
+                onChange={(value: string) => handleOnChange("collectionName", value)}
               />
             </div>
           </div>
@@ -146,7 +138,7 @@ export default function EditCollectionNameDialog({
       </div>
       <STKSnackbar
         open={showSnackbar}
-        message="Story updated with success"
+        message="Collection updated with success"
         onClose={() => setShowSnackbar(false)}
       />
     </STKDialog>

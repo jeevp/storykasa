@@ -69,6 +69,26 @@ class Library {
         })
     }
 
+    async delete() {
+        await axios.delete(`${process.env.SUPABASE_URL}/rest/v1/libraries`,{
+            params: {
+                select: "*",
+                library_id: `eq.${this.libraryId}`
+            },
+            headers: generateSupabaseHeaders()
+        })
+
+
+        return new Library({
+            libraryId: this.libraryId,
+            accountId: this.accountId,
+            profileId: this.profileId,
+            libraryName: this.libraryName,
+            totalDuration: 0,
+            totalStories: 0
+        })
+    }
+
     /**
      *
      * @param {object} searchParams
@@ -197,10 +217,13 @@ class Library {
         }, 0) / 60
     }
 
-    async update({ sharedAccountIds }) {
-        const response = await axios.patch(`${process.env.SUPABASE_URL}/rest/v1/libraries`, {
-            shared_account_ids: sharedAccountIds
-        }, {
+    async update({ sharedAccountIds, libraryName }) {
+        const payload = {}
+        if (sharedAccountIds) payload.shared_account_ids = sharedAccountIds
+        if (libraryName) payload.library_name = libraryName
+
+        const response = await axios.patch(`${process.env.SUPABASE_URL}/rest/v1/libraries`,
+            payload, {
             params: {
                 select: "*",
                 library_id: `eq.${this.libraryId}`

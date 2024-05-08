@@ -11,8 +11,7 @@ import { green600, neutral800 } from "@/assets/colorPallet/colors";
 import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
 import STKMenu from "@/components/STKMenu/STKMenu";
 import DeleteCollectionDialog from "../DeleteCollectionDialog/DeleteCollectionDialog";
-import UpdateStoryDialog from "../UpdateStoryDialog/UpdateStoryDialog";
-import EditCollectionNameDialog from "../EditCollectionNameDialog/EditCollectionNameDialog";
+import EditCollectionDialog from "@/composedComponents/EditCollectionDialog/EditCollectionDialog";
 
 export default function LibraryCard({
   library,
@@ -213,10 +212,10 @@ export default function LibraryCard({
                 </div>
               ) : null}
             </div>
-            <div style={{ alignItems: "flex-end", display: "flex", height: "110px" }}>
+            <div className="flex flex-col justify-end h-[110px] pr-2 pb-2">
               <STKMenu
                 options={[
-                  { label: "Edit Collection name", value: EDIT_COLLECTION_NAME },
+                  { label: "Edit Collection", value: EDIT_COLLECTION_NAME },
                   {
                     label: "Delete Collection",
                     value: DELETE_COLLECTION,
@@ -230,12 +229,12 @@ export default function LibraryCard({
       </div>
       <DeleteCollectionDialog
         open={showDeleteCollectionName}
-        story={library}
+        collection={library}
         onClose={() => setShowDeleteCollectionDialog(false)}
       />
-      <EditCollectionNameDialog
+      <EditCollectionDialog
         open={showEditCollectionName}
-        story={library}
+        collection={library}
         onClose={() => setShowEditCollectionNameDialog(false)}
       />
     </>

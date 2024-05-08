@@ -15,6 +15,20 @@ export default class LibraryHandler {
         })))
     }
 
+    static async updateLibrary({ profileId, libraryId }: { profileId: string, libraryId: string }, { libraryName }: { libraryName: string }) {
+        const headers = generateHeaders()
+        const payload = { libraryName }
+        const response = await axios.put(
+            `/api/profiles/${profileId}/libraries/${libraryId}`,
+            payload,
+            headers
+        )
+
+        return new Library({
+            ...response.data
+        })
+    }
+
     static async createLibrary({ libraryName, listenersEmails, profileId }: { libraryName: string, listenersEmails: string[], profileId: string }) {
         const payload = {}
         // @ts-ignore
@@ -88,5 +102,11 @@ export default class LibraryHandler {
             storyId,
             profileId
         })
+    }
+
+    static async deleteLibrary({ profileId, libraryId }: { profileId: string, libraryId: string }) {
+        const headers = generateHeaders()
+
+        await axios.delete(`/api/profiles/${profileId}/libraries/${libraryId}`, headers)
     }
 }

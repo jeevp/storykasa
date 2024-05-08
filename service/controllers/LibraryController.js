@@ -154,4 +154,66 @@ export default class LibraryController {
             return res.status(error.statusCode || 400).send({ message: error.message || "Something went wrong" })
         }
     }
+
+    static async deleteLibrary(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["libraryId", "profileId"]
+            })
+
+            const { libraryId, profileId } = req.query
+
+            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
+
+            const library = await Library.findOne({ libraryId })
+
+            if (!library) {
+                return res.status(404).send({ message: "Library not found" })
+            }
+
+            if (library.accountId !== user.id) {
+                return res.status(401).send({ message: "Not authorized" })
+            }
+
+            await library.delete()
+
+            return res.status(204).send({ message: "Deleted with success" })
+        } catch (error) {
+            return res.status(400).send({ message: "Something went wrong." })
+        }
+    }
+
+    static async updateLibrary(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["libraryId", "profileId"]
+            })
+
+            APIValidator.requiredPayload({ req, res }, {
+                requiredPayload: ["libraryName"]
+            })
+
+            const { libraryId } = req.query
+
+            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
+
+            const library = await Library.findOne({ libraryId })
+
+            if (!library) {
+                return res.status(404).send({ message: "Library not found" })
+            }
+
+            if (library.accountId !== user.id) {
+                return res.status(401).send({ message: "Not authorized" })
+            }
+
+            const { libraryName } = req.body
+
+            const updatedLibrary = await library.update({ libraryName })
+
+            return res.status(202).send(updatedLibrary)
+        } catch (error) {
+            return res.status(400).send({ message: "Something went wrong." })
+        }
+    }
 }

@@ -3,51 +3,57 @@ import STKDialog from "@/components/STKDialog/STKDialog";
 import STKButton from "@/components/STKButton/STKButton";
 import {Trash} from "@phosphor-icons/react";
 import useDevice from "@/customHooks/useDevice";
-import StoryHandler from "@/handlers/StoryHandler";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
-import {useStory} from "@/contexts/story/StoryContext";
+import LibraryHandler from "@/handlers/LibraryHandler";
+import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useLibrary} from "@/contexts/library/LibraryContext";
+import Library from "@/models/Library";
 
 
 interface DeleteCollectionDialogProps {
     open: boolean;
-    story: any;
+    collection: Library;
     onClose?: () => void;
     onSuccess?: () => void;
 }
 
 export default function DeleteCollectionDialog({
     open,
-    story,
+    collection,
     onClose = () => ({}),
     onSuccess = () => ({})
 }: DeleteCollectionDialogProps) {
     const { setSnackbarBus } = useSnackbar()
     const { onMobile } = useDevice()
 
+    // Contexts
+    const { currentProfileId } = useProfile()
+    const { libraries, setLibraries } = useLibrary()
+
+    // States
     const [loading, setLoading] = useState(false)
 
-    // Contexts
-    const { privateStories, setPrivateStories } = useStory()
-
     // Methods
-    const handleDeleteStory = async () => {
-        if (story) {
+    const handleDeleteCollection = async () => {
+        if (collection) {
             try {
                 setLoading(true)
-                await StoryHandler.deleteStory(story?.storyId)
+                await LibraryHandler.deleteLibrary({
+                    profileId: currentProfileId,
+                    libraryId: collection?.libraryId
+                })
                 setSnackbarBus({
                     active: true,
-                    message: "Story deleted with success",
+                    message: "Collection deleted with success",
                     type: "success"
                 })
 
-                const _privateStories = privateStories.filter((_story) => {
-                    // @ts-ignore
-                    return _story?.storyId !== story?.storyId
+                const _libraries = libraries.filter((_library: Library) => {
+                    return _library.libraryId !== collection.libraryId
                 })
 
                 // @ts-ignore
-                setPrivateStories(_privateStories)
+                setLibraries(_libraries)
 
                 onSuccess()
                 onClose()
@@ -59,10 +65,10 @@ export default function DeleteCollectionDialog({
 
 
     return (
-        <STKDialog title="Delete story" active={open} onClose={() => onClose()}>
+        <STKDialog title="Delete collection" active={open} onClose={() => onClose()}>
             <div>
                 <p className="mt-4">
-                    Are you sure you want to delete <span className="font-semibold">&ldquo;{story?.title}&rdquo;?</span> ? Deleting a story is
+                    Are you sure you want to delete <span className="font-semibold">&ldquo;{collection?.libraryName}&rdquo;</span> ? Deleting a collection is
                     permanent and cannot be undone.
                 </p>
                 <div className="mt-8 flex items-center justify-end flex-col lg:flex-row">
@@ -77,8 +83,8 @@ export default function DeleteCollectionDialog({
                         color="primary"
                         startIcon={<Trash size={20} />}
                         loading={loading}
-                        onClick={handleDeleteStory}>
-                            Yes, delete story
+                        onClick={handleDeleteCollection}>
+                            Yes, delete collection
                         </STKButton>
                     </div>
                 </div>
