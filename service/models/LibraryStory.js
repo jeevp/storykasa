@@ -94,7 +94,7 @@ class LibraryStory {
             headers: generateSupabaseHeaders()
         })
 
-        return response.data.map((storyLibrary) => {
+        return response.data.filter((lib) => lib.stories).map((storyLibrary) => {
             const story = storyLibrary.stories
 
             return new Story({

@@ -209,6 +209,18 @@ class Library {
         return response.data[0]
     }
 
+    static async deleteStoryFromLibraries(storyId) {
+        const response = await axios.delete(`${process.env.SUPABASE_URL}/rest/v1/library_stories`, {
+            params: {
+                select: "*",
+                story_id: `eq.${storyId}`,
+            },
+            headers: generateSupabaseHeaders()
+        })
+
+        return response.data[0]
+    }
+
     static async getTotalRecordingTime({ accountId }) {
         const stories = await Story.findAll({ accountId })
 

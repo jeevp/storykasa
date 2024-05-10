@@ -33,6 +33,8 @@ class StoryController {
                 headers: generateSupabaseHeaders()
             })
 
+            await Library.deleteStoryFromLibraries(storyId)
+
             return res.status(204).send(response.data)
         } catch (error) {
             console.error(error)
