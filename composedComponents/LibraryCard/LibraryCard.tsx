@@ -15,12 +15,14 @@ import EditCollectionDialog from "@/composedComponents/EditCollectionDialog/Edit
 
 export default function LibraryCard({
   library,
+  showMenu,
   menuOptions = [],
   sharedLibraryInvitation,
   showListeners,
   onClick = () => ({}),
 }: {
   library: Library;
+  showMenu?: boolean;
   menuOptions?: any[];
   sharedLibraryInvitation?: SharedLibraryInvitation;
   showListeners?: boolean;
@@ -212,18 +214,17 @@ export default function LibraryCard({
                 </div>
               ) : null}
             </div>
-            <div className="flex flex-col justify-end h-[110px] pr-2 pb-2">
-              <STKMenu
-                options={[
-                  { label: "Edit Collection", value: EDIT_COLLECTION_NAME },
-                  {
-                    label: "Delete Collection",
-                    value: DELETE_COLLECTION,
-                  },
-                ]}
-                onChange={handleMenuOnChange}
-              />
-            </div>
+            {showMenu && (
+                <div className="flex flex-col justify-end h-[110px] pr-2 pb-2">
+                  <STKMenu
+                      options={[
+                        { label: "Edit Collection", value: EDIT_COLLECTION_NAME },
+                        { label: "Delete Collection", value: DELETE_COLLECTION },
+                      ]}
+                      onChange={handleMenuOnChange}
+                  />
+                </div>
+            )}
           </div>
         </STKCard>
       </div>

@@ -171,6 +171,7 @@ function Collections() {
                                                 <LibraryCard
                                                     showListeners
                                                     library={library}
+                                                    showMenu
                                                     onClick={() => goToLibrary(library)}/>
                                             </div>
                                         ))}
