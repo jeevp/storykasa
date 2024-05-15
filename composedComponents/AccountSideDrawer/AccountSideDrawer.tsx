@@ -137,6 +137,17 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                 </STKButton>
                             </div>
                             <div className="mt-4">
+                                <STKButton
+                                    startIcon={<Info />}
+                                    alignStart
+                                    color="info"
+                                    variant=""
+                                    fullWidth
+                                    onClick={() => router.push("/help-videos")}>
+                                    Help videos
+                                </STKButton>
+                            </div>
+                            <div className="mt-4">
                                 <a className="text-neutral-800 no-underline" href={`https://storykasa.com/about-us`} target="_blank">
                                     <STKButton
                                         startIcon={<Info />}
