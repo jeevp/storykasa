@@ -1,7 +1,7 @@
 import STKDrawer from "@/components/STKDrawer/STKDrawer";
 import STKAvatar from "@/components/STKAvatar/STKAvatar";
 import STKButton from "@/components/STKButton/STKButton";
-import {UserSwitch, SignOut, BookOpenText, Books, Info, Question} from '@phosphor-icons/react'
+import {UserSwitch, SignOut, BookOpenText, Books, Info, Question, Video} from '@phosphor-icons/react'
 import { STK_PROFILE_ID, STK_ACCESS_TOKEN, STK_REFRESH_TOKEN } from "@/config"
 import AuthHandler from "@/handlers/AuthHandler";
 import {useRouter} from "next/router";
@@ -138,7 +138,7 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                             </div>
                             <div className="mt-4">
                                 <STKButton
-                                    startIcon={<Info />}
+                                    startIcon={<Video />}
                                     alignStart
                                     color="info"
                                     variant=""
