@@ -136,9 +136,6 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
     }
   };
 
-  const handleChange = () => {
-    setShowVideoDialog(true);
-  };
 
   return (
     <STKCard>
@@ -210,17 +207,9 @@ export default function SignupForm({ onSuccess = () => ({}) }: SignupFormProps) 
         </div>
 
         <div style={{ marginTop: "20px", justifyContent:"center", display:"flex" }}>
-          <span
-            onClick={handleChange}
-            style={{
-              color: "#333333",
-              fontSize: "12px",
-              fontWeight: 400,
-              cursor: "pointer",
-            }}
-          >
+          <STKButton variant="text" color="info" onClick={() => setShowVideoDialog(true)}>
             Need help creating your account?
-          </span>
+          </STKButton>
         </div>
 
         <div className="flex justify-center">

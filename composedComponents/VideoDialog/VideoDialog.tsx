@@ -1,6 +1,5 @@
 import STKDialog from "@/components/STKDialog/STKDialog";
 import React from "react";
-import ReactPlayer from "react-player";
 import useDevice from "@/customHooks/useDevice";
 
 interface VideoDialogProps {
@@ -11,16 +10,12 @@ interface VideoDialogProps {
 export default function VideoDialog({ active, onClose = () => ({}) }: VideoDialogProps) {
   const { onMobile } = useDevice();
 
-  // Methods
-
   return (
-    <STKDialog fullScreen={onMobile} active={active} onClose={() => onClose()}>
+    <STKDialog maxWidth="lg" fullScreen={onMobile} active={active} onClose={() => onClose()}>
       <div>
-        <ReactPlayer
-          url="https://api.storykasa.com/storage/v1/object/public/storykasa-videos/Getting Started.mp4?t=2024-05-14T15%3A21%3A20.055Z"
-          width="100%"
-          height="100%"
-        />
+          <video width="100%" controls>
+              <source src="https://api.storykasa.com/storage/v1/object/public/storykasa-videos/Getting Started.mp4?t=2024-05-14T15%3A21%3A20.055Z" type="video/mp4" />
+          </video>
       </div>
     </STKDialog>
   );

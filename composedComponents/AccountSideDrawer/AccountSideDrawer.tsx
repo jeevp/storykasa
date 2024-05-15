@@ -138,13 +138,13 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                             </div>
                             <div className="mt-4">
                                 <STKButton
-                                    startIcon={<Info />}
+                                    startIcon={<Question />}
                                     alignStart
                                     color="info"
                                     variant=""
                                     fullWidth
-                                    onClick={() => router.push("/help-videos")}>
-                                    Help videos
+                                    onClick={() => router.push("/help-guide")}>
+                                    Help Guide
                                 </STKButton>
                             </div>
                             <div className="mt-4">
@@ -159,17 +159,6 @@ export default function AccountSideDrawer({ open, onClose = () => ({}) }: Accoun
                                         About us
                                     </STKButton>
                                 </a>
-                            </div>
-                            <div className="mt-4">
-                                <STKButton
-                                    startIcon={<Question />}
-                                    alignStart
-                                    color="info"
-                                    variant=""
-                                    fullWidth
-                                    onClick={() => setShowHelperDialog(true)}>
-                                    Help
-                                </STKButton>
                             </div>
                         </div>
                     )}
