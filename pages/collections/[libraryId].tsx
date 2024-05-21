@@ -26,6 +26,7 @@ import {ArrowBack} from "@mui/icons-material";
 import AddListenerDialog from "@/composedComponents/AddListenerDialog/AddListenerDialog";
 import ListenersDialog from "@/composedComponents/ListenersDialog/ListenersDialog"
 import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useAuth} from "@/contexts/auth/AuthContext";
 
 function Library() {
     const router = useRouter()
@@ -49,6 +50,8 @@ function Library() {
         currentLibrary,
         setCurrentLibrary
     } = useLibrary()
+
+    const { currentUser } = useAuth()
 
     // Watchers
     useEffect(() => {
@@ -107,6 +110,7 @@ function Library() {
         })
     }
 
+    console.log(currentUser, {  currentLibrary})
 
     return (
         <PageWrapper path="library">
@@ -153,9 +157,15 @@ function Library() {
                                     <div className="px-2 md:px-4">
                                         <Divider orientation="vertical" sx={{ height: "20px" }} />
                                     </div>
-                                    <STKButton variant="text" slim onClick={() => setShowListenersDialog(true)}>
-                                        <span className="font-semibold mr-1">{currentLibrary?.listeners?.length}</span> listeners
-                                    </STKButton>
+                                    {currentLibrary?.accountId === currentUser?.sub ? (
+                                        <STKButton variant="text" slim onClick={() => setShowListenersDialog(true)}>
+                                            <span className="font-semibold mr-1">{currentLibrary?.listeners?.length}</span> listeners
+                                        </STKButton>
+                                    ) : (
+                                        <label className="text-sm">
+                                            <span className="font-semibold mr-1">{currentLibrary?.listeners?.length}</span> listeners
+                                        </label>
+                                    )}
                                 </>
                             )}
                         </>

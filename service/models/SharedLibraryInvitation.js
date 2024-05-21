@@ -27,7 +27,7 @@ class SharedLibraryInvitation {
             libraryId
         })
 
-        if (sharedLibraryInvitationAlreadySent) {
+        if (!sharedLibraryInvitationAlreadySent?.accept) {
             return null
         }
 
