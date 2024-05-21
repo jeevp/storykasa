@@ -24,11 +24,16 @@ import {useLibrary} from "@/contexts/library/LibraryContext";
 import STKButton from "@/components/STKButton/STKButton";
 import {ArrowBack} from "@mui/icons-material";
 import AddListenerDialog from "@/composedComponents/AddListenerDialog/AddListenerDialog";
+import ListenersDialog from "@/composedComponents/ListenersDialog/ListenersDialog"
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 function Library() {
     const router = useRouter()
+    // States
+    const [showListenersDialog, setShowListenersDialog] = useState<boolean>(false)
 
     const { onMobile } = useDevice()
+    const { currentProfileId } = useProfile()
     const [filterQuery, setFilterQuery] = useState('')
     const [selectedStory, setSelectedStory] = useState<Story | undefined>()
     const [loaded, setLoaded] = useState(false)
@@ -38,7 +43,12 @@ function Library() {
 
     // Contexts
     const { storyFilters } = useStory()
-    const { currentLibraryStories, setCurrentLibraryStories, currentLibrary } = useLibrary()
+    const {
+        currentLibraryStories,
+        setCurrentLibraryStories,
+        currentLibrary,
+        setCurrentLibrary
+    } = useLibrary()
 
     // Watchers
     useEffect(() => {
@@ -57,6 +67,11 @@ function Library() {
     }
 
     const loadStories = async () => {
+        await LibraryHandler.fetchLibraryDetails({
+            profileId: currentProfileId,
+            libraryId: String(router.query.libraryId)
+        }, { setCurrentLibrary })
+
         const libraryStories: Story[] = await LibraryHandler.fetchStories({
             libraryId: String(router.query.libraryId)
         })
@@ -99,13 +114,13 @@ function Library() {
                 <div className="flex justify-between">
                     <div className=" flex items-center w-full lg:w-auto mt-4 lg:mt-0">
                         <STKButton iconButton onClick={gotToLibrariesPage}><ArrowBack /></STKButton>
-                        <h2 className="m-0 text-2xl ml-2">
+                        <h2 className="m-0 text-2xl ml-2 items-center">
                             {router.query.libraryName}
                             <span>
-                        <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles.">
+                            <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles.">
 
-                        </STKTooltip>
-                    </span>
+                            </STKTooltip>
+                            </span>
                         </h2>
                     </div>
                     <div className="hidden lg:block">
@@ -116,20 +131,36 @@ function Library() {
                         </STKButton>
                     </div>
                 </div>
-                {
-                    // @ts-ignore
-                    currentLibrary?.profile?.profileName && (
-                        <div className="mt-2 mb-4">
-                            <label
-                            className="text-sm">
-                                Collection created by {
+                <div className="flex md:flex-row items-center mt-2 mb-4">
+                    {currentLibrary && (
+                        <>
+                            {
                                 // @ts-ignore
-                                currentLibrary?.profile?.profileName
-                                }
-                            </label>
-                        </div>
-                    )
-                }
+                                currentLibrary?.profile?.profileName && (
+                                <div>
+                                    <label
+                                        className="text-sm">
+                                        Collection created by {
+                                        // @ts-ignore
+                                        currentLibrary?.profile?.profileName
+                                    }
+                                    </label>
+                                </div>
+                            )}
+
+                            {currentLibrary?.listeners?.length > 0 && (
+                                <>
+                                    <div className="px-2 md:px-4">
+                                        <Divider orientation="vertical" sx={{ height: "20px" }} />
+                                    </div>
+                                    <STKButton variant="text" slim onClick={() => setShowListenersDialog(true)}>
+                                        <span className="font-semibold mr-1">{currentLibrary?.listeners?.length}</span> listeners
+                                    </STKButton>
+                                </>
+                            )}
+                        </>
+                    )}
+                </div>
                 <div className="mt-4 w-full">
                     {!loaded ? (
                         <div className="mb-10">
@@ -280,6 +311,10 @@ function Library() {
                 library={currentLibrary}
                 open={showAddListenerDialog}
                 onClose={() => setShowAddListenerDialog(false)} />
+            <ListenersDialog
+                open={showListenersDialog}
+                library={currentLibrary}
+                onClose={() => setShowListenersDialog(false)} />
         </PageWrapper>
     )
 }

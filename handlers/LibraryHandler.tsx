@@ -15,6 +15,37 @@ export default class LibraryHandler {
         })))
     }
 
+    static async removeListener(
+        { profileId, libraryId }: { profileId: string, libraryId: string },
+        { listenerAccountId }: { listenerAccountId: string },
+    ) {
+        const headers = generateHeaders()
+        const response = await axios.delete(
+            `/api/profiles/${profileId}/libraries/${libraryId}/listeners/${listenerAccountId}`,
+            headers
+        )
+
+
+        return response.data
+    }
+
+    static async fetchLibraryDetails(
+        { profileId, libraryId }: { profileId: string, libraryId: string },
+        {setCurrentLibrary}: {setCurrentLibrary: (library: Library) => void}
+    ) {
+        const headers = generateHeaders()
+        const response = await axios.get(
+            `/api/profiles/${profileId}/libraries/${libraryId}`,
+            headers
+        )
+
+        const library = new Library({
+            ...response.data
+        })
+
+        setCurrentLibrary(library)
+    }
+
     static async updateLibrary({ profileId, libraryId }: { profileId: string, libraryId: string }, { libraryName }: { libraryName: string }) {
         const headers = generateHeaders()
         const payload = { libraryName }

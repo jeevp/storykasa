@@ -90,7 +90,7 @@ export default function STKButton({
             }
         }
 
-        if (color === "aiMode") {
+        if (color === "aiMode" || color === "error") {
             return "white"
         }
 

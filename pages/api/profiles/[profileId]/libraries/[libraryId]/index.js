@@ -10,6 +10,9 @@ const index = async (req, res) => {
             case "PUT":
                 return LibraryController.updateLibrary(req, res)
 
+            case "GET":
+                return LibraryController.getLibrary(req, res)
+
             default:
                 return res.status(404).send({ message: "API route not found." })
         }

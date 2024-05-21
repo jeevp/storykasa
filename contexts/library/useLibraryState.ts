@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Library from "@/models/Library";
 
 export default function useLibraryState() {
     const [
@@ -9,7 +10,7 @@ export default function useLibraryState() {
     const [sharedLibraries, setSharedLibraries] = useState<[]>([])
     const [sharedLibraryInvitations, setSharedLibraryInvitations] = useState<[]>([])
     const [currentLibraryStories, setCurrentLibraryStories] = useState<[]>([])
-    const [currentLibrary, setCurrentLibrary] = useState(null)
+    const [currentLibrary, setCurrentLibrary] = useState<Library | null>(null)
 
     return {
         libraries,

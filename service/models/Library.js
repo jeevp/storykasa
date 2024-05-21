@@ -306,6 +306,14 @@ class Library {
             return acc + current.duration
         }, 0) : 0
     }
+
+    async removeListener(listenerAccountId) {
+        const _sharedAccountIds = this.sharedAccountIds.filter((sharedAccountId) => {
+            return sharedAccountId !== listenerAccountId
+        })
+
+        await this.update({ sharedAccountIds: _sharedAccountIds })
+    }
 }
 
 

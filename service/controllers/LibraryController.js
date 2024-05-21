@@ -216,4 +216,38 @@ export default class LibraryController {
             return res.status(400).send({ message: "Something went wrong." })
         }
     }
+
+    static async getLibrary(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["libraryId", "profileId"]
+            })
+
+            const { libraryId } = req.query
+
+            const library = await Library.findOne({ libraryId }, { serialized: true })
+
+            return res.status(200).send(library)
+        } catch {
+            return res.status(400).send({ message: "Something went wrong." })
+        }
+    }
+
+    static async removeListener(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["libraryId", "profileId", "listenerAccountId"]
+            })
+
+            const { libraryId, listenerAccountId } = req.query
+
+            const library = await Library.findOne({ libraryId })
+
+            await library.removeListener(listenerAccountId)
+
+            return res.status(204).send({ message: "Listener removed with success." })
+        } catch {
+            return res.status(400).send({ message: "Something went wrong." })
+        }
+    }
 }
