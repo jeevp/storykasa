@@ -239,9 +239,15 @@ export default class LibraryController {
                 requiredParams: ["libraryId", "profileId", "listenerAccountId"]
             })
 
+            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
+
             const { libraryId, listenerAccountId } = req.query
 
             const library = await Library.findOne({ libraryId })
+
+            if (user?.id !== library?.accountId && user?.id !== listenerAccountId) {
+                return res.status(401).send({ message: "Not allowed" })
+            }
 
             await library.removeListener(listenerAccountId)
 

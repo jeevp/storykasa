@@ -12,6 +12,11 @@ import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBook
 import STKMenu from "@/components/STKMenu/STKMenu";
 import DeleteCollectionDialog from "../DeleteCollectionDialog/DeleteCollectionDialog";
 import EditCollectionDialog from "@/composedComponents/EditCollectionDialog/EditCollectionDialog";
+import {useAuth} from "@/contexts/auth/AuthContext";
+import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
+import LibraryHandler from "@/handlers/LibraryHandler";
+import {useProfile} from "@/contexts/profile/ProfileContext";
+import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 
 export default function LibraryCard({
   library,
@@ -28,14 +33,22 @@ export default function LibraryCard({
   showListeners?: boolean;
   onClick?: () => void;
 }) {
+  const { setSnackbarBus } = useSnackbar()
+  const { currentUser } = useAuth()
+  const { currentProfileId } = useProfile()
+
   const [internalSharedLibraryInvitation, setInternalSharedLibraryInvitation] =
     useState<SharedLibraryInvitation | null>(null);
   const [loadingAccept, setLoadingAccept] = useState(false);
   const [loadingReject, setLoadingReject] = useState(false);
   const [showEditCollectionName, setShowEditCollectionNameDialog] = useState(false);
   const [showDeleteCollectionName, setShowDeleteCollectionDialog] = useState(false);
+  const [showLeaveCollectionDialog, setShowLeaveCollectionDialog] = useState(false)
+  const [loadingLeaveCollection, setLoadingLeaveCollection] = useState(false)
+
   const DELETE_COLLECTION = "DELETE_COLLECTION";
   const EDIT_COLLECTION_NAME = "EDIT_COLLECTION_NAME";
+  const LEAVE_COLLECTION = "LEAVE_COLLECTION"
 
   const {
     sharedLibraries,
@@ -97,6 +110,10 @@ export default function LibraryCard({
         setShowDeleteCollectionDialog(true);
         break;
 
+      case LEAVE_COLLECTION:
+        setShowLeaveCollectionDialog(true)
+        break
+
       default:
         break;
     }
@@ -124,6 +141,39 @@ export default function LibraryCard({
 
     setLoadingReject(false);
   };
+
+
+  const handleLeaveCollection = async () => {
+    try {
+      setLoadingLeaveCollection(true)
+      await LibraryHandler.removeListener({
+        profileId: currentProfileId,
+        libraryId: library?.libraryId
+      }, {
+        listenerAccountId: currentUser?.sub
+      })
+
+      setSnackbarBus({
+        active: true,
+        message: "You've left collection with success.",
+        type: "success"
+      })
+
+      const _sharedLibraries = sharedLibraries.filter((sharedLibrary) => {
+        return sharedLibrary.libraryId !== library?.libraryId
+      })
+
+      setSharedLibraries(_sharedLibraries)
+    } catch {
+      setSnackbarBus({
+        active: true,
+        message: "Ops! Something went wrong.",
+        type: "error"
+      })
+    } finally {
+      setLoadingLeaveCollection(false)
+    }
+  }
 
   return (
     <>
@@ -217,10 +267,10 @@ export default function LibraryCard({
             {showMenu && (
                 <div className="flex flex-col justify-end h-[110px] pr-2 pb-2">
                   <STKMenu
-                      options={[
+                      options={currentUser?.sub === library?.accountId ? [
                         { label: "Edit Collection", value: EDIT_COLLECTION_NAME },
                         { label: "Delete Collection", value: DELETE_COLLECTION },
-                      ]}
+                      ] : [{ label: "Leave collection", value: LEAVE_COLLECTION }]}
                       onChange={handleMenuOnChange}
                   />
                 </div>
@@ -236,8 +286,15 @@ export default function LibraryCard({
       <EditCollectionDialog
         open={showEditCollectionName}
         collection={library}
-        onClose={() => setShowEditCollectionNameDialog(false)}
-      />
+        onClose={() => setShowEditCollectionNameDialog(false)} />
+      <InfoDialog
+        active={showLeaveCollectionDialog}
+        onAction={handleLeaveCollection}
+        title="Leave collection"
+        loading={loadingLeaveCollection}
+        text={`Are you sure about leaving ${library?.libraryName} collection?`}
+        confirmationButtonText="Yes, leave collection"
+        onClose={() => setShowLeaveCollectionDialog(false)} />
     </>
   );
 }

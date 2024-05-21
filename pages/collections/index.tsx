@@ -215,6 +215,7 @@ function Collections() {
                                             <div className="p-3 lg:w-[320px] w-full" key={index}>
                                                 <LibraryCard
                                                     library={sharedLibrary}
+                                                    showMenu
                                                     onClick={() => goToLibrary(sharedLibrary)}/>
                                             </div>
                                         ))}
