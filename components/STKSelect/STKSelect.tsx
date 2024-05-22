@@ -2,6 +2,7 @@ import {MenuItem, Select, ThemeProvider} from "@mui/material";
 import theme from "@/components/theme";
 import {useEffect, useState} from "react";
 import STkCheckbox from "@/components/STKCheckbox/STKCheckbox";
+import { green800 } from "@/assets/colorPallet/colors";
 
 interface STKSelectProps {
     options: Array<Object>
@@ -9,6 +10,7 @@ interface STKSelectProps {
     optionLabel?: string
     placeholder?: string
     multiple?: boolean
+    createCollection?: boolean
     color?: string
     enableSelectAll?: boolean
     selectAllLabel?: string
@@ -23,6 +25,7 @@ function STKSelect({
     fluid,
     value,
     multiple,
+    createCollection,
     enableSelectAll,
     color,
     selectAllLabel = "All",
@@ -60,10 +63,16 @@ function STKSelect({
     }, [value, multiple, optionValue]);
 
     const handleChange = (e: Event) => {
+        
         e.stopPropagation()
         // @ts-ignore
         const { value } = e.target
         if (value === null) return
+
+        if (value === "Create Collection") {
+            onChange?.(value as string);
+            return
+        }
 
         if (multiple) {
             // @ts-ignore
@@ -122,6 +131,7 @@ function STKSelect({
                 // @ts-ignore
                 onChange={handleChange}
             >
+                {createCollection && <MenuItem key={1000} value={"Create Collection"}  sx={{ color: green800 }}>Create Collection</MenuItem>}
                 {enableSelectAll ? (
                     <MenuItem value={""} onClick={handleAllOnClick}>
                         <STkCheckbox
