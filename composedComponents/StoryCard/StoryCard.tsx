@@ -359,7 +359,7 @@ export default function StoryCard({
                             </div>
                         </div>
                     </div>
-                    <div className="lg:hidden flex items-end justify-between mt-4">s
+                    <div className="lg:hidden flex items-end justify-between mt-4">
                         <div className="flex items-center flex-wrap opacity-60 pr-14">
                             {story?.duration && (
                                 <div className="flex items-center mr-4 mb-1 lg:mb-0">
