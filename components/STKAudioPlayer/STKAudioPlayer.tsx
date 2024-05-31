@@ -19,6 +19,7 @@ import STKTooltip from "@/components/STKTooltip/STKTooltip"
 import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog"
 
 interface STKAudioPlayerProps {
+    readingDialog: boolean;
     src: string;
     preload?: boolean;
     outlined?: boolean;
@@ -27,6 +28,7 @@ interface STKAudioPlayerProps {
     onPlaying?: (playing: boolean) => void;
     clearable?: boolean
     clearRecordWarningText?: string
+    onTimeChanging: (currentTime: string) => void;
     onEnd?: () => void;
     onTimeChange?: () => void
     onClear?: () => void
@@ -39,6 +41,7 @@ const formatTime = (seconds: number) => {
 };
 
 const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
+    readingDialog,
     src,
     preload = true,
     outlined = false,
@@ -46,6 +49,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     clearable,
     clearRecordWarningText,
     customDuration = 0,
+    onTimeChanging = (currentTime) => ({}),
     onPlaying = () => ({}),
     onEnd = () => ({}),
     onTimeChange = () => ({}),
@@ -106,13 +110,18 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
         };
     }, [src, preload, customDuration]);
 
+    useEffect(() => {
+        if (readingDialog) {
+            onTimeChanging(currentTime)
+        }
+    },[currentTime])
+
 
     useEffect(() => {
         if (howl) {
             isPlaying ? howl.play() : howl.pause();
         }
     }, [howl, isPlaying]);
-
     useEffect(() => {
         let frameId: number;
         const updateProgress = () => {
