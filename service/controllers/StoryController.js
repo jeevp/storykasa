@@ -91,6 +91,8 @@ class StoryController {
                 finished
             })
 
+            if (recordingURL) await story.getTranscript()
+
             return res.status(202).send(updatedStory)
         } catch (error) {
             console.error(error)
@@ -331,6 +333,8 @@ class StoryController {
                 }
             }
 
+            if (recordingURL) createdStory
+
             return res.status(201).send({ storyId: newStoryID })
         } catch (error) {
             return res.status(400).send({ message: "Something went wrong" })
@@ -529,8 +533,6 @@ class StoryController {
         }
     }
 
-
-
     static async generateStoryIdea(req, res) {
         try {
             APIValidator.requiredPayload({ req, res }, {
@@ -591,6 +593,41 @@ class StoryController {
         } catch (error) {
             console.error(error)
             return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async getTranscript(req, res) {
+        try {
+            APIValidator.requiredParams({ req, res }, {
+                requiredParams: ["storyId"]
+            })
+
+            const { storyId } = req.query
+
+            // const story = await Story.getStory(storyId)
+
+            const stories = await Story.findAll()
+            const _stories = stories.filter((story) => {
+                return !story.deleted && story.recordingUrl
+            })
+
+            console.log({ stories: _stories.length })
+
+            for (let i = 0; i < _stories.length; i+= 1) {
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                console.log(`COUNT: ${_stories.length - i}`)
+                console.log(`START STORY_ID: ${_stories[i].storyId}`)
+                await _stories[i].getTranscript()
+                console.log(`END STORY_ID: ${_stories[i].storyId}`)
+            }
+
+            // const transcript = await story.getTranscript()
+
+            // return res.status(200).send({ transcript: story.transcript })
+            return res.status(200).send("OK")
+        } catch(error) {
+            console.log(error)
+            return res.status(400).send({ message: "Something went wrong." })
         }
     }
 }

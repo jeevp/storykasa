@@ -1,6 +1,7 @@
 const axios = require("axios")
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
 const StoryIdea = require("../models/StoryIdea");
+const OpenAIService = require("../services/OpenAIService/OpenAIService").default
 
 class Story {
     constructor({
@@ -263,6 +264,20 @@ class Story {
         })
     }
 
+    async getTranscript() {
+        // if (this.transcript) {
+        //     return this.transcript
+        // }
+
+        const transcript = await OpenAIService.getTranscriptFromAudio(this.recordingUrl)
+
+        await this.update({
+            transcript
+        })
+
+        return transcript
+    }
+
     /**
      *
      * @param {boolean} isPublic
@@ -277,6 +292,7 @@ class Story {
      * @param {string[]} ageGroups
      * @param {string[]} illustrationsURL
      * @param {boolean} finished
+     * @param {string} transcript
      * @returns {Promise<any>}
      */
     async update({
@@ -291,7 +307,8 @@ class Story {
         language,
         ageGroups,
         finished,
-        illustrationsURL
+        illustrationsURL,
+        transcript
     }) {
         require('dotenv').config({ path: '.env' });
 
@@ -307,6 +324,7 @@ class Story {
         if (language) payload.language = language
         if (ageGroups) payload.age_groups = ageGroups
         if (finished === true || finished === false) payload.finished = finished
+        if (transcript) payload.transcript = transcript
 
         if (Object.keys(payload).length === 0) throw new Error("Payload is missing")
 

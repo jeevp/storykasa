@@ -4,7 +4,7 @@ import useDevice from "@/customHooks/useDevice";
 import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import StoryHandler from "@/handlers/StoryHandler";
 import Story from "@/models/Story";
-
+import STKSkeleton from "@/components/STKSkeleton/STKSkeleton"
 interface ReadingDialogProps {
   open: boolean;
   story: Story | null;
@@ -17,12 +17,14 @@ export default function ReadingDialog({
   story,
 }: ReadingDialogProps) {
   const { onMobile } = useDevice();
+  // States
+  const [loading, setLoading] = useState(true)
 
   // Contexts
-
   const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false);
   const [storyHasEnded, setStoryHasEnded] = useState(false);
   const [storyCurrentTime, setStoryCurrentTime] = useState(0);
+  const [transcription, setTranscription] = useState("")
   const [readerCurrentTime, setReaderCurrentTime] = useState<number>(0);
   const [playCounted, setPlayCounted] = useState(false);
   const [audioDuration, setAudioDuration] = useState(0);
@@ -32,22 +34,30 @@ export default function ReadingDialog({
 
 
   useEffect(() => {
-    const audio = new Audio(story?.recordingUrl);
+    if (story?.recordingUrl) {
+      const audio = new Audio(story?.recordingUrl);
 
-    audio.addEventListener("loadedmetadata", () => {
-      setAudioDuration(audio.duration);
-    });
-
-    return () => {
-      audio.removeEventListener("loadedmetadata", () => {
+      audio.addEventListener("loadedmetadata", () => {
         setAudioDuration(audio.duration);
       });
-    };
+
+      return () => {
+        audio.removeEventListener("loadedmetadata", () => {
+          setAudioDuration(audio.duration);
+        });
+      };
+    }
   }, [story?.recordingUrl]);
 
   useEffect(() => {
-    const transcription =
-      "Once upon a time, in a faraway land, there lived a brave knight named Sir Gallant. He was known for his courage and kindness, and the people loved him dearly. One day, a dragon appeared in the kingdom, causing fear and chaos. Sir Gallant knew he had to act. With his sword in hand, he set out to face the beast. The journey was long and arduous, but Sir Gallant did not waver. He crossed treacherous mountains and dark forests, always moving forward. Finally, he reached the dragon's lair. The dragon was fierce and powerful, but Sir Gallant fought bravely. After a long and intense battle, he managed to defeat the dragon. The kingdom rejoiced at the news of Sir Gallant's victory. He returned home a hero, celebrated by all. From that day on, Sir Gallant's name was etched in the annals of history as a symbol of bravery and heroism. And so, the brave knight lived happily ever after, always ready to defend his kingdom from any threat that might arise.";
+    if (audioDuration) {
+      handlTranscriptWithTimestamp()
+    }
+  }, [audioDuration]);
+
+  const handlTranscriptWithTimestamp = async () => {
+    setLoading(true)
+    const transcription = await StoryHandler.getStoryTranscript(story?.storyId)
     const words = transcription.split(" ");
     const numWords = words.length;
     const avgWordDuration = audioDuration / numWords;
@@ -61,9 +71,9 @@ export default function ReadingDialog({
       };
     });
     setTranscriptWithTimestamps(transcriptWithTimestamps);
-  }, [audioDuration]);
-  console.log({ transcriptWithTimestamps });
+    setLoading(false)
 
+  }
 
   const handleStoryOnEnd = () => {
     setStoryHasEnded(true);
@@ -94,7 +104,6 @@ export default function ReadingDialog({
 
     setReaderCurrentTime(totalSeconds);
   };
-  console.log(readerCurrentTime);
 
   const renderTranscript = () => {
     let renderedText = "";
@@ -136,7 +145,24 @@ export default function ReadingDialog({
           />
         </div>
         <div className="mt-6">
-          <p dangerouslySetInnerHTML={renderTranscript()} />
+          {loading ? (
+              <div>
+                <div>
+                  <STKSkeleton width="100%" height="30px" />
+                </div>
+                <div className="mt-2">
+                  <STKSkeleton width="100%" height="30px" />
+                </div>
+                <div className="mt-2">
+                  <STKSkeleton width="100%" height="30px" />
+                </div>
+                <div className="mt-2">
+                  <STKSkeleton width="100%" height="30px" />
+                </div>
+              </div>
+          ) : (
+              <p className="text-lg leading-8" dangerouslySetInnerHTML={renderTranscript()} />
+          )}
         </div>
       </form>
     </STKDialog>
