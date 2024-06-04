@@ -184,7 +184,7 @@ function Library() {
                             <div className="w-full">
                                 {currentLibraryStories.length || (currentLibraryStories.length === 0 && Object.keys(storyFilters).length > 0) ? (
                                     <p>
-                                        This is the home for the index you save or record.
+                                        This is the home for the stories you save or record.
                                     </p>
                                 ) : currentLibraryStories.length === 0 && Object.keys(storyFilters).length === 0 ? (
                                     <div className="bg-[#f5efdc] box-border flex flex-col items-center p-5 rounded-lg text-center w-full">

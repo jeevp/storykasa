@@ -75,7 +75,7 @@ export default function CreateCollectionDialog({
                             <STKTextField
                             fluid
                             value={libraryName}
-                            placeholder="Type the story title"
+                            placeholder="Type the collection title"
                             onChange={(value: string) => setLibraryName(value)}/>
                         </div>
                     </div>
