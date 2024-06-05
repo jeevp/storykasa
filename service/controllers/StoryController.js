@@ -602,7 +602,7 @@ class StoryController {
                 requiredParams: ["storyId"]
             })
 
-            const { storyId } = req.query
+            // const { storyId } = req.query
 
             // const story = await Story.getStory(storyId)
 
@@ -623,7 +623,7 @@ class StoryController {
 
             // const transcript = await story.getTranscript()
 
-            // return res.status(200).send({ transcript: story.transcript })
+            // return res.status(200).send({ transcript })
             return res.status(200).send("OK")
         } catch(error) {
             console.log(error)
