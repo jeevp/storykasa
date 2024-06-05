@@ -19,26 +19,22 @@ const processOauth = async (req: NextRequest, res: NextResponse) => {
             return res.status(400).send({ message: "Something went wrong" })
         }
 
-        console.log(">>> OK 1 >>>>", { data })
         let defaultProfile = await Profile.getDefaultAccountProfile({
             accessToken: data.session.access_token
         })
-        console.log(">>> OK 2 >>>>", { defaultProfile })
 
         if (!defaultProfile) {
             defaultProfile = await Profile.createProfile({
                 name: data.session?.user?.user_metadata?.full_name,
                 avatarUrl: data.session?.user?.user_metadata?.avatar_url
-            })
+            }, { accessToken: data.session?.access_token })
         }
-        console.log(">>> OK 3 >>>>")
 
         // @ts-ignore
         await supabaseService.auth.setSession({
             refresh_token: data.session.refresh_token,
             access_token: data.session.access_token
         })
-        console.log(">>> OK 4 >>>>")
 
         // @ts-ignore
         return res.status(200).send({
