@@ -19,7 +19,7 @@ import STKTooltip from "@/components/STKTooltip/STKTooltip"
 import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog"
 
 interface STKAudioPlayerProps {
-    readingDialog: boolean;
+    readingDialog?: boolean;
     src: string;
     preload?: boolean;
     outlined?: boolean;
@@ -28,7 +28,7 @@ interface STKAudioPlayerProps {
     onPlaying?: (playing: boolean) => void;
     clearable?: boolean
     clearRecordWarningText?: string
-    onTimeChanging: (currentTime: string) => void;
+    onTimeChanging?: (currentTime: string) => void;
     onEnd?: () => void;
     onTimeChange?: () => void
     onClear?: () => void
