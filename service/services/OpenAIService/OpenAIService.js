@@ -1,24 +1,24 @@
 import OpenAI from "openai";
-import axios from "axios"
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+import axios from "axios";
 import FormData from 'form-data';
 import fs from 'fs';
-import ffmpeg from 'fluent-ffmpeg';
-import { Readable } from 'stream';
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 export default class OpenAIService {
-    static async createCompletion({ prompt }){
+    static async createCompletion({ prompt }) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: "system", content: "You are a Story maker" }, { role: "user", content: prompt }],
             model: "gpt-4-0125-preview",
             temperature: 0.2
-        })
+        });
 
-        return completion?.choices[0]
+        return completion?.choices[0];
     }
 
     static async getTranscriptFromAudio(recordingURL) {
         try {
-            const maxChunkSizeBytes = 25 * 1024 * 1024; // 25 MB in bytes
+            const maxChunkSizeBytes = 24.5 * 1024 * 1024; // 24.5 MB in bytes to leave room for form data overhead
             const response = await axios.get(recordingURL, { responseType: 'arraybuffer' });
             const audioData = Buffer.from(response.data);
 
@@ -42,7 +42,7 @@ export default class OpenAIService {
             const formData = new FormData();
             formData.append('file', fs.createReadStream(filename));
             formData.append('model', 'whisper-1');
-            formData.append('response_format', 'text');
+            formData.append('response_format', 'verbose_json');  // Request detailed JSON response including timestamps
 
             const transcriptResponse = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
                 headers: {
@@ -52,7 +52,14 @@ export default class OpenAIService {
             });
 
             fs.unlinkSync(filename);
-            return transcriptResponse.data;
+
+            // Parse the response to extract the text with timestamps
+            const transcriptData = transcriptResponse.data;
+            return transcriptData.segments.map(segment => ({
+                start: segment.start,
+                end: segment.end,
+                text: segment.text
+            }));
 
         } catch (error) {
             console.error("Error processing audio file:", error.response ? error.response.data : error.message);
@@ -74,13 +81,13 @@ export default class OpenAIService {
 
             const transcript = await this.processAudioFile(chunkData, chunkPath);
             if (transcript) {
-                transcripts.push(transcript);
+                transcripts.push(...transcript);
             }
 
             start = chunkEnd;
             chunkIndex += 1;
         }
 
-        return transcripts.join(' ');
+        return transcripts; // Return the combined array of all segments from all chunks
     }
 }

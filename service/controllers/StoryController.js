@@ -79,6 +79,8 @@ class StoryController {
                 return res.status(404).send({ message: "Story not found" })
             }
 
+            let transcript = story.transcript
+
             const updatedStory = await story.update({
                 title,
                 description,
@@ -88,10 +90,11 @@ class StoryController {
                 language,
                 ageGroups,
                 illustrationsURL,
-                finished
+                finished,
+                transcript
             })
 
-            if (recordingURL) await story.getTranscript()
+            if (finished) updatedStory.getTranscript()
 
             return res.status(202).send(updatedStory)
         } catch (error) {
@@ -311,7 +314,26 @@ class StoryController {
                     }
                 )
 
-                const createdStory = response.data[0]
+                const createdStory =  new Story({
+                    storyId: response.data[0].story_id,
+                    title: response.data[0].title,
+                    description: response.data[0].description,
+                    isPublic: response.data[0].is_public,
+                    transcript: response.data[0].transcript,
+                    language: response.data[0].language,
+                    region: response.data[0].region,
+                    theme: response.data[0].theme,
+                    category: response.data[0].category,
+                    imageUrl: response.data[0].imageUrl,
+                    lastUpdated: response.data[0].last_updated,
+                    createdAt: response.data[0].created_at,
+                    ageGroups: response.data[0].age_groups,
+                    narratorName: response.data[0].narrator_name,
+                    recordedBy: response.data[0]?.recorded_by,
+                    playCount: response.data[0]?.play_count,
+                    finished: response.data[0]?.finished,
+                    recordingUrl: response.data[0]?.recording_url
+                })
 
                 if (illustrationsURL?.length > 0) {
                     // Let's add the illustrations
@@ -320,7 +342,7 @@ class StoryController {
                             `${process.env.SUPABASE_URL}/rest/v1/stories_images`,
                             {
                                 image_url: illustrationURL,
-                                story_id: createdStory?.story_id
+                                story_id: createdStory?.storyId
                             },
                             {
                                 params: {
@@ -333,7 +355,7 @@ class StoryController {
                 }
             }
 
-            if (recordingURL) createdStory
+            if (finished) createdStory.getTranscript()
 
             return res.status(201).send({ storyId: newStoryID })
         } catch (error) {
@@ -602,34 +624,45 @@ class StoryController {
                 requiredParams: ["storyId"]
             })
 
-            // const { storyId } = req.query
+            const { storyId } = req.query
 
-            // const story = await Story.getStory(storyId)
+            const story = await Story.getStory(storyId)
 
-            const stories = await Story.findAll()
-            const _stories = stories.filter((story) => {
-                return !story.deleted && story.recordingUrl
-            })
+            const transcript = await story.getTranscript()
 
-            console.log({ stories: _stories.length })
-
-            for (let i = 0; i < _stories.length; i+= 1) {
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-                console.log(`COUNT: ${_stories.length - i}`)
-                console.log(`START STORY_ID: ${_stories[i].storyId}`)
-                await _stories[i].getTranscript()
-                console.log(`END STORY_ID: ${_stories[i].storyId}`)
-            }
-
-            // const transcript = await story.getTranscript()
-
-            // return res.status(200).send({ transcript })
-            return res.status(200).send("OK")
+            return res.status(200).send({ transcript })
         } catch(error) {
             console.log(error)
             return res.status(400).send({ message: "Something went wrong." })
         }
     }
+
+    static async generateTranscriptForExistingStories(req, res) {
+        try {
+            const stories = await Story.findAll();
+            const _stories = stories.filter((story) => {
+                return !story.deleted && story.recordingUrl
+            })
+
+            console.log(">>> TOTAL STORIES: ", _stories.length);
+            for (let i = 0; i < _stories.length; i += 1) {
+                const story = _stories[i];
+                console.log(`>>> START STORY ID: ${story.storyId} | ${i + 1}/${_stories.length}`);
+                if (story.transcriptWithTimestamp) {
+                    console.log(">>> SKIPPING STORY - TRANSCRIPTION ALREADY DONE");
+                    continue;
+                }
+                await story.getTranscript({ forceCreation: true });
+                console.log(">>> END STORY");
+            }
+
+            return res.status(200).send("OK");
+        } catch (error) {
+            console.log(error);
+            return res.status(400).send({ message: "Something went wrong." });
+        }
+    }
+
 }
 
 
