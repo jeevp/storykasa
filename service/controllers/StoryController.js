@@ -94,8 +94,6 @@ class StoryController {
                 transcript
             })
 
-            if (finished) updatedStory.getTranscript()
-
             return res.status(202).send(updatedStory)
         } catch (error) {
             console.error(error)
@@ -354,8 +352,6 @@ class StoryController {
                     })
                 }
             }
-
-            if (finished) createdStory.getTranscript()
 
             return res.status(201).send({ storyId: newStoryID })
         } catch (error) {
