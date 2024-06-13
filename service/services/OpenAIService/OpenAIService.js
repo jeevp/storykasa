@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import axios from "axios";
 import FormData from 'form-data';
-import fs from 'fs';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -37,23 +36,23 @@ export default class OpenAIService {
 
     static async processAudioFile(audioData, filename) {
         try {
-            fs.writeFileSync(filename, audioData);
+            // Create a FormData instance
+            const formData = new FormData();
+            formData.append('file', audioData, filename);
+            formData.append('model', 'whisper-1');
+            formData.append('response_format', 'verbose_json');
+            formData.append('temperature', 0.2);
 
-            // Read the file as a stream
-            const audioStream = fs.createReadStream(filename);
-
-            // Make the API request using OpenAI library
-            const transcript = await openai.audio.transcriptions.create({
-                model: 'whisper-1',
-                file: audioStream,
-                response_format: 'verbose_json',
-                timestamp_granularities: ['word', 'segment'],
-                temperature: 0.2
+            // Make the API request using axios
+            const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
+                headers: {
+                    ...formData.getHeaders(),
+                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                },
             });
 
-            // Delete the temporary file
-            fs.unlinkSync(filename)
             // Parse the response to extract the text with timestamps
+            const transcript = response.data;
             return transcript.segments.map(segment => ({
                 start: segment.start,
                 end: segment.end,
@@ -74,11 +73,8 @@ export default class OpenAIService {
         while (start < audioData.length) {
             const chunkEnd = Math.min(start + maxChunkSizeBytes, audioData.length);
             const chunkData = audioData.slice(start, chunkEnd);
-            const chunkPath = `chunk_${chunkIndex}.wav`;
 
-            fs.writeFileSync(chunkPath, chunkData);
-
-            const transcript = await this.processAudioFile(chunkData, chunkPath);
+            const transcript = await this.processAudioFile(chunkData, `chunk_${chunkIndex}.wav`);
             if (transcript) {
                 transcripts.push(...transcript);
             }
