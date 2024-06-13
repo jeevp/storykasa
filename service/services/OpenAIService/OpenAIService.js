@@ -39,23 +39,22 @@ export default class OpenAIService {
         try {
             fs.writeFileSync(filename, audioData);
 
-            const formData = new FormData();
-            formData.append('file', fs.createReadStream(filename));
-            formData.append('model', 'whisper-1');
-            formData.append('response_format', 'verbose_json');  // Request detailed JSON response including timestamps
+            // Read the file as a stream
+            const audioStream = fs.createReadStream(filename);
 
-            const transcriptResponse = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
-                headers: {
-                    ...formData.getHeaders(),
-                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-                }
+            // Make the API request using OpenAI library
+            const transcript = await openai.audio.transcriptions.create({
+                model: 'whisper-1',
+                file: audioStream,
+                response_format: 'verbose_json',
+                timestamp_granularities: ['word', 'segment'],
+                temperature: 0.2
             });
 
-            fs.unlinkSync(filename);
-
+            // Delete the temporary file
+            fs.unlinkSync(filename)
             // Parse the response to extract the text with timestamps
-            const transcriptData = transcriptResponse.data;
-            return transcriptData.segments.map(segment => ({
+            return transcript.segments.map(segment => ({
                 start: segment.start,
                 end: segment.end,
                 text: segment.text

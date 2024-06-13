@@ -628,7 +628,7 @@ class StoryController {
 
             const story = await Story.getStory(storyId)
 
-            const transcript = await story.getTranscript()
+            const transcript = await story.getTranscript({ forceCreation: true })
 
             return res.status(200).send({ transcript })
         } catch(error) {
