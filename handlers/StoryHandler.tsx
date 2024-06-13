@@ -299,4 +299,12 @@ export default class StoryHandler {
 
         return response.data
     }
+
+    static async getStoryTranscript(storyId: string) {
+        const headers = generateHeaders()
+
+        const response = await axios.get(`/api/stories/${storyId}/transcript`, headers)
+
+        return response.data.transcript
+    }
 }

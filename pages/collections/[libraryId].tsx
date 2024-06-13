@@ -110,7 +110,6 @@ function Library() {
         })
     }
 
-    console.log(currentUser, {  currentLibrary})
 
     return (
         <PageWrapper path="library">

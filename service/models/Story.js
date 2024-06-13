@@ -1,6 +1,8 @@
 const axios = require("axios")
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
 const StoryIdea = require("../models/StoryIdea");
+const OpenAIService = require("../services/OpenAIService/OpenAIService").default
+const ISO6391 = require('iso-639-1');
 
 class Story {
     constructor({
@@ -14,6 +16,7 @@ class Story {
         theme,
         category,
         imageUrl,
+        transcriptWithTimestamp,
         lastUpdated,
         recordingUrl,
         recordedBy,
@@ -32,6 +35,7 @@ class Story {
         this.description = description
         this.isPublic = isPublic
         this.transcript = transcript
+        this.transcriptWithTimestamp = transcriptWithTimestamp
         this.language = language
         this.region = region
         this.theme = theme
@@ -71,6 +75,7 @@ class Story {
             description: story.description,
             isPublic: story.is_public,
             transcript: story.transcript,
+            transcriptWithTimestamp: story.transcript_with_timestamp,
             language: story.language,
             region: story.region,
             theme: story.theme,
@@ -251,6 +256,7 @@ class Story {
                 lastUpdated: story?.last_updated,
                 createdAt: story?.created_at,
                 ageGroups: story?.ageGroups,
+                transcriptWithTimestamp: story?.transcript_with_timestamp,
                 narratorName: story?.narrator_name,
                 duration: story?.duration,
                 recordedBy: story?.recorded_by,
@@ -261,6 +267,18 @@ class Story {
                 finished: story?.finished
             })
         })
+    }
+
+    async getTranscript(options = { forceCreation: false }) {
+        if (this.transcriptWithTimestamp && !options.forceCreation) return this.transcriptWithTimestamp
+
+        const transcriptWithTimestamp = await OpenAIService.getTranscriptFromAudio(this.recordingUrl)
+
+        await this.update({
+            transcriptWithTimestamp
+        })
+
+        return transcriptWithTimestamp
     }
 
     /**
@@ -277,6 +295,7 @@ class Story {
      * @param {string[]} ageGroups
      * @param {string[]} illustrationsURL
      * @param {boolean} finished
+     * @param {json[]} transcriptWithTimestamp
      * @returns {Promise<any>}
      */
     async update({
@@ -291,7 +310,8 @@ class Story {
         language,
         ageGroups,
         finished,
-        illustrationsURL
+        illustrationsURL,
+         transcriptWithTimestamp
     }) {
         require('dotenv').config({ path: '.env' });
 
@@ -307,6 +327,7 @@ class Story {
         if (language) payload.language = language
         if (ageGroups) payload.age_groups = ageGroups
         if (finished === true || finished === false) payload.finished = finished
+        if (transcriptWithTimestamp) payload.transcript_with_timestamp = transcriptWithTimestamp
 
         if (Object.keys(payload).length === 0) throw new Error("Payload is missing")
 
@@ -346,7 +367,7 @@ class Story {
             title: story.title,
             description: story.description,
             isPublic: story.is_public,
-            transcript: story.transcript,
+            transcriptWithTimestamp: story.transcriptWithTimestamp,
             language: story.language,
             region: story.region,
             theme: story.theme,
