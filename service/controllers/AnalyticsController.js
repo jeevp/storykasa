@@ -59,22 +59,16 @@ class AnalyticsController {
                 FREE_SUBSCRIPTION_PLAN,
                 PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
                 PREMIUM_SUBSCRIPTION_PLAN,
-                PREMIUM_PLUS_SUBSCRIPTION_PLAN
             } = Subscription.getAllowedSubscriptionPlanNames()
             const subscriptions = await Subscription.findAll()
             const freeSubscriptions = []
             const premiumSubscriptions = []
-            const premiumPlusSubscriptions = []
             const organizationalSubscriptions = []
 
             subscriptions.forEach((subscription) => {
                 switch(subscription.subscriptionPlan) {
                     case FREE_SUBSCRIPTION_PLAN:
                         freeSubscriptions.push(subscription)
-                        break
-
-                    case PREMIUM_PLUS_SUBSCRIPTION_PLAN:
-                        premiumPlusSubscriptions.push(subscription)
                         break
 
                     case PREMIUM_SUBSCRIPTION_PLAN:

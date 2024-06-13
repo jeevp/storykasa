@@ -11,7 +11,6 @@ import {
     FREE_SUBSCRIPTION_PLAN,
     PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
     PREMIUM_SUBSCRIPTION_PLAN,
-    PREMIUM_PLUS_SUBSCRIPTION_PLAN
 } from "@/models/Subscription";
 import StripeCheckout from "@/composedComponents/StripeCheckout/StripeCheckout";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
@@ -90,21 +89,6 @@ export default function Signup() {
             ],
             isSelected: selectedPlan.value === PREMIUM_SUBSCRIPTION_PLAN,
             value: PREMIUM_SUBSCRIPTION_PLAN
-        },
-        {
-            name: 'Premium',
-            extensionName: "Plus",
-            price: '$20',
-            priceNumber: 20,
-            features: [
-                'Unlimited listening time to all stories',
-                'Limited to 10 profiles',
-                'More story recording time (600 minutes)',
-                'Can add artwork to any stories',
-                'AI Story Idea Generator for endless inspiration'
-            ],
-            isSelected: selectedPlan.value === PREMIUM_PLUS_SUBSCRIPTION_PLAN,
-            value: PREMIUM_PLUS_SUBSCRIPTION_PLAN
         },
         {
             name: 'Premium',
@@ -202,10 +186,7 @@ export default function Signup() {
                                 ) : selectedPlan?.value === PREMIUM_SUBSCRIPTION_PLAN || selectedPlan?.value === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN ? (
                                     ` An account can have up to five profiles. Get started by creating a profile for
                                 yourself. Later, you can create profiles for other members of your family or group.`
-                                ) : (selectedPlan?.value === PREMIUM_PLUS_SUBSCRIPTION_PLAN)  ? (
-                                    ` An account can have ten profiles. Get started by creating a profile for
-                                yourself. Later, you can create profiles for other members of your family or group.`
-                                ): null}
+                                ) : null}
                             </p>
                             <div className="mt-10">
                                 <ProfileCreationForm

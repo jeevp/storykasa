@@ -50,7 +50,6 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            PREMIUM_PLUS_SUBSCRIPTION_PLAN
         } = Subscription.getAllowedSubscriptionPlanNames()
 
         // @ts-ignore
@@ -89,8 +88,6 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
                             <label className="mt-2 font-semibold text-lg">Subscription plan updated with success</label>
                             {previousSubscriptionPlanName === FREE_SUBSCRIPTION_PLAN && currentSubscription?.subscriptionPlan === PREMIUM_SUBSCRIPTION_PLAN ? (
                                 "Congratulations and thank you for upgrading to StoryKasa Premium! We are thrilled to have you as a premium member of our community"
-                            ) : previousSubscriptionPlanName !== FREE_SUBSCRIPTION_PLAN && currentSubscription?.subscriptionPlan === PREMIUM_PLUS_SUBSCRIPTION_PLAN ? (
-                                "You've just unlocked the plus storytelling experience! A huge welcome to StoryKasa Premium Plus - where your journey into the limitless realms of imagination knows no bounds."
                             ) : previousSubscriptionPlanName !== FREE_SUBSCRIPTION_PLAN && currentSubscription?.subscriptionPlan === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN ? (
                                 "Congratulations on elevating your organization's storytelling journey with StoryKasa Premium Organizational! We are excited to partner with your team and offer an unparalleled storytelling platform that caters to your organizational needs."
                             ) : "We're glad you're continuing your journey with us! Welcome to the StoryKasa Free experience, where the world of stories remains at your fingertips."}

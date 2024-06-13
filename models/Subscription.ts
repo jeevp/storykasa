@@ -1,6 +1,5 @@
 export const FREE_SUBSCRIPTION_PLAN = "FREE_SUBSCRIPTION_PLAN"
 export const PREMIUM_SUBSCRIPTION_PLAN = "PREMIUM_SUBSCRIPTION_PLAN"
-export const PREMIUM_PLUS_SUBSCRIPTION_PLAN = "PREMIUM_PLUS_SUBSCRIPTION_PLAN"
 export const PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN = "PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN"
 
 
@@ -45,7 +44,6 @@ export default class Subscription {
         return {
             FREE_SUBSCRIPTION_PLAN: "FREE_SUBSCRIPTION_PLAN",
             PREMIUM_SUBSCRIPTION_PLAN: "PREMIUM_SUBSCRIPTION_PLAN",
-            PREMIUM_PLUS_SUBSCRIPTION_PLAN: "PREMIUM_PLUS_SUBSCRIPTION_PLAN",
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN: "PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN"
         }
     }
@@ -54,15 +52,11 @@ export default class Subscription {
         const {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            PREMIUM_PLUS_SUBSCRIPTION_PLAN,
             PREMIUM_SUBSCRIPTION_PLAN
         } = Subscription.getAllowedSubscriptionPlanNames()
         switch(this.subscriptionPlan) {
             case (FREE_SUBSCRIPTION_PLAN):
                 return "Free"
-
-            case (PREMIUM_PLUS_SUBSCRIPTION_PLAN):
-                return "Premium Plus"
 
             case (PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN):
                 return "Premium Unlimited Organizational"

@@ -14,7 +14,8 @@ const plans = [
             'Limited listening time to select stories',
             'Limited to 3 profiles',
             'Limited story recording time (60 minutes)',
-            'Can add artwork to your own stories'
+            'Can add artwork to your own stories',
+            'Read stories while listening'
         ],
         isSelected: selectedPlan.value === FREE_SUBSCRIPTION_PLAN,
         value: FREE_SUBSCRIPTION_PLAN

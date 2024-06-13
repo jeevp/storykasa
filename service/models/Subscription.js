@@ -18,7 +18,6 @@ class Subscription {
         const {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            PREMIUM_PLUS_SUBSCRIPTION_PLAN,
             PREMIUM_SUBSCRIPTION_PLAN,
         } = Subscription.getAllowedSubscriptionPlanNames()
 
@@ -27,9 +26,6 @@ class Subscription {
                 return 3
             case PREMIUM_SUBSCRIPTION_PLAN:
                 return 5
-
-            case PREMIUM_PLUS_SUBSCRIPTION_PLAN:
-                return 10
 
             case PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN:
                 return 5
@@ -42,7 +38,6 @@ class Subscription {
         const {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            PREMIUM_PLUS_SUBSCRIPTION_PLAN,
             PREMIUM_SUBSCRIPTION_PLAN
         } = Subscription.getAllowedSubscriptionPlanNames()
 
@@ -51,9 +46,6 @@ class Subscription {
                 return 60
             case PREMIUM_SUBSCRIPTION_PLAN:
                 return 300
-
-            case PREMIUM_PLUS_SUBSCRIPTION_PLAN:
-                return 600
 
             case PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN:
                 return 600
@@ -67,7 +59,6 @@ class Subscription {
         return {
             FREE_SUBSCRIPTION_PLAN: "FREE_SUBSCRIPTION_PLAN",
             PREMIUM_SUBSCRIPTION_PLAN: "PREMIUM_SUBSCRIPTION_PLAN",
-            PREMIUM_PLUS_SUBSCRIPTION_PLAN: "PREMIUM_PLUS_SUBSCRIPTION_PLAN",
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN: "PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN"
         }
     }
@@ -83,9 +74,6 @@ class Subscription {
         switch(subscriptionPlan) {
             case (FREE_SUBSCRIPTION_PLAN):
                 return 0
-
-            case (PREMIUM_PLUS_SUBSCRIPTION_PLAN):
-                return 20
 
             case (PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN):
                 return 300
