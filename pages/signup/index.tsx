@@ -68,7 +68,6 @@ export default function Signup() {
             priceNumber: 0,
             features: [
                 'Limited listening time to select stories',
-                'Limited to 3 profiles',
                 'Limited story recording time (60 minutes)',
                 'Can add artwork to your own stories'
             ],
@@ -78,32 +77,17 @@ export default function Signup() {
         {
             name: 'Premium',
             extensionName: "",
-            price: '$10',
-            priceNumber: 10,
+            price: '$5',
+            priceNumber: 5,
             features: [
                 'Unlimited listening time to all stories',
-                'Limited to 5 profiles',
                 'More story recording time (300 minutes)',
-                'Can add artwork to any stories',
-                'AI Story Idea Generator for endless inspiration'
+                'Can add artwork to all stories',
+                'AI Story Idea Generator for endless inspiration',
+                'AI Audio Transcription to support readers and language learners'
             ],
             isSelected: selectedPlan.value === PREMIUM_SUBSCRIPTION_PLAN,
             value: PREMIUM_SUBSCRIPTION_PLAN
-        },
-        {
-            name: 'Premium',
-            extensionName: "Organizational",
-            price: '$300',
-            priceNumber: 300,
-            features: [
-                'Unlimited listening time to all stories',
-                'Even more story recording (600 minutes)',
-                'Can add artwork to any stories',
-                'AI Story Idea Generator for endless inspiration',
-                'Includes up to 100 premium users'
-            ],
-            isSelected: selectedPlan.value === PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            value: PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN
         }
     ];
 

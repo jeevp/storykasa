@@ -3,7 +3,6 @@ import useDevice from "@/customHooks/useDevice";
 import {useEffect, useState} from "react";
 import ChooseSubscriptionPlan from "@/composedComponents/ChooseSubscriptionPlan/ChooseSubscriptionPlan";
 import StripeCheckout from "@/composedComponents/StripeCheckout/StripeCheckout";
-import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
 import Subscription from "@/models/Subscription";
 import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
@@ -137,7 +136,7 @@ export default function UpdateSubscriptionDialog({ active, onClose = () => ({}) 
         <STKDialog
         fullScreen={onMobile}
         active={active}
-        maxWidth={currentStep === CHOOSE_SUBSCRIPTION_PLAN_STEP ? "xl" : "sm"}
+        maxWidth={currentStep === CHOOSE_SUBSCRIPTION_PLAN_STEP ? "sm" : "sm"}
         includeBackArrow={currentStep === ADD_PAYMENT_DETAILS_STEP}
         title={currentStep === SUCCESS_FEEDBACK_STEP ? "" : "Update subscription plan"}
         onClose={() => onClose()}
