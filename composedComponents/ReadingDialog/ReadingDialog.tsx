@@ -13,10 +13,10 @@ interface ReadingDialogProps {
 }
 
 export default function ReadingDialog({
-                                        open,
-                                        onClose = () => ({}),
-                                        story,
-                                      }: ReadingDialogProps) {
+  open,
+  onClose = () => ({}),
+  story,
+}: ReadingDialogProps) {
   const { onMobile } = useDevice();
   const transcriptRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +29,7 @@ export default function ReadingDialog({
   const [playCounted, setPlayCounted] = useState(false);
   const [audioDuration, setAudioDuration] = useState(0);
   const [transcriptWithTimestamps, setTranscriptWithTimestamps] = useState<
-      { text: string; start: number; end: number }[]
+    { text: string; start: number; end: number }[]
   >([]);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function ReadingDialog({
     setLoading(true);
     if (story?.storyId) {
       const transcription = await StoryHandler.getStoryTranscript(story.storyId);
-      setTranscriptWithTimestamps(transcription);
+      setTranscriptWithTimestamps(transcription || []);
     }
     setLoading(false);
   };
@@ -109,62 +109,75 @@ export default function ReadingDialog({
   const renderTranscript = () => {
     let renderedText = "";
 
-    transcriptWithTimestamps.forEach(({ text, start, end }) => {
-      if (end <= readerCurrentTime) {
-        renderedText += `<span style="color: #333333;">${text}</span> `;
-      } else if (start <= readerCurrentTime && end > readerCurrentTime) {
-        renderedText += `<span style="color: #3d996d;" class="active">${text}</span> `;
-      } else {
-        renderedText += `<span style="color: #888888;">${text}</span> `;
-      }
-    });
+    if (Array.isArray(transcriptWithTimestamps)) {
+      transcriptWithTimestamps.forEach(({ text, start, end }) => {
+        if (end <= readerCurrentTime) {
+          renderedText += `<span style="color: #333333;">${text}</span> `;
+        } else if (start <= readerCurrentTime && end > readerCurrentTime) {
+          renderedText += `<span style="color: #3d996d;" class="active">${text}</span> `;
+        } else {
+          renderedText += `<span style="color: #888888;">${text}</span> `;
+        }
+      });
+    }
+
     return { __html: renderedText };
   };
 
   return (
-      <STKDialog
-          active={open}
-          maxWidth="sm"
-          title={story?.title}
-          fullScreen={onMobile}
-          onClose={() => onClose()}
-      >
-        <form>
-          <div className="mt-6 ">
-            <STKAudioPlayer
-                readingDialog
-                onTimeChanging={handleCurrentTime}
-                outlined
-                src={story?.recordingUrl || ""}
-                html5
-                onEnd={handleStoryOnEnd}
-                customDuration={story?.duration}
-                onPlaying={handlePlaying}
-                // @ts-ignore
-                onTimeChange={handleOnTimeChange}
+    <STKDialog
+      active={open}
+      maxWidth="sm"
+      title={story?.title}
+      fullScreen={onMobile}
+      onClose={() => onClose()}
+    >
+      <form>
+        <div className="mt-6 ">
+          <STKAudioPlayer
+            readingDialog
+            onTimeChanging={handleCurrentTime}
+            outlined
+            src={story?.recordingUrl || ""}
+            html5
+            onEnd={handleStoryOnEnd}
+            customDuration={story?.duration}
+            onPlaying={handlePlaying}
+            // @ts-ignore
+            onTimeChange={handleOnTimeChange}
+          />
+        </div>
+        <div
+          className="mt-6"
+          ref={transcriptRef}
+          style={{
+            maxHeight: onMobile ? "calc(100vh - 220px)" : "400px",
+            overflowY: "auto",
+          }}
+        >
+          {loading ? (
+            <div>
+              <div>
+                <STKSkeleton width="100%" height="30px" />
+              </div>
+              <div className="mt-2">
+                <STKSkeleton width="100%" height="30px" />
+              </div>
+              <div className="mt-2">
+                <STKSkeleton width="100%" height="30px" />
+              </div>
+              <div className="mt-2">
+                <STKSkeleton width="100%" height="30px" />
+              </div>
+            </div>
+          ) : (
+            <p
+              className="text-lg leading-8"
+              dangerouslySetInnerHTML={renderTranscript()}
             />
-          </div>
-          <div className="mt-6" ref={transcriptRef} style={{ maxHeight: onMobile ? 'calc(100vh - 220px)' : '400px', overflowY: 'auto' }}>
-            {loading ? (
-                <div>
-                  <div>
-                    <STKSkeleton width="100%" height="30px" />
-                  </div>
-                  <div className="mt-2">
-                    <STKSkeleton width="100%" height="30px" />
-                  </div>
-                  <div className="mt-2">
-                    <STKSkeleton width="100%" height="30px" />
-                  </div>
-                  <div className="mt-2">
-                    <STKSkeleton width="100%" height="30px" />
-                  </div>
-                </div>
-            ) : (
-                <p className="text-lg leading-8" dangerouslySetInnerHTML={renderTranscript()} />
-            )}
-          </div>
-        </form>
-      </STKDialog>
+          )}
+        </div>
+      </form>
+    </STKDialog>
   );
 }

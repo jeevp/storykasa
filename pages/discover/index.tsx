@@ -29,6 +29,7 @@ function Discover() {
     const { onMobile } = useDevice()
     const { currentUser } = useAuth()
 
+
     const [stories, setStories] = useState<Story[]>([])
     const [selectedStoryId, setSelectedStoryId] = useState<string>()
     const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false)

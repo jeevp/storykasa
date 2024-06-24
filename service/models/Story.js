@@ -2,7 +2,7 @@ const axios = require("axios")
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
 const StoryIdea = require("../models/StoryIdea");
 const OpenAIService = require("../services/OpenAIService/OpenAIService").default
-const ISO6391 = require('iso-639-1');
+// const ISO6391 = require('iso-639-1');
 
 class Story {
     constructor({

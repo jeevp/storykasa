@@ -16,4 +16,4 @@ const transcript = async (req, res) => {
     }
 }
 
-export default transcript
+export default authMiddleware(transcript)

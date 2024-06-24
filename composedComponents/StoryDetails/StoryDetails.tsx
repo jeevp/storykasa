@@ -10,6 +10,9 @@ import StoryHandler from "@/handlers/StoryHandler";
 import HeadphonesOutlinedIcon from "@mui/icons-material/HeadphonesOutlined";
 import STKButton from "@/components/STKButton/STKButton";
 import ReadingDialog from "../ReadingDialog/ReadingDialog";
+import { useSubscription } from "@/contexts/subscription/SubscriptionContext";
+import { useAuth } from "@/contexts/auth/AuthContext";
+import UpgradeDialog from "../UpgradeDialog/UpgradeDialog";
 
 interface StoryDetailsProps {
   story: Story | null;
@@ -17,8 +20,12 @@ interface StoryDetailsProps {
 }
 export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsProps) {
   // States
+
+  const { currentSubscription } = useSubscription();
+  const { currentUserIsAdmin } = useAuth();
   const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false);
   const [showReadingDialog, setShowReadingDialog] = useState(false);
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [storyHasEnded, setStoryHasEnded] = useState(false);
   const [storyCurrentTime, setStoryCurrentTime] = useState(0);
   const [playCounted, setPlayCounted] = useState(false);
@@ -48,6 +55,14 @@ export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsP
 
   const handleOnTimeChange = (time: any) => {
     setStoryCurrentTime(time);
+  };
+
+  const handleClick = () => {
+    if (currentSubscription?.subscriptionPlanName === "Free" && !currentUserIsAdmin) {
+      setShowUpgradeDialog(true);
+    } else {
+      setShowReadingDialog(true);
+    }
   };
 
   return (
@@ -137,19 +152,19 @@ export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsP
                 // @ts-ignore
                 onTimeChange={handleOnTimeChange}
               />
-              <div className=" inline-flex bg-[#7662c4] rounded-[8px] mt-4 flex flex-col lg:flex-row justify-between items-center">
-                <STKButton
-                  alignStart
-                  // @ts-ignore
-                  startIcon={<AutoAwesomeIcon size={20} />}
-                  fullWidth
-                  color="aiMode"
-                  variant=""
-                  onClick={() => setShowReadingDialog(true)}
-                >
-                  Read story while listening
-                </STKButton>
-              </div>
+                <div className="inline-flex bg-[#7662c4] rounded-[8px] mt-4 flex flex-col lg:flex-row justify-between items-center">
+                  <STKButton
+                    alignStart
+                    // @ts-ignore
+                    startIcon={<AutoAwesomeIcon size={20} />}
+                    fullWidth
+                    color="aiMode"
+                    variant=""
+                    onClick={() => handleClick()}
+                  >
+                    Read story while listening
+                  </STKButton>
+                </div>
             </div>
           )
         }
@@ -165,6 +180,11 @@ export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsP
         story={story}
         open={showReadingDialog}
         onClose={() => setShowReadingDialog(false)}
+      />
+      <UpgradeDialog
+        story={story}
+        open={showUpgradeDialog}
+        onClose={() => setShowUpgradeDialog(false)}
       />
     </div>
   );
