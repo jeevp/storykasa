@@ -6,6 +6,7 @@ import STKTextField from "@/components/STKTextField/STKTextField"
 import STKButton from "@/components/STKButton/STKButton";
 import {useEffect, useState} from "react";
 import PromoCodeHandler from "@/handlers/PromoCodeHandler";
+import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
 
 // @ts-ignore
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -28,6 +29,7 @@ const StripeCheckout = ({
     const [promoCodeDetails, setPromoCodeDetails] = useState({})
     const [promoCodeIsValid, setPromoCodeIsValid] = useState(undefined)
     const [chargeHelperText, setChargeHelperText] = useState("")
+    const [showPromoCodeWarningDialog, setShowPromoCodeWarningDialog] = useState(false)
     const options = { clientSecret }
 
     // Watchers
@@ -55,6 +57,7 @@ const StripeCheckout = ({
 
         generateChargeHelperText(_promoCode)
         setLoadingPromoCodeValidation(false)
+        setShowPromoCodeWarningDialog(true)
     }
 
     const generateChargeHelperText = (promoCode: any) => {
@@ -154,6 +157,11 @@ const StripeCheckout = ({
                     </div>
                 </STKCard>
             </div>
+            <InfoDialog
+            active={showPromoCodeWarningDialog}
+            text="Please remember that once this promotional period expires, you will automatically be charged the standard subscription rate unless you switch to a free subscription. To avoid any charges, you can change your subscription plan at any time from your account settings before the promotional period ends."
+            title="Promo Code Applied Successfully!"
+            onClose={() => setShowPromoCodeWarningDialog(false)}/>
         </div>
 
     );

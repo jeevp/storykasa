@@ -5,6 +5,10 @@ import STKAudioPlayer from "@/components/STKAudioPlayer/STKAudioPlayer";
 import StoryHandler from "@/handlers/StoryHandler";
 import Story from "@/models/Story";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton";
+import {useSubscription} from "@/contexts/subscription/SubscriptionContext";
+import STKButton from "@/components/STKButton/STKButton";
+import {useAuth} from "@/contexts/auth/AuthContext";
+import {useRouter} from "next/router";
 
 interface ReadingDialogProps {
   open: boolean;
@@ -17,8 +21,16 @@ export default function ReadingDialog({
   onClose = () => ({}),
   story,
 }: ReadingDialogProps) {
+  // Hooks
+  const router = useRouter()
   const { onMobile } = useDevice();
+
+  // Refs
   const transcriptRef = useRef<HTMLDivElement>(null);
+
+  // Contexts
+  const { currentSubscription } = useSubscription();
+  const { currentUserIsAdmin } = useAuth();
 
   // States
   const [loading, setLoading] = useState(true);
@@ -124,6 +136,10 @@ export default function ReadingDialog({
     return { __html: renderedText };
   };
 
+  const redirectToAccountSettings = async () => {
+    await router.push("/account-settings")
+  }
+
   return (
     <STKDialog
       active={open}
@@ -132,52 +148,71 @@ export default function ReadingDialog({
       fullScreen={onMobile}
       onClose={() => onClose()}
     >
-      <form>
-        <div className="mt-6 ">
-          <STKAudioPlayer
-            readingDialog
-            onTimeChanging={handleCurrentTime}
-            outlined
-            src={story?.recordingUrl || ""}
-            html5
-            onEnd={handleStoryOnEnd}
-            customDuration={story?.duration}
-            onPlaying={handlePlaying}
-            // @ts-ignore
-            onTimeChange={handleOnTimeChange}
-          />
-        </div>
-        <div
-          className="mt-6"
-          ref={transcriptRef}
-          style={{
-            maxHeight: onMobile ? "calc(100vh - 220px)" : "400px",
-            overflowY: "auto",
-          }}
-        >
-          {loading ? (
+      {currentSubscription?.subscriptionPlanName === "Free" && !currentUserIsAdmin ? (
+          <div>
             <div>
+              <p className="mt-4">
+                <span className="font-semibold">{'"Read While Listening"'}</span> feature is exclusively available to our premium users.
+              Upgrade to premium today to enjoy this feature along with many other benefits!
+              </p>
+            </div>
+            <div className="justify-end flex gap-x-2 mt-10">
+                <STKButton variant="text" onClick={() => onClose()}>Close</STKButton>
               <div>
-                <STKSkeleton width="100%" height="30px" />
-              </div>
-              <div className="mt-2">
-                <STKSkeleton width="100%" height="30px" />
-              </div>
-              <div className="mt-2">
-                <STKSkeleton width="100%" height="30px" />
-              </div>
-              <div className="mt-2">
-                <STKSkeleton width="100%" height="30px" />
+                <STKButton onClick={redirectToAccountSettings}>
+                  Upgrade now
+                </STKButton>
               </div>
             </div>
-          ) : (
-            <p
-              className="text-lg leading-8"
-              dangerouslySetInnerHTML={renderTranscript()}
-            />
-          )}
-        </div>
-      </form>
+          </div>
+      ) : (
+          <form>
+            <div className="mt-6 ">
+              <STKAudioPlayer
+                  readingDialog
+                  onTimeChanging={handleCurrentTime}
+                  outlined
+                  src={story?.recordingUrl || ""}
+                  html5
+                  onEnd={handleStoryOnEnd}
+                  customDuration={story?.duration}
+                  onPlaying={handlePlaying}
+                  // @ts-ignore
+                  onTimeChange={handleOnTimeChange}
+              />
+            </div>
+            <div
+                className="mt-6"
+                ref={transcriptRef}
+                style={{
+                  maxHeight: onMobile ? "calc(100vh - 220px)" : "400px",
+                  overflowY: "auto",
+                }}
+            >
+              {loading ? (
+                  <div>
+                    <div>
+                      <STKSkeleton width="100%" height="30px" />
+                    </div>
+                    <div className="mt-2">
+                      <STKSkeleton width="100%" height="30px" />
+                    </div>
+                    <div className="mt-2">
+                      <STKSkeleton width="100%" height="30px" />
+                    </div>
+                    <div className="mt-2">
+                      <STKSkeleton width="100%" height="30px" />
+                    </div>
+                  </div>
+              ) : (
+                  <p
+                      className="text-lg leading-8"
+                      dangerouslySetInnerHTML={renderTranscript()}
+                  />
+              )}
+            </div>
+          </form>
+      )}
     </STKDialog>
   );
 }
