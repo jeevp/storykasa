@@ -123,7 +123,7 @@ function Library() {
             <h2 className="m-0 text-2xl ml-2 items-center">
               {router.query.libraryName}
               <span>
-                <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles."></STKTooltip>
+                <STKTooltip title="Stories in your library are private to your account, but can be accessed from any of your profiles."/>
               </span>
             </h2>
           </div>

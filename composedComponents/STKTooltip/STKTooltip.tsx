@@ -1,8 +1,8 @@
 import {Tooltip} from "@mui/material";
 
 interface STKTooltipProps {
-    children: any
-    title: string
+    children?: any
+    title?: string
 }
 
 export default function STKTooltip({ children, title }: STKTooltipProps) {
