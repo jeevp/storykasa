@@ -15,6 +15,7 @@
     "@ffmpeg/core": "^0.12.6",
     "@ffmpeg/ffmpeg": "^0.12.10",
     "@ffmpeg/util": "^0.12.1",
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.11",
     "@phosphor-icons/react": "^2.0.13",

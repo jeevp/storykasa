@@ -1,5 +1,8 @@
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
+const MailchimpService = require("@/service/services/MailchimpService/MailchimpService");
+const MailchimpUser = require("@/service/models/MailchimpUser")
+
 
 class Subscription {
     constructor({
@@ -154,6 +157,26 @@ class Subscription {
 
 
         if (!subscription) return null
+
+        const mailchimpUser = await MailchimpUser.findOne({ userId: this.accountId })
+        let tags = ["welcome"]
+
+        const { PREMIUM_SUBSCRIPTION_PLAN, FREE_SUBSCRIPTION_PLAN } = Subscription.getAllowedSubscriptionPlanNames()
+        if (subscription.subscription_plan === PREMIUM_SUBSCRIPTION_PLAN) {
+            tags.push("premium")
+        } else if (subscription.subscription_plan === FREE_SUBSCRIPTION_PLAN) {
+            tags.push("switched_to_free")
+        }
+
+        if (mailchimpUser) {
+            await MailchimpService.updateListMember({
+                memberId: mailchimpUser.mailchimpMemberId
+            }, {
+                tags
+            })
+        }
+
+
 
         return new Subscription({
             accountId: subscription.account_id,

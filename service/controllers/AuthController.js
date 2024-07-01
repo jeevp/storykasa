@@ -6,6 +6,8 @@ const StripeService = require("../services/StripeService/StripeService")
 const StripeAccount = require("../models/StripeAccount")
 const Subscription = require("../models/Subscription")
 const AccountToolsUsage = require("../models/AccountToolsUsage")
+const MailchimpService = require("../services/MailchimpService/MailchimpService").default
+const MailchimpUser = require("../models/MailchimpUser")
 
 class AuthController {
     static async signUp(req, res) {
@@ -83,6 +85,16 @@ class AuthController {
 
             // Let's create the account tools usage configuration
             await AccountToolsUsage.create({ accountId: data.user.id })
+
+            // Add user to mailchimp contact list
+            const mailchimpMember = await MailchimpService.addMemberToList({
+                email,
+                firstName: fullName
+            })
+
+            if (mailchimpMember) {
+                await MailchimpUser.create({ userId: data.user.id, mailchimpMemberId: mailchimpMember?.id })
+            }
 
             return res.status(200).send({
                 ...data,
