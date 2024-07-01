@@ -49,11 +49,11 @@ export default class MailchimpService {
     }
 
 
-    static async updateListMember({ memberId }, { tags }) {
+    static async updateListMemberTags({ memberId }, { tags }) {
         try {
             const defaultList = await this.getDefaultList()
 
-            const response = await mailchimp.lists.updateListMember(defaultList?.id, memberId, {
+            const response = await mailchimp.lists.updateListMemberTags(defaultList?.id, memberId, {
                 tags
             });
 

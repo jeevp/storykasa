@@ -159,17 +159,27 @@ class Subscription {
         if (!subscription) return null
 
         const mailchimpUser = await MailchimpUser.findOne({ userId: this.accountId })
-        let tags = ["welcome"]
+        let tags = [{ name: "welcome", status: "active" }]
 
         const { PREMIUM_SUBSCRIPTION_PLAN, FREE_SUBSCRIPTION_PLAN } = Subscription.getAllowedSubscriptionPlanNames()
         if (subscription.subscription_plan === PREMIUM_SUBSCRIPTION_PLAN) {
-            tags.push("premium")
+            tags = [
+                ...tags,
+                { name: "premium", status: "active" },
+                { name: "free", status: "inactive" },
+                { name: "switched_to_free", status: "inactive" }
+            ]
         } else if (subscription.subscription_plan === FREE_SUBSCRIPTION_PLAN) {
-            tags.push("switched_to_free")
+            tags = [
+                ...tags,
+                { name: "premium", status: "inactive" },
+                { name: "free", status: "inactive" },
+                { name: "switched_to_free", status: "active" }
+            ]
         }
 
         if (mailchimpUser) {
-            await MailchimpService.updateListMember({
+            await MailchimpService.updateListMemberTags({
                 memberId: mailchimpUser.mailchimpMemberId
             }, {
                 tags
