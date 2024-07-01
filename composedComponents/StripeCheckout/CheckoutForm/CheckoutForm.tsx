@@ -1,22 +1,21 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import STKButton from "@/components/STKButton/STKButton";
 import SubscriptionPlanHandler from "@/handlers/SubscriptionPlanHandler";
 import useDevice from "@/customHooks/useDevice";
 
-interface  CheckoutFormProps {
-    onSuccess: () => void
+interface CheckoutFormProps {
+    onSuccess: () => void;
+    promoCode?: string;
 }
 
-
-const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
+const CheckoutForm = ({ onSuccess, promoCode }: CheckoutFormProps) => {
     const stripe = useStripe();
     const elements = useElements();
-    const { onMobile } = useDevice()
+    const { onMobile } = useDevice();
 
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
-
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
@@ -25,7 +24,8 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
             if (!stripe || !elements) {
                 return; // Stripe.js has not yet loaded.
             }
-            setLoading(true)
+            setLoading(true);
+
             const result = await stripe.confirmSetup({
                 elements,
                 redirect: 'if_required',
@@ -37,19 +37,19 @@ const CheckoutForm = ({ onSuccess }: CheckoutFormProps) => {
                     We're sorry, but we couldn't process your subscription payment. This could be due to a variety of 
                     reasons such as insufficient funds, card expiration, or a temporary hold by your bank. Please update your payment details and try again. If you continue to see this message, please contact our 
                     support team for assistance. We're here to help!
-                `)
+                `);
             } else {
                 if (result.setupIntent && result.setupIntent.status === 'succeeded') {
                     await SubscriptionPlanHandler.attachPaymentMethodToCustomer({
-                        // @ts-ignore
-                        paymentMethodId: result?.setupIntent.payment_method
-                    })
+                        paymentMethodId: String(result?.setupIntent.payment_method),
+                        promoCode
+                    });
 
-                    onSuccess()
+                    onSuccess();
                 }
             }
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 

@@ -29,11 +29,15 @@ export default class SubscriptionPlanHandler {
         return response?.data?.clientSecret
     }
 
-    static async attachPaymentMethodToCustomer({ paymentMethodId }: { paymentMethodId: string }) {
+    static async attachPaymentMethodToCustomer({ paymentMethodId, promoCode }: { paymentMethodId: string, promoCode?: string }) {
         const headers = generateHeaders()
-        const response = await axios.put("/api/payments/customers/attachPaymentMethods", {
-            paymentMethodId
-        }, headers)
+        const payload: { paymentMethodId: string, promoCode?: string } = { paymentMethodId }
+        if (promoCode) payload.promoCode = promoCode
+
+        const response = await axios.put("/api/payments/customers/attachPaymentMethods",
+            payload,
+            headers
+        )
 
         return response.data
     }

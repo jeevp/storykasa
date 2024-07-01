@@ -67,7 +67,6 @@ class Subscription {
         const {
             FREE_SUBSCRIPTION_PLAN,
             PREMIUM_ORGANIZATIONAL_SUBSCRIPTION_PLAN,
-            PREMIUM_PLUS_SUBSCRIPTION_PLAN,
             PREMIUM_SUBSCRIPTION_PLAN
         } = Subscription.getAllowedSubscriptionPlanNames()
 
@@ -79,7 +78,7 @@ class Subscription {
                 return 300
 
             case (PREMIUM_SUBSCRIPTION_PLAN):
-                return 10
+                return 5
 
             default:
                 break

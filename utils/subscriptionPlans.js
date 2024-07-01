@@ -23,8 +23,8 @@ const plans = [
     {
         name: 'Premium',
         extensionName: "",
-        price: '$10',
-        priceNumber: 10,
+        price: '$5',
+        priceNumber: 5,
         features: [
             'Unlimited listening time to all stories',
             'Limited to 5 profiles',

@@ -24,6 +24,14 @@ class Customer {
             },
         });
     }
+
+    static async applyPromoCode({ customerId }, { promoCodeId }) {
+        const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
+
+        await stripe.customers.update(customerId, {
+            promotion_codes: [promoCodeId],
+        });
+    }
 }
 
 module.exports = Customer
