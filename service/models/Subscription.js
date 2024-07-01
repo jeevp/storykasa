@@ -1,6 +1,6 @@
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");
-const MailchimpService = require("@/service/services/MailchimpService/MailchimpService");
+const MailchimpService = require("@/service/services/MailchimpService/MailchimpService").default
 const MailchimpUser = require("@/service/models/MailchimpUser")
 
 
