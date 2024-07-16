@@ -13,6 +13,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 import DiscountOutlinedIcon from '@mui/icons-material/DiscountOutlined';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
+import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
 
 const navigationOptions = [
     { text: "Public Story Requests", icon: <ChecklistOutlinedIcon sx={{ width: "20px", color: neutral800 }} />, pathname: "/admin/public-story-requests"  },
@@ -20,6 +21,7 @@ const navigationOptions = [
     { text: "Blog System", icon: <CampaignOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/blog" },
     { text: "Promo Codes", icon: <DiscountOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/promo-code" },
     { text: "Analytics", icon: <AnalyticsOutlinedIcon sx={{ width: "20px", color: neutral800 }}  />, pathname: "/admin/analytics" },
+    { text: "Organizations", icon: <CorporateFareOutlinedIcon sx={{ width: "20px", color: neutral800 }} />, pathname: "/admin/organizations" }
 ]
 
 export default function AdminNavigation() {

@@ -11,6 +11,7 @@ import {SubscriptionProvider} from "@/contexts/subscription/SubscriptionContext"
 import { BlogProvider } from "@/contexts/blog/BlogContext"
 import { PromoCodeProvider } from "./promoCode/PromoCodeContext";
 import { AnalyticsProvider } from "@/contexts/analytics/AnalyticsContext";
+import { OrganizationProvider } from "@/contexts/organizations/OrganizationContext"
 
 interface ContextWrapperProps {
     children: React.ReactNode;
@@ -28,7 +29,9 @@ export default function ContextWrapper({ children }: ContextWrapperProps){
                                        <BlogProvider>
                                             <PromoCodeProvider>
                                                 <AnalyticsProvider>
-                                                    {children}
+                                                    <OrganizationProvider>
+                                                        {children}
+                                                    </OrganizationProvider>
                                                 </AnalyticsProvider>
                                             </PromoCodeProvider>
                                        </BlogProvider>
