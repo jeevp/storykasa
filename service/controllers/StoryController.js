@@ -1,5 +1,4 @@
 import DecodeJWT from "../../utils/decodeJWT";
-const fs = require("fs");
 const supabase = require("../../service/supabase");
 const axios = require("axios");
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders");

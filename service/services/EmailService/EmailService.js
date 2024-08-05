@@ -4,11 +4,13 @@ const nodemailer = require("nodemailer")
 // EMAIL TEMPLATES
 const {
     recoverPasswordEmailTemplate,
-    listenerInvitationEmailTemplate
+    listenerInvitationEmailTemplate,
+    initialCredentialEmailTemplate
 } = require("./templates")
 
 const RECOVER_PASSWORD_EMAIL = "RECOVER_PASSWORD_EMAIL"
 const LISTENER_INVITATION_EMAIL = "LISTENER_INVITATION_EMAIL"
+const INITIAL_CREDENTIAL_EMAIL_TYPE = "INITIAL_CREDENTIAL_EMAIL_TYPE"
 
 class EmailTemplate {
     constructor({ emailType }) {
@@ -26,6 +28,10 @@ class EmailTemplate {
 
                 case LISTENER_INVITATION_EMAIL:
                     htmlTemplate = listenerInvitationEmailTemplate(params)
+                    return htmlTemplate
+
+                case INITIAL_CREDENTIAL_EMAIL_TYPE:
+                    htmlTemplate = initialCredentialEmailTemplate(params)
                     return htmlTemplate
 
                 default:
@@ -70,6 +76,19 @@ class EmailService {
         }).getHtml({
             collectionTitle,
             collectionOwnerName
+        })
+
+        await this.sendEmail(emailContext, emailTemplate)
+    }
+
+    static async sendInitialCredentialEmail({ to, subject }, { userEmail, temporaryPassword }) {
+        const emailContext = new EmailContext({ to, subject })
+
+        const emailTemplate = await new EmailTemplate({
+            emailType: INITIAL_CREDENTIAL_EMAIL_TYPE
+        }).getHtml({
+            userEmail,
+            temporaryPassword
         })
 
         await this.sendEmail(emailContext, emailTemplate)

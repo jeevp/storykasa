@@ -1,5 +1,7 @@
 import APIValidator from "../validators/APIValidator"
 import Organization from "../models/Organization";
+import User from "../models/User"
+
 
 export default class PromoCodesController {
     static async createOrganization(req, res) {
@@ -20,10 +22,11 @@ export default class PromoCodesController {
 
     static async getOrganizations(req, res) {
         try {
-            const organizations = await Organization.findAll()
+            const organizations = await Organization.findAll({ serializer: true })
 
             return res.status(200).send(organizations)
         } catch (error) {
+            console.log(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }
@@ -34,19 +37,37 @@ export default class PromoCodesController {
                 requiredParams: ["organizationId"]
             })
 
-            APIValidator.requiredPayload({ req, res }, {
-                requiredPayload: ["name"]
-            })
-
             const { organizationId } = req.query
-            const { name } = req.body
+            const { name, accountOwner } = req.body
 
             const organization = await Organization.findOne({ id: organizationId })
 
-            const updatedOrganization = await organization.update({ name })
+            const attributesToUpdate = {}
+            if (name) attributesToUpdate.name = name
+            const updatedOrganization = await organization.update({...attributesToUpdate})
+
+            if (accountOwner) {
+                let accountOwnerUser = await User.findOne({ email: accountOwner?.email })
+                if (!accountOwnerUser) {
+                    const { user } = await User.signUp({
+                        fullName: `${accountOwner?.name}`,
+                        email: accountOwner?.email
+                    }, { sendInitialCredentialEmail: true })
+
+                    if (!user) {
+                        return res.status(400).send({ message: "Account not created." })
+                    }
+
+                    accountOwnerUser = user
+                }
+
+                updatedOrganization.accountOwner = accountOwnerUser
+                await organization.update({ accountId: accountOwnerUser.id })
+            }
 
             return res.status(202).send(updatedOrganization)
         } catch (error) {
+            console.log(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
     }

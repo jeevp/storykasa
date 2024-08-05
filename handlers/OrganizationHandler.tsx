@@ -1,6 +1,6 @@
 import axios from "axios"
 import generateHeaders from "@/handlers/generateHeaders";
-import Organization from "@/service/models/Organization";
+import Organization from "@/models/Organization";
 
 export default class OrganizationHandler {
     static async fetchOrganizations() {
@@ -25,10 +25,11 @@ export default class OrganizationHandler {
         return response.data
     }
 
-    static async updateOrganization({ id }: { id: number }, { name }: { name: string }) {
+    static async updateOrganization({ id }: { id: number }, { name, accountOwner }: { name: string, accountOwner: { name: string, email: string } }) {
         const headers = generateHeaders()
-        const payload: { name?: string } = {}
+        const payload: { name?: string, accountOwner?: { name: string, email: string } } = {}
         if (name) payload.name = name
+        if (accountOwner) payload.accountOwner = accountOwner
 
         const response = await axios.put(`/api/admin/organizations/${id}`, payload, headers)
 

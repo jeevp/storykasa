@@ -1,14 +1,19 @@
 import axios from "axios";
 import generateSupabaseHeaders from "../utils/generateSupabaseHeaders";
+import User from "../models/User"
 
 export default class Organization {
     constructor({
         id,
         name,
+        accountId,
+        accountOwner,
         createdAt
     }) {
         this.id = id
         this.name = name
+        this.accountId = accountId
+        this.accountOwner = accountOwner
         this.createdAt = createdAt
     }
 
@@ -58,11 +63,12 @@ export default class Organization {
         return new Organization({
             id: organization.id,
             name: organization.name,
-            createdAt: organization.created_at
+            createdAt: organization.created_at,
+            accountId: organization.account_id
         })
     }
 
-    static async findAll() {
+    static async findAll(options = { serializer: false }) {
         const response = await axios.get(
             `${process.env.SUPABASE_URL}/rest/v1/organizations`,
             {
@@ -73,16 +79,35 @@ export default class Organization {
             }
         )
 
-        return response.data.map((organization) => new Organization({
-            id: organization.id,
-            name: organization.name,
-            createdAt: organization.created_at,
+        if (!options.serializer) {
+            return response.data.map((organization) => new Organization({
+                id: organization.id,
+                name: organization.name,
+                accountId: organization.account_id,
+                createdAt: organization.created_at,
+            }))
+        }
+
+        const organizationsSerialized = []
+        await Promise.all(response.data.map(async(organization) => {
+            const accountOwnerUser = await User.findOne({ id: organization.account_id })
+
+            organizationsSerialized.push(new Organization({
+                id: organization.id,
+                name: organization.name,
+                accountId: organization.account_id,
+                accountOwner: accountOwnerUser,
+                createdAt: organization.created_at
+            }))
         }))
+
+        return organizationsSerialized
     }
 
-    async update({ name }) {
+    async update({ name, accountId }) {
         const payload = {}
         if (name) payload.name = name
+        if (accountId) payload.account_id = accountId
 
         if (Object.keys(payload).length === 0) return
 
@@ -105,6 +130,7 @@ export default class Organization {
         return new Organization({
             id: organization.id,
             name: organization.name,
+            accountId: organization.account_id,
             createdAt: organization.created_at
         })
     }
@@ -125,5 +151,16 @@ export default class Organization {
             id: this.id,
             name: this.name,
         })
+    }
+
+    async serializer() {
+        const accountOwnerUser = await User.findOne({ id: this.accountId })
+
+        return {
+            id: this.id,
+            name: this.name,
+            accountId: this.accountId,
+            accountOwner: accountOwnerUser
+        }
     }
 }
