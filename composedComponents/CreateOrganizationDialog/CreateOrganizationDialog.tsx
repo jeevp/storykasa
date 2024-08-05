@@ -45,6 +45,7 @@ export default function CreateOrganizationDialog({
 
     try {
       setLoading(true)
+      // @ts-ignore
       const organization: Organization = await OrganizationHandler.createOrganization({ name })
 
       if (organization) {
