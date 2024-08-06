@@ -15,6 +15,7 @@ class Library {
      * @param {string} libraryId
      * @param {string} libraryName
      * @param {string} profileId
+     * @param {number} organizationId
      * @param {string[]} sharedAccountIds
      */
     constructor({
@@ -23,6 +24,7 @@ class Library {
         libraryId,
         libraryName,
         sharedAccountIds = [],
+        organizationId,
         profileId
     }) {
         this.createdAt = createdAt
@@ -31,6 +33,7 @@ class Library {
         this.libraryName = libraryName
         this.sharedAccountIds = sharedAccountIds
         this.profileId = profileId
+        this.organizationId = organizationId
     }
 
 
@@ -39,19 +42,25 @@ class Library {
      * @param {string} libraryName
      * @param {string} accountId
      * @param {string} profileId
+     * @param {number} organizationId
      * @param {string} accessToken
      * @returns {Promise<Library>}
      */
     static async create({
         libraryName,
         accountId,
-        profileId
+        profileId,
+        organizationId
     }) {
-        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/libraries`, {
+        const payload = {
             account_id: accountId,
             profile_id: profileId,
             library_name: libraryName
-        }, {
+        }
+
+        if (organizationId) payload.organization_id = organizationId
+
+        const response = await axios.post(`${process.env.SUPABASE_URL}/rest/v1/libraries`, payload, {
             params: {
                select: "*"
             },
@@ -64,6 +73,7 @@ class Library {
             accountId: response.data[0].account_id,
             profileId: response.data[0].profile_id,
             libraryName: response.data[0].library_name,
+            organizationId: response.data[0].organization_id,
             totalDuration: 0,
             totalStories: 0
         })
@@ -163,6 +173,7 @@ class Library {
             profileId: response.data[0].profile_id,
             libraryId: response.data[0].library_id,
             libraryName: response.data[0].library_name,
+            organizationId: response.data[0].organization_id,
             sharedAccountIds: response.data[0].shared_account_ids
         })
 
@@ -286,7 +297,8 @@ class Library {
             totalDuration,
             createdAt: this.createdAt,
             listeners,
-            profile
+            profile,
+            organizationId: this.organizationId
         };
     }
 

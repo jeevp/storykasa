@@ -1,5 +1,6 @@
 import StoryCard, {
   REMOVE_FROM_COLLECTION_MENU_OPTION,
+  COPY_PUBLIC_LINK_MENU_OPTION
 } from "@/composedComponents/StoryCard/StoryCard";
 import { useEffect, useState } from "react";
 import StoryDetails from "@/composedComponents/StoryDetails/StoryDetails";
@@ -111,6 +112,8 @@ function Library() {
       shallow: true,
     });
   };
+
+  console.log({ currentLibrary })
 
   return (
     <PageWrapper path="library">
@@ -282,11 +285,20 @@ function Library() {
                         // @ts-ignore
                         selected={selectedStory?.storyId === story?.storyId}
                         enableMenuOptions
-                        menuOptions={[
+                        menuOptions={currentLibrary?.organizationId ? [
+                          {
+                            label: "Copy Public Link",
+                            value: COPY_PUBLIC_LINK_MENU_OPTION,
+                          },
                           {
                             label: "Remove from collection",
                             value: REMOVE_FROM_COLLECTION_MENU_OPTION,
-                          },
+                          }
+                        ] : [
+                          {
+                            label: "Remove from collection",
+                            value: REMOVE_FROM_COLLECTION_MENU_OPTION,
+                          }
                         ]}
                         onClick={() => handleStoryClick(story)}
                       ></StoryCard>

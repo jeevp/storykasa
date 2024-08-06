@@ -3,6 +3,7 @@ import APIValidator from "../validators/APIValidator"
 const Library = require("../models/Library")
 const SharedLibraryInvitation = require("../models/SharedLibraryInvitation")
 import LibraryStory from "../models/LibraryStory"
+import Organization from "../models/Organization";
 
 
 export default class LibraryController {
@@ -47,16 +48,29 @@ export default class LibraryController {
 
     static async createLibrary(req, res) {
         try {
-            const { libraryName, profileId } = req.body
+            const { libraryName, profileId, organizationId } = req.body
             if (!libraryName) return res.status(400).send({ message: "Payload is incorrect" })
 
             const {data: { user }} = await supabase.auth.getUser(req.accessToken)
 
-            const library = await Library.create({
+            let organization = null
+
+            if (organizationId) {
+                organization = await Organization.findOne({ id: organizationId })
+                if (organization.accountId !== user.id) {
+                    return res.status(401).send({ message: "Not allowed" })
+                }
+            }
+
+            const libraryAttributes = {
                 libraryName,
                 accountId: user.id,
                 profileId
-            })
+            }
+
+            if (organization) libraryAttributes.organizationId = organization.id
+
+            const library = await Library.create({ ...libraryAttributes })
 
             const { listenersEmails } = req.body
             if (listenersEmails?.length > 0) {

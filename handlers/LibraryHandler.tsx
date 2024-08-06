@@ -60,14 +60,18 @@ export default class LibraryHandler {
         })
     }
 
-    static async createLibrary({ libraryName, listenersEmails, profileId }: { libraryName: string, listenersEmails: string[], profileId: string }) {
-        const payload = {}
-        // @ts-ignore
+    static async createLibrary({ libraryName, listenersEmails, profileId, organizationId }: { libraryName: string, listenersEmails: string[], profileId: string, organizationId: number }) {
+        const payload : {
+            libraryName?: string
+            listenersEmails?: string[]
+            profileId?: string
+            organizationId?: number
+        } = {}
+
         if (libraryName) payload.libraryName = libraryName
-        // @ts-ignore
         if (listenersEmails) payload.listenersEmails = listenersEmails
-        // @ts-ignore
         if (profileId) payload.profileId = profileId
+        if (organizationId) payload.organizationId = organizationId
 
         const headers = generateHeaders()
 

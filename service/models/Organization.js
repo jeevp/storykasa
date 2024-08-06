@@ -68,13 +68,14 @@ export default class Organization {
         })
     }
 
-    static async findAll(options = { serializer: false }) {
+    static async findAll(params = { accountId: null }, options = { serializer: false }) {
+        const _params = { select: "*" }
+        if (params.accountId) _params.account_id = `eq.${params.accountId}`
+
         const response = await axios.get(
             `${process.env.SUPABASE_URL}/rest/v1/organizations`,
             {
-                params: {
-                    select: "*"
-                },
+                params: _params,
                 headers: generateSupabaseHeaders()
             }
         )

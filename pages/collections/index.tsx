@@ -15,6 +15,8 @@ import Library from "@/models/Library";
 import STKSkeleton from "@/components/STKSkeleton/STKSkeleton"
 import useDevice from "@/customHooks/useDevice";
 import {useAuth} from "@/contexts/auth/AuthContext";
+import OrganizationHandler from "@/handlers/OrganizationHandler";
+import {useOrganization} from "@/contexts/organizations/OrganizationContext";
 
 function Collections() {
     const router = useRouter()
@@ -31,7 +33,7 @@ function Collections() {
         setSharedLibraryInvitations,
         setCurrentLibrary
     } = useLibrary()
-
+    const { setUserOrganizations } = useOrganization()
     const { currentUser } = useAuth()
 
     const startLoading = (
@@ -51,6 +53,7 @@ function Collections() {
         handleFetchLibraries()
         handleFetchSharedLibraries()
         handleFetchSharedLibraryInvitations()
+        handleFetchUserOrganizations()
     }, [])
 
     // Methods
@@ -74,6 +77,11 @@ function Collections() {
         // @ts-ignore
         setSharedLibraryInvitations(sharedLibraryInvitations)
         setLoadingSharedLibraryInvitations(false)
+    }
+
+    const handleFetchUserOrganizations = async () => {
+        const userOrganizations = await OrganizationHandler.fetchUserOrganizations()
+        setUserOrganizations(userOrganizations)
     }
 
     const goToLibrary = async (library: Library) => {

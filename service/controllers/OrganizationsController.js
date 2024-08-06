@@ -22,13 +22,20 @@ export default class PromoCodesController {
 
     static async getOrganizations(req, res) {
         try {
-            const organizations = await Organization.findAll({ serializer: true })
+            const organizations = await Organization.findAll({}, { serializer: true })
 
             return res.status(200).send(organizations)
         } catch (error) {
             console.log(error)
             return res.status(400).send({ message: "Something went wrong" })
         }
+    }
+
+
+    static async getUserOrganizations(req, res) {
+        const organizations = await Organization.findAll({ accountId: req.user.id })
+
+        return res.status(200).send(organizations)
     }
 
     static async updateOrganization(req, res) {

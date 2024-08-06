@@ -24,11 +24,17 @@ import {useRouter} from "next/router";
 import {useLibrary} from "@/contexts/library/LibraryContext";
 import UpdateStoryDialog from "@/composedComponents/UpdateStoryDialog/UpdateStoryDialog";
 import DeleteStoryDialog from "@/composedComponents/DeleteStoryDialog/DeleteStoryDialog";
+import encodeJWT from "@/utils/encodeJWT";
+import {
+    STORY_LISTENING_DEMO_LINK_TYPE,
+    STORY_RECORDING_DEMO_LINK_TYPE
+} from "@/composedComponents/GenerateGuestAccessLinkDialog/GenerateGuestAccessLinkDialog";
 
 
 export const SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION = "SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION"
 export const ADD_TO_LIBRARY_MENU_OPTION = "ADD_TO_LIBRARY_MENU_OPTION"
 export const REMOVE_FROM_COLLECTION_MENU_OPTION = "REMOVE_FROM_COLLECTION_MENU_OPTION"
+export const COPY_PUBLIC_LINK_MENU_OPTION = "COPY_PUBLIC_LINK_MENU_OPTION"
 export const EDIT_STORY_MENU_OPTION = "EDIT_STORY_MENU_OPTION"
 export const DELETE_STORY_MENU_OPTION = "DELETE_STORY_MENU_OPTION"
 
@@ -51,6 +57,7 @@ export default function StoryCard({
     const router = useRouter()
 
     // States
+    const [guestAccessLink, setGuestAccessLink] = useState(null)
     const [showUpdateStoryDialog, setShowUpdateStoryDialog] = useState(false)
     const [showDeleteStoryDialog, setShowDeleteStoryDialog] = useState(false)
     const [removeStoryLoading, setRemoveStoryLoading] = useState(false)
@@ -165,6 +172,27 @@ export default function StoryCard({
         setPublicStoryRequestSent(true)
     }
 
+    const generateGuestAccessLink = () => {
+        const accessToken = encodeJWT({
+            // @ts-ignore
+            storyId: story?.storyId,
+            isGuest: true,
+            allowRecording: STORY_LISTENING_DEMO_LINK_TYPE,
+            email: "",
+            sub: "guest-user",
+            name: ""
+        })
+
+        return `${router.asPath}&guestAccessToken=${accessToken}`
+    }
+
+    const copyLink = async () => {
+        const guestAccessLink = generateGuestAccessLink()
+        if (navigator.clipboard && guestAccessLink) {
+            await navigator.clipboard.writeText(guestAccessLink)
+        }
+    }
+
     const handleMenuOnChange = (menu: Object) => {
         // @ts-ignore
         switch(menu?.value) {
@@ -178,6 +206,15 @@ export default function StoryCard({
 
             case REMOVE_FROM_COLLECTION_MENU_OPTION:
                 setShowRemoveFromCollectionDialog(true)
+                break
+
+            case COPY_PUBLIC_LINK_MENU_OPTION:
+                copyLink()
+                setSnackbarBus({
+                    type: "success",
+                    message: "Public link copied!",
+                    active: true
+                })
                 break
 
             case EDIT_STORY_MENU_OPTION:

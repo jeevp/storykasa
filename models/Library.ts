@@ -7,7 +7,8 @@
     listeners: []
     totalStories: number
     totalDuration: number
-    profile: {}
+    profile: {},
+    organizationId: number
 }
 
 export default class Library {
@@ -20,6 +21,7 @@ export default class Library {
     totalStories: number
     totalDuration: number
     profile: {}
+    organizationId: number
 
     constructor({
         libraryId,
@@ -30,7 +32,8 @@ export default class Library {
         sharedAccountIds,
         totalStories = 0,
         totalDuration = 0,
-        profile
+        profile,
+        organizationId
     }: LibraryProps) {
         this.libraryId = libraryId
         this.accountId = accountId
@@ -41,5 +44,6 @@ export default class Library {
         this.totalDuration = totalDuration
         this.profileId = profileId
         this.profile = profile
+        this.organizationId = organizationId
     }
 }

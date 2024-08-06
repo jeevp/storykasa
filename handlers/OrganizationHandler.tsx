@@ -9,6 +9,13 @@ export default class OrganizationHandler {
         return response.data
     }
 
+    static async fetchUserOrganizations() {
+        const headers = generateHeaders()
+        const response = await axios.get("/api/organizations", headers)
+
+        return response.data.map((organization: Organization) => new Organization({ ...organization }))
+    }
+
     static async createOrganization({ name }: { name: string }) {
         const headers = generateHeaders()
         const payload = { name }
