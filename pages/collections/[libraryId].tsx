@@ -63,6 +63,14 @@ function Library() {
     }
   }, [currentLibraryStories]);
 
+  useEffect(() => {
+    if (currentUser && currentUser.isOrganizationGuest && stories?.length > 0) {
+      const story = stories.find((story: Story) => story?.storyId === currentUser?.storyId)
+      setSelectedStory(story)
+      setShowStoryDetailsDialog(true)
+    }
+  }, [currentUser, stories]);
+
   const handleFilterQueryChange = (value: string) => {
     setFilterQuery(value);
     const filteredStories = currentLibraryStories.filter((story: Story) => {
@@ -113,7 +121,6 @@ function Library() {
     });
   };
 
-  console.log({ currentLibrary })
 
   return (
     <PageWrapper path="library">
@@ -352,6 +359,7 @@ function Library() {
       )}
       <StoryDetailsDialog
         open={showStoryDetailsDialog}
+        persist={currentUser?.isOrganizationGuest}
         story={
           selectedStory !== undefined && selectedStory !== null ? selectedStory : null
         }

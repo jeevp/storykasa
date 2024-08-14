@@ -101,7 +101,7 @@ class Story {
         storyLengths: [],
         private: false,
         finished: true
-    }, params = { userId: "", profileId: "", libraryId: "", freeTier: false }) {
+    }, params = { userId: "", profileId: "", libraryId: "", freeTier: false, isOrganizationGuest: false }) {
         // Prepare query parameters for filtering
         const queryParams = {
             select: '*,profiles!inner(*)',
@@ -187,7 +187,7 @@ class Story {
             });
         }
 
-        if (params.freeTier) {
+        if (params.freeTier && !params.isOrganizationGuest) {
             const fiveMinutesInSeconds = 4 * 60
             data = data.map((story) => {
                 const notAvailableOnFreeTier = story.duration > fiveMinutesInSeconds && !story.free_tier_exception

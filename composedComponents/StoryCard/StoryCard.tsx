@@ -177,13 +177,14 @@ export default function StoryCard({
             // @ts-ignore
             storyId: story?.storyId,
             isGuest: true,
-            allowRecording: STORY_LISTENING_DEMO_LINK_TYPE,
+            isOrganizationGuest: true,
+            allowRecording: false,
             email: "",
             sub: "guest-user",
             name: ""
         })
 
-        return `${router.asPath}&guestAccessToken=${accessToken}`
+        return `${window.location.origin}${router.asPath}&guestAccessToken=${accessToken}`
     }
 
     const copyLink = async () => {
@@ -193,7 +194,7 @@ export default function StoryCard({
         }
     }
 
-    const handleMenuOnChange = (menu: Object) => {
+    const handleMenuOnChange = async (menu: Object) => {
         // @ts-ignore
         switch(menu?.value) {
             case SUBMIT_TO_PUBLIC_LIBRARY_MENU_OPTION:
@@ -209,7 +210,7 @@ export default function StoryCard({
                 break
 
             case COPY_PUBLIC_LINK_MENU_OPTION:
-                copyLink()
+                await copyLink()
                 setSnackbarBus({
                     type: "success",
                     message: "Public link copied!",

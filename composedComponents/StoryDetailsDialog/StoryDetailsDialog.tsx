@@ -44,7 +44,7 @@ export default function StoryDetailsDialog({
             <StoryDetails
             editionNotAllowed={editionNotAllowed}
             story={story} />
-            {currentUser?.isGuest ? (
+            {currentUser?.isGuest && !currentUser.isOrganizationGuest ? (
                 <div className="mt-4 w-full flex flex-col lg:flex-row justify-end items-center">
                     <div className={"w-full lg:w-auto"}>
                         <STKButton fullWidth={onMobile} onClick={handleSignUp}>Sign up to continue exploring stories</STKButton>

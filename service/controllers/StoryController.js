@@ -214,6 +214,7 @@ class StoryController {
     try {
       const decodedJWT = DecodeJWT(req.accessToken);
       const isGuestUser = decodedJWT.isGuest;
+      const isOrganizationUser = decodedJWT.isOrganizationGuest
 
       if (isGuestUser) {
         const publicStories = await Story.getStories(
@@ -222,6 +223,7 @@ class StoryController {
           },
           {
             freeTier: true,
+            isOrganizationGuest: isOrganizationUser
           }
         );
 
