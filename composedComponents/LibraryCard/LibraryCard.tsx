@@ -1,5 +1,4 @@
 import STKCard from "@/components/STKCard/STKCard";
-import { Books } from "@phosphor-icons/react";
 import Library from "@/models/Library";
 import STKButton from "@/components/STKButton/STKButton";
 import SharedLibraryInvitation from "@/models/SharedLibraryInvitation";
@@ -7,7 +6,7 @@ import SharedLibraryInvitationHandler from "@/handlers/SharedLibraryInvitationHa
 import { useEffect, useState } from "react";
 import { useLibrary } from "@/contexts/library/LibraryContext";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import { green600, neutral800 } from "@/assets/colorPallet/colors";
+import { green600, neutral800, blue500 } from "@/assets/colorPallet/colors";
 import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
 import STKMenu from "@/components/STKMenu/STKMenu";
 import DeleteCollectionDialog from "../DeleteCollectionDialog/DeleteCollectionDialog";
@@ -17,6 +16,7 @@ import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog";
 import LibraryHandler from "@/handlers/LibraryHandler";
 import {useProfile} from "@/contexts/profile/ProfileContext";
 import {useSnackbar} from "@/contexts/snackbar/SnackbarContext";
+import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
 
 export default function LibraryCard({
   library,
@@ -220,22 +220,33 @@ export default function LibraryCard({
                   </div>
                   {showListeners && (
                     <>
-                      {library?.listeners?.length > 0 ? (
-                        <div className="mt-2 flex items-center">
-                          <PeopleAltOutlinedIcon
-                            sx={{ color: green600, width: "16px", height: "16px" }}
-                          />
-                          <label className="ml-2 text-sm text-[#3d996d]">
-                            Shared with {library?.listeners?.length} listeners
-                          </label>
-                        </div>
+                      {library.organizationId ? (
+                          <div className="mt-2 flex items-center">
+                            <CorporateFareOutlinedIcon
+                                sx={{ color: blue500, width: "16px", height: "16px" }}
+                            />
+                            <label className="ml-2 text-sm text-[#255fa0]">{library?.organization?.name}</label>
+                          </div>
                       ) : (
-                        <div className="mt-2 flex items-center">
-                          <PeopleAltOutlinedIcon
-                            sx={{ color: neutral800, width: "16px", height: "16px" }}
-                          />
-                          <label className="ml-2 text-sm text-[#292524]">Private</label>
-                        </div>
+                        <>
+                          {library?.listeners?.length > 0 ? (
+                              <div className="mt-2 flex items-center">
+                                <PeopleAltOutlinedIcon
+                                    sx={{ color: green600, width: "16px", height: "16px" }}
+                                />
+                                <label className="ml-2 text-sm text-[#3d996d]">
+                                  Shared with {library?.listeners?.length} listeners
+                                </label>
+                              </div>
+                          ) : (
+                              <div className="mt-2 flex items-center">
+                                <PeopleAltOutlinedIcon
+                                    sx={{ color: neutral800, width: "16px", height: "16px" }}
+                                />
+                                <label className="ml-2 text-sm text-[#292524]">Private</label>
+                              </div>
+                          )}
+                        </>
                       )}
                     </>
                   )}

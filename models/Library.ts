@@ -1,4 +1,6 @@
-    interface LibraryProps {
+import Organization from "@/service/models/Organization";
+
+interface LibraryProps {
     libraryId: string
     accountId: string
     profileId: string
@@ -9,6 +11,7 @@
     totalDuration: number
     profile: {},
     organizationId: number
+    organization: Organization
 }
 
 export default class Library {
@@ -22,6 +25,7 @@ export default class Library {
     totalDuration: number
     profile: {}
     organizationId: number
+    organization: Organization
 
     constructor({
         libraryId,
@@ -33,7 +37,8 @@ export default class Library {
         totalStories = 0,
         totalDuration = 0,
         profile,
-        organizationId
+        organizationId,
+        organization
     }: LibraryProps) {
         this.libraryId = libraryId
         this.accountId = accountId
@@ -45,5 +50,6 @@ export default class Library {
         this.profileId = profileId
         this.profile = profile
         this.organizationId = organizationId
+        this.organization = organization
     }
 }

@@ -1,3 +1,5 @@
+import Organization from "./Organization";
+
 const generateSupabaseHeaders = require("../utils/generateSupabaseHeaders")
 const axios = require("axios")
 const {ApiError} = require("next/dist/server/api-utils")
@@ -16,6 +18,7 @@ class Library {
      * @param {string} libraryName
      * @param {string} profileId
      * @param {number} organizationId
+     * @param {Organization} organization
      * @param {string[]} sharedAccountIds
      */
     constructor({
@@ -25,6 +28,7 @@ class Library {
         libraryName,
         sharedAccountIds = [],
         organizationId,
+        organization,
         profileId
     }) {
         this.createdAt = createdAt
@@ -34,6 +38,7 @@ class Library {
         this.sharedAccountIds = sharedAccountIds
         this.profileId = profileId
         this.organizationId = organizationId
+        this.organization = organization
     }
 
 
@@ -124,6 +129,7 @@ class Library {
                 return acc + current.duration
             }, 0) : 0
 
+
             const _library = new Library({
                 createdAt: library?.created_at,
                 accountId: library?.account_id,
@@ -132,7 +138,8 @@ class Library {
                 libraryName: library?.library_name,
                 sharedAccountIds: library?.shared_account_ids,
                 totalStories: libraryStories?.length,
-                totalDuration: totalDuration
+                totalDuration: totalDuration,
+                organizationId: library?.organization_id
             });
 
             if (options.serialized) {
@@ -286,6 +293,10 @@ class Library {
 
         const totalStories = await this.getTotalStories()
         const totalDuration = await this.getTotalDuration()
+        let organization = null
+        if (this.organizationId) {
+            organization = await Organization.findOne({ id: this.organizationId })
+        }
 
         return {
             accountId: this.accountId,
@@ -298,7 +309,8 @@ class Library {
             createdAt: this.createdAt,
             listeners,
             profile,
-            organizationId: this.organizationId
+            organizationId: this.organizationId,
+            organization
         };
     }
 

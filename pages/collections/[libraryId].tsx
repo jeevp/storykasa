@@ -157,7 +157,7 @@ function Library() {
                       Collection created by{" "}
                       {
                         // @ts-ignore
-                        currentLibrary?.profile?.profileName
+                        currentLibrary?.organizationId ? currentLibrary?.organization?.name : currentLibrary?.profile?.profileName
                       }
                     </label>
                   </div>
