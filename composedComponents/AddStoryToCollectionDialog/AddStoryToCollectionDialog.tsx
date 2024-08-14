@@ -74,6 +74,7 @@ export default function AddStoryToCollectionDialog({
       try {
         setLoading(true);
 
+        // @ts-ignore
         const library = await LibraryHandler.createLibrary({
           libraryName,
           listenersEmails: [],
