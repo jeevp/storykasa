@@ -80,6 +80,7 @@ function STKSelect({
 
         if (multiple) {
             if (value.includes("")) {
+                // @ts-ignore
                 const _options = [...options.map((option) => option[optionValue]), ""];
                 setSelectedOptions(_options);
                 onChange(_options.filter((_option) => _option !== ""));
@@ -88,6 +89,7 @@ function STKSelect({
                 onChange(value);
             }
         } else {
+            // @ts-ignore
             const _selectedOption = options.find((option) => value === option[optionValue]);
             onChange(_selectedOption);
         }
@@ -100,17 +102,20 @@ function STKSelect({
     };
 
     const getRenderInputValue = (value: any) => {
+        // @ts-ignore
         if (!multiple) return value ? optionsHash[value] : "";
 
         if (value.includes("")) {
             return "All ages";
         }
 
+        // @ts-ignore
         return value.map((_value: any) => optionsHash[_value]).join(", ");
     };
 
     const handleAllOnClick = () => {
         setSelectedOptions(!selectedOptions.includes("") ? [""] : []);
+        // @ts-ignore
         onChange(!selectedOptions.includes("") ? options.map((opt) => opt[optionValue]) : []);
     };
 
