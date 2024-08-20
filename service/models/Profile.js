@@ -40,6 +40,29 @@ class Profile {
         })
     }
 
+    static async findOne(params = { accountId: "" }) {
+        const response = await axios.get(
+            `${process.env.SUPABASE_URL}/rest/v1/profiles`,
+            {
+                params: {
+                    select: "*",
+                    accountId: `eq.${profileId}`,
+                },
+                headers: generateSupabaseHeaders()
+            }
+        )
+
+        const profile = response.data[0]
+
+        return new Profile({
+            profileId: profile.profile_id,
+            createdAt: profile.created_at,
+            accountId: profile.account_id,
+            profileName: profile.profile_name,
+            avatarUrl: profile.avatar_url
+        })
+    }
+
     static async createProfile({ name, avatarUrl }, { accessToken }) {
         if (!name) {
             throw new Error("Cannot add a profile without a name.")
@@ -70,10 +93,12 @@ class Profile {
         return response?.data[0]
     }
 
-    static async getAccountProfiles({ accessToken }) {
-        const {data: { user }} = await supabase.auth.getUser(accessToken)
-
-        const userId = user.id
+    static async getAccountProfiles({ accessToken, accountId }) {
+        let userId = accountId
+        if (!accountId && accessToken) {
+            const {data: { user }} = await supabase.auth.getUser(accessToken)
+            userId = user.id
+        }
 
         const response = await axios.get(
             `${process.env.SUPABASE_URL}/rest/v1/profiles`,
@@ -89,8 +114,8 @@ class Profile {
         return response.data
     }
 
-    static async getDefaultAccountProfile({ accessToken }) {
-        const profiles = await this.getAccountProfiles({ accessToken })
+    static async getDefaultAccountProfile({ accessToken, accountId }) {
+        const profiles = await this.getAccountProfiles({ accessToken, accountId })
 
         const ascendantProfileAccounts = profiles?.sort((a, b) => {
             if (a.created_at > b.created_at) return 1

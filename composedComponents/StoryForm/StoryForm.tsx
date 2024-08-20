@@ -43,7 +43,7 @@ const STKRecordAudio = dynamic(() => import('@/components/STKRecordAudio/STKReco
 const RECORD_STORY_CREATION_METHOD = "RECORD_STORY_CREATION_METHOD"
 const UPLOAD_STORY_CREATION_METHOD = "UPLOAD_STORY_CREATION_METHOD"
 
-export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfinishedStory: any, storyIdea: any, onSave: () => void }) {
+export default function StoryForm({ unfinishedStory, storyIdea, libraryId, onSave }: { unfinishedStory: any, storyIdea: any, libraryId?: string, onSave: () => void }) {
     const {currentProfileId} = useProfile()
     const {onMobile} = useDevice()
     const { currentUser, setCurrentUser } = useAuth()
@@ -203,7 +203,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
 
     const saveStory = async () => {
         try {
-            if (currentUser?.isGuest) {
+            if (currentUser?.isGuest && !currentUser?.isOrganizationGuest) {
                 setShowMustSignUpDialog(true)
                 return
             }
@@ -236,7 +236,8 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                     description,
                     language,
                     ageGroups,
-                    finished: true
+                    finished: true,
+                    libraryId
                 }
 
                 // @ts-ignore
@@ -551,15 +552,17 @@ export default function StoryForm({ unfinishedStory, storyIdea, onSave }: { unfi
                                     Save to library
                                 </STKButton>
                             </div>
-                            <div className="mt-4 ml-0 lg:ml-2 lg:mt-0">
-                                <STKButton
-                                    fullWidth={onMobile}
-                                    variant="outlined"
-                                    loading={loadingAutoSave}
-                                    onClick={autoSaveStory}>
-                                    Finish later
-                                </STKButton>
-                            </div>
+                            {!currentUser?.isGuest && (
+                                <div className="mt-4 ml-0 lg:ml-2 lg:mt-0">
+                                    <STKButton
+                                        fullWidth={onMobile}
+                                        variant="outlined"
+                                        loading={loadingAutoSave}
+                                        onClick={autoSaveStory}>
+                                        Finish later
+                                    </STKButton>
+                                </div>
+                            )}
 
                             <UploadStoryDialog
                                 open={showUploadStoryDialog}

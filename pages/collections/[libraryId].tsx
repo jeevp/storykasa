@@ -30,6 +30,8 @@ import AddListenerDialog from "@/composedComponents/AddListenerDialog/AddListene
 import ListenersDialog from "@/composedComponents/ListenersDialog/ListenersDialog";
 import { useProfile } from "@/contexts/profile/ProfileContext";
 import { useAuth } from "@/contexts/auth/AuthContext";
+import GenerateInviteToRecordDialog
+  from "@/composedComponents/GenerateInviteToRecordDialog/GenerateInviteToRecordDialog";
 
 function Library() {
   const router = useRouter();
@@ -44,6 +46,7 @@ function Library() {
   const [showStoryDetailsDialog, setShowStoryDetailsDialog] = useState(false);
   const [stories, setStories] = useState([]);
   const [showAddListenerDialog, setShowAddListenerDialog] = useState(false);
+  const [showGenerateInviteToRecordDialog, setShowGenerateInviteToRecordDialog] = useState(false)
 
   // Contexts
   const { storyFilters } = useStory();
@@ -137,13 +140,22 @@ function Library() {
               </span>
             </h2>
           </div>
-          <div className="hidden lg:block">
+          <div className="gap-x-2 hidden lg:flex">
             <STKButton
               fullWidth={onMobile}
               onClick={() => setShowAddListenerDialog(true)}
             >
-              Add listener
+              Add Listener
             </STKButton>
+            {currentLibrary?.organizationId && (
+                <STKButton
+                    variant="outlined"
+                    fullWidth={onMobile}
+                    onClick={() => setShowGenerateInviteToRecordDialog(true)}
+                >
+                  Invite to Record
+                </STKButton>
+            )}
           </div>
         </div>
         <div className="flex md:flex-row items-center mt-2 mb-4">
@@ -376,6 +388,11 @@ function Library() {
         library={currentLibrary}
         onClose={() => setShowListenersDialog(false)}
       />
+      <GenerateInviteToRecordDialog
+        open={showGenerateInviteToRecordDialog}
+        // @ts-ignore
+        library={currentLibrary}
+        onClose={() => setShowGenerateInviteToRecordDialog(false)} />
     </PageWrapper>
   );
 }

@@ -2,6 +2,7 @@ import axios from "axios"
 import Profile from "@/models/Profile"
 import { STK_ACCESS_TOKEN, STK_REFRESH_TOKEN, STK_PROFILE_ID } from "@/config"
 import identifyPendoVisitor from "@/tools/Pendo/identifyPendoVisitor";
+import generateHeaders from "@/handlers/generateHeaders";
 
 export default class AuthHandler {
     static async signUp({
@@ -95,6 +96,21 @@ export default class AuthHandler {
         localStorage.setItem(STK_PROFILE_ID, response?.data?.defaultProfile?.profile_id)
 
         identifyPendoVisitor({ userId: response.data.user.id })
+
+        return response.data
+    }
+
+    static async generateGuestAccessToken(
+        payload: {
+            allowRecording?: boolean
+            storyId?: string
+            libraryId?: string
+            organizationId?: number
+        }
+    ) {
+        const headers = generateHeaders()
+
+        const response = await axios.post("/api/auth/guest-access-token", payload, headers)
 
         return response.data
     }

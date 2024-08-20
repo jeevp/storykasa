@@ -21,7 +21,7 @@ function Record() {
 
     const { currentSubscription } = useSubscription()
     const { currentUser } = useAuth()
-    const { currentProfileId } = useProfile()
+    const { currentProfileId, setCurrentProfileId } = useProfile()
     const { totalRecordingTime, setTotalRecordingTime } = useStory()
 
     // States
@@ -38,9 +38,14 @@ function Record() {
 
     // Mounted
     useEffect(() => {
-        handleFetchTotalRecordingTime()
-        handleFetchUnfinishedStories()
-    }, []);
+        if (!currentUser?.isGuest) {
+            handleFetchTotalRecordingTime()
+            handleFetchUnfinishedStories()
+        } else {
+            setCurrentProfileId(currentUser?.guestProfileId)
+        }
+    }, [currentUser]);
+
 
     // Watchers
     useEffect(() => {
@@ -128,8 +133,13 @@ function Record() {
                 <div className={`mt-10 ${allowStoryCreation ? '' : 'disabled'}`}>
                     <h2 className="m-0 text-2xl">Create a story</h2>
                     <p className="mt-4 max-w-2xl">
-                        Record a story of your own. Remember, only profiles on your account can view and listen to
-                        your story. Feel free to enhance it with a description and illustrations or images
+                        {currentUser.isOrganizationGuest ?  `
+                           Record a story for ${currentUser?.libraryName}. Your story will be visible to the collection owner and 
+                           others they share it with. Feel free to enhance it with a description and illustrations or images.
+                        ` : `
+                           Record a story of your own. Remember, only profiles on your account can view and listen to
+                            your story. Feel free to enhance it with a description and illustrations or images
+                        `}
                     </p>
                     {!loading && unfinishedStories?.length > 0 && (
                         <div className="mt-10">
@@ -195,14 +205,17 @@ function Record() {
                             </div>
                         </div>
                     ) : null}
-                    <div className="mt-10">
-                        <AIStoryGenerator onSelect={handleStoryOnSelect} />
-                    </div>
+                    {!currentUser?.isGuest && (
+                        <div className="mt-10">
+                            <AIStoryGenerator onSelect={handleStoryOnSelect} />
+                        </div>
+                    )}
                     <div className="mt-10" ref={storyFormContainerRef}>
                         <StoryForm
                         unfinishedStory={selectedUnfinishedStory}
                         // @ts-ignore
                         storyIdea={selectedStoryIdea}
+                        libraryId={currentUser?.isGuest ? currentUser?.libraryId : null}
                         onSave={handleStoryOnSave}></StoryForm>
                     </div>
                 </div>

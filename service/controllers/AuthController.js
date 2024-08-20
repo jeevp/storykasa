@@ -8,6 +8,9 @@ const Subscription = require("../models/Subscription")
 const AccountToolsUsage = require("../models/AccountToolsUsage")
 const MailchimpService = require("../services/MailchimpService/MailchimpService").default
 const MailchimpUser = require("../models/MailchimpUser")
+const jwt = require('jsonwebtoken');
+const Library = require("../models/Library")
+const Organization = require("../models/Organization").default
 
 class AuthController {
     static async signUp(req, res) {
@@ -204,6 +207,59 @@ class AuthController {
             return res.status(200).send({ message: "Password updated with success" })
         } catch (error) {
             return res.status(400).send({ message: "Something went wrong" })
+        }
+    }
+
+    static async generateGuestAccessToken(req, res) {
+        try {
+            const {data: { user }} = await supabase.auth.getUser(req.accessToken)
+
+            const { organizationId, storyId, allowRecording, libraryId } = req.body
+
+            let organization = null
+            let library = null
+            let guestProfile = null
+
+            if (organizationId) {
+                organization = await Organization.findOne({ id: organizationId })
+
+                if (organization.accountId !== user.id) {
+                    return res.status(401).send({ message: "Not allowed" })
+                }
+
+                library = await Library.findOne({ libraryId })
+
+                if (!library) {
+                    return res.status(404).send({ message: "Library not found." })
+                }
+
+                guestProfile = await Profile.getDefaultAccountProfile({ accountId: organization.accountId })
+            }
+
+            if (!organization && libraryId) {
+                return res.status(401).send({ message: "Only organizations can create guest access token with libraryId" })
+            }
+
+            const payload = {
+                storyId: storyId || "",
+                isGuest: true,
+                isOrganizationGuest: !!organization,
+                guestProfileId: guestProfile?.profile_id,
+                allowRecording,
+                email: "",
+                libraryId,
+                libraryName: library ? library?.libraryName : "",
+                sub: "guest-user",
+                name: ""
+            };
+
+
+            const accessToken = jwt.sign(payload, process.env.SUPABASE_JWT_SECRET, { expiresIn: '30d' });
+
+            return res.status(201).send({ guestAccessToken: accessToken })
+        } catch (error) {
+            console.error(`Error in AuthController.generateGuestAccessToken: `, error)
+            return res.status(400).send({ message: "Something went wrong." })
         }
     }
 }

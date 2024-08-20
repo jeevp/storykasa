@@ -14,6 +14,7 @@ interface createStoryProps {
     illustrationsURL: Array<string>
     finished?: boolean
     storyIdeaId?: number
+    libraryId?: string
 }
 
 interface updateStoryProps {
@@ -54,7 +55,8 @@ export default class StoryHandler {
         ageGroups,
         illustrationsURL,
         finished,
-        storyIdeaId
+        storyIdeaId,
+        libraryId,
     }: createStoryProps, parameters: CreateStoryParameters) {
         const payload = {
             isPublic: false,
@@ -66,10 +68,12 @@ export default class StoryHandler {
             duration: duration,
             illustrationsURL,
             finished,
-            storyIdeaId
+            storyIdeaId,
+            libraryId
         }
 
         const headers = generateHeaders()
+
         const response = await axios.post(`/api/profiles/${parameters.profileId}/stories`, payload, headers)
 
         return new Story({

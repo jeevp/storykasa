@@ -286,13 +286,16 @@ class StoryController {
       } = await supabase.auth.getUser(req.accessToken);
 
       let allowActionToProceed = false;
-      if (Account.getAdminAccounts().includes(user.email)) {
+      if (user && Account.getAdminAccounts().includes(user.email)) {
         allowActionToProceed = true;
       } else {
-        allowActionToProceed =
-          await SubscriptionValidator.validateMaxStoriesRecordingTime({
+        if (user) {
+          allowActionToProceed = await SubscriptionValidator.validateMaxStoriesRecordingTime({
             accountId: user.id,
           });
+        } else {
+          allowActionToProceed = true
+        }
       }
 
       if (!allowActionToProceed) {
@@ -312,9 +315,17 @@ class StoryController {
         illustrationsURL,
         finished,
         storyIdeaId,
+        libraryId
       } = req.body;
 
       const { profileId } = req.query;
+
+      let library = null
+      if (libraryId) {
+        library = await Library.findOne({ libraryId })
+      } else {
+        library = await Library.findDefaultLibrary({ accountId: user?.id });
+      }
 
       const newStory = {
         is_public: isPublic,
@@ -325,7 +336,7 @@ class StoryController {
         language: language,
         age_groups: ageGroups,
         duration: duration,
-        account_id: user?.id,
+        account_id: user ? user?.id : library?.accountId,
         finished,
         story_idea_id: storyIdeaId,
       };
@@ -344,15 +355,14 @@ class StoryController {
       let newStoryID = response.data[0].story_id;
 
       // simulate the story "saving" process by adding it to the library_stories table
-      if (newStoryID && user) {
-        const defaultLibrary = await Library.findDefaultLibrary({ accountId: user?.id });
+      if (newStoryID && (user || library)) {
 
         await axios.post(
           `${process.env.SUPABASE_URL}/rest/v1/library_stories`,
           {
-            account_id: user.id,
+            account_id: user ? user.id : library.accountId,
             story_id: newStoryID,
-            library_id: defaultLibrary.libraryId,
+            library_id: library.libraryId,
             profile_id: profileId,
           },
           {
@@ -406,6 +416,7 @@ class StoryController {
 
       return res.status(201).send({ storyId: newStoryID });
     } catch (error) {
+      console.error(`Error in StoryController.createStory: `, error)
       return res.status(400).send({ message: "Something went wrong" });
     }
   }
