@@ -25,7 +25,8 @@ const processOauth = async (req: NextRequest, res: NextResponse) => {
         }
 
         let defaultProfile = await Profile.getDefaultAccountProfile({
-            accessToken: data.session.access_token
+            accessToken: data.session.access_token,
+            accountId: ""
         })
 
         if (!defaultProfile) {
