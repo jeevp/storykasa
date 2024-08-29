@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
-import supabaseService from "@/service/supabase";
+import supabaseService from "../../../service/supabase"
 // @ts-ignore
-import Profile from "@/service/models/Profile";
-import StripeService from "@/service/services/StripeService/StripeService"
+import Profile from "@/service/models/Profile"
+import StripeService from "../../../service/services/StripeService/StripeService"
 const StripeAccount = require("../../../service/models/StripeAccount")
 const Subscription = require("../../../service/models/Subscription")
 const AccountToolsUsage = require("../../../service/models/AccountToolsUsage")

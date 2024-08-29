@@ -1,4 +1,6 @@
 import PromoCode from "../models/PromoCode";
+import PromoCodeTransaction from "../../service/models/PromoCodeTransaction";
+import {DateTime} from "luxon";
 
 const supabase = require("../supabase")
 const Subscription = require("../models/Subscription")
@@ -37,6 +39,17 @@ export default class SubscriptionsController {
 
             if (_promoCode) {
                 await _promoCode.applyUsageLimitValidation()
+
+                if (!promoCode.unlimitedUsage) {
+                    // Create a promo code transaction to keep track of when it was used
+                    // and when the period will end.
+                    await PromoCodeTransaction.create({
+                        accountId: user.id,
+                        promoCodeId: promoCode.id,
+                        startDate: DateTime.now().toISO(),
+                        endDate: DateTime.now().plus({ months: promoCode.durationInMonths }).toISO()
+                    })
+                }
             }
 
             const subscriptionSerialized = updatedSubscription.serializer()
