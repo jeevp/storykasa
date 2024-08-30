@@ -1,4 +1,5 @@
 import axios from "axios";
+import { DateTime } from "luxon"
 import generateSupabaseHeaders from "../utils/generateSupabaseHeaders"
 
 export default class PromoCodeTransaction {
@@ -13,7 +14,6 @@ export default class PromoCodeTransaction {
     this.id = id
     this.createdAt = createdAt
     this.promoCodeId = promoCodeId
-    this.startDate = startDate
     this.startDate = startDate
     this.endDate = endDate
     this.accountId = accountId
@@ -30,7 +30,7 @@ export default class PromoCodeTransaction {
     }
 
     const response = await axios.post(
-        `${process.env.SUPABASE_URL}/rest/v1/promo_codes`,
+        `${process.env.SUPABASE_URL}/rest/v1/promo_code_transactions`,
         {
           account_id: accountId,
           promoCodeId: promoCodeId,
@@ -55,6 +55,28 @@ export default class PromoCodeTransaction {
   }
 
   static async findAllOngoingTransactions() {
+    const now = DateTime.now().toISO()
 
+    const response = await axios.get(
+        `${process.env.SUPABASE_URL}/rest/v1/promo_code_transactions`,
+        {
+          headers: generateSupabaseHeaders(),
+          params: {
+            select: "*",
+            start_date: `lte.${now}`,
+            end_date: `gte.${now}`
+          }
+        }
+    );
+    console.log('Response data:', response.data);
+
+    return response.data.map((promoCodeTransaction) => new PromoCodeTransaction({
+      id: promoCodeTransaction.id,
+      createdAt: promoCodeTransaction.created_at,
+      promoCodeId: promoCodeTransaction.promo_code_id,
+      startDate: promoCodeTransaction.start_date,
+      endDate: promoCodeTransaction.end_date,
+      accountId: promoCodeTransaction.account_id
+    }))
   }
 }
