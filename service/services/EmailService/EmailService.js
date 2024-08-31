@@ -5,12 +5,14 @@ const nodemailer = require("nodemailer")
 const {
     recoverPasswordEmailTemplate,
     listenerInvitationEmailTemplate,
-    initialCredentialEmailTemplate
+    initialCredentialEmailTemplate,
+    promoCodeEndDateReminderEmailTemplate
 } = require("./templates")
 
 const RECOVER_PASSWORD_EMAIL = "RECOVER_PASSWORD_EMAIL"
 const LISTENER_INVITATION_EMAIL = "LISTENER_INVITATION_EMAIL"
 const INITIAL_CREDENTIAL_EMAIL_TYPE = "INITIAL_CREDENTIAL_EMAIL_TYPE"
+const PROMO_CODE_END_DATE_REMINDER_EMAIL_TYPE = "PROMO_CODE_END_DATE_REMINDER_EMAIL_TYPE"
 
 class EmailTemplate {
     constructor({ emailType }) {
@@ -32,6 +34,10 @@ class EmailTemplate {
 
                 case INITIAL_CREDENTIAL_EMAIL_TYPE:
                     htmlTemplate = initialCredentialEmailTemplate(params)
+                    return htmlTemplate
+
+                case PROMO_CODE_END_DATE_REMINDER_EMAIL_TYPE:
+                    htmlTemplate = promoCodeEndDateReminderEmailTemplate(params)
                     return htmlTemplate
 
                 default:
@@ -89,6 +95,20 @@ class EmailService {
         }).getHtml({
             userEmail,
             temporaryPassword
+        })
+
+        await this.sendEmail(emailContext, emailTemplate)
+    }
+
+    static async sendPromoCodeEndDateReminderEmail({ to, subject }, { userName, daysLeft, endDate }) {
+        const emailContext = new EmailContext({ to, subject })
+
+        const emailTemplate = await new EmailTemplate({
+            emailType: PROMO_CODE_END_DATE_REMINDER_EMAIL_TYPE
+        }).getHtml({
+            userName,
+            daysLeft,
+            endDate
         })
 
         await this.sendEmail(emailContext, emailTemplate)

@@ -770,16 +770,12 @@ class StoryController {
         return !story.deleted && story.recordingUrl;
       });
 
-      console.log(">>> TOTAL STORIES: ", _stories.length);
       for (let i = 0; i < _stories.length; i += 1) {
         const story = _stories[i];
-        console.log(`>>> START STORY ID: ${story.storyId} | ${i + 1}/${_stories.length}`);
         if (story.transcriptWithTimestamp) {
-          console.log(">>> SKIPPING STORY - TRANSCRIPTION ALREADY DONE");
           continue;
         }
         await story.getTranscript({ forceCreation: true });
-        console.log(">>> END STORY");
       }
 
       return res.status(200).send("OK");

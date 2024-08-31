@@ -68,7 +68,6 @@ export default class PromoCodeTransaction {
           }
         }
     );
-    console.log('Response data:', response.data);
 
     return response.data.map((promoCodeTransaction) => new PromoCodeTransaction({
       id: promoCodeTransaction.id,

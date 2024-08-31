@@ -88,7 +88,6 @@ class User {
             return null;
         }
 
-        console.log({ user })
         return user
     }
 
