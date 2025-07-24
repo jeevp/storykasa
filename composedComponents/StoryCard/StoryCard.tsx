@@ -274,9 +274,9 @@ export default function StoryCard({
                 onClose={() => setShowSubmitStoryToPublicLibraryInfoDialog(false)} />
             {enableMenuOptions && (
                 <AddStoryToCollectionDialog
-                    open={showAddStoryToLibraryDialog}
-                    story={story}
-                    onClose={() => setShowAddStoryToLibraryDialog(false)}/>
+                open={showAddStoryToLibraryDialog}
+                story={story}
+                onClose={() => setShowAddStoryToLibraryDialog(false)}/>
             )}
             <div
             // @ts-ignore
@@ -376,19 +376,11 @@ export default function StoryCard({
                                               <></>
                                           ) : (
                                               <div>
-                                                  {story?.recordedBy && story.recordedBy === currentProfileId && enableMenuOptions ? (
-                                                      <div>
-                                                          <STKMenu
-                                                              options={menuOptions}
-                                                              onChange={handleMenuOnChange}/>
-                                                      </div>
-                                                  ) : (
-                                                      <div>
-                                                          <STKMenu
-                                                              options={menuOptions}
-                                                              onChange={handleMenuOnChange}/>
-                                                      </div>
-                                                  )}
+                                                  <div>
+                                                      <STKMenu
+                                                      options={menuOptions}
+                                                      onChange={handleMenuOnChange}/>
+                                                  </div>
                                               </div>
                                           )}
                                       </>

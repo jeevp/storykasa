@@ -230,7 +230,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, libraryId, onSav
             const recordingURL = await generateRecordingURL()
             if (!storyId) {
                 const storyData = {
-                    recordingURL,
+                    recordingURL: recordingURL || unfinishedStoryRecordingURL,
                     duration: String(audioDuration),
                     title,
                     description,
@@ -247,7 +247,7 @@ export default function StoryForm({ unfinishedStory, storyIdea, libraryId, onSav
                     finished: true,
                     // @ts-ignore
                     illustrationsURL,
-                    recordingURL
+                    recordingURL: recordingURL || unfinishedStoryRecordingURL,
                 })
             }
 

@@ -148,6 +148,7 @@ export default function AddStoryToCollectionDialog({
               optionValue="libraryName"
               placeholder="Select a collection"
               fluid={onMobile}
+              value={showCreateCollection ? undefined : libraries.find((lib: any) => lib.libraryId === selectedLibraryId)}
               // @ts-ignore
               onChange={handleLibraryOnChange}
             />
