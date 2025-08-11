@@ -17,6 +17,7 @@ import useDevice from "@/customHooks/useDevice";
 import DeleteIcon from '@mui/icons-material/Delete';
 import STKTooltip from "@/components/STKTooltip/STKTooltip"
 import InfoDialog from "@/composedComponents/InfoDialog/InfoDialog"
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 
 interface STKAudioPlayerProps {
     readingDialog?: boolean;
@@ -32,6 +33,8 @@ interface STKAudioPlayerProps {
     onEnd?: () => void;
     onTimeChange?: () => void
     onClear?: () => void
+    downloadable?: boolean
+    downloadFileName?: string
 }
 
 const formatTime = (seconds: number) => {
@@ -53,7 +56,9 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     onPlaying = () => ({}),
     onEnd = () => ({}),
     onTimeChange = () => ({}),
-    onClear = () => ({})
+    onClear = () => ({}),
+    downloadable = false,
+    downloadFileName
 }) => {
     const speedControlOption = [
         { label: "0.5", value: 0.5 },
@@ -78,6 +83,7 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
     const [playbackSpeed, setPlaybackSpeed] = useState(1.0)
     const [userIsDragging, setUserIsDragging] = useState(false)
     const [showClearRecordingWarning, setShowClearRecordingWarning] = useState(false)
+    const [downloading, setDownloading] = useState(false)
 
     useEffect(() => {
         if (!src) {
@@ -267,6 +273,40 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
 
     const playbackTarget = `${playbackSpeed}x`
 
+    const deriveFileNameFromSrc = (source: string): string => {
+        try {
+            const url = new URL(source);
+            const pathname = url.pathname;
+            const lastSegment = pathname.split('/').pop() || 'story';
+            return lastSegment;
+        } catch (e) {
+            const parts = source.split('?')[0].split('/');
+            return parts[parts.length - 1] || 'story';
+        }
+    }
+
+    const handleDownload = async () => {
+        if (!src || downloading) return;
+        try {
+            setDownloading(true)
+            const response = await fetch(src, { mode: 'cors' });
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href = blobUrl;
+            const inferred = downloadFileName || deriveFileNameFromSrc(src);
+            anchor.download = inferred || 'story-audio';
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            // no-op, download failed
+        } finally {
+            setDownloading(false)
+        }
+    }
+
     return (
         <div className={`stk-audio-player ${!outlined ? '!border-0' : ''}`} style={{ background: 'white' }}>
             <div className="flex items-center w-full">
@@ -350,6 +390,13 @@ const STKAudioPlayer: React.FC<STKAudioPlayerProps> = ({
                             onChange={changePlaybackSpeed}
                             customTarget={playbackTarget}/>
                     </div>
+                    {downloadable && src ? (
+                        <STKTooltip text={downloading ? 'Downloading...' : 'Download'} position="left">
+                            <STKButton iconButton onClick={handleDownload} disabled={downloading}>
+                                <FileDownloadOutlinedIcon sx={{ width: '20px', height: '20px' }} />
+                            </STKButton>
+                        </STKTooltip>
+                    ) : null}
                     {clearable ? (
                         <STKTooltip text="Clear recording" position="left">
                             <STKButton iconButton onClick={() => setShowClearRecordingWarning(true)}>

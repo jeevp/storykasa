@@ -179,6 +179,8 @@ export default function ReadingDialog({
                   onPlaying={handlePlaying}
                   // @ts-ignore
                   onTimeChange={handleOnTimeChange}
+                  downloadable
+                  downloadFileName={`${story?.title || 'story'}.mp3`}
               />
             </div>
             <div

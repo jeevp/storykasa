@@ -123,6 +123,7 @@ export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsP
                   // @ts-ignore
                   onTimeChange={handleOnTimeChange}
                   onPlaying={handlePlaying}
+                  downloadable
                 />
               </div>
             </div>
@@ -141,6 +142,7 @@ export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsP
                 onPlaying={handlePlaying}
                 // @ts-ignore
                 onTimeChange={handleOnTimeChange}
+                downloadable
               />
               {!currentUser?.isOrganizationGuest && (
                   <div className="inline-flex bg-[#7662c4] rounded-[8px] mt-4 flex flex-col lg:flex-row justify-between items-center">

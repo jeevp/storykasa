@@ -171,7 +171,7 @@ export default function PublicStoryRequestCard({ publicStoryRequest }: {
                 </div>
 
                 <div className="mt-4">
-                    <STKAudioPlayer outlined src={publicStoryRequest?.story.recordingUrl} />
+                    <STKAudioPlayer outlined src={publicStoryRequest?.story.recordingUrl} downloadable />
                 </div>
                 <div className="flex items-center justify-end mt-8">
                     <div>
