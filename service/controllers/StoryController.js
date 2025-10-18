@@ -763,6 +763,40 @@ class StoryController {
     }
   }
 
+  static async updateTranscript(req, res) {
+    try {
+      APIValidator.requiredParams(
+        { req, res },
+        {
+          requiredParams: ["storyId"],
+        }
+      );
+
+      APIValidator.requiredPayload(
+        { req, res },
+        {
+          requiredPayload: ["transcript"],
+        }
+      );
+
+      const { storyId } = req.query;
+      const { transcript } = req.body;
+
+      const story = await Story.getStory(storyId);
+
+      if (!story) {
+        return res.status(404).send({ message: "Story not found" });
+      }
+
+      await story.update({ transcriptWithTimestamp: transcript });
+
+      return res.status(200).send({ message: "Transcript updated successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).send({ message: "Something went wrong." });
+    }
+  }
+
   static async generateTranscriptForExistingStories(req, res) {
     try {
       const stories = await Story.findAll();

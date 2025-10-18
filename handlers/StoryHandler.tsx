@@ -311,4 +311,12 @@ export default class StoryHandler {
 
         return response.data.transcript
     }
+
+    static async updateStoryTranscript({ storyId }: { storyId: string }, transcript: Array<{start: number, end: number, text: string}>) {
+        const headers = generateHeaders()
+
+        await axios.put(`/api/stories/${storyId}/transcript`, {
+            transcript
+        }, headers)
+    }
 }

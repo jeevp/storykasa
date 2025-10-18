@@ -3,12 +3,18 @@ import StoryController from "../../../../service/controllers/StoryController"
 
 const transcript = async (req, res) => {
     try {
-        const allowedMethods = ["GET"]
+        const allowedMethods = ["GET", "PUT"]
         if (!allowedMethods.includes(req.method)) {
             return res.status(404).send({ message: "API route not found" })
         }
 
-        return StoryController.getTranscript(req, res)
+        if (req.method === "GET") {
+            return StoryController.getTranscript(req, res)
+        }
+
+        if (req.method === "PUT") {
+            return StoryController.updateTranscript(req, res)
+        }
 
     } catch (error) {
         console.error(error)

@@ -270,8 +270,15 @@ class Story {
     }
 
     async getTranscript(options = { forceCreation: false }) {
-        if (this.transcriptWithTimestamp && !options.forceCreation) return this.transcriptWithTimestamp
+        // Return existing transcript if available and not forcing creation
+        if (!options.forceCreation) {
+            if (this.transcriptWithTimestamp) return this.transcriptWithTimestamp
+            if (this.transcript) return this.transcript
+            // Return empty array if no transcript exists and not forcing creation
+            return []
+        }
 
+        // Generate new transcript from audio only when explicitly requested
         const transcriptWithTimestamp = await OpenAIService.getTranscriptFromAudio(this.recordingUrl)
 
         await this.update({
@@ -311,7 +318,8 @@ class Story {
         ageGroups,
         finished,
         illustrationsURL,
-         transcriptWithTimestamp
+        transcript,
+        transcriptWithTimestamp
     }) {
         require('dotenv').config({ path: '.env' });
 
@@ -327,6 +335,7 @@ class Story {
         if (language) payload.language = language
         if (ageGroups) payload.age_groups = ageGroups
         if (finished === true || finished === false) payload.finished = finished
+        if (transcript) payload.transcript = transcript
         if (transcriptWithTimestamp) payload.transcript_with_timestamp = transcriptWithTimestamp
 
         if (Object.keys(payload).length === 0) throw new Error("Payload is missing")

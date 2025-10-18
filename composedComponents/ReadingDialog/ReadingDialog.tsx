@@ -27,6 +27,7 @@ export default function ReadingDialog({
 
   // Refs
   const transcriptRef = useRef<HTMLDivElement>(null);
+  const transcriptLoadingRef = useRef<boolean>(false);
 
   // Contexts
   const { currentSubscription } = useSubscription();
@@ -61,18 +62,38 @@ export default function ReadingDialog({
   }, [story?.recordingUrl]);
 
   useEffect(() => {
-    if (audioDuration && story?.storyId) {
+    if (audioDuration && story?.storyId && open) {
       handleTranscriptWithTimestamp();
     }
   }, [audioDuration, story?.storyId]);
 
-  const handleTranscriptWithTimestamp = async () => {
-    setLoading(true);
-    if (story?.storyId) {
-      const transcription = await StoryHandler.getStoryTranscript(story.storyId);
-      setTranscriptWithTimestamps(transcription || []);
+  // Reset loading ref when story changes
+  useEffect(() => {
+    if (story?.storyId && open) {
+      transcriptLoadingRef.current = false;
     }
-    setLoading(false);
+  }, [story?.storyId]);
+
+  const handleTranscriptWithTimestamp = async () => {
+    // Prevent multiple simultaneous requests
+    if (transcriptLoadingRef.current) {
+      return;
+    }
+
+    transcriptLoadingRef.current = true;
+    setLoading(true);
+    
+    try {
+      if (story?.storyId) {
+        const transcription = await StoryHandler.getStoryTranscript(story.storyId);
+        setTranscriptWithTimestamps(transcription || []);
+      }
+    } catch (error) {
+      console.error("Error loading transcript:", error);
+    } finally {
+      setLoading(false);
+      transcriptLoadingRef.current = false;
+    }
   };
 
   const handleStoryOnEnd = () => {

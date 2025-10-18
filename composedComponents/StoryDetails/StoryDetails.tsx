@@ -11,6 +11,7 @@ import HeadphonesOutlinedIcon from "@mui/icons-material/HeadphonesOutlined";
 import STKButton from "@/components/STKButton/STKButton";
 import ReadingDialog from "../ReadingDialog/ReadingDialog";
 import {useAuth} from "@/contexts/auth/AuthContext";
+import {useProfile} from "@/contexts/profile/ProfileContext";
 
 interface StoryDetailsProps {
   story: Story | null;
@@ -19,6 +20,7 @@ interface StoryDetailsProps {
 export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsProps) {
   // Contexts
   const { currentUser } = useAuth()
+  const { currentProfileId } = useProfile()
 
   // States
   const [startIllustrationsDisplay, setStartIllustrationsDisplay] = useState(false);
@@ -54,6 +56,7 @@ export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsP
     setStoryCurrentTime(time);
   };
 
+  console.log({ currentUser, story })
 
   return (
     <div>
@@ -123,7 +126,7 @@ export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsP
                   // @ts-ignore
                   onTimeChange={handleOnTimeChange}
                   onPlaying={handlePlaying}
-                  downloadable
+                  downloadable={story?.recordedBy === currentProfileId}
                 />
               </div>
             </div>
@@ -142,8 +145,8 @@ export default function StoryDetails({ story, editionNotAllowed }: StoryDetailsP
                 onPlaying={handlePlaying}
                 // @ts-ignore
                 onTimeChange={handleOnTimeChange}
-                downloadable
-              />
+                downloadable={story?.recordedBy === currentProfileId}
+                />
               {!currentUser?.isOrganizationGuest && (
                   <div className="inline-flex bg-[#7662c4] rounded-[8px] mt-4 flex flex-col lg:flex-row justify-between items-center">
                     <STKButton
